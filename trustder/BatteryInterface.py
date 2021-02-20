@@ -13,9 +13,8 @@ class Battery:
         pass
     def get_current_capacity(self): 
         pass
-    def set_chargeable(self, is_chargeable): 
+    def set_charge(self, target: float): 
         pass
-    def set_dischargeable(self, is_dischargeable): 
+    def set_discharge(self, target: float): 
         pass
-    
 
