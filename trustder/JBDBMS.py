@@ -177,7 +177,7 @@ class JBDBMS(BatteryInterface.Battery):
             mosfet_status = (mosfet_status & 2)
         else: 
             mosfet_status = (mosfet_status | 1)
-        self.query_info(self.get_write_register_command(b'\xe1'))
+        self.query_info(self.get_write_register_command(b'\xe1', mosfet_status.to_bytes(1, byteorder='big')))
     
     def set_dischargeable(self, is_dischargeable): 
         mosfet_status = self.state['MOSFET status']
@@ -186,7 +186,39 @@ class JBDBMS(BatteryInterface.Battery):
             mosfet_status = (mosfet_status & 1)
         else: 
             mosfet_status = (mosfet_status | 2)
-        self.query_info(self.get_write_register_command(b'\xe1'))
+        self.query_info(self.get_write_register_command(b'\xe1', mosfet_status.to_bytes(1, byteorder='big')))
+
+    # def get_mosfet_status_data(self, chargeable, dischargeable): 
+    #     mosfet_status = self.state['MOSFET status']
+    #     assert mosfet_status <= 3
+    #     if chargeable: 
+    #         mosfet_status = (mosfet_status & 2)
+    #     else: 
+    #         mosfet_status = (mosfet_status | 1)
+    #     if dischargeable: 
+    #         mosfet_status = (mosfet_status & 1)
+    #     else: 
+    #         mosfet_status = (mosfet_status | 2)
+    #     return mosfet_status
+
+    def set_current(self, target_current): 
+        if target_current > 0: 
+            self.set_chargeable(False)
+            self.set_dischargeable(True)
+        elif target_current < 0: 
+            self.set_chargeable(True)
+            self.set_dischargeable(False)
+        else: 
+            self.set_chargeable(False)
+            self.set_dischargeable(False)
+        # how to limit the current? 
+
+    def get_max_current_range(self): 
+        """
+        Max discharging current, Max charging current (negative)
+        """
+        return (120, -120)
+            
 
 
 # print(
