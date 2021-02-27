@@ -37,6 +37,9 @@ class JBDBMS(BatteryInterface.Battery):
 
         self.state = self.get_basic_info()
 
+        self.current_range = (120, 120)
+        self._current_range = range(-120, 120)
+
     def query_info(self, to_send):
         self.data_handler.data_length = 0
         while 1: 
@@ -157,6 +160,14 @@ class JBDBMS(BatteryInterface.Battery):
     
     def refresh(self): 
         self.state = self.get_basic_info()
+        if self.get_current_capacity <= 0: 
+            self._set_dischargeable(False)
+        else: 
+            self._set_dischargeable(True)
+        if self.get_current_capacity >= self.get_maximum_capacity(): 
+            self._set_chargeable(False)
+        else: 
+            self._set_chargeable(True)
 
     def get_voltage(self): 
         return self.state['voltage']
@@ -170,7 +181,7 @@ class JBDBMS(BatteryInterface.Battery):
     def get_current_capacity(self): 
         return self.state['remaining charge']
 
-    def set_chargeable(self, is_chargeable): 
+    def _set_chargeable(self, is_chargeable): 
         mosfet_status = self.state['MOSFET status']
         assert mosfet_status <= 3
         if is_chargeable: 
@@ -179,7 +190,7 @@ class JBDBMS(BatteryInterface.Battery):
             mosfet_status = (mosfet_status | 1)
         self.query_info(self.get_write_register_command(b'\xe1', mosfet_status.to_bytes(1, byteorder='big')))
     
-    def set_dischargeable(self, is_dischargeable): 
+    def _set_dischargeable(self, is_dischargeable): 
         mosfet_status = self.state['MOSFET status']
         assert mosfet_status <= 3
         if is_dischargeable: 
@@ -202,22 +213,32 @@ class JBDBMS(BatteryInterface.Battery):
     #     return mosfet_status
 
     def set_current(self, target_current): 
-        if target_current > 0: 
-            self.set_chargeable(False)
-            self.set_dischargeable(True)
-        elif target_current < 0: 
-            self.set_chargeable(True)
-            self.set_dischargeable(False)
-        else: 
-            self.set_chargeable(False)
-            self.set_dischargeable(False)
+        if (target_current not in self._current_range): 
+            return False
+        if (target_current > 0 and self.get_current_capacity() <= 0): 
+            # self._set_dischargeable(False)
+            return False
+        if (target_current < 0 and self.get_current_capacity() >= self.get_maximum_capacity()): 
+            # self._set_chargeable(False)
+            return False 
+        # if target_current > 0: 
+        #     # self._set_chargeable(False)
+        #     self._set_dischargeable(True)
+        # elif target_current < 0: 
+        #     self._set_chargeable(True)
+        #     # self._set_dischargeable(False)
+        # else: 
+        #     self._set_chargeable(False)
+        #     self._set_dischargeable(False)
         # how to limit the current? 
+        
+        return True
 
-    def get_max_current_range(self): 
+    def get_current_range(self): 
         """
-        Max discharging current, Max charging current (negative)
+        Max discharging current, Max charging current 
         """
-        return (120, -120)
+        return self.current_range
             
 
 

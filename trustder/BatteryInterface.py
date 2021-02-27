@@ -6,6 +6,11 @@ class Battery:
     def refresh(self): 
         """
         Refresh the state of the battery 
+
+        this is the interface for physical battery, but it's required for virtual battery 
+        because we couldn't distinguish between physical battery and virtual battery 
+        i.e. we can use a virtual battery as a underlying battery of a BOS, 
+        the BOS will keep calling this function to refresh the state 
         """
         pass
     def get_voltage(self): 
@@ -36,10 +41,10 @@ class Battery:
         if negative, the battery is charging 
         """ 
         pass
-    def get_max_current_range(self): 
+    def get_current_range(self): 
         """
         Returns (max_discharging_current, max_charging_current)
-        e.g. (20, -20)
+        e.g. (20, 20)
         """
         pass
 
