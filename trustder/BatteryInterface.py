@@ -1,5 +1,8 @@
 
 class Battery: 
+    """
+    The interface used for communication between BOS & physical batteries and BOS & virtual batteries
+    """
     def __init__(self): 
         raise NotImplementedError
         pass
