@@ -30,15 +30,8 @@ class VirtualBatteryUser(BatteryInterface.Battery):
         """
         Just get everything from the BOS 
         """
+        # just don't perform refresh here explicitly... 
         pass
-
-    def read_current_meter(self): 
-        """
-        TODO 
-        """
-        # should send a request to the client side and retrieve the information 
-        self.actual_current = 0
-        return self.actual_current
     
     def get_voltage(self): 
         """

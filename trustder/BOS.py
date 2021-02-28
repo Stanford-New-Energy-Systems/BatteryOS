@@ -1,4 +1,5 @@
 import signal
+import time
 import BatteryInterface
 import JBDBMS
 import VirtualBattery
@@ -61,8 +62,8 @@ class VirtualBattery(BatteryInterface.Battery):
     def read_current_meter(self): 
         """
         TODO 
+        Let the BOS know the user-side current meter reading 
         """
-        # should send a request to the client side and retrieve the information 
         self.actual_current = 0
         return self.actual_current
     
@@ -145,7 +146,7 @@ class VirtualBattery(BatteryInterface.Battery):
 
 
 class BOS: 
-    def __init__(self, voltage, bms_list=[], sample_period):
+    def __init__(self, voltage, bms_list, sample_period):
         self.bms_list = bms_list 
         self.virtual_battery_list = []
         self._voltage = voltage
@@ -160,7 +161,7 @@ class BOS:
         net_claimed_current = 0
         for vb in self.virtual_battery_list: 
             total_capacity += vb.get_maximum_capacity()
-            capcity_remaining += vb.get_current_capacity()
+            capacity_remaining += vb.get_current_capacity()
             current_range = vb.get_current_range()
             max_discharging_current += current_range[0]
             max_charging_current += current_range[1]
@@ -192,6 +193,7 @@ class BOS:
         # refresh end-point currents of the virtual batteries 
         actual_net_current = 0
         for vb in self.virtual_battery_list: 
+            vb.refresh()
             actual_net_current += vb.read_current_meter()
         # refresh the physical batteries  
         for bms in self.bms_list: 
