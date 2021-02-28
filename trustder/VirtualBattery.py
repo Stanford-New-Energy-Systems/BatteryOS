@@ -1,14 +1,21 @@
+"""
+This file should contain a "client"-side virtual battery class 
+"""
 import BatteryInterface
-import BOS
-
-class VirtualBattery(BatteryInterface.Battery):
-    def __init__(self, bos, reserve_capacity, max_discharging_current, max_charging_current, sample_period): 
-        self.bos = bos
+class VirtualBatteryUser(BatteryInterface.Battery):
+    """
+    This should be the user-local implementation of VirtualBattery 
+    """
+    def __init__(self, bos_handle, voltage, reserve_capacity, max_discharging_current, max_charging_current):
+        """
+        assuming the BOS has approved the creation of virtual battery 
+        """ 
+        self.bos_handle = bos_handle
         self.chargeable = False
         self.dischargeable = True
         
         # voltage 
-        self._voltage = bos.get_voltage()
+        self._voltage = voltage 
 
         self._current_range = range(-max_charging_current, max_discharging_current)
         self.current_range = (max_discharging_current, max_charging_current)
@@ -18,39 +25,20 @@ class VirtualBattery(BatteryInterface.Battery):
         
         self.reserved_capacity = reserve_capacity
         self.remaining_capacity = reserve_capacity
-
-        self.sample_period = sample_period
-
-        # how does the actual drawing vs the claimed drawing compare
-        # if you claimed to draw 1A, but you drawn 2A, your credit will be -1Ah after an hour! 
-        self.credit = 0
     
     def refresh(self): 
-        # self.bos.refresh_all()
-        # refresh the virtual batteries 
-        # and update the capacity according to the measured current values 
-        # what TODO  
-        # the underlying BOS will handle the refresh of the physical batteries 
-
-        # perhaps refresh the associated current meter? 
-        # this should be from a current meter, we just assume that we have it 
-        # but we don't have it right now, we just assume we have it 
-        self.actual_current = 0  # TODO
-        # also estimate the remaining capacity 
-        self._voltage = self.bos.get_voltage()
-        self.remaining_capacity -= (self.claimed_current * self._voltage) * self.sample_period
-        self.credit = (self.claimed_current - self.actual_current) * self._voltage * self.sample_period
-        # perhaps use a more accurate approach... 
-
-        if self.get_current_capacity <= 0: 
-            self._set_dischargeable(False)
-        else: 
-            self._set_dischargeable(True)
-        if self.get_current_capacity >= self.get_maximum_capacity(): 
-            self._set_chargeable(False)
-        else: 
-            self._set_chargeable(True)
+        """
+        Just get everything from the BOS 
+        """
         pass
+
+    def read_current_meter(self): 
+        """
+        TODO 
+        """
+        # should send a request to the client side and retrieve the information 
+        self.actual_current = 0
+        return self.actual_current
     
     def get_voltage(self): 
         """
@@ -95,7 +83,7 @@ class VirtualBattery(BatteryInterface.Battery):
             return False 
         
         self.claimed_current = target_current
-        # ? do we need to do that, or the BOS will figure out itself? 
+        # # BOS side don't need to tell the BOS
         # self.bos.currrent_change()
         return True
 
@@ -125,5 +113,4 @@ class VirtualBattery(BatteryInterface.Battery):
         """
         self.dischargeable = is_dischargeable
         # TODO is there a way to regulate this? 
-
 
