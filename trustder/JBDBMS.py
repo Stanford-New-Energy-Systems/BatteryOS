@@ -26,7 +26,7 @@ class JBDBMS(BatteryInterface.Battery):
     exit_and_save_factory_mode_command = b'\x28\x28'
     exit_factory_mode_command = b'\x00\x00'
 
-    def __init__(self, device): 
+    def __init__(self, device, staleness=100): 
         self.bms_service_uuid = ('0000ff00-0000-1000-8000-00805f9b34fb') # btle.UUID("ff00") # 
         self.bms_write_uuid = ('0000ff02-0000-1000-8000-00805f9b34fb') # btle.UUID("ff02") # 
         self.bms_read_uuid = ('0000ff01-0000-1000-8000-00805f9b34fb') # btle.UUID("ff01") # 
@@ -39,6 +39,8 @@ class JBDBMS(BatteryInterface.Battery):
 
         self.current_range = (120, 120)
         self._current_range = range(-120, 120)
+        self.staleness = staleness
+        self.last_refresh = (time.time() * 1000)  # in ms 
 
     def query_info(self, to_send):
         self.data_handler.data_length = 0
@@ -158,30 +160,49 @@ class JBDBMS(BatteryInterface.Battery):
             # print("Battery {} voltage: {}mV".format(i+1, int.from_bytes(info[4+2*i:4+2*i+2], byte_order)))
         return voltages
     
+    def set_max_staleness(self, ms):
+        """
+        the maximum stale time of a value 
+        """
+        if ms >= 0: 
+            self.staleness = ms
+
+    def check_staleness(self): 
+        now = (time.time() * 1000)
+        if now - self.last_refresh > self.staleness: 
+            self.refresh()
+            self.last_refresh = (time.time() * 1000)
+        return
+
     def refresh(self): 
         self.state = self.get_basic_info()
-        if self.get_current_capacity <= 0: 
+        if self.state['remaining charge'] <= 0: 
             self._set_dischargeable(False)
         else: 
             self._set_dischargeable(True)
-        if self.get_current_capacity >= self.get_maximum_capacity(): 
+        if self.state['remaining charge'] >= self.get_maximum_capacity(): 
             self._set_chargeable(False)
         else: 
             self._set_chargeable(True)
 
     def get_voltage(self): 
+        self.check_staleness()
         return self.state['voltage']
 
     def get_current(self): 
+        self.check_staleness()
         return self.state['current']
     
     def get_maximum_capacity(self): 
+        self.check_staleness()
         return self.state['maximum capacity']
 
     def get_current_capacity(self): 
+        self.check_staleness()
         return self.state['remaining charge']
 
     def _set_chargeable(self, is_chargeable): 
+        # self.check_staleness()
         mosfet_status = self.state['MOSFET status']
         assert mosfet_status <= 3
         if is_chargeable: 
@@ -191,6 +212,7 @@ class JBDBMS(BatteryInterface.Battery):
         self.query_info(self.get_write_register_command(b'\xe1', mosfet_status.to_bytes(1, byteorder='big')))
     
     def _set_dischargeable(self, is_dischargeable): 
+        # self.check_staleness()
         mosfet_status = self.state['MOSFET status']
         assert mosfet_status <= 3
         if is_dischargeable: 
@@ -239,7 +261,17 @@ class JBDBMS(BatteryInterface.Battery):
         Max discharging current, Max charging current 
         """
         return self.current_range
-            
+
+    def get_status(self):
+        self.check_staleness()
+        return BatteryInterface.BatteryStatus(\
+            self.state['voltage'], 
+            self.state['current'], 
+            self.state['remaining charge'], 
+            self.state['maximum capacity'], 
+            self.current_range[0], 
+            self.current_range[1])
+        
 
 
 # print(
@@ -427,4 +459,4 @@ def notused():
     # data_length = 0
 
     # device.subscribe(bms_read_uuid, indication=False, callback=handle_data)
-
+    pass

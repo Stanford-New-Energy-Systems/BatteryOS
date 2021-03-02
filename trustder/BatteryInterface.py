@@ -1,3 +1,40 @@
+import json
+class BatteryStatus: 
+    def __init__(self, 
+        voltage, 
+        current, 
+        current_capacity, 
+        max_capacity, 
+        max_discharging_current, 
+        max_charging_current,
+        ): 
+        self.voltage = voltage
+        self.current = current
+        self.current_capacity = current_capacity
+        self.max_capacity = max_capacity
+        self.max_discharging_current = max_discharging_current
+        self.max_charging_current = max_charging_current
+    
+    def serialize(self): 
+        serialized = json.dumps({
+            "voltage": self.voltage,
+            "current": self.current, 
+            "current_capacity": self.current_capacity, 
+            "max_capacity": self.max_capacity,
+            "max_discharging_current": self.max_discharging_current, 
+            "max_charging_current": self.max_charging_current
+        })
+        return serialized
+    
+    def load_serialized(self, serialized): 
+        data = json.loads(serialized)
+        self.voltage = data['voltage']
+        self.current = data['current']
+        self.current_capacity = data['current_capacity']
+        self.max_capacity = data['max_capacity']
+        self.max_discharging_current = data['max_discharging_current']
+        self.max_charging_current = data['max_charging_current'] 
+        return
 
 class Battery: 
     """
@@ -50,4 +87,16 @@ class Battery:
         e.g. (20, 20)
         """
         pass
+    
+    # def set_max_staleness(self, ms):
+    #     """
+    #     the maximum stale time of a value 
+    #     the virtual battery should query information every time 
+    #     """
+    #     pass
 
+    def get_status(self): 
+        """
+        Gets voltage, current, current capacity, max capacity, max_discharging_current, max_charging_current
+        """
+        pass

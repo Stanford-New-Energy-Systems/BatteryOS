@@ -127,6 +127,15 @@ class VirtualBattery(BatteryInterface.Battery):
         """
         return self.credit
 
+    def get_status(self):
+        return BatteryInterface.BatteryStatus(\
+            self._voltage, 
+            self.actual_current, 
+            self.remaining_capacity, 
+            self.reserved_capacity, 
+            self.current_range[0], 
+            self.current_range[1])
+
     def _set_chargeable(self, is_chargeable): 
         """
         should be able to shutdown the virtual battery 
@@ -231,11 +240,11 @@ class BOS:
 
     def main_loop(self): 
         while 1: 
-            # handle inputs 
-            # polling from connections 
+            time.sleep(self.sample_period)
             # refresh 
             self.refresh_all()
-            time.sleep(self.sample_period)
+            # handle inputs 
+            # polling from connections 
             # handle output requests 
             # for each request, send back a reply 
             # something else to do 

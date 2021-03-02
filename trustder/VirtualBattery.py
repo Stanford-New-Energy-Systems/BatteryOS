@@ -31,30 +31,46 @@ class VirtualBatteryUser(BatteryInterface.Battery):
         Just get everything from the BOS 
         """
         # just don't perform refresh here explicitly... 
-        pass
+        self.get_status()
     
+    def get_status(self):
+        """
+        Query status from BOS 
+        """
+        # query the status from the BOS 
+        status = BatteryInterface.BatteryStatus(0, 0, 0, 0, 0, 0)
+        self._voltage = status.voltage
+        self.actual_current = status.current
+        self.remaining_capacity = status.current_capacity
+        self.reserved_capacity = status.max_capacity
+        return status
+
     def get_voltage(self): 
         """
         the voltage is fixed 
         """
+        self.get_status()
         return self._voltage
     
     def get_current(self): 
         """
         The actual current the you are drawing 
         """
+        self.get_status()
         return self.actual_current
     
     def get_maximum_capacity(self): 
         """
         Just the reserved capacity 
         """
+        self.get_status()
         return self.reserved_capacity
     
     def get_current_capacity(self): 
         """
         if you keep running at your claimed current, what's your remaining charge... 
         """
+        self.get_status()
         return self.remaining_capacity
 
     def set_current(self, target_current): 
@@ -76,8 +92,7 @@ class VirtualBatteryUser(BatteryInterface.Battery):
             return False 
         
         self.claimed_current = target_current
-        # # BOS side don't need to tell the BOS
-        # self.bos.currrent_change()
+        # tell BOS the current is changed 
         return True
 
     def get_current_range(self): 
@@ -91,6 +106,7 @@ class VirtualBatteryUser(BatteryInterface.Battery):
         """
         how much do I owe? 
         """
+        # query credit from BOS 
         return self.credit
 
     def _set_chargeable(self, is_chargeable): 
