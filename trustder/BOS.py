@@ -3,13 +3,20 @@ import time
 import BatteryInterface
 import JBDBMS
 import VirtualBattery
+import BOSControl
+from BOSControl import BOSError
+from collections import defaultdict
+from util import *
+from BOSErr import *
+from BatteryDAG import *
 
 class VirtualBattery(BatteryInterface.Battery):
     """
     This should be the BOS-local implementation of VirtualBattery 
     There should also be a user-local implementation 
     """
-    def __init__(self, bos, reserve_capacity, max_discharging_current, max_charging_current, sample_period): 
+    def __init__(self, bos, reserve_capacity, current_capacity, max_discharging_current,
+                 max_charging_current, sample_period): 
         self.bos = bos
         self.chargeable = False
         self.dischargeable = True
@@ -150,105 +157,205 @@ class VirtualBattery(BatteryInterface.Battery):
         self.dischargeable = is_dischargeable
         # TODO is there a way to regulate this? 
 
+    # split off battery w/ maximum capacity `maximum_capacity`
+    # and current capacity `current_capacity`
+    # returns (False, _) if either parameter exceeds what's available
+    def split(self, maximum_capacity, current_capacity) -> VirtualBattery:
+        if maximum_capacity > self.reserved_capacity:
+            raise BOSError.InsufficientResources('maximum_capacity')
+        elif current_capacity > self.current_capacity:
+            raise BOSError.InsufficientResources('current_capacity')
+        new_vb = VirtualBattery(self.bos, maximum_capacity, current_capacity,
+                                self.max_discharging_current,
+                                self.max_charging_current, self.sample_period)
+        self.reserved_capacity -= maximum_capacity
+        self.current_capacity -= current_capacity
+        return new_vb
+
+    def merge(self, other: VirtualBattery):
+        self.reserved_capacity += other.reserved_capacity
+        other.reserved_capacity = 0
+        self.current_capacity += other.current_capacity
+        other.current_capacity = 0
 
 
+class AggregatorBattery: BatteryInterface.Battery:
+    def __init__(self, voltage, voltage_tolerance, sample_period,
+                 sources: [BatteryInterface.Battery]):
+        self._sources = sources
+        self._sample_period = sample_period
 
+        if len(sources) == 0:
+            raise BOSErr_NoBattery
 
-class BOS: 
-    def __init__(self, voltage, bms_list, sample_period):
-        self.bms_list = bms_list 
-        self.virtual_battery_list = []
-        self._voltage = voltage
-        self.sample_period = sample_period
-        self.net_current = 0
+        # check voltages within given tolerance
+        for source in sources:
+            v = source.get_voltage()
+            if not (v >= voltage - voltage_tolerance and v <= voltage + voltage_tolerance):
+                raise BOS_VoltageMismatch
 
-    def new_virtual_battery(self, reserve_capacity, max_discharging_current, max_charging_current): 
-        total_capacity = 0
-        capacity_remaining = 0
-        max_charging_current = 0
-        max_discharging_current = 0 
-        net_claimed_current = 0
-        for vb in self.virtual_battery_list: 
-            total_capacity += vb.get_maximum_capacity()
-            capacity_remaining += vb.get_current_capacity()
-            current_range = vb.get_current_range()
-            max_discharging_current += current_range[0]
-            max_charging_current += current_range[1]
-            net_claimed_current += vb.claimed_current
+    def refresh(self):
+        for source in self._sources:
+            source.refresh()
+        # TODO: Check to make sure voltages still in range.
 
-        # check capacity
-        if capacity_remaining <= reserve_capacity: 
-            return None
-        # check max current 
-        if (net_claimed_current < 0 and (-net_claimed_current) >= max_charging_current) or \
-            (net_claimed_current > 0 and net_claimed_current >= max_discharging_current): 
-            return None
+    def get_status(self):
+        s_max_capacity = 0
+        s_cur_capacity = 0
+        s_max_discharge_time = 0
+        s_max_charge_time = 0
+        s_current = 0
 
-        v_battery = VirtualBattery(\
-            self, reserve_capacity, max_discharging_current, max_charging_current, self.sample_period)
-        self.virtual_battery_list.append(v_battery)
-        return v_battery
+        for source in self._sources:
+            s_max_capacity += source.get_maximum_capacity()
+            s_cur_capacity += source.get_current_capacity()
+            (max_discharge_rate, max_charge_rate) = source.get_current_range()
+            s_max_discharge_time = max(s_max_discharge_time,
+                                       source.get_current_capacity() / max_discharge_rate)
+            s_max_charge_time = max(s_max_charge_time, (source.get_maximum_capacity() -
+                                                        source.get_current_capacity()) /
+                                    max_charge_rate)
+            s_current += source.get_current()
+            
+        s_max_discharge_rate = s_max_capacity / s_max_discharge_time
+        s_max_charge_rate = s_max_capacity / s_max_charge_time
 
-    def refresh_all(self): 
-        """
-        refresh the states of physical batteries 
-        and get the actual currents of the virtual batteries 
-        also distribute the currents accordingly to the physical batteries 
-        """
-        # also refresh the bus voltage! 
-        # should get the real time voltage from the bus 
-        # but we don't have it yet 
-        self._voltage = 3
-        # refresh end-point currents of the virtual batteries 
-        actual_net_current = 0
-        for vb in self.virtual_battery_list: 
-            vb.refresh()
-            actual_net_current += vb.read_current_meter()
-        # refresh the physical batteries  
-        for bms in self.bms_list: 
-            bms.refresh()
-        # distribute the currents to the batteries 
-        # now we just fairly distribute the currents 
-        # huge assumption! 
-        # should fix 
-        bms_current = actual_net_current / len(self.bms_list)
-        for bms in self.bms_list: 
-            bms.set_current(bms_current)
-        return
-    
-    def get_voltage(self): 
-        return self._voltage
+        return BatteryInterface.BatteryStatus(self._voltage,
+                                              s_current,
+                                              s_cur_capacity,
+                                              s_max_capacity,
+                                              s_max_discharge_rate,
+                                              s_max_charge_rate)
 
-    def get_maximum_capacity(self): 
-        max_capacity = 0
-        for bms in self.bms_list: 
-            max_capacity += bms.get_maximum_capacity()
-        return max_capacity
+    def set_current(self, target_current):
+        (max_discharge_rate, max_charge_rate) = self.get_current_range()
+        if target_current not in range(-max_discharge_rate, max_charge_rate):
+            raise Exception('invalid current')
 
-    def get_current_capacity(self): 
-        current_capacity = 0
-        for bms in self.bms_list: 
-            current_capacity += bms.get_current_capacity()
-        return current_capacity
+        if target_current > 0: # discharging
+            charge = self.get_current_capacity()
+            time = charge / target_current
+            for source in self._sources:
+                current = source.get_current_capacity() / time
+                source.set_current(current)
+        elif target_current < 0: # charging
+            charge = self.get_maximum_capacity() - self.get_current_capacity()
+            time = charge / -target_current
+            for source in self._sources:
+                current = (source.get_maximum_capacity() - source.get_current_capacity()) / time
+                source.set_current(current)
+        else: # none
+            for source in self._sources:
+                source.set_current(0)
 
-    # def currrent_change(self): 
-    #     self.refresh_all()
-    #     virtual_battery_currents = 0
-    #     for vb in self.virtual_battery_list:
-    #         virtual_battery_currents += vb.current
+class SplitterBattery: BatteryInterface.Battery:
+    class Scale:
+        def __init__(self, current_capacity, max_capacity, max_discharge_rate, max_charge_rate):
+            for scale in [current_capacity, max_capacity, max_discharge_rate, max_charge_rate]:
+                if not (scale >= 0.0 and scale <= 1.0):
+                    raise BOSErr_InvalidArgument
+            
+            self._current_capacity = current_capacity
+            self._max_capacity = max_capacity
+            self._max_discharge_rate = max_discharge_rate
+            self._max_charge_rate = max_charge_rate
+
+        def get_current_capacity(self): return self._current_capacity
+        def get_max_capacity(self): return self._max_capacity
+        def get_max_discharge_rate(self): return self._max_discharge_rate
+        def get_max_charge_rate(self): return self._max_charge_rate
         
+    
+    def __init__(self, sample_period, source, scale: Scale):
+        self._sample_period = sample_period
+        self._source = source
 
-    def main_loop(self): 
-        while 1: 
-            time.sleep(self.sample_period)
-            # refresh 
-            self.refresh_all()
-            # handle inputs 
-            # polling from connections 
-            # handle output requests 
-            # for each request, send back a reply 
-            # something else to do 
-            pass
+        # TODO: Refresh first?
+        self._source_status = source.get_status()
+        s = self._source_status
 
+        self._current_capacity = s.current_capacity * scale.get_current_capacity()
+        self._max_capacity = s.max_capacity * scale.get_max_capacity()
+        self._max_discharge_rate = s.max_discharging_current * scale.get_max_discharge_rate()
+        self._max_charge_rate = s.max_charging_current * scale.get_max_charge_rate()
 
+        # TODO: Should current be a parameter? User can just call `set_current()` afterwards.
+        self._current = 0;
 
+    def refresh(self):
+        self._source.refresh()
+
+    def _update(self, snew: BatteryInterface.BatteryStatus):
+        # update measurements given new status
+        sold = self._source_status
+
+        newloc = lambda oldloc, oldsrc, newsrc: (oldloc / oldsrc) * newsrc
+
+        self._current = newloc(self._current, sold.current, snew.current)
+        self._current_capacity = newloc(self._current_capacity,
+                                        sold.current_capacity,
+                                        snew.current_capacity)
+        self._max_capacity = newloc(self._max_capacity, sold.max_capacity, snew.max_capacity)
+        self._max_discharge_rate = newloc(self._max_discharge_rate,
+                                          sold.max_discharging_current,
+                                          snew.max_discharging_current)
+
+        self._source_status = snew
+
+        
+    def get_status(self):
+        self._update(source.get_status())
+        s = self._source_status
+        return BatteryInterface.BatteryStatus(s.voltage,
+                                              self._current,
+                                              self._current_capacity,
+                                              self._max_capacity,
+                                              self._max_discharge_rate,
+                                              self._max_charge_rate)
+
+    def set_current(self, target_current):
+        s = self.get_status()
+        min_current = -s.max_charging_current
+        max_current = s.max_discharging_current
+
+        # TODO: This should throw a "bad request" error, or something of the sort.
+        assert target_current >= min_current and target_current <= max_current
+
+        base = self._source_status.current
+        diff = target_current - s.current
+
+        new_source_current = base + diff
+        assert new_source_current >= -self._source_status.max_charging_current and \
+            new_source_current <= self._source_status.max_discharging_current
+        
+        source.set_current(new_source_current)
+        
+class BOS:
+    def __init__(self):
+        # Directory: map from battery names to battery objects
+        self._dag = BatteryDAG()
+
+        
+    def make_battery(self, name: str, kind: BatteryInterface.Battery,
+                     iface: Interface, addr: str) -> VirtualBattery:
+        raise NotImplementedError
+
+    
+    def make_aggregator(self, name: str, sources: [str], voltage, voltage_tolerance, sample_period):
+        # look up sources
+        src_batteries = self._dag.get_battery(src) for src in sources
+        ab = AggregatorBattery(voltage, voltage_tolerance, sample_period, src_batteries)
+        self.add_parents(name, sources, ab)
+
+        
+    def make_splitter(self, parts, source: str, sample_period):
+        # parts: dictionary from name to scale
+        src_battery = self._dag.get_battery(source)
+        
+        batteries = dict()
+        for name in parts:
+            scale = parts[name]
+            sb = SplitterBattery(sample_period, src_battery, scale)
+            batteries[name] = sb
+
+        self._dag.add_children(batteries, source)
