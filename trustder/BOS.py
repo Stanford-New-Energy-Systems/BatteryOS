@@ -4,189 +4,35 @@ import BatteryInterface
 import JBDBMS
 import VirtualBattery
 import BOSControl
+import Interface
 from BOSControl import BOSError
 from collections import defaultdict
 from util import *
-from BOSErr import *
+import BOSErr
 from BatteryDAG import *
 
-class VirtualBattery(BatteryInterface.Battery):
-    """
-    This should be the BOS-local implementation of VirtualBattery 
-    There should also be a user-local implementation 
-    """
-    def __init__(self, bos, reserve_capacity, current_capacity, max_discharging_current,
-                 max_charging_current, sample_period): 
-        self.bos = bos
-        self.chargeable = False
-        self.dischargeable = True
-        
-        # voltage 
-        self._voltage = bos.get_voltage()
+class NullBattery(BatteryInterface.Battery):
+    def __init__(self, voltage):
+        self._voltage = voltage
 
-        self._current_range = range(-max_charging_current, max_discharging_current)
-        self.current_range = (max_discharging_current, max_charging_current)
-
-        self.actual_current = 0
-        self.claimed_current = 0
-        
-        self.reserved_capacity = reserve_capacity
-        self.remaining_capacity = reserve_capacity
-
-        self.sample_period = sample_period
-
-        # how does the actual drawing vs the claimed drawing compare
-        # if you claimed to draw 1A, but you drawn 2A, your credit will be -1Ah after an hour! 
-        self.credit = 0
-    
-    def refresh(self): 
-        # self._bos.refresh_all()
-        # refresh the virtual batteries 
-        # and update the capacity according to the measured current values 
-        # what TODO  
-        # the underlying BOS will handle the refresh of the physical batteries 
-
-        # perhaps refresh the associated current meter? 
-        # this should be from a current meter, we just assume that we have it 
-        # but we don't have it right now, we just assume we have it 
-        self.actual_current = self.read_current_meter()  # TODO
-        # also estimate the remaining capacity 
-        self._voltage = self.bos.get_voltage()
-        self.remaining_capacity -= (self.claimed_current * self._voltage) * self.sample_period
-        self.credit = (self.claimed_current - self.actual_current) * self._voltage * self.sample_period
-        # perhaps use a more accurate approach... 
-
-        if self.get_current_capacity <= 0: 
-            self._set_dischargeable(False)
-        else: 
-            self._set_dischargeable(True)
-        if self.get_current_capacity >= self.get_maximum_capacity(): 
-            self._set_chargeable(False)
-        else: 
-            self._set_chargeable(True)
-        pass
-
-    def read_current_meter(self): 
-        """
-        TODO 
-        Let the BOS know the user-side current meter reading 
-        """
-        self.actual_current = 0
-        return self.actual_current
-    
-    def get_voltage(self): 
-        """
-        the voltage is fixed 
-        """
-        return self._voltage
-    
-    def get_current(self): 
-        """
-        The actual current the you are drawing 
-        """
-        return self.actual_current
-    
-    def get_maximum_capacity(self): 
-        """
-        Just the reserved capacity 
-        """
-        return self.reserved_capacity
-    
-    def get_current_capacity(self): 
-        """
-        if you keep running at your claimed current, what's your remaining charge... 
-        """
-        return self.remaining_capacity
-
-    def set_current(self, target_current): 
-        """
-        Now submit a current contract 
-        it's a contract that the user is drawing target_current in the future  
-        if charging, please set it to negative current 
-        otherwise it's positive 
-
-        return value: fail / succeed 
-        """
-        if (target_current not in self._current_range): 
-            return False
-        if (target_current > 0 and self.get_current_capacity() <= 0): 
-            # self._set_dischargeable(False)
-            return False
-        if (target_current < 0 and self.get_current_capacity() >= self.get_maximum_capacity()): 
-            # self._set_chargeable(False)
-            return False 
-        
-        self.claimed_current = target_current
-        # # BOS side don't need to tell the BOS
-        # self.bos.currrent_change()
-        return True
-
-    def get_current_range(self): 
-        """
-        Returns (max_discharging_current, max_charging_current)
-        e.g. (20, 20)
-        """
-        return self.current_range
-
-    def get_credit(self): 
-        """
-        how much do I owe? 
-        """
-        return self.credit
+    def refresh(self): return
 
     def get_status(self):
-        return BatteryInterface.BatteryStatus(\
-            self._voltage, 
-            self.actual_current, 
-            self.remaining_capacity, 
-            self.reserved_capacity, 
-            self.current_range[0], 
-            self.current_range[1])
+        return BatteryInterface.BatteryStatus(self._voltage, 0, 0, 0, 0, 0)
 
-    def _set_chargeable(self, is_chargeable): 
-        """
-        should be able to shutdown the virtual battery 
-        """
-        self.chargeable = is_chargeable
-        # TODO is there a way to regulate this? 
-    
-    def _set_dischargeable(self, is_dischargeable): 
-        """
-        should be able to shutdown the virtual battery 
-        """
-        self.dischargeable = is_dischargeable
-        # TODO is there a way to regulate this? 
+    def set_current(self, current):
+        if current != 0:
+            raise BOSErr.CurrentOutOfRange
 
-    # split off battery w/ maximum capacity `maximum_capacity`
-    # and current capacity `current_capacity`
-    # returns (False, _) if either parameter exceeds what's available
-    def split(self, maximum_capacity, current_capacity) -> VirtualBattery:
-        if maximum_capacity > self.reserved_capacity:
-            raise BOSError.InsufficientResources('maximum_capacity')
-        elif current_capacity > self.current_capacity:
-            raise BOSError.InsufficientResources('current_capacity')
-        new_vb = VirtualBattery(self.bos, maximum_capacity, current_capacity,
-                                self.max_discharging_current,
-                                self.max_charging_current, self.sample_period)
-        self.reserved_capacity -= maximum_capacity
-        self.current_capacity -= current_capacity
-        return new_vb
-
-    def merge(self, other: VirtualBattery):
-        self.reserved_capacity += other.reserved_capacity
-        other.reserved_capacity = 0
-        self.current_capacity += other.current_capacity
-        other.current_capacity = 0
-
-
-class AggregatorBattery: BatteryInterface.Battery:
+        
+class AggregatorBattery(BatteryInterface.Battery):
     def __init__(self, voltage, voltage_tolerance, sample_period,
                  sources: [BatteryInterface.Battery]):
         self._sources = sources
         self._sample_period = sample_period
 
         if len(sources) == 0:
-            raise BOSErr_NoBattery
+            raise BOSErr.NoBattery
 
         # check voltages within given tolerance
         for source in sources:
@@ -230,7 +76,7 @@ class AggregatorBattery: BatteryInterface.Battery:
     def set_current(self, target_current):
         (max_discharge_rate, max_charge_rate) = self.get_current_range()
         if target_current not in range(-max_discharge_rate, max_charge_rate):
-            raise Exception('invalid current')
+            raise BOSErr.CurrentOutOfRange
 
         if target_current > 0: # discharging
             charge = self.get_current_capacity()
@@ -248,12 +94,13 @@ class AggregatorBattery: BatteryInterface.Battery:
             for source in self._sources:
                 source.set_current(0)
 
-class SplitterBattery: BatteryInterface.Battery:
+
+class SplitterBattery(BatteryInterface.Battery):
     class Scale:
         def __init__(self, current_capacity, max_capacity, max_discharge_rate, max_charge_rate):
             for scale in [current_capacity, max_capacity, max_discharge_rate, max_charge_rate]:
                 if not (scale >= 0.0 and scale <= 1.0):
-                    raise BOSErr_InvalidArgument
+                    raise BOSErr.InvalidArgument
             
             self._current_capacity = current_capacity
             self._max_capacity = max_capacity
@@ -329,16 +176,24 @@ class SplitterBattery: BatteryInterface.Battery:
             new_source_current <= self._source_status.max_discharging_current
         
         source.set_current(new_source_current)
-        
+
+
 class BOS:
     def __init__(self):
         # Directory: map from battery names to battery objects
         self._dag = BatteryDAG()
+        self._ble = Interface.BLE()
 
         
     def make_battery(self, name: str, kind: BatteryInterface.Battery,
                      iface: Interface, addr: str) -> VirtualBattery:
-        raise NotImplementedError
+
+        if kind == JBDBMS:
+            if iface != Interface.BLE:
+                raise BOSErr.InvalidArgument
+            return JBDBMS(self._ble.connect(addr))
+
+        raise BOSErr.InvalidArgument
 
     
     def make_aggregator(self, name: str, sources: [str], voltage, voltage_tolerance, sample_period):
@@ -359,3 +214,5 @@ class BOS:
             batteries[name] = sb
 
         self._dag.add_children(batteries, source)
+
+
