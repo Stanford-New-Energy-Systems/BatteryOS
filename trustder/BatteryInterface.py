@@ -42,7 +42,7 @@ class Battery:
     """
     def __init__(self): 
         raise NotImplementedError
-        pass
+
     def refresh(self): 
         """
         Refresh the state of the battery 
@@ -52,41 +52,48 @@ class Battery:
         i.e. we can use a virtual battery as a underlying battery of a BOS, 
         the BOS will keep calling this function to refresh the state 
         """
-        pass
+        raise NotImplementedError
+    
     def get_voltage(self): 
         """
         Return the voltage of the last refresh action
         """
-        pass
+        return self.get_status().voltage
+
     def get_current(self): 
         """
         Returns the current of the last refresh action
         """
-        pass
+        return self.get_status().current
+        
     def get_maximum_capacity(self): 
         """
         Returns the maximum capacity of the last refresh action 
         """
-        pass
+        return self.get_status().maximum_capacity()
+
     def get_current_capacity(self): 
         """
         Returns the capacity remaining of the last refresh action
         """
-        pass
+        return self.get_status().current_capacity
+
     def set_current(self, target_current):
         """
         Sets the current of the battery could pass through 
         could be positive or negative, 
         if positive, the battery is discharging, 
         if negative, the battery is charging 
-        """ 
-        pass
+        """
+        raise NotImplementedError
+    
     def get_current_range(self): 
         """
         Returns (max_discharging_current, max_charging_current)
         e.g. (20, 20)
         """
-        pass
+        s = self.get_status()
+        return (s.max_discharging_current, s.max_charging_current)
     
     # def set_max_staleness(self, ms):
     #     """
@@ -99,4 +106,12 @@ class Battery:
         """
         Gets voltage, current, current capacity, max capacity, max_discharging_current, max_charging_current
         """
-        pass
+        raise NotImplementedError
+
+    def serialize(self):
+        raise NotImplementedError
+
+
+import enum
+class BatteryKind(enum.Enum):
+    JBDBMS = auto
