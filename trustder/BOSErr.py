@@ -1,7 +1,8 @@
 class BOSErr(Exception): pass
-class BOSErr_NameTaken(BOSException): pass
-class BOSErr_BadName(BOSException): pass
-class BOSErr_VoltageMismatch(BOSException): pass
-class BOSErr_NoBattery(BOSException): pass
-class BOSErr_BatteryInUse(BOSException): pass
-class BOSErr_InvalidArgument(BOSException): pass
+class NameTaken(BOSErr): pass
+class BadName(BOSErr): pass
+class VoltageMismatch(BOSErr): pass
+class NoBattery(BOSErr): pass
+class BatteryInUse(BOSErr): pass
+class InvalidArgument(BOSErr): pass
+class CurrentOutOfRange(BOSErr): pass
