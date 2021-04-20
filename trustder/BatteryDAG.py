@@ -1,28 +1,27 @@
-from collections import defaultdict
 import BatteryInterface
-from BOSErr import *
+import BOSErr
 
 class BatteryDAG:
     def __init__(self):
         self._children = set()
         self._parents = set()
-        self._batteries = defaultdict(set())
+        self._batteries = dict()
 
     def _name_taken(self, name: str) -> bool:
         return name in self._batteries
 
     def _check_name_free(self, name: str):
         if self._name_taken(name):
-            raise BOSErr_NameTaken
+            raise BOSErr.NameTaken
 
     def _check_name_taken(self, name: str):
         if not self._name_taken:
-            raise BOSErr_BadName
+            raise BOSErr.BadName
 
     def _check_add_parent(self, parent: str):
         self._check_name_taken(parent)
         if parent in self._children:
-            raise BOSErr_BatteryInUse
+            raise BOSErr.BatteryInUse
 
     def _check_add_child(self, child: str):
         self._check_name_free(child)
@@ -31,13 +30,13 @@ class BatteryDAG:
         for child in children:
             self._check_add_child(child)
         if not all_different(children):
-            raise BOSErr_InvalidArgument
+            raise BOSErr.InvalidArgument
 
     def _check_add_parents(self, parents: [str]):
         for parent in parents:
             self._check_add_parent(parent)
         if not all_different(parents):
-            raise BOSErr_InvalidArgument
+            raise BOSErr.InvalidArgument
 
         
     def add(self, child: str, parent: str, battery: BatteryInterface.Battery):
@@ -73,13 +72,16 @@ class BatteryDAG:
     def remove_children(self, name: str):
         self._check_name_taken(name)
 
-        # check if children are leaves
-        for child in self._children[name]:
-            if child in self._children:
-                raise BOSErr_BatteryInUse
+        if name not in self._children: return
+        children = self._children[name]
 
-        for child in self._children[name]:
-            assert self._parents[child] == {name}
+        # check if children are leaves
+        for child in children
+            if child in self._children:
+                raise BOSErr.BatteryInUse
+
+        for child in children
+            assert self._parents.get(child) == {name}
             del self._parents[child]
             del self._batteries[child]
 
@@ -88,16 +90,17 @@ class BatteryDAG:
         
     def get_parents(self, name: str) -> [str]:
         self._check_name_taken(name)
-        return self._parents[name]
+        return self._parents.get(name, set())
 
     def get_children(self, name: str) -> [str]:
         self._check_name_taken(name)
-        return self._children[name]
+        return self._children.get(name, set())
 
     def get_battery(self, name: str) -> BatteryInterface.Battery:
+        self._check_name_taken(name)
         return self._batteries[name]
 
-
+    
     def rename(self, oldname: str, newname: str):
         self._check_name_taken(oldname)
         if oldname == newname: return
@@ -119,3 +122,16 @@ class BatteryDAG:
                 children.remove(oldname)
                 children.add(newname)
 
+    def serialize(self) -> str:
+        names = set(self._batteries.keys())
+        assert names == (set(self._parents.keys()) | set(self._children.keys())) # correctness
+
+        entries = dict()
+        for name in names:
+            entry = dict()
+            entry["parents"] = list(self._parents.get(name, set()))
+            entry["children"] = list(self._children.get(name, set()))
+            entry["battery"] = self._battery[name].serialize()
+            entries[name] = entry
+        
+        return json.dumps(entries)
