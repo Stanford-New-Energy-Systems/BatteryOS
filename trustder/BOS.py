@@ -109,7 +109,7 @@ class AggregatorBattery(BatteryInterface.Battery):
         if target_current not in range(-max_discharge_rate, max_charge_rate):
             raise BOSErr.CurrentOutOfRange
 
-        sources = self._lookup(srcname) for srcname in self._srcnames
+        sources = [self._lookup(srcname) for srcname in self._srcnames]
 
         if target_current > 0: # discharging
             charge = self.get_current_capacity()
@@ -136,7 +136,7 @@ class AggregatorBattery(BatteryInterface.Battery):
     def serialize(self):
         return self._serialize_base({_KEY_SOURCES: self._srcnames,
                                      _KEY_VOLTAGE: self._voltage,
-                                     _KEY_VOLTAGE_TOLERANCE, self._voltage_tolerance})
+                                     _KEY_VOLTAGE_TOLERANCE: self._voltage_tolerance})
 
     @staticmethod
     def _deserialize_derived(d: dict, sample_period, lookup):
@@ -195,7 +195,7 @@ class SplitterBattery(BatteryInterface.Battery):
 
     def scale(self):
         s = self._source_status
-        return Scale(self._current_capacity / s.current_capacity
+        return Scale(self._current_capacity / s.current_capacity,
                      self._max_capacity / s.max_capacity,
                      self._max_discharge_rate / s.max_discharging_current,
                      self._max_charge_rate / s.max_charging_current)
@@ -278,13 +278,13 @@ class BOSDirectory:
         if name in self: raise BOSErr.NameTaken
 
     def ensure_names_free(self, names: [str]):
-        return all(name not in self for name in names)
+        return all([name not in self for name in names])
 
     def ensure_name_taken(self, name: str):
         if name not in self: raise BOSErr.BadName
 
     def ensure_names_taken(self, names: [str]):
-        return all(name in self for name in names)
+        return all([name in self for name in names])
 
     def add_battery(self, name: str, battery: BatteryInterface.Battery, children: set):
         self.ensure_name_free(name)
@@ -322,8 +322,8 @@ class BOSDirectory:
         
         
 class BOS:
-    battery_types = dict((battery.type(), battery) for battery in
-                         [NullBattery, AggregatorBattery, SplitterBattery, JBDBMS])
+    battery_types = dict([(battery.type(), battery) for battery in
+                         [NullBattery, AggregatorBattery, SplitterBattery, JBDBMS]])
     
     def __init__(self):
         # Directory: map from battery names to battery objects
