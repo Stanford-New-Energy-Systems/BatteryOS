@@ -27,7 +27,7 @@ class BOSControl:
 
     # Add a virtual battery
     # Returns whether it was successfully added and, if so, the battery ID
-    def add_virtual_battery(self, vb: BOS.VirtualBattery) -> (bool, int):
+    def add_virtual_battery(self, maximum_capacity: float, current_capacity: float) -> int:
         pass
 
     # Remove a virtual battery
@@ -56,4 +56,15 @@ class BOSControl:
     # Returns whether successful
     def set_configuration(self, json: str) -> bool:
         pass
+        
+
+class BOSError(Exception):
+    class InsufficientResources(Exception):
+        # raised when an operation would result in an oversubscription of resources
+        pass
+
+    class NoBattery(Exception):
+        # raised when the user provides an invalid battery ID
+        pass
+    
         
