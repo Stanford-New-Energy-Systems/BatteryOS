@@ -108,10 +108,31 @@ class Battery:
         """
         raise NotImplementedError
 
+    _KEY_TYPE = "type"
+    
+    @staticmethod
+    def type() -> str:
+        raise NotImplementedError
+
+    def _serialize_base(self, kvs):
+        """
+        Private method for serializing given derived class key-value pairs. 
+        This is a protected method, i.e. should be called by derived classes when serializing.
+        """
+        kvs[_KEY_TYPE] = self.type()
+        return json.dumps(kvs)
+    
     def serialize(self):
         raise NotImplementedError
 
+    @staticmethod
+    def _deserialize_derived(d: dict):
+        raise NotImplementedError
 
-import enum
-class BatteryKind(enum.Enum):
-    JBDBMS = auto
+    @staticmethod
+    def deserialize(d: dict, types: dict):
+        if not isinstance(d, dict): raise BOSErr.InvalidArgument
+        tstr = d[_KEY_TYPE]
+        t = types[tstr]
+        return t._deserialize_derived(d)
+
