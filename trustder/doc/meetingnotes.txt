@@ -1,0 +1,31 @@
+Philip Levis11:27 AM
+refresh();
+while (getVoltage() > 12) {}
+int refresh(BatteryData* data);
+Philip Levis11:29 AM
+def set_maximum_staleness(ms):
+Philip Levis11:32 AM
+sync()
+fsync()
+Philip Levis11:36 AM
+def get_voltage(self): 
+  now = get_now()
+  expired = now - self.last_refresh
+  if (expired >= self.max_staleness):
+You11:36 AM
+int getVolt(Battery *this) { if not expired refresh(); return this->volt; }
+Philip Levis11:36 AM
+    refresh()
+Philip Levis11:48 AM
+current = battery.get_current()
+# If a refresh happens here, problems occur
+voltage = battery.get_voltage()
+power = voltage * current
+battery = battery.get_data()
+power = battery.voltage * battery.current
+b = battery.get_data()
+power = b.voltage * b.current
+Philip Levis11:50 AM
+battery.refresh()
+b = battery.get_data()
+
