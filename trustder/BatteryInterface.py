@@ -1,4 +1,6 @@
 import json
+from Interface import Interface
+
 class BatteryStatus: 
     def __init__(self, 
         voltage, 
@@ -14,19 +16,24 @@ class BatteryStatus:
         self.max_capacity = max_capacity
         self.max_discharging_current = max_discharging_current
         self.max_charging_current = max_charging_current
+
+    def __str__(self):
+        return '{{voltage = {}, current = {}, current_capacity = {}, max_capacity = {}, '\
+            'max_discharging_current = {}, max_charging_current = {}}}'\
+            .format(self.voltage, self.current, self.current_capacity, self.max_capacity,
+                    self.max_discharging_current, self.max_charging_current)
     
     def serialize(self): 
-        serialized = json.dumps({
+        return {
             "voltage": self.voltage,
             "current": self.current, 
             "current_capacity": self.current_capacity, 
             "max_capacity": self.max_capacity,
             "max_discharging_current": self.max_discharging_current, 
             "max_charging_current": self.max_charging_current
-        })
-        return serialized
+        }
     
-    def load_serialized(self, serialized): 
+    def load_serialized(self, serialized):
         data = json.loads(serialized)
         self.voltage = data['voltage']
         self.current = data['current']
@@ -42,6 +49,9 @@ class Battery:
     """
     def __init__(self): 
         raise NotImplementedError
+
+    def __str__(self):
+        return '{{config = {}, status = {}}}'.format(self.serialize(), self.get_status())
 
     def refresh(self): 
         """
@@ -70,7 +80,7 @@ class Battery:
         """
         Returns the maximum capacity of the last refresh action 
         """
-        return self.get_status().maximum_capacity()
+        return self.get_status().max_capacity
 
     def get_current_capacity(self): 
         """
@@ -119,8 +129,8 @@ class Battery:
         Private method for serializing given derived class key-value pairs. 
         This is a protected method, i.e. should be called by derived classes when serializing.
         """
-        kvs[_KEY_TYPE] = self.type()
-        return json.dumps(kvs)
+        kvs[self._KEY_TYPE] = self.type()
+        return kvs
     
     def serialize(self):
         raise NotImplementedError
@@ -132,7 +142,23 @@ class Battery:
     @staticmethod
     def deserialize(d: dict, types: dict):
         if not isinstance(d, dict): raise BOSErr.InvalidArgument
-        tstr = d[_KEY_TYPE]
+        tstr = d[self._KEY_TYPE]
         t = types[tstr]
         return t._deserialize_derived(d)
 
+class BALBattery(Battery):
+    def __init__(self, iface: Interface, addr: str):
+        assert type(self) != BALBattery # abstract class
+        self._iface = iface
+        self._addr = addr
+
+    _KEY_IFACE = "iface"
+    _KEY_ADDR = "addr"
+    
+    def _serialize_base(self, d: dict) -> str:
+        d[self._KEY_IFACE] = self._iface.value
+        d[self._KEY_ADDR] = self._addr
+        return super()._serialize_base(d)
+
+    def serialize(self) -> str:
+        return self._serialize_base({})

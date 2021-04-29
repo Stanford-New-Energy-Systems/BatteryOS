@@ -1,9 +1,10 @@
 import enum
+import pygatt
 
 class Interface(enum.Enum):
-    BLE = auto
-    UART = auto
-    TCP = auto
+    BLE = "BLE"
+    UART = "UART"
+    TCP = "TCP"
     # TODO: add more
     
 class Connection:

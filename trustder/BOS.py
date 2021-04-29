@@ -1,15 +1,11 @@
 import signal
 import time
+import json
 import BatteryInterface
-import JBDBMS
-import VirtualBattery
-import BOSControl
+from JBDBMS import JBDBMS
 import Interface
-from BOSControl import BOSError
-from collections import defaultdict
 from util import *
 import BOSErr
-from BatteryDAG import *
 
 class NullBattery(BatteryInterface.Battery):
     def __init__(self, voltage):
@@ -30,11 +26,37 @@ class NullBattery(BatteryInterface.Battery):
     _KEY_VOLTAGE = "voltage"
     
     def serialize(self):
-        return self._serialize_base({_KEY_VOLTAGE: self._voltage})
+        return self._serialize_base({self._KEY_VOLTAGE: self._voltage})
 
     @staticmethod
     def _deserialize_derived(d: dict):
-        return NullBattery(d[_KEY_VOLTAGE])
+        return NullBattery(d[self._KEY_VOLTAGE])
+
+class PseudoBattery(BatteryInterface.BALBattery):
+    def __init__(self, iface, addr, status: BatteryInterface.BatteryStatus):
+        super().__init__(iface, addr)
+        self._status = status
+
+    def __str__(self): return str(self.serialize())
+        
+    @staticmethod
+    def type(): return "Pseudo"
+
+    def get_status(self): return self._status
+
+    def set_status(self, status):
+        self._status = status
+
+    _KEY_IFACE = "iface"
+    _KEY_ADDR = "addr"
+    _KEY_STATUS = "status"
+
+    def serialize(self):
+        return self._serialize_base({self._KEY_STATUS: self._status.serialize()})
+
+    @staticmethod
+    def _deserialize_derived(d):
+        return PseudoBattery(d[self._KEY_IFACE], d[self._KEY_ADDR], d[self._KEY_STATUS])
 
 '''
 class ForwardBattery(BatteryInterface.Battery):
@@ -59,8 +81,10 @@ class AggregatorBattery(BatteryInterface.Battery):
         self._lookup = lookup
         self._srcnames = srcnames
         self._sample_period = sample_period
+        self._voltage = voltage
+        self._voltage_tolerance = voltage_tolerance
 
-        if len(sources) == 0:
+        if len(srcnames) == 0:
             raise BOSErr.NoBattery
 
         # check voltages within given tolerance
@@ -93,9 +117,9 @@ class AggregatorBattery(BatteryInterface.Battery):
                                                         source.get_current_capacity()) /
                                     max_charge_rate)
             s_current += source.get_current()
-            
-        s_max_discharge_rate = s_max_capacity / s_max_discharge_time
-        s_max_charge_rate = s_max_capacity / s_max_charge_time
+
+        s_max_discharge_rate = s_cur_capacity / s_max_discharge_time
+        s_max_charge_rate = (s_max_capacity - s_cur_capacity) / s_max_charge_time
 
         return BatteryInterface.BatteryStatus(self._voltage,
                                               s_current,
@@ -127,29 +151,31 @@ class AggregatorBattery(BatteryInterface.Battery):
             for source in sources:
                 source.set_current(0)
 
-    def type(self): return "Aggregator"
+    @staticmethod
+    def type(): return "Aggregator"
 
     _KEY_SOURCES = "sources"
     _KEY_VOLTAGE = "voltage"
     _KEY_VOLTAGE_TOLERANCE = "voltage_tolerance"
     
     def serialize(self):
-        return self._serialize_base({_KEY_SOURCES: self._srcnames,
-                                     _KEY_VOLTAGE: self._voltage,
-                                     _KEY_VOLTAGE_TOLERANCE: self._voltage_tolerance})
+        return self._serialize_base({self._KEY_SOURCES: self._srcnames,
+                                     self._KEY_VOLTAGE: self._voltage,
+                                     self._KEY_VOLTAGE_TOLERANCE: self._voltage_tolerance})
 
     @staticmethod
     def _deserialize_derived(d: dict, sample_period, lookup):
-        return AggregatorBattery(d[_KEY_VOLTAGE],
-                                 d[_KEY_VOLTAGE_TOLERANCE],
+        return AggregatorBattery(d[self._KEY_VOLTAGE],
+                                 d[self._KEY_VOLTAGE_TOLERANCE],
                                  sample_period,
-                                 d[_KEY_SOURCES],
+                                 d[self._KEY_SOURCES],
                                  lookup)
                                  
 
 class SplitterBattery(BatteryInterface.Battery):
     class Scale:
-        def __init__(self, current_capacity, max_capacity, max_discharge_rate, max_charge_rate):
+        def __init__(self, current_capacity, max_capacity, max_discharge_rate,
+                     max_charge_rate):
             for scale in [current_capacity, max_capacity, max_discharge_rate, max_charge_rate]:
                 if not (scale >= 0.0 and scale <= 1.0):
                     raise BOSErr.InvalidArgument
@@ -159,16 +185,19 @@ class SplitterBattery(BatteryInterface.Battery):
             self._max_discharge_rate = max_discharge_rate
             self._max_charge_rate = max_charge_rate
 
+        @staticmethod
+        def scale_all(scale): return SplitterBattery.Scale(scale, scale, scale, scale)
+            
         def get_current_capacity(self): return self._current_capacity
         def get_max_capacity(self): return self._max_capacity
         def get_max_discharge_rate(self): return self._max_discharge_rate
         def get_max_charge_rate(self): return self._max_charge_rate
 
         def serialize(self):
-            return json.dumps({"current_capacity": self._current_capacity,
-                               "max_capacity": self._max_capacity,
-                               "max_discharge_rate": self._max_discharge_rate,
-                               "max_charge_rate": self._max_charge_rate})
+            return {"current_capacity": self._current_capacity,
+                    "max_capacity": self._max_capacity,
+                    "max_discharge_rate": self._max_discharge_rate,
+                    "max_charge_rate": self._max_charge_rate}
                                
         
     
@@ -195,10 +224,10 @@ class SplitterBattery(BatteryInterface.Battery):
 
     def scale(self):
         s = self._source_status
-        return Scale(self._current_capacity / s.current_capacity,
-                     self._max_capacity / s.max_capacity,
-                     self._max_discharge_rate / s.max_discharging_current,
-                     self._max_charge_rate / s.max_charging_current)
+        return SplitterBattery.Scale(self._current_capacity / s.current_capacity,
+                                     self._max_capacity / s.max_capacity,
+                                     self._max_discharge_rate / s.max_discharging_current,
+                                     self._max_charge_rate / s.max_charging_current)
                      
 
     def _source(self) -> BatteryInterface.Battery: return self._lookup(self._srcname)
@@ -212,7 +241,12 @@ class SplitterBattery(BatteryInterface.Battery):
 
         newloc = lambda oldloc, oldsrc, newsrc: (oldloc / oldsrc) * newsrc
 
-        self._current = newloc(self._current, sold.current, snew.current)
+        if self._current >= 0:
+            self._current = newloc(self._current, sold.max_discharging_current,
+                                   snew.max_discharging_current)
+        else:
+            self._current = newloc(self._current, sold.max_charging_current,
+                                   snew.max_charging_current)
         self._current_capacity = newloc(self._current_capacity,
                                         sold.current_capacity,
                                         snew.current_capacity)
@@ -220,6 +254,9 @@ class SplitterBattery(BatteryInterface.Battery):
         self._max_discharge_rate = newloc(self._max_discharge_rate,
                                           sold.max_discharging_current,
                                           snew.max_discharging_current)
+        self._max_charge_rate = newloc(self._max_charge_rate,
+                                       sold.max_charging_current,
+                                       snew.max_charging_current)
 
         self._source_status = snew
 
@@ -255,14 +292,14 @@ class SplitterBattery(BatteryInterface.Battery):
     _KEY_SCALE = "scale"
         
     def serialize(self):
-        return self._serialize_base({_KEY_SOURCE: self._srcname,
-                                     _KEY_SCALE: self.scale().serialize()})
+        return self._serialize_base({self._KEY_SOURCE: self._srcname,
+                                     self._KEY_SCALE: self.scale().serialize()})
 
     @staticmethod
     def _deserialize_derived(d: dict, sample_period, lookup):
         return SplitterBattery(sample_period,
-                               d[_KEY_SOURCE],
-                               Scale.deserialize(d[_KEY_SCALE]),
+                               d[self._KEY_SOURCE],
+                               Scale.deserialize(d[self._KEY_SCALE]),
                                lookup)
                                
     
@@ -273,6 +310,13 @@ class BOSDirectory:
 
     def __contains__(self, name: str):
         return name in self._map
+
+    def __getitem__(self, name):
+        return self._map[name]
+
+    def __str__(self):
+        strd = dict([(k, tuple(map(str, v))) for (k, v) in self._map.items()])
+        return str(strd)
 
     def ensure_name_free(self, name: str):
         if name in self: raise BOSErr.NameTaken
@@ -303,7 +347,7 @@ class BOSDirectory:
             for child in children:
                 rec(child)
             # remove all children
-            for child in children:
+            for child in set(children):
                 del self._map[child]
                 for (_, children) in self._map.values():
                     if child in children:
@@ -314,8 +358,8 @@ class BOSDirectory:
     # NOTE: Currently not implemented due to design constraints / inconsistencies it may cause.
     # It'd be hard to rename a battery and update the references in all the battery objects.
 
-    def replace_battery(self, name: str, newbattery: VirtualBattery):
-        assert isinstance(newbattery, VirtualBattery)
+    def replace_battery(self, name: str, newbattery: BatteryInterface.BALBattery):
+        assert isinstance(newbattery, BALBattery)
         self.enure_name_taken(name)
         assert len(self._map[name][1]) == 0
         self._map[name][0] = newbattery
@@ -323,7 +367,8 @@ class BOSDirectory:
         
 class BOS:
     battery_types = dict([(battery.type(), battery) for battery in
-                         [NullBattery, AggregatorBattery, SplitterBattery, JBDBMS]])
+                         [NullBattery, PseudoBattery, AggregatorBattery, SplitterBattery,
+                          JBDBMS]])
     
     def __init__(self):
         # Directory: map from battery names to battery objects
@@ -331,22 +376,25 @@ class BOS:
         self._directory = BOSDirectory()
         self._ble = Interface.BLE()
 
+    def __str__(self):
+        return '{{directory = {}}}'.format(self._directory)
+
     def make_null(self, name: str, voltage) -> NullBattery:
         battery = NullBattery(voltage)
         self._directory.add_battery(name, battery, [])
         return battery
         
         
-    def make_battery(self, name: str, kind: str, iface: Interface, addr: str) -> VirtualBattery:
+    def make_battery(self, name: str, kind: str, iface: Interface, addr: str, *args):
         battery = None
         if kind == JBDBMS.type():
-            if iface != Interface.BLE:
+            if iface != Interface.Interface.BLE:
                 raise BOSErr.InvalidArgument
-            battery = JBDBMS(self._ble.connect(addr))
+            battery = JBDBMS(addr, self._ble.connect(addr))
         else:
-            raise BOSErr.InvalidArgument
-
-        self._directory.add_battery(name, battery, [])
+            battery_type = self.battery_types[kind]
+            battery = battery_type(iface, addr, *args)
+            self._directory.add_battery(name, battery, [])
         
         return battery
     
@@ -359,7 +407,6 @@ class BOS:
         return battery
         
     def make_splitter(self, parts, source: str, sample_period):
-        # parts: dictionary from name to scale
         # ensure all splitter names are available
         for (name, _) in parts:
             self._directory.ensure_names_free(name)
@@ -374,5 +421,40 @@ class BOS:
             batteries.append(battery)
 
         return batteries
-        
 
+    def get_status(self, name: str) -> BatteryInterface.BatteryStatus:
+        return self._directory[name].get_status()
+
+    def free_battery(self, name: str): return self._directory.free_battery(name)
+    
+    def replace_battery(self, name: str, *args):
+        newbattery = self.make_battery(name, *args)
+        self._directory.replace_battery(name, newbattery)
+        return battery
+
+if __name__ == '__main__':
+    bos = BOS()
+
+    pseudo = bos.make_battery("pseudo1", "Pseudo", Interface.Interface.BLE, "pseudo1",
+                              BatteryInterface.BatteryStatus(7000, 0, 500, 1000, 12, 12))
+    splits = bos.make_splitter([("pseudo1a", SplitterBattery.Scale.scale_all(0.5)),
+                                ("pseudo1b", SplitterBattery.Scale.scale_all(0.5))],
+                               "pseudo1",
+                               100)
+    map(lambda s: s.refresh(), splits)
+    
+    print(bos)
+    print(splits[0].get_status())
+
+    pseudo.set_status(BatteryInterface.BatteryStatus(6000, 4, 600, 800, 14, 14))
+    
+    print(splits[0].get_status())
+    print(splits[1].get_status())
+
+    aggregator = bos.make_aggregator("agg", ["pseudo1a", "pseudo1b"], 6000, 500, 100)
+
+    print(aggregator.get_status())
+
+    # bos.free_battery("agg")
+
+    print(bos)

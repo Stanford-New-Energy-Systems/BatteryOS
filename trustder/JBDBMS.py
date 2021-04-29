@@ -4,6 +4,7 @@ import binascii
 import time
 import sys
 import BatteryInterface
+from Interface import Interface
 # import uuid
 # import threading
 DEBUG = True
@@ -15,7 +16,7 @@ class DataHandler:
         self.global_data[self.data_length] = value
         self.data_length += 1
 
-class JBDBMS(BatteryInterface.Battery): 
+class JBDBMS(BatteryInterface.BALBattery): 
     dev_info_str = b'\xdd\xa5\x03\x00\xff\xfd\x77'
     bat_info_str = b'\xdd\xa5\x04\x00\xff\xfc\x77'
     ver_info_str = b'\xdd\xa5\x05\x00\xff\xfb\x77'
@@ -26,7 +27,8 @@ class JBDBMS(BatteryInterface.Battery):
     exit_and_save_factory_mode_command = b'\x28\x28'
     exit_factory_mode_command = b'\x00\x00'
 
-    def __init__(self, device, staleness=100): 
+    def __init__(self, addr, device, staleness=100):
+        super().__init__(Interface.BLE, addr)
         self.bms_service_uuid = ('0000ff00-0000-1000-8000-00805f9b34fb') # btle.UUID("ff00") # 
         self.bms_write_uuid = ('0000ff02-0000-1000-8000-00805f9b34fb') # btle.UUID("ff02") # 
         self.bms_read_uuid = ('0000ff01-0000-1000-8000-00805f9b34fb') # btle.UUID("ff01") # 
@@ -40,7 +42,10 @@ class JBDBMS(BatteryInterface.Battery):
         self.current_range = (120, 120)
         self._current_range = range(-120, 120)
         self.staleness = staleness
-        self.last_refresh = (time.time() * 1000)  # in ms 
+        self.last_refresh = (time.time() * 1000)  # in ms
+
+    @staticmethod
+    def type() -> str: return "JBDBMS"
 
     def query_info(self, to_send):
         self.data_handler.data_length = 0
@@ -272,8 +277,6 @@ class JBDBMS(BatteryInterface.Battery):
             self.current_range[0], 
             self.current_range[1])
         
-
-
 # print(
 #     hexlify(JBDBMS.get_read_register_command(b'\x03')), 
 #     hexlify(JBDBMS.get_read_register_command(b'\x04')), 
@@ -381,34 +384,38 @@ def test_factory_mode(bms):
             JBDBMS.exit_factory_mode_command))
     print(hexlify(info))
 
-try:
-    adapter = pygatt.GATTToolBackend(search_window_size=2048)
-    adapter.start()
-    device = adapter.connect("a4:c1:38:e5:32:26")
-    time.sleep(1)
-    if DEBUG: print("subscribe")
-    bms = JBDBMS(device)
-    # device.bond()
-    for _ in range(2): 
-        try: 
-            # test_query_info(bms)
-            # test_factory_mode(bms)
-            
-            print(bms.state)
-            
-            break
-        except pygatt.device.exceptions.BLEError: 
-            # adapter.disconnect(device)
-            # adapter.stop()
-            print("Retrying in 1 second(s)...")
-            time.sleep(1)
-            continue
-
-finally:
-    adapter.disconnect(device)
-    adapter.stop()
-
-exit(0)
+if __name__ == "__main__":
+	try:
+	    adapter = pygatt.GATTToolBackend(search_window_size=2048)
+	    adapter.start()
+	    address = "a4:c1:38:e5:32:26"
+	    device = adapter.connect(address)
+	    time.sleep(1)
+	    if DEBUG: print("subscribe")
+	    bms = JBDBMS(address, device)
+	    # device.bond()
+	    for _ in range(2): 
+	        try: 
+	            # test_query_info(bms)
+	            # test_factory_mode(bms)
+	            
+	            print(bms.state)
+	            print(bms.get_status())
+	            print(bms)
+	            
+	            break
+	        except pygatt.device.exceptions.BLEError: 
+	            # adapter.disconnect(device)
+	            # adapter.stop()
+	            print("Retrying in 1 second(s)...")
+	            time.sleep(1)
+	            continue
+	
+	finally:
+	    adapter.disconnect(device)
+	    adapter.stop()
+	
+	exit(0)
 
 def notused():
     # global_data = [None for _ in range(10)]
