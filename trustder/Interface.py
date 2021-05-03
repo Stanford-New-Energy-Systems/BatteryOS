@@ -27,9 +27,9 @@ class Connection:
     
 class BLE:
     def __init__(self):
-        self._adapter = pygatt.GATTToolBackend(search_window_size=2048)
-        self._adapter.start()
-
+        # self._adapter = pygatt.GATTToolBackend(search_window_size=2048)
+        # self._adapter.start()
+        pass
 
     def connect(self, addr: str):
         device = self._adapter.connect(addr)
