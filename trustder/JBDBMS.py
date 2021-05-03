@@ -27,8 +27,8 @@ class JBDBMS(BatteryInterface.BALBattery):
     exit_and_save_factory_mode_command = b'\x28\x28'
     exit_factory_mode_command = b'\x00\x00'
 
-    def __init__(self, addr, device, staleness=100):
-        super().__init__(Interface.BLE, addr)
+    def __init__(self, name, addr, device, staleness=100):
+        super().__init__(name, Interface.BLE, addr)
         self.bms_service_uuid = ('0000ff00-0000-1000-8000-00805f9b34fb') # btle.UUID("ff00") # 
         self.bms_write_uuid = ('0000ff02-0000-1000-8000-00805f9b34fb') # btle.UUID("ff02") # 
         self.bms_read_uuid = ('0000ff01-0000-1000-8000-00805f9b34fb') # btle.UUID("ff01") # 
