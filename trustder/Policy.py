@@ -145,7 +145,7 @@ class TranchePolicy(SplitterPolicy):
 
         curstatus.current = target_current
 
-        current_sum = sum(map(lambda (_, status): status.current, self._tranches))
+        current_sum = sum(map(lambda t: t[1].current, self._tranches))
         src = self._source()
         src.set_current(current_sum)
         

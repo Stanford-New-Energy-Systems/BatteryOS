@@ -1,33 +1,34 @@
 import json
 from Interface import Interface
+from BOSNode import *
 
 class BatteryStatus: 
     def __init__(self, 
         voltage, 
         current, 
-        current_capacity, 
+        state_of_charge, 
         max_capacity, 
         max_discharging_current, 
         max_charging_current,
         ): 
         self.voltage = voltage
         self.current = current
-        self.current_capacity = current_capacity
+        self.state_of_charge = state_of_charge
         self.max_capacity = max_capacity
         self.max_discharging_current = max_discharging_current
         self.max_charging_current = max_charging_current
 
     def __str__(self):
-        return '{{voltage = {}, current = {}, current_capacity = {}, max_capacity = {}, '\
+        return '{{voltage = {}, current = {}, state_of_charge = {}, max_capacity = {}, '\
             'max_discharging_current = {}, max_charging_current = {}}}'\
-            .format(self.voltage, self.current, self.current_capacity, self.max_capacity,
+            .format(self.voltage, self.current, self.state_of_charge, self.max_capacity,
                     self.max_discharging_current, self.max_charging_current)
     
     def serialize(self): 
         return {
             "voltage": self.voltage,
             "current": self.current, 
-            "current_capacity": self.current_capacity, 
+            "state_of_charge": self.state_of_charge, 
             "max_capacity": self.max_capacity,
             "max_discharging_current": self.max_discharging_current, 
             "max_charging_current": self.max_charging_current
@@ -37,21 +38,24 @@ class BatteryStatus:
         data = json.loads(serialized)
         self.voltage = data['voltage']
         self.current = data['current']
-        self.current_capacity = data['current_capacity']
+        self.state_of_charge = data['state_of_charge']
         self.max_capacity = data['max_capacity']
         self.max_discharging_current = data['max_discharging_current']
         self.max_charging_current = data['max_charging_current'] 
         return
 
-class Battery: 
+class Battery(BOSNode): 
     """
     The interface used for communication between BOS & physical batteries and BOS & virtual batteries
     """
-    def __init__(self): 
-        raise NotImplementedError
+    def __init__(self, name):
+        self._name = name
 
     def __str__(self):
         return '{{config = {}, status = {}}}'.format(self.serialize(), self.get_status())
+
+    def name(self):
+        return self._name
 
     def refresh(self): 
         """
@@ -82,11 +86,11 @@ class Battery:
         """
         return self.get_status().max_capacity
 
-    def get_current_capacity(self): 
+    def get_state_of_charge(self): 
         """
         Returns the capacity remaining of the last refresh action
         """
-        return self.get_status().current_capacity
+        return self.get_status().state_of_charge
 
     def set_current(self, target_current):
         """
@@ -147,7 +151,8 @@ class Battery:
         return t._deserialize_derived(d)
 
 class BALBattery(Battery):
-    def __init__(self, iface: Interface, addr: str):
+    def __init__(self, name: str, iface: Interface, addr: str):
+        super().__init__(name)
         assert type(self) != BALBattery # abstract class
         self._iface = iface
         self._addr = addr
@@ -162,3 +167,32 @@ class BALBattery(Battery):
 
     def serialize(self) -> str:
         return self._serialize_base({})
+
+
+
+class Scale:
+    def __init__(self, state_of_charge, max_capacity, max_discharge_rate,
+                 max_charge_rate):
+        for scale in [state_of_charge, max_capacity, max_discharge_rate, max_charge_rate]:
+            if not (scale >= 0.0 and scale <= 1.0):
+                raise BOSErr.InvalidArgument
+            
+        self._state_of_charge = state_of_charge
+        self._max_capacity = max_capacity
+        self._max_discharge_rate = max_discharge_rate
+        self._max_charge_rate = max_charge_rate
+
+    @staticmethod
+    def scale_all(scale): return SplitterBattery.Scale(scale, scale, scale, scale)
+    
+    def get_state_of_charge(self): return self._state_of_charge
+    def get_max_capacity(self): return self._max_capacity
+    def get_max_discharge_rate(self): return self._max_discharge_rate
+    def get_max_charge_rate(self): return self._max_charge_rate
+    
+    def serialize(self):
+        return {"state_of_charge": self._state_of_charge,
+                "max_capacity": self._max_capacity,
+                "max_discharge_rate": self._max_discharge_rate,
+                "max_charge_rate": self._max_charge_rate}
+    
