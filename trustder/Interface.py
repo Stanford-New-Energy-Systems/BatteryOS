@@ -17,6 +17,12 @@ class Connection:
     def get_iface(self) -> Interface: return self._iface
     def get_addr(self) -> str: return self._addr
 
+    def is_connected(self) -> bool: 
+        raise NotImplementedError
+
+    def connect(self):
+        raise NotImplementedError
+
     def read(self, nbytes: int) -> bytes:
         raise NotImplementedError
 
@@ -27,19 +33,42 @@ class Connection:
         raise NotImplementedError
 
     
-class BLE:
-    def __init__(self):
-        # self._adapter = pygatt.GATTToolBackend(search_window_size=2048)
-        # self._adapter.start()
-        pass
+class BLEConnection(Connection):
+    class DataHandler: 
+        def __init__(self): 
+            self.global_data = [None for _ in range(10)]
+            self.data_length = 0
+        def __call__(self, handle, value): 
+            self.global_data[self.data_length] = value
+            self.data_length += 1
+    
+    def __init__(self, addr: str, write_uuid: str, read_uuid: str):
+        super(BLEConnection, self).__init__(Interface.BLE, addr)
+        self._adapter = pygatt.GATTToolBackend(search_window_size=2048)
+        self._device = None
+        self._connected = False
+        self._write_uuid = write_uuid
+        self._read_uuid = read_uuid
+        self._data_handler = DataHandler()
 
-    def connect(self, addr: str):
-        device = self._adapter.connect(addr)
+    def is_connected(self) -> bool: 
+        return self._connected
+
+    def connect(self):
+        self._adapter.start()
+        self._device = self._adapter.connect(self.get_addr())
         time.sleep(1) # not sure why this is necessary...
         # this is to wake the BMS up from sleep 
         # same for JBDBMS.query_info
         # could be changed to shorter time?
-        return device
+        self._connected = True
+    
+    def read(self): 
+        print("Please write to the device to retrieve information", file=sys.stderr)
+        return b''
+    
+    def write(self) -> bytes: 
+        pass
 
 
 class TCPConnection(Connection):
@@ -49,7 +78,7 @@ class TCPConnection(Connection):
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._connected = False
     
-    def is_connected() -> bool: 
+    def is_connected(self) -> bool: 
         return self._connected
 
     def connect(self): 
