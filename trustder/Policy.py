@@ -17,6 +17,9 @@ class SplitterPolicy(Policy):
 
     def _source(self): return self._lookup(self._srcname)
 
+    def get_splitter_status(self):
+        return {"source": self._srcname}
+
     def refresh(self):
         src = self._lookup(self._srcname)
         src.refresh()
@@ -27,7 +30,7 @@ class SplitterPolicy(Policy):
         '''
         raise NotImplementedError
 
-    def add_child(*args):
+    def add_child(name, *args):
         raise NotImplementedError
 
     def remove_child(*args):
@@ -41,7 +44,21 @@ class ProportionalPolicy(SplitterPolicy):
         self._currents = dict() # map from splitter battery name to current
         self._socs = dict()     # map from splitter battery name to state of charge
 
-    def get_status(self, dstname: str) -> BatteryStatus:
+    def get_splitter_status(self):
+        parts = []
+        for name in self._scales:
+            part = {
+                "name": name,
+                "scale": self._scales[name],
+                "current": self._currents[name],
+                "charge": self._socs[name],
+            }
+            parts.append(part)
+        return super().get_splitter_status() | {
+            "parts": parts,
+        }
+
+    def get_status(self, dstname=None) -> BatteryStatus:
         src = self._source()
         status = src.get_status()
         scale = self._scales[dstname]
