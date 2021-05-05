@@ -385,35 +385,35 @@ def test_factory_mode(bms):
     print(hexlify(info))
 
 if __name__ == "__main__":
-	try:
-	    adapter = pygatt.GATTToolBackend(search_window_size=2048)
-	    adapter.start()
-	    address = "a4:c1:38:e5:32:26"
-	    device = adapter.connect(address)
-	    time.sleep(1)
-	    if DEBUG: print("subscribe")
-	    bms = JBDBMS(address, device)
-	    # device.bond()
-	    for _ in range(2): 
-	        try: 
-	            # test_query_info(bms)
-	            # test_factory_mode(bms)
-	            
-	            print(bms.state)
-	            print(bms.get_status())
-	            print(bms)
-	            
-	            break
-	        except pygatt.device.exceptions.BLEError: 
-	            # adapter.disconnect(device)
-	            # adapter.stop()
-	            print("Retrying in 1 second(s)...")
-	            time.sleep(1)
-	            continue
-	
-	finally:
-	    adapter.disconnect(device)
-	    adapter.stop()
-	
-	exit(0)
+    try:
+        adapter = pygatt.GATTToolBackend(search_window_size=2048)
+        adapter.start()
+        address = "a4:c1:38:e5:32:26"
+        device = adapter.connect(address)
+        time.sleep(1)
+        if DEBUG: print("subscribe")
+        bms = JBDBMS(address, device)
+        # device.bond()
+        for _ in range(2): 
+            try: 
+                # test_query_info(bms)
+                # test_factory_mode(bms)
+                
+                print(bms.state)
+                print(bms.get_status())
+                print(bms)
+                
+                break
+            except pygatt.device.exceptions.BLEError: 
+                # adapter.disconnect(device)
+                # adapter.stop()
+                print("Retrying in 1 second(s)...")
+                time.sleep(1)
+                continue
+    
+    finally:
+        adapter.disconnect(device)
+        adapter.stop()
+    
+    exit(0)
 
