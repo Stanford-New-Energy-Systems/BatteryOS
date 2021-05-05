@@ -187,7 +187,7 @@ class SplitterBattery(Battery):
     @staticmethod
     def type(): return "Splitter"
 
-    def _policy(self): return self._lookup(self._policy)
+    def _policy(self): return self._lookup(self._policyname)
                      
     def refresh(self):
         self._policy().refresh()
@@ -209,7 +209,7 @@ class BOSDirectory:
 
     def __getitem__(self, name):
         if name not in self:
-            raise BOSErr.BadName
+            raise BOSErr.BadName(name)
         return self._map[name]
 
     def __str__(self):
@@ -257,14 +257,27 @@ class BOSDirectory:
 
     def print_status(self):
         for src in self._map:
-            status = self._map[src][0].get_status()
+            node = self._map[src][0]
             print('{}:'.format(src))
-            print('    current:         {}A'.format(status.current))
-            print('    state of charge: {}Ah'.format(status.state_of_charge))
-            print('    max capacity:    {}Ah'.format(status.max_capacity))
-            print('    max discharge:   {}A'.format(status.max_discharging_current))
-            print('    max charge:      {}A'.format(status.max_charging_current))
-    
+            if isinstance(node, Battery):
+                status = node.get_status()
+                print('\tcurrent:         {}A'.format(status.current))
+                print('\tstate of charge: {}Ah'.format(status.state_of_charge))
+                print('\tmax capacity:    {}Ah'.format(status.max_capacity))
+                print('\tmax discharge:   {}A'.format(status.max_discharging_current))
+                print('\tmax charge:      {}A'.format(status.max_charging_current))
+            elif isinstance(node, SplitterPolicy):
+                status = node.get_splitter_status()
+                print('\tsource: {}'.format(status["source"]))
+                parts = status["parts"]
+                print('\tparts: {}'.format(len(parts)))
+                for part in parts:
+                  print('\t\t{}:'.format(part["name"]))
+                  print('\t\t\tscale:   {}'.format(part["scale"]))
+                  print('\t\t\tcurrent: {}A'.format(part["current"]))
+                  print('\t\t\tstate of charge: {}Ah'.format(part["charge"]))
+
+                  
     def visualize(self):
         import networkx as nx
         import matplotlib.pyplot as plt
@@ -319,7 +332,7 @@ class BOS:
     def make_splitter_policy(self, policyname: str, policytype, parent: str, *policyargs) -> SplitterPolicy:
         if not issubclass(policytype, SplitterPolicy):
             raise BOSErr.InvalidArgument
-        policy = policytype(*policyargs, self._lookup)
+        policy = policytype(parent, self._lookup, *policyargs)
         self._directory.add_node(policyname, policy, {parent})
         return policy
 
@@ -346,8 +359,10 @@ class BOS:
     
     def visualize(self):
         self._directory.visualize()
-            
+
+from util import time
 if __name__ == '__main__':
+    time = DummyTime(0)
     bos = BOS()
 
     pseudo1 = bos.make_battery("pseudo1", "Pseudo", Interface.BLE, "pseudo1",
@@ -361,6 +376,17 @@ if __name__ == '__main__':
     agg.set_current(12)
 
     bos.print_status()
-    
+
+
+    # splitter
+    splitter = bos.make_splitter_policy("splitter", ProportionalPolicy, "agg")
+
+    bos.print_status()
+
+    bos.make_splitter_battery("part1", "splitter", 0, Scale(0.5, 0.5, 0.5, 0.5))
+    bos.make_splitter_battery("part2", "splitter", 0, Scale(0.5, 0.5, 0.5, 0.5))
+
+    bos.print_status()
+
     # bos.visualize()
     
