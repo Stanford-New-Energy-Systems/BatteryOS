@@ -1,6 +1,7 @@
 import json
 from Interface import Interface
 from BOSNode import *
+from util import time
 
 class BatteryStatus: 
     def __init__(self, 
@@ -50,6 +51,9 @@ class Battery(BOSNode):
     """
     def __init__(self, name):
         self._name = name
+        self._current = 0    # last measured current current
+        self._meter = 0 # expected net charge of this battery
+        self._timestamp = time()
 
     def __str__(self):
         return '{{config = {}, status = {}}}'.format(self.serialize(), self.get_status())
@@ -121,6 +125,29 @@ class Battery(BOSNode):
         Gets voltage, current, current capacity, max capacity, max_discharging_current, max_charging_current
         """
         raise NotImplementedError
+
+    def update_meter(self, endcurrent, newcurrent):
+        '''
+        Approximate the total charge that has passed through the battery.
+        `endcurrent` is the current that the battery has just been measured at (before modification).
+        `newcurrent` is the current that the battery has just been set to (after modification).
+        This function is general enough to work for background refresh() updates, which will call 
+        this with `endcurrent == newcurrent`, as well as set_current() requests, which will generally
+        call this with `endcurrent != newcurrent`.
+        '''
+        begincurrent = self._current
+        endtimestamp = time()
+        duration = endtimestamp - self._timestamp
+        
+        # take the average of start and end currents for duration
+        amp_hours = ((begincurrent + endcurrent) / 2) * (duration / 3600)
+        self._meter += amp_hours
+
+        # update meter info
+        self._current = newcurrent
+        self._timestamp = endtimestamp
+
+        
 
     _KEY_TYPE = "type"
     
