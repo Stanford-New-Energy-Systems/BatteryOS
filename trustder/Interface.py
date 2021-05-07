@@ -5,6 +5,7 @@ class Interface(enum.Enum):
     BLE = "BLE"
     UART = "UART"
     TCP = "TCP"
+    PSEUDO = "PSEUDO"
     # TODO: add more
     
 class Connection:

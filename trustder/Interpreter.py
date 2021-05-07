@@ -1,7 +1,10 @@
+import sys
+import argparse
+
 import BOS
 import util
 import BOSErr
-from BatteryInterface import BatteryStatus
+from BatteryInterface import BatteryStatus, Battery
 import Interface
 import Policy
 
@@ -16,7 +19,24 @@ class Interpreter:
                           "stat": self._stat,
                           "list": self._list,
                           "ls":   self._list,
+                          "load": self._load,
+                          "alias": self._alias,
+                          "unalias": self._unalias,
+                          "remove": self._remove,
+                          "rm": self._remove,
+                          "modify": self._modify,
+                          "mod": self._modify,
+                          "current": self._current,
+                          "visualize": self._visualize,
                           }
+        self._aliases = dict()
+
+    def load(self, path):
+        with open(path) as f:
+            lines = f.readlines()
+            for line in lines:
+                self.execute(line)
+        
         
     def run(self):
         while True:
@@ -25,18 +45,27 @@ class Interpreter:
             except EOFError:
                 print('')
                 return
-            args = line.split()
-            if len(args) == 0:
-                continue
-            cmd = args[0]
-            args = args[1:]
-            if cmd not in self._commands:
+            self.execute(line)
+
+    def execute(self, line: str):
+        args = line.split()
+        if len(args) == 0:
+            return
+        cmd = args[0]
+        args = args[1:]
+        if cmd not in self._commands:
+            if cmd in self._aliases:
+                args = self._aliases[cmd] + args
+                cmd = args[0]
+                args = args[1:]
+            else:
                 print("Unrecognized command '{}'.".format(cmd))
-            try:
-                self._commands[cmd](args)
-            except Exception as e:
-                print('Error: {}'.format(e))
+        try:
+            self._commands[cmd](args)
+        except Exception as e:
+            print('Error: {}: {}'.format(type(e), e))
         
+                
     def _make(self, args):
         subcmds = {
             "null": self._make_null,
@@ -76,8 +105,9 @@ class Interpreter:
         addr = args[3]
         self._bos.make_battery(name, kind, iface, addr)
 
-    def _parse_status(self, args):
-        status = BatteryStatus(0, 0, 0, 0, 0, 0)
+    def _parse_status(self, args, status=None):
+        if status is None:
+            status = BatteryStatus(0, 0, 0, 0, 0, 0)
         for arg in args.split(','):
             (key, value) = arg.split('=')
             value = float(value)
@@ -165,11 +195,33 @@ class Interpreter:
 
         
     def _list(self, args):
-        if len(args) != 0:
-            print("'list' accepts no arguments")
-            return
-        for node in self._bos.list():
-            print(node)
+        parser = argparse.ArgumentParser(description='list mode parser')
+        parser.add_argument('-l', dest='long', action='store_const', const=True, default=False,
+                            help='long mode')
+        flags = parser.parse_args(args)
+
+        for name in self._bos.list():
+            if flags.long:
+                node = self._bos.lookup(name)
+                # get type
+                tl = [(Battery, 'b'),
+                      (Policy.Policy, 'p')]
+                t = '?'
+
+                # get usage status
+                if len(self._bos.get_children(name)) == 0:
+                    usage = '-' # free
+                else:
+                    usage = 'X' # used
+                
+                for (ty, ch) in tl:
+                    if isinstance(node, ty):
+                        t = ch
+                        break
+                
+                print('{} {} {}'.format(t, usage, name))
+            else:
+                print(name)
         
 
     def _tick(self, args):
@@ -180,7 +232,7 @@ class Interpreter:
         if hours < 0:
             print("You can't go back in time!")
             return
-        util.bos_time.tick(hours)
+        util.bos_time.tick(hours * 3600)
 
     def _time(self, args):
         if len(args) != 0:
@@ -200,6 +252,67 @@ class Interpreter:
             return
         print(status)
 
+    def _load(self, args):
+        if len(args) == 0:
+            print("Usage: load <cmdfile>...")
+            return
+        for arg in args:
+            self.load(arg)
+
+    def _alias(self, args):
+        if len(args) < 2:
+            print("Usage: alias <name> <cmd> [<arg>...]")
+            return
+        self._aliases[args[0]] = args[1:]
+
+    def _unalias(self, args):
+        if len(args) != 1:
+            print("Usage: unalias <name>")
+            return
+        del self._aliases[args[0]]
+
+    def _remove(self, args):
+        raise NotImplementedError
+
+    def _modify(self, args):
+        if len(args) < 1:
+            print("Usage: modify pseudo [<arg>...]")
+            return
+        cmds = {
+            "pseudo": self._modify_pseudo,
+        }
+        cmd = args[0]
+        if cmd not in cmds:
+            print("Unrecognized subcommand '{}'".format(cmd))
+            return
+        cmds[cmd](args[1:])
+
+    def _modify_pseudo(self, args):
+        if len(args) < 2:
+            print("Usage: modify pseudo <name> <status_specs>")
+            return
+        name = args[0]
+        status_specs = args[1]
+        pseudo = self._bos.lookup(name)
+        newstatus = self._parse_status(status_specs, pseudo.get_status())
+        pseudo.set_status(newstatus)
+        assert pseudo.get_status() == newstatus
+
+    def _current(self, args):
+        if len(args) != 2:
+            print("Usage: current <name> <value>\n"
+                  "Negative <value> means charging; positive <value> means discharging"
+                  )
+            return
+        name = args[0]
+        current = float(args[1])
+        self._bos.set_current(name, current)
+
+    def _visualize(self, args):
+        self._bos.visualize()
+
 if __name__ == '__main__':
     interp = Interpreter()
+    for arg in sys.argv[1:]:
+        interp.load(arg)
     interp.run()

@@ -30,20 +30,31 @@ class SplitterPolicy(Policy):
         '''
         raise NotImplementedError
 
-    def add_child(name, *args):
+    def add_child(self, name, target_status: BatteryStatus, *args):
         raise NotImplementedError
 
-    def remove_child(*args):
+    def remove_child(self, name, *args):
+        raise NotImplementedError
+
+    def reset_meter(self, name: str):
         raise NotImplementedError
     
 
 class ProportionalPolicy(SplitterPolicy):
-    def __init__(self, srcname, lookup):
+    def __init__(self, srcname, lookup, initname):
         super().__init__(srcname, lookup)
         self._scales = dict()   # map from splitter battery name to scale
         self._currents = dict() # map from splitter battery name to current
-        self._socs = dict()     # map from splitter battery name to state of charge
 
+        # add initial battery
+        self._scales[initname] = Scale(1, 1, 1, 1)
+        self._currents[initname] = 0
+
+        
+    def _parts(self):
+        return self._scales.keys()
+
+    
     def get_splitter_status(self):
         parts = []
         for name in self._scales:
@@ -51,24 +62,29 @@ class ProportionalPolicy(SplitterPolicy):
                 "name": name,
                 "scale": self._scales[name],
                 "current": self._currents[name],
-                "charge": self._socs[name],
             }
             parts.append(part)
         return super().get_splitter_status() | {
             "parts": parts,
         }
+    
 
-    def get_status(self, dstname=None) -> BatteryStatus:
+    def get_status(self, dstname) -> BatteryStatus:
         src = self._source()
         status = src.get_status()
         scale = self._scales[dstname]
+        expected_soc = self._lookup(dstname).get_meter()
+        total_expected_soc = sum([self._lookup(name).get_meter() for name in self._parts()])
+        total_actual_soc = self._source().get_status().state_of_charge
+        actual_soc = expected_soc / total_expected_soc * total_actual_soc
         return BatteryStatus(status.voltage,
                              self._currents[dstname],
-                             self._socs[dstname],
+                             actual_soc,
                              status.max_capacity * scale.get_max_capacity(),
                              status.max_discharging_current * scale.get_max_discharge_rate(),
                              status.max_charging_current * scale.get_max_charge_rate(),
                              )
+    
 
     def set_current(self, dstname: str):
         scale = self._scales[dstname]
@@ -88,38 +104,87 @@ class ProportionalPolicy(SplitterPolicy):
         new_net_current = sum(self._currents.values())
         src.set_current(new_net_current)
 
-    def add_child(self, name: str, newscale: Scale):
-        if name in self._scales:
+
+    def add_child(self, name: str, target_status: BatteryStatus, from_name: str) -> Battery:
+        '''
+        Add a new managed battery to this splitter policy.
+        name: name of battery to add
+        target_status: the desired parameters of this battery
+        from_name: name of battery to split this battery off of (must be free and managed by
+                   this policy)
+        '''
+        if name in self._parts():
             raise BOSErr.InvalidArgument
-        
-        # make sure all scale components will still <= 1.0
-        total_soc = 0
-        total_max_cap = 0
-        total_discharge = 0
-        total_charge = 0
-        for scale in list(self._scales.values()) + [newscale]:
-            total_soc += scale.get_state_of_charge()
-            total_max_cap += scale.get_max_capacity()
-            total_discharge += scale.get_max_discharge_rate()
-            total_charge += scale.get_max_charge_rate()
+        if from_name not in self._parts():
+            raise BOSErr.InvalidArgument
 
-        for total in [total_soc, total_max_cap, total_discharge, total_charge]:
-            if total > 1:
-                raise BOSErr.NoResources
+        from_battery = self._lookup(from_name)
+        from_status = from_battery.get_status()
+        if from_status.current != 0:
+            raise BOSErr.BatteryInUse
 
-        self._scales[name] = newscale
+        if from_status.voltage != target_status.voltage:
+            raise BOSErr.VoltageMismatch
+
+        actual_status = BatteryStatus(target_status.voltage,
+                                      0,
+                                      min(target_status.state_of_charge,
+                                          from_status.state_of_charge),
+                                      min(target_status.max_capacity,
+                                          from_status.max_capacity),
+                                      min(target_status.max_discharging_current,
+                                          from_status.max_discharging_current),
+                                      min(target_status.max_charging_current,
+                                          from_status.max_charging_current),
+                                      )
+
+        # compute scale
+        total_status = self._source().get_status()
+        scale = Scale(actual_status.state_of_charge / total_status.state_of_charge,
+                      actual_status.max_capacity / total_status.max_capacity,
+                      actual_status.max_discharging_current / total_status.max_discharging_current,
+                      actual_status.max_charging_current / total_status.max_charging_current,
+                      )
+        self._scales[name] = scale
         self._currents[name] = 0
-        self._socs[name] = 0 # TODO: allow specifying state of charge, too
+        
+        
+        # update free battery that was split from
+        self._scales[from_name] -= scale
+        self._lookup(from_name).reset_meter()
+        
+        
+        return actual_status
+    
 
-    def remove_child(self, name: str):
-        if name not in self._scales:
+    def remove_child(self, name: str, to_name: str):
+        '''
+        Remove managed battery from splitter policy.
+        name: name of battery to remove
+        to_name: name of battery to merge state of charge, capacity, etc. into
+        '''
+        if name not in self._parts():
             raise BOSErr.InvalidArgument
-        current = self._currents[name]
-        if current != 0:
-            self.set_current(name, 0)
-        del self._currents[name]
-        del self._socs[name]
-        del self._scales[name]
+        if self._currents[name] != 0:
+            raise BOSErr.BatteryInUse
+        
+        rm_scale = self._scales[name]
+        rm_soc = self._lookup(name).get_meter()
+        to_battery = self._lookup(to_name)
+        to_soc = to_battery.get_meter()
+        to_soc += rm_soc
+        to_battery.set_meter(to_soc)
+        
+
+    def reset_meter(self, name: str):
+        '''
+        Reset the meter of the named managed battery.
+        This will set the meter readout to be the proportional amount of the actual source charge
+        read from source.get_status().
+        '''
+        total_soc = self._source().get_status().state_of_charge
+        soc = total_soc * self._scales[name].get_state_of_charge()
+        self._lookup(name).set_meter(soc)
 
         
 class TranchePolicy(SplitterPolicy):
@@ -165,8 +230,8 @@ class TranchePolicy(SplitterPolicy):
         current_sum = sum(map(lambda t: t[1].current, self._tranches))
         src = self._source()
         src.set_current(current_sum)
-        
 
+        
     def add_child(self, name: str, status: BatteryStatus, pos: int):
         '''
         If `pos == 0`, then insert at the front.

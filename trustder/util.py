@@ -36,4 +36,4 @@ class DummyTime:
         assert duration >= 0
         self._time += duration
 
-time = SystemTime()
+bos_time = SystemTime()

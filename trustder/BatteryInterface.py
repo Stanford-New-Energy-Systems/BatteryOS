@@ -1,7 +1,7 @@
 import json
 from Interface import Interface
 from BOSNode import *
-from util import time
+import util
 
 class BatteryStatus: 
     def __init__(self, 
@@ -52,8 +52,8 @@ class Battery(BOSNode):
     def __init__(self, name):
         self._name = name
         self._current = 0    # last measured current current
-        self._meter = 0 # expected net charge of this battery
-        self._timestamp = time()
+        self._meter = 0 # expected net charge of this battery. This must be initialized by BOS
+        self._timestamp = util.bos_time()
 
     def __str__(self):
         return '{{config = {}, status = {}}}'.format(self.serialize(), self.get_status())
@@ -136,17 +136,28 @@ class Battery(BOSNode):
         call this with `endcurrent != newcurrent`.
         '''
         begincurrent = self._current
-        endtimestamp = time()
+        endtimestamp = util.bos_time()
         duration = endtimestamp - self._timestamp
         
         # take the average of start and end currents for duration
         amp_hours = ((begincurrent + endcurrent) / 2) * (duration / 3600)
-        self._meter += amp_hours
+        self._meter -= amp_hours
 
         # update meter info
         self._current = newcurrent
         self._timestamp = endtimestamp
 
+    def get_meter(self):
+        return self._meter
+
+    # NOTE: Should this be more protected?
+    # This is public because it's needed by splitter policies which update expected SOC when
+    # batteries are created or destroyed.
+    def set_meter(self, newvalue):
+        self._meter = newvalue
+
+    def reset_meter(self):
+        self._meter = self.get_status().state_of_charge
         
 
     _KEY_TYPE = "type"
@@ -209,6 +220,14 @@ class Scale:
         self._max_discharge_rate = max_discharge_rate
         self._max_charge_rate = max_charge_rate
 
+    def __str__(self) -> str:
+        return '{{soc = {}, max_capacity = {}, max_discharge = {}, max_charge = {}}}'.format(
+            self._state_of_charge,
+            self._max_capacity,
+            self._max_discharge_rate,
+            self._max_charge_rate,
+            )
+
     @staticmethod
     def scale_all(scale): return SplitterBattery.Scale(scale, scale, scale, scale)
     
@@ -223,3 +242,18 @@ class Scale:
                 "max_discharge_rate": self._max_discharge_rate,
                 "max_charge_rate": self._max_charge_rate}
     
+
+    def __sub__(self, other):
+        if self._state_of_charge >= other._state_of_charge and \
+           self._max_capacity >= other._max_capacity and \
+           self._max_discharge_rate >= other._max_discharge_rate and \
+           self._max_charge_rate >= other._max_charge_rate:
+            return Scale(self._state_of_charge - other._state_of_charge,
+                         self._max_capacity - other._max_capacity,
+                         self._max_discharge_rate - other._max_discharge_rate,
+                         self._max_charge_rate - other._max_charge_rate,
+                         )
+        else:
+            raise BOSErr.NoResources
+        
+        

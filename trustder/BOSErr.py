@@ -7,4 +7,3 @@ class BatteryInUse(BOSErr): pass
 class InvalidArgument(BOSErr): pass
 class CurrentOutOfRange(BOSErr): pass
 class NoResources(BOSErr): pass
-

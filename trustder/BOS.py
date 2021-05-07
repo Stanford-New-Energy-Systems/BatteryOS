@@ -39,21 +39,32 @@ class PseudoBattery(BALBattery):
     def __init__(self, name, iface, addr, status: BatteryStatus):
         super().__init__(name, iface, addr)
         self._status = status
+        self.set_meter(self._status.state_of_charge)
 
     def __str__(self): return str(self.serialize())
         
     @staticmethod
     def type(): return "Pseudo"
 
-    def get_status(self): return self._status
+    def get_status(self):
+        old_meter = self.get_meter()
+        self.update_meter(self._status.current, self._status.current) # update meter
+        new_meter = self.get_meter()
+        self._status.state_of_charge += new_meter - old_meter
+        # self._status.state_of_charge = self.get_meter() # TODO: Why did I add this?
+        return self._status
 
     def set_current(self, target_current):
+        old_current = self.get_status().current
         if not (target_current >= -self._status.max_charging_current and
                 target_current <= self._status.max_discharging_current):
             raise BOSErr.CurrentOutOfRange
         self._status.current = target_current
+        new_current = self.get_status().current
+        self.update_meter(old_current, new_current)
 
     def set_status(self, status):
+        self.update_meter(self._status.current, status.current)
         self._status = status
 
     _KEY_IFACE = "iface"
@@ -122,6 +133,9 @@ class AggregatorBattery(Battery):
         s_max_discharge_rate = s_cur_capacity / s_max_discharge_time
         s_max_charge_rate = (s_max_capacity - s_cur_capacity) / s_max_charge_time
 
+        # update meter
+        self.update_meter(s_current, s_current)
+
         return BatteryStatus(self._voltage,
                              s_current,
                              s_cur_capacity,
@@ -130,6 +144,8 @@ class AggregatorBattery(Battery):
                              s_max_charge_rate)
 
     def set_current(self, target_current):
+        old_current = self.get_status().current
+        
         (max_discharge_rate, max_charge_rate) = self.get_current_range()
         if not (target_current >= -max_charge_rate and target_current <= max_discharge_rate):
             raise BOSErr.CurrentOutOfRange
@@ -151,6 +167,10 @@ class AggregatorBattery(Battery):
         else: # none
             for source in sources:
                 source.set_current(0)
+
+        new_current = self.get_status().current
+        self.update_meter(old_current, new_current)
+        
 
     @staticmethod
     def type(): return "Aggregator"
@@ -193,11 +213,18 @@ class SplitterBattery(Battery):
         self._policy().refresh()
         
     def get_status(self):
-        return self._policy().get_status(self._name)
+        status = self._policy().get_status(self._name)
+        self.update_meter(status.current, status.current)
+        return status
 
-    def set_current(self):
-        return self._policy().set_current(self._name)
+    def set_current(self, target_current):
+        old_current = self.get_status().current
+        self._policy().set_current(self._name, target_current)
+        new_current = self.get_status().current
+        self.update_meter(old_current, new_current)
 
+    def reset_meter(self):
+        self._policy().reset_meter(self._name)
     
 
 class BOSDirectory:
@@ -216,12 +243,25 @@ class BOSDirectory:
         strd = dict([(k, tuple(map(str, v))) for (k, v) in self._map.items()])
         return str(strd)
 
+    def keys(self):
+        return self._map.keys()
+
     def add_node(self, name: str, node: BOSNode, parents=set()):
         if name in self: raise BOSErr.NameTaken
         self._map[name] = (node, parents)
 
     def remove_node(self, name: str):
         raise NotImplementedError
+
+    def get_parents(self, name: str):
+        return self._map[name][1]
+
+    def get_children(self, name: str):
+        children = set()
+        for child in self._map:
+            if name in self.get_parents(child):
+                children.add(child)
+        return children
 
     # def free_battery(self, name: str):
     #     '''
@@ -255,6 +295,13 @@ class BOSDirectory:
     #     assert len(self._map[name][1]) == 0
     #     self._map[name][0] = newbattery
 
+    def refresh(self):
+        for name in self._directory:
+            node = self._directory[name][0]
+            if isinstance(node, Battery):
+                node.refresh()
+    
+
     def print_status(self):
         for src in self._map:
             node = self._map[src][0]
@@ -266,6 +313,7 @@ class BOSDirectory:
                 print('\tmax capacity:    {}Ah'.format(status.max_capacity))
                 print('\tmax discharge:   {}A'.format(status.max_discharging_current))
                 print('\tmax charge:      {}A'.format(status.max_charging_current))
+                print('\tmeter:           {}Ah'.format(node.get_meter()))
             elif isinstance(node, SplitterPolicy):
                 status = node.get_splitter_status()
                 print('\tsource: {}'.format(status["source"]))
@@ -275,7 +323,6 @@ class BOSDirectory:
                   print('\t\t{}:'.format(part["name"]))
                   print('\t\t\tscale:   {}'.format(part["scale"]))
                   print('\t\t\tcurrent: {}A'.format(part["current"]))
-                  print('\t\t\tstate of charge: {}Ah'.format(part["charge"]))
 
                   
     def visualize(self):
@@ -304,9 +351,14 @@ class BOS:
     def __str__(self):
         return '{{directory = {}}}'.format(self._directory)
 
+
+    def list(self):
+        return self._directory.keys()
+    
     def make_null(self, name: str, voltage) -> NullBattery:
         battery = NullBattery(name, voltage)
-        self._directroy.add_null(name, battery)
+        battery.reset_meter()
+        self._directory.add_node(name, battery)
         return battery
         
         
@@ -318,6 +370,7 @@ class BOS:
         else:
             battery_type = self.battery_types[kind]
             battery = battery_type(name, iface, addr, *args)
+        battery.reset_meter()
         self._directory.add_node(name, battery)
         return battery
     
@@ -326,27 +379,48 @@ class BOS:
         battery = AggregatorBattery(name, voltage, voltage_tolerance, sample_period, sources,
                                     self._lookup
                                     )
+        battery.reset_meter()
         self._directory.add_node(name, battery, set(sources))
         return battery
 
-    def make_splitter_policy(self, policyname: str, policytype, parent: str, *policyargs) -> SplitterPolicy:
+    def make_splitter_policy(self, policyname: str, policytype, parent: str, initname: str, *policyargs) -> SplitterPolicy:
+        '''
+        Make a splitter policy. Initializes the policy with one managed battery.
+        policyname: name of policy to create
+        policytype: type constructor that will be used to instantiate the battery
+        parent: source of the splitter policy
+        initname: name of the initialization battery
+        *policyargs: subtype-specific arguments to pass to policy constructor
+        '''
         if not issubclass(policytype, SplitterPolicy):
             raise BOSErr.InvalidArgument
-        policy = policytype(parent, self._lookup, *policyargs)
+
+        policy = policytype(parent, self._lookup, initname, *policyargs)
         self._directory.add_node(policyname, policy, {parent})
+        
+        # add initial battery
+        # TODO: sample period
+        init_battery = SplitterBattery(initname, 0, policyname, self._lookup)
+        self._directory.add_node(initname, init_battery, {policyname})
+        init_battery.reset_meter()
         return policy
 
-    def make_splitter_battery(self, batteryname: str, policyname: str, sample_period, *policyargs):
+    def make_splitter_battery(self, batteryname: str, policyname: str, sample_period, tgt_status,
+                              *policyargs):
         battery = SplitterBattery(batteryname, sample_period, policyname, self._lookup)
         self._directory.add_node(batteryname, battery, {policyname})
         policy = self._lookup(policyname)
-        policy.add_child(batteryname, *policyargs)
+        policy.add_child(batteryname, tgt_status, *policyargs)
+        battery.reset_meter()
         return battery
         
 
     def get_status(self, name: str) -> BatteryStatus:
-        return self._directory[name].get_status()
+        return self._directory[name][0].get_status()
 
+    def set_current(self, name: str, current):
+        self.lookup(name).set_current(current)
+    
     def free_battery(self, name: str): return self._directory.free_battery(name)
     
     def replace_battery(self, name: str, *args):
@@ -360,9 +434,18 @@ class BOS:
     def visualize(self):
         self._directory.visualize()
 
-from util import time
+    def lookup(self, name: str):
+        return self._lookup(name)
+
+    def get_parents(self, name: str):
+        return self._directory.get_parents(name)
+
+    def get_children(self, name: str):
+        return self._directory.get_children(name)
+
+import util
 if __name__ == '__main__':
-    time = DummyTime(0)
+    util.bos_time = DummyTime(0)
     bos = BOS()
 
     pseudo1 = bos.make_battery("pseudo1", "Pseudo", Interface.BLE, "pseudo1",
@@ -371,22 +454,40 @@ if __name__ == '__main__':
                                BatteryStatus(7000, 0, 500, 1000, 12, 12))
     agg = bos.make_aggregator("agg", ["pseudo1", "pseudo2"], 7000, 500, 100)
 
-    bos.print_status()
+    # bos.print_status()
     
     agg.set_current(12)
 
     bos.print_status()
 
+    print('=====')
+    
+    util.bos_time.tick(3600)
 
     # splitter
-    splitter = bos.make_splitter_policy("splitter", ProportionalPolicy, "agg")
+    splitter = bos.make_splitter_policy("splitter", ProportionalPolicy, "agg", "splitter_free")
+
+    # bos.print_status()
+
+    free_status = bos._lookup("splitter_free").get_status()
+    bos.make_splitter_battery("part1", "splitter", 0,
+                              BatteryStatus(free_status.voltage,
+                                            0,
+                                            free_status.state_of_charge / 2,
+                                            free_status.max_capacity / 2,
+                                            free_status.max_discharging_current / 2,
+                                            free_status.max_charging_current / 2,
+                                            ),
+                              "splitter_free",
+                              )
 
     bos.print_status()
 
-    bos.make_splitter_battery("part1", "splitter", 0, Scale(0.5, 0.5, 0.5, 0.5))
-    bos.make_splitter_battery("part2", "splitter", 0, Scale(0.5, 0.5, 0.5, 0.5))
+    print('=========')
+
+    util.bos_time.tick(3600)
 
     bos.print_status()
-
+    
     # bos.visualize()
     
