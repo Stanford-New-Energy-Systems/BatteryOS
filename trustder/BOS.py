@@ -78,7 +78,7 @@ class PseudoBattery(BALBattery):
 
     @staticmethod
     def _deserialize_derived(d):
-        return PseudoBattery(d[__class__._KEY_IFACE], d[PseudoBattery._KEY_ADDR], d[PseudoBattery._KEY_STATUS])
+        return PseudoBattery(d[PseudoBattery._KEY_IFACE], d[PseudoBattery._KEY_ADDR], d[PseudoBattery._KEY_STATUS])
 
         
 class AggregatorBattery(Battery):
