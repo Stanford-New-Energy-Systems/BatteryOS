@@ -1,5 +1,6 @@
 import sys
 import argparse
+import traceback
 
 import BOS
 import util
@@ -28,6 +29,7 @@ class Interpreter:
                           "mod": self._modify,
                           "current": self._current,
                           "visualize": self._visualize,
+                          "help": self._help,
                           }
         self._aliases = dict()
 
@@ -63,8 +65,14 @@ class Interpreter:
         try:
             self._commands[cmd](args)
         except Exception as e:
-            print('Error: {}: {}'.format(type(e), e))
-        
+            print(traceback.format_exc());
+            # print('Error: {}: {}'.format(type(e), e))
+
+
+    def _help(self, args):
+        for cmd in sorted(self._commands.keys()):
+            print(cmd)
+            
                 
     def _make(self, args):
         subcmds = {
@@ -91,7 +99,7 @@ class Interpreter:
         self._bos.make_null(name, voltage)
     
         
-    def _make_battery(self, name, args):
+    def _make_battery(self, args):
         if len(args) < 4:
             print("Usage: make battery <name> <kind> <iface> <addr>")
             return
