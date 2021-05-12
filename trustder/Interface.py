@@ -12,7 +12,7 @@ class Interface(enum.Enum):
     # TODO: add more
     
 class Connection:
-    def __init__(iface: Interface, addr: str):
+    def __init__(self, iface: Interface, addr: str):
         self._iface = iface
         self._addr = addr
 
@@ -114,7 +114,7 @@ class TCPConnection(Connection):
         return self._connected
 
     def connect(self): 
-        self._socket.connect((addr, port))
+        self._socket.connect((self._addr, self._port))
         self._connected = True
 
     def get_port(self) -> int: 
