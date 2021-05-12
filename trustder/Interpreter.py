@@ -132,7 +132,7 @@ class Interpreter:
             elif key in {'max_charging_current', 'mcc', 'charge'}:
                 status.max_charging_current = pos()
             else:
-                raise InvalidArgument("unrecognized key '{}'".format(key))
+                raise BOSErr.InvalidArgument("unrecognized key '{}'".format(key))
         return status
         
     def _make_pseudo(self, args):

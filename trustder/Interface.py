@@ -36,6 +36,14 @@ class Connection:
 
     
 class BLEConnection(Connection):
+    class DataHandler: 
+        def __init__(self, recv_buffer_size: int=10): 
+            self.recv_data = [b'' for _ in range(recv_buffer_size)]
+            self.recv_data_length = 0
+        def __call__(self, data):
+            self.recv_data[self.recv_data_length] = data
+            self.recv_data_length += 1
+
     def __init__(self, addr: str, write_uuid: str, read_uuid: str, recv_buffer_size: int = 10):
         super(BLEConnection, self).__init__(Interface.BLE, addr)
         self._address = addr
@@ -62,7 +70,7 @@ class BLEConnection(Connection):
         # this is to wake the BMS up from sleep 
         # same for JBDBMS.query_info
         # could be changed to shorter time?
-        self._device.subscribe(self._read_uuid, indication=False, callback=self.handle_recv_data)
+        self._device.subscribe(self._read_uuid, indication=False, callback=self._data_handler)
     
     def read(self) -> bytes: 
         print("Please write to the device to retrieve information", file=sys.stderr)
@@ -78,13 +86,13 @@ class BLEConnection(Connection):
         if self._device is None: 
             print("BLEConnection.write: not connected", file=sys.stderr)
             return b''
-        self._recv_data_length = 0
+        self._data_handler.recv_data_length = 0
         retry_counter = 0
         while 1: 
             self._device.char_write(self._write_uuid, to_send, wait_for_response=wait_for_response)
             timeout_counter = 0
             timeout = False
-            while self._recv_data_length <= 0: 
+            while self._data_handler.recv_data_length <= 0: 
                 timeout_counter += 1
                 time.sleep(0.1)
                 if timeout_counter > 30:
@@ -99,8 +107,8 @@ class BLEConnection(Connection):
             print("BLEConnection.write: nothing is received", file=sys.stderr)
             break
 
-        data_recv = b''.join(self._recv_data)
-        self._recv_data_length = 0
+        data_recv = b''.join(self._data_handler.recv_data)
+        self._data_handler.recv_data_length = 0
         return data_recv
 
     def close(self): 
