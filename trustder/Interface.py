@@ -48,7 +48,7 @@ class BLEConnection(Connection):
         self._recv_data = [None for _ in range(recv_buffer_size)]
         self._recv_data_length = 0
         
-    def handle_recv_data(self, data): 
+    def handle_recv_data(self, handle, data): 
         self._recv_data[self._recv_data_length] = data
         self._recv_data_length += 1
 
