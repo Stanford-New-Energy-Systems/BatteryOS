@@ -4,9 +4,9 @@ import binascii
 import time
 import sys
 import typing as T
-from .BatteryInterface import BALBattery, BatteryStatus
-from .Interface import Interface, BLEConnection
-from .BOSErr import NoBattery
+from BatteryInterface import BALBattery, BatteryStatus
+from Interface import Interface, BLEConnection
+from BOSErr import NoBattery
 # import uuid
 # import threading
 DEBUG = True
