@@ -104,7 +104,7 @@ class BLEConnection(Connection):
 
 
 class TCPConnection(Connection):
-    def __init__(addr: str, port: int):
+    def __init__(self, addr: str, port: int):
         super(TCPConnection, self).__init__(Interface.TCP, addr)
         self._port = port
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
