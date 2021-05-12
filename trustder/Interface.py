@@ -40,7 +40,7 @@ class BLEConnection(Connection):
         def __init__(self, recv_buffer_size: int=10): 
             self.recv_data = [b'' for _ in range(recv_buffer_size)]
             self.recv_data_length = 0
-        def __call__(self, data):
+        def __call__(self, handle, data):
             self.recv_data[self.recv_data_length] = data
             self.recv_data_length += 1
 
@@ -53,6 +53,7 @@ class BLEConnection(Connection):
         self._read_uuid = read_uuid
         
         # buffer for receiving data
+        self._data_handler = BLEConnection.DataHandler(recv_buffer_size)
         self._recv_data = [None for _ in range(recv_buffer_size)]
         self._recv_data_length = 0
         
