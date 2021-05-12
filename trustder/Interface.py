@@ -38,6 +38,7 @@ class Connection:
 class BLEConnection(Connection):
     def __init__(self, addr: str, write_uuid: str, read_uuid: str, recv_buffer_size: int = 10):
         super(BLEConnection, self).__init__(Interface.BLE, addr)
+        self._address = addr
         self._adapter = pygatt.GATTToolBackend(search_window_size=2048)
         self._device = None
         self._write_uuid = write_uuid
@@ -56,7 +57,7 @@ class BLEConnection(Connection):
 
     def connect(self):
         self._adapter.start()
-        self._device = self._adapter.connect(self.get_addr())
+        self._device = self._adapter.connect(self._address)
         time.sleep(1) # not sure why this is necessary...
         # this is to wake the BMS up from sleep 
         # same for JBDBMS.query_info
@@ -67,11 +68,16 @@ class BLEConnection(Connection):
         print("Please write to the device to retrieve information", file=sys.stderr)
         return b''
     
+    def write_without_receive(self, to_send: bytes, wait_for_response: bool=False): 
+        if self._device is None: 
+            print("BLEConnection.write: not connected", file=sys.stderr)
+            return
+        self._device.char_write(self._write_uuid, to_send, wait_for_response=wait_for_response)
+
     def write(self, to_send: bytes, wait_for_response: bool=False) -> bytes: 
         if self._device is None: 
             print("BLEConnection.write: not connected", file=sys.stderr)
             return b''
-        
         self._recv_data_length = 0
         retry_counter = 0
         while 1: 
@@ -90,6 +96,7 @@ class BLEConnection(Connection):
                 print("retrying in 1 second...", file=sys.stderr)
                 time.sleep(1) 
                 continue
+            print("BLEConnection.write: nothing is received", file=sys.stderr)
             break
 
         data_recv = b''.join(self._recv_data)

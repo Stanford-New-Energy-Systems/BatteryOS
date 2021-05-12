@@ -3,20 +3,15 @@ from binascii import hexlify
 import binascii
 import time
 import sys
-import BatteryInterface
-from Interface import Interface
+import typing as T
+from .BatteryInterface import BALBattery, BatteryStatus
+from .Interface import Interface, BLEConnection
+from .BOSErr import NoBattery
 # import uuid
 # import threading
 DEBUG = True
-class DataHandler: 
-    def __init__(self): 
-        self.global_data = [None for _ in range(10)]
-        self.data_length = 0
-    def __call__(self, handle, value): 
-        self.global_data[self.data_length] = value
-        self.data_length += 1
 
-class JBDBMS(BatteryInterface.BALBattery): 
+class JBDBMS(BALBattery): 
     dev_info_str = b'\xdd\xa5\x03\x00\xff\xfd\x77'
     bat_info_str = b'\xdd\xa5\x04\x00\xff\xfc\x77'
     ver_info_str = b'\xdd\xa5\x05\x00\xff\xfb\x77'
@@ -27,15 +22,21 @@ class JBDBMS(BatteryInterface.BALBattery):
     exit_and_save_factory_mode_command = b'\x28\x28'
     exit_factory_mode_command = b'\x00\x00'
 
-    def __init__(self, name, addr, device, staleness=100):
+    def __init__(self, name, addr, staleness=100):
         super().__init__(name, Interface.BLE, addr)
-        self.bms_service_uuid = ('0000ff00-0000-1000-8000-00805f9b34fb') # btle.UUID("ff00") # 
-        self.bms_write_uuid = ('0000ff02-0000-1000-8000-00805f9b34fb') # btle.UUID("ff02") # 
-        self.bms_read_uuid = ('0000ff01-0000-1000-8000-00805f9b34fb') # btle.UUID("ff01") # 
-        self.data_handler = DataHandler()
-        self.device = device
+        self.bms_service_uuid = ('0000ff00-0000-1000-8000-00805f9b34fb') # ("ff00") # 
+        self.bms_write_uuid = ('0000ff02-0000-1000-8000-00805f9b34fb') # ("ff02") # 
+        self.bms_read_uuid = ('0000ff01-0000-1000-8000-00805f9b34fb') # ("ff01") # 
 
-        self.device.subscribe(self.bms_read_uuid, indication=False, callback=self.data_handler)
+        self.address = addr
+        self.connection = BLEConnection(self.address, self.bms_write_uuid, self.bms_read_uuid)
+
+        if DEBUG: print("connecting")
+        self.connection.connect()
+
+        if not self.connection.is_connected(): 
+            print("JBDBMS: BLE connection failed!", file=sys.stderr)
+            raise NoBattery()
 
         self.state = self.get_basic_info()
 
@@ -47,39 +48,18 @@ class JBDBMS(BatteryInterface.BALBattery):
     @staticmethod
     def type() -> str: return "JBDBMS"
 
-    def query_info(self, to_send):
-        self.data_handler.data_length = 0
-        while 1: 
-            self.device.char_write(self.bms_write_uuid, to_send, wait_for_response=False)
-            timeout_counter = 0
-            timeout = False
-            while self.data_handler.data_length <= 0: 
-                timeout_counter += 1
-                time.sleep(0.1)
-                if timeout_counter > 30:
-                    if DEBUG: print("query_info: Timeout: Not receiving anything", file=sys.stderr)
-                    # raise pygatt.device.exceptions.BLEError("query timed out")
-                    timeout = True
-                    break
-            if timeout:
-                if DEBUG: print("retrying in 1 second...")
-                time.sleep(1) 
-                continue
-            break
-        # if DEBUG: print("received within {} seconds".format(timeout_counter * 0.1), file=sys.stderr)
-        info = self.data_handler.global_data[0]
-        for i in range(1, self.data_handler.data_length): 
-            info += self.data_handler.global_data[i]
-        self.data_handler.data_length = 0
-        return info
+    def query_info(self, to_send) -> bytes:
+        return self.connection.write(to_send)
 
     def write_without_receive(self, to_send): 
-        self.device.char_write(self.bms_write_uuid, to_send, wait_for_response=False)
+        self.connection.write_without_receive(to_send)
         time.sleep(0.1)
-        return True
+    
+    def close(self): 
+        self.connection.close()
 
     @staticmethod
-    def get_read_register_command(register_address): 
+    def get_read_register_command(register_address) -> bytes: 
         starter = b'\xdd'
         read_indicator = b'\xa5'
         write_indicator = b'\x5a'
@@ -97,7 +77,7 @@ class JBDBMS(BatteryInterface.BALBattery):
         return command
 
     @staticmethod
-    def get_write_register_command(register_address, bytes_to_write): 
+    def get_write_register_command(register_address, bytes_to_write) -> bytes: 
         starter = b'\xdd'
         read_indicator = b'\xa5'
         write_indicator = b'\x5a'
@@ -118,7 +98,7 @@ class JBDBMS(BatteryInterface.BALBattery):
         return command
 
     @staticmethod
-    def extract_received_data(info): 
+    def extract_received_data(info) -> T.Tuple[bool, int, bytes]: 
         """
         info = 0xdd <register_addr> <OK:0x00 / Error:0x80> <length> <data> <checksum> 0x77
         """
@@ -131,7 +111,7 @@ class JBDBMS(BatteryInterface.BALBattery):
         data = info[4:-3]
         return (success, length, data)
 
-    def get_basic_info(self): 
+    def get_basic_info(self) -> T.Dict[str, T.Union[int, bytes]]: 
         info = self.query_info(self.get_read_register_command(b'\x03'))
         byte_order = "big"
         basic_info = {
@@ -267,9 +247,9 @@ class JBDBMS(BatteryInterface.BALBattery):
         """
         return self.current_range
 
-    def get_status(self):
+    def get_status(self) -> BatteryStatus:
         self.check_staleness()
-        return BatteryInterface.BatteryStatus(\
+        return BatteryStatus(\
             self.state['voltage'], 
             self.state['current'], 
             self.state['remaining charge'], 
@@ -286,7 +266,7 @@ class JBDBMS(BatteryInterface.BALBattery):
 # exit(0)
 
 
-def test_query_info(bms): 
+def test_query_info(bms: JBDBMS): 
     dev_info_str = JBDBMS.get_read_register_command(b'\x03') # b'\xdd\xa5\x03\x00\xff\xfd\x77'
     bat_info_str = JBDBMS.get_read_register_command(b'\x04') # b'\xdd\xa5\x04\x00\xff\xfc\x77'
     ver_info_str = JBDBMS.get_read_register_command(b'\x05') # b'\xdd\xa5\x05\x00\xff\xfb\x77'
@@ -327,7 +307,7 @@ def test_query_info(bms):
     print("version in hex: ", hexlify(info))
 
 
-def test_factory_mode(bms): 
+def test_factory_mode(bms: JBDBMS): 
     print("------ Entering factory mode ------")
     info = bms.query_info(
         JBDBMS.get_write_register_command(
@@ -386,14 +366,8 @@ def test_factory_mode(bms):
 
 if __name__ == "__main__":
     try:
-        adapter = pygatt.GATTToolBackend(search_window_size=2048)
-        adapter.start()
         address = "a4:c1:38:e5:32:26"
-        device = adapter.connect(address)
-        time.sleep(1)
-        if DEBUG: print("subscribe")
-        bms = JBDBMS(address, device)
-        # device.bond()
+        bms = JBDBMS("JBDBMSTest", address)
         for _ in range(2): 
             try: 
                 # test_query_info(bms)
@@ -405,15 +379,13 @@ if __name__ == "__main__":
                 
                 break
             except pygatt.device.exceptions.BLEError: 
-                # adapter.disconnect(device)
-                # adapter.stop()
+                # bms.close()
                 print("Retrying in 1 second(s)...")
                 time.sleep(1)
                 continue
     
     finally:
-        adapter.disconnect(device)
-        adapter.stop()
+        bms.close()
     
     exit(0)
 

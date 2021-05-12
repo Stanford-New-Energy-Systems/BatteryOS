@@ -1,6 +1,7 @@
 import json
-from Interface import Interface
-from BOSNode import *
+from .Interface import Interface
+from .BOSNode import *
+import BOSErr
 import util
 
 class BatteryStatus: 
