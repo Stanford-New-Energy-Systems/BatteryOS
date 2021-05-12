@@ -35,7 +35,7 @@ class NullBattery(Battery):
 
     @staticmethod
     def _deserialize_derived(d: dict):
-        return NullBattery(d[self._KEY_VOLTAGE])
+        return NullBattery(d[NullBattery._KEY_VOLTAGE])
 
 class PseudoBattery(BALBattery):
     def __init__(self, name, iface, addr, status: BatteryStatus):
@@ -78,7 +78,7 @@ class PseudoBattery(BALBattery):
 
     @staticmethod
     def _deserialize_derived(d):
-        return PseudoBattery(d[self._KEY_IFACE], d[self._KEY_ADDR], d[self._KEY_STATUS])
+        return PseudoBattery(d[PseudoBattery._KEY_IFACE], d[PseudoBattery._KEY_ADDR], d[PseudoBattery._KEY_STATUS])
 
         
 class AggregatorBattery(Battery):
@@ -188,10 +188,10 @@ class AggregatorBattery(Battery):
 
     @staticmethod
     def _deserialize_derived(d: dict, sample_period, lookup):
-        return AggregatorBattery(d[self._KEY_VOLTAGE],
-                                 d[self._KEY_VOLTAGE_TOLERANCE],
+        return AggregatorBattery(d[AggregatorBattery._KEY_VOLTAGE],
+                                 d[AggregatorBattery._KEY_VOLTAGE_TOLERANCE],
                                  sample_period,
-                                 d[self._KEY_SOURCES],
+                                 d[AggregatorBattery._KEY_SOURCES],
                                  lookup)
                                  
 
