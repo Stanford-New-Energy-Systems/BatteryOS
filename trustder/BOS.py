@@ -5,6 +5,7 @@ from BatteryInterface import *
 from BOSNode import *
 from JBDBMS import JBDBMS
 import Interface
+from Interface import BLEConnection
 from util import *
 import BOSErr
 from Policy import *
@@ -366,7 +367,13 @@ class BOS:
         if kind == JBDBMS.type():
             if iface != Interface.BLE:
                 raise BOSErr.InvalidArgument
-            battery = JBDBMS(name, addr, self._ble.connect(addr))
+            conn = BLEConnection(addr,
+                                "0000ff00-0000-1000-8000-00805f9b34fb",
+                                "0000ff01-0000-1000-8000-00805f9b34fb",
+            )
+            conn.connect()
+            assert conn.is_connected()
+            battery = JBDBMS(name, addr, conn._device)
         else:
             battery_type = self.battery_types[kind]
             battery = battery_type(name, iface, addr, *args)
