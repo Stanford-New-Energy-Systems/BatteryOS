@@ -365,8 +365,9 @@ def test_factory_mode(bms: JBDBMS):
     print(hexlify(info))
 
 if __name__ == "__main__":
+    bms = None
     try:
-        address = "a4:c1:38:e5:32:26"
+        address = "A4:C1:38:3C:9D:22"
         bms = JBDBMS("JBDBMSTest", address)
         for _ in range(2): 
             try: 
@@ -385,7 +386,8 @@ if __name__ == "__main__":
                 continue
     
     finally:
-        bms.close()
+        if bms != None:
+            bms.close()
     
     exit(0)
 
