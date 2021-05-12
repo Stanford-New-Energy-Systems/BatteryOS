@@ -1,6 +1,7 @@
 import signal
 import time
 import json
+import typing as T
 from BatteryInterface import *
 from BOSNode import *
 from JBDBMS import JBDBMS
@@ -80,7 +81,7 @@ class PseudoBattery(BALBattery):
 
         
 class AggregatorBattery(Battery):
-    def __init__(self, name, voltage, voltage_tolerance, sample_period, srcnames: [str], lookup):
+    def __init__(self, name, voltage, voltage_tolerance, sample_period, srcnames: T.List[str], lookup):
         '''
         `voltage` is the reported voltage of the aggregated battery. 
         `voltage_tolerance` indicates how much the source voltages are allowed to differ from the 
@@ -375,7 +376,7 @@ class BOS:
         return battery
     
     
-    def make_aggregator(self, name: str, sources: [str], voltage, voltage_tolerance, sample_period):
+    def make_aggregator(self, name: str, sources: T.List[str], voltage, voltage_tolerance, sample_period):
         battery = AggregatorBattery(name, voltage, voltage_tolerance, sample_period, sources,
                                     self._lookup
                                     )
