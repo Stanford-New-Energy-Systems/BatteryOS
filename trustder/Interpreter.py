@@ -30,6 +30,7 @@ class Interpreter:
                           "current": self._current,
                           "visualize": self._visualize,
                           "help": self._help,
+                          "clock": self._clock,
                           }
         self._aliases = dict()
 
@@ -158,7 +159,7 @@ class Interpreter:
         sources = args[1].split(',')
         voltage = float(args[2])
         voltage_tolerance = float(args[3])
-        self._bos.make_aggregator(name, sources, voltage, voltage_tolerance, 0)
+        self._bos.make_aggregator(name, sources, voltage, voltage_tolerance)
 
     def _make_splitter(self, args):
         if len(args) < 1:
@@ -258,7 +259,7 @@ class Interpreter:
         except BOSErr.BOSErr as e:
             print('Error: {}'.format(e))
             return
-        print(status)
+        print('{{status = {}, meter = {}}}'.format( status, self._bos.lookup(battery).get_meter()))
 
     def _load(self, args):
         if len(args) == 0:
@@ -318,6 +319,30 @@ class Interpreter:
 
     def _visualize(self, args):
         self._bos.visualize()
+
+    def _clock(self, args):
+        if len(args) < 1:
+            print('Usage: clock get|set ...')
+            return
+        subcmd = args[0]
+        if subcmd == 'get':
+            if len(args) != 1:
+                print('clock get: accepts no arguments')
+                return 
+            print('{} {}'.format(type(util.bos_time).__name__, util.bos_time()))
+        elif subcmd == 'set':
+            if len(args) < 2:
+                print('Usage: clock set DummyTime|SystemTime <arg>...')
+                return
+            typename = args[1]
+            if typename == 'DummyTime':
+                util.bos_time = util.DummyTime(*args[2:])
+            elif typename == 'SystemTime':
+                util.bos_time = util.SystemTime(*args[2:])
+            else:
+                print('clock set: invalid clock type {}'.format(args[1]))
+                return
+
 
 if __name__ == '__main__':
     interp = Interpreter()
