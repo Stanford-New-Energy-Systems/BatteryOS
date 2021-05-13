@@ -1,3 +1,4 @@
+import threading
 import signal
 import time
 import json
@@ -229,113 +230,120 @@ class SplitterBattery(Battery):
         self._policy().reset_meter(self._name)
     
 
+# class NetworkedBattery:
+#     def __init__(self, name, iface, addr, *args):
+#         if iface == Interface.TCP:
+#             if len(args) == 1:
+#                 raise BOSErr.InvalidArgument("NetworkedBattery.__init__(): missing additional"\
+#                                              " argument 'port'")
+#             self._conn = TCPConnection(addr, args[0])
+#         else:
+#             raise BOSErr.InvalidArgument("Bad interface {}".format(iface))
+# 
+#         self._conn.connect()
+# 
+#     @staticmethod
+#     def type(): return "Networked"
+# 
+#     def refresh(self):
+#         raise NotImplementedError
+# 
+#     def get_status(self):
+        
+            
 class BOSDirectory:
-    def __init__(self):
+    def __init__(self, lock: threading.RLock):
         self._map = dict() # map battery names to (battery, children)
+        self._lock = lock
 
     def __contains__(self, name: str):
-        return name in self._map
+        with self._lock:
+            return name in self._map
 
     def __getitem__(self, name):
-        if name not in self:
-            raise BOSErr.BadName(name)
-        return self._map[name]
+        with self._lock:
+            if name not in self:
+                raise BOSErr.BadName(name)
+            return self._map[name]
 
     def __str__(self):
-        strd = dict([(k, tuple(map(str, v))) for (k, v) in self._map.items()])
-        return str(strd)
+        with self._lock:
+            strd = dict([(k, tuple(map(str, v))) for (k, v) in self._map.items()])
+            return str(strd)
 
     def keys(self):
-        return self._map.keys()
+        with self._lock:
+            return self._map.keys()
 
     def add_node(self, name: str, node: BOSNode, parents=set()):
-        if name in self: raise BOSErr.NameTaken
-        self._map[name] = (node, parents)
+        with self._lock:
+            if name in self:
+                raise BOSErr.NameTaken
+            self._map[name] = (node, parents)
 
     def remove_node(self, name: str):
-        raise NotImplementedError
+        with self._lock:
+            raise NotImplementedError
 
     def get_parents(self, name: str):
-        return self._map[name][1]
+        with self._lock:
+            return self._map[name][1]
 
     def get_children(self, name: str):
-        children = set()
-        for child in self._map:
-            if name in self.get_parents(child):
-                children.add(child)
-        return children
+        with self._lock:
+            children = set()
+            for child in self._map:
+                if name in self.get_parents(child):
+                    children.add(child)
+            return children
 
-    # def free_battery(self, name: str):
-    #     '''
-    #     Removes all children from the given battery, so that it is free for any use.
-    #     This is the only battery removal mechanism in order to maintain consistency in splitter
-    #     batteries; it is impossible to remove one splitter battery without removing all of them.
-    #     '''
-    #     self.ensure_name_taken(name)
-    #     def rec(name: str):
-    #         (_, children) = self._map[name]
-    #         # free all children
-    #         for child in children:
-    #             rec(child)
-    #         # remove all children
-    #         for child in set(children):
-    #             del self._map[child]
-    #             for (_, children) in self._map.values():
-    #                 if child in children:
-    #                     children.remove(child)
-    #     rec(name)
-
-    # def rename_battery(self, oldname, newname)
-    # NOTE: Currently not implemented due to design constraints / inconsistencies it may cause.
-    # It'd be hard to rename a battery and update the references in all the battery objects.
 
     def replace_node(self, name: str, newnode: BOSNode):
-        raise NotImplementedError
-    # def replace_battery(self, name: str, newbattery: BALBattery):
-    #     assert isinstance(newbattery, BALBattery)
-    #     self.enure_name_taken(name)
-    #     assert len(self._map[name][1]) == 0
-    #     self._map[name][0] = newbattery
+        with self._lock:
+            raise NotImplementedError
 
-    def refresh(self):
-        for name in self._directory:
-            node = self._directory[name][0]
-            if isinstance(node, Battery):
-                node.refresh()
+
+#     def refresh(self):
+#         for name in self._directory:
+#             node = self._directory[name][0]
+#             if isinstance(node, Battery):
+#                 node.refresh()
     
 
     def print_status(self):
-        for src in self._map:
-            node = self._map[src][0]
-            print('{}:'.format(src))
-            if isinstance(node, Battery):
-                status = node.get_status()
-                print('\tcurrent:         {}A'.format(status.current))
-                print('\tstate of charge: {}Ah'.format(status.state_of_charge))
-                print('\tmax capacity:    {}Ah'.format(status.max_capacity))
-                print('\tmax discharge:   {}A'.format(status.max_discharging_current))
-                print('\tmax charge:      {}A'.format(status.max_charging_current))
-                print('\tmeter:           {}Ah'.format(node.get_meter()))
-            elif isinstance(node, SplitterPolicy):
-                status = node.get_splitter_status()
-                print('\tsource: {}'.format(status["source"]))
-                parts = status["parts"]
-                print('\tparts: {}'.format(len(parts)))
-                for part in parts:
-                  print('\t\t{}:'.format(part["name"]))
-                  print('\t\t\tscale:   {}'.format(part["scale"]))
-                  print('\t\t\tcurrent: {}A'.format(part["current"]))
+        with self._lock:
+            for src in self._map:
+                node = self._map[src][0]
+                print('{}:'.format(src))
+                if isinstance(node, Battery):
+                    status = node.get_status()
+                    print('\tcurrent:         {}A'.format(status.current))
+                    print('\tstate of charge: {}Ah'.format(status.state_of_charge))
+                    print('\tmax capacity:    {}Ah'.format(status.max_capacity))
+                    print('\tmax discharge:   {}A'.format(status.max_discharging_current))
+                    print('\tmax charge:      {}A'.format(status.max_charging_current))
+                    print('\tmeter:           {}Ah'.format(node.get_meter()))
+                elif isinstance(node, SplitterPolicy):
+                    status = node.get_splitter_status()
+                    print('\tsource: {}'.format(status["source"]))
+                    parts = status["parts"]
+                    print('\tparts: {}'.format(len(parts)))
+                    for part in parts:
+                      print('\t\t{}:'.format(part["name"]))
+                      print('\t\t\tscale:   {}'.format(part["scale"]))
+                      print('\t\t\tcurrent: {}A'.format(part["current"]))
 
                   
     def visualize(self):
-        import networkx as nx
-        import matplotlib.pyplot as plt
-        g = nx.DiGraph()
-        for src in self._map:
-            for dst in self._map[src][1]:
-                g.add_edge(dst, src)
-        nx.draw_networkx(g)
-        plt.show()
+        with self._lock:
+            import networkx as nx
+            import matplotlib.pyplot as plt
+            g = nx.DiGraph()
+            for src in self._map:
+                for dst in self._map[src][1]:
+                    g.add_edge(dst, src)
+            nx.draw_networkx(g)
+            plt.show()
 
     
         
@@ -344,9 +352,9 @@ class BOS:
                          [NullBattery, PseudoBattery, AggregatorBattery, SplitterBattery,
                           JBDBMS]])
     
-    def __init__(self):
+    def __init__(self, lock=threading.RLock()):
         # Directory: map from battery names to battery objects
-        self._directory = BOSDirectory()
+        self._directory = BOSDirectory(lock)
         # self._ble = Interface.BLE()
         self._lookup = lambda name: self._directory[name][0]
 
@@ -356,6 +364,7 @@ class BOS:
 
     def list(self):
         return self._directory.keys()
+        
     
     def make_null(self, name: str, voltage) -> NullBattery:
         battery = NullBattery(name, voltage)
@@ -368,22 +377,25 @@ class BOS:
         if kind == JBDBMS.type():
             if iface != Interface.BLE:
                 raise BOSErr.InvalidArgument
+            '''
             conn = BLEConnection(addr,
                                 "0000ff00-0000-1000-8000-00805f9b34fb",
                                 "0000ff01-0000-1000-8000-00805f9b34fb",
             )
             conn.connect()
             assert conn.is_connected()
-            battery = JBDBMS(name, addr, conn._device)
+            '''
+            battery = JBDBMS(name, addr)
         else:
             battery_type = self.battery_types[kind]
             battery = battery_type(name, iface, addr, *args)
-        battery.reset_meter()
+            battery.reset_meter()
         self._directory.add_node(name, battery)
         return battery
     
     
-    def make_aggregator(self, name: str, sources: T.List[str], voltage, voltage_tolerance, sample_period):
+    def make_aggregator(self, name: str, sources: T.List[str], voltage, voltage_tolerance,
+                        sample_period):
         battery = AggregatorBattery(name, voltage, voltage_tolerance, sample_period, sources,
                                     self._lookup
                                     )

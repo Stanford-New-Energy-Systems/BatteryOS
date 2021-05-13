@@ -3,6 +3,8 @@ from Interface import Interface
 from BOSNode import *
 import BOSErr
 import util
+import threading
+import time
 
 class BatteryStatus: 
     def __init__(self, 
@@ -50,19 +52,25 @@ class Battery(BOSNode):
     """
     The interface used for communication between BOS & physical batteries and BOS & virtual batteries
     """
-    def __init__(self, name):
+    def __init__(self, name, sample_period=-1):
         self._name = name
         self._current = 0    # last measured current current
         self._meter = 0 # expected net charge of this battery. This must be initialized by BOS
         self._timestamp = util.bos_time()
+        self._sample_period = sample_period
+        self._lock = threading.RLock()
+        self._background_refresh_thread = None
+        self._should_background_refresh = False
 
     def __str__(self):
-        return '{{config = {}, status = {}}}'.format(self.serialize(), self.get_status())
+        with self._lock:
+            return '{{config = {}, status = {}}}'.format(self.serialize(), self.get_status())
 
     def name(self):
-        return self._name
+        with self._lock:
+            return self._name
 
-    def refresh(self): 
+    def refresh(self, lock=None): 
         """
         Refresh the state of the battery 
 
@@ -70,9 +78,37 @@ class Battery(BOSNode):
         because we couldn't distinguish between physical battery and virtual battery 
         i.e. we can use a virtual battery as a underlying battery of a BOS, 
         the BOS will keep calling this function to refresh the state 
+
+        We need the lock in the multithreaded case where one thread is trying to access the 
+        cached battery status and another is refreshing the battery.
         """
         raise NotImplementedError
+
     
+    def start_background_refresh(self):
+        with self._lock:
+            if self._sample_period < 0:
+                return
+            elif self._should_background_refresh or self._background_refresh_thread != None:
+                raise BOSErr.InvalidArgument # already refreshing
+            self._should_background_refresh = True
+            self._background_refresh_thread = \
+                threading.Thread(target=self._background_refresh, args=())
+            self._background_refresh_thread.start()
+    
+    def stop_background_refresh(self):
+        with self._lock:
+            self._should_background_refresh = False
+            self._background_refresh_thread = None
+
+    def _background_refresh(self):
+        while self._should_background_refresh:
+            with self._lock:
+                self.refresh()
+                print('{} status: {}'.format(self._name, self.get_status()))
+            time.sleep(self._sample_period / 1000)
+
+            
     def get_voltage(self): 
         """
         Return the voltage of the last refresh action
@@ -136,30 +172,34 @@ class Battery(BOSNode):
         this with `endcurrent == newcurrent`, as well as set_current() requests, which will generally
         call this with `endcurrent != newcurrent`.
         '''
-        begincurrent = self._current
-        endtimestamp = util.bos_time()
-        duration = endtimestamp - self._timestamp
-        
-        # take the average of start and end currents for duration
-        amp_hours = ((begincurrent + endcurrent) / 2) * (duration / 3600)
-        self._meter -= amp_hours
-
-        # update meter info
-        self._current = newcurrent
-        self._timestamp = endtimestamp
+        with self._lock:
+            begincurrent = self._current
+            endtimestamp = util.bos_time()
+            duration = endtimestamp - self._timestamp
+            
+            # take the average of start and end currents for duration
+            amp_hours = ((begincurrent + endcurrent) / 2) * (duration / 3600)
+            self._meter -= amp_hours
+    
+            # update meter info
+            self._current = newcurrent
+            self._timestamp = endtimestamp
 
     def get_meter(self):
-        return self._meter
+        with self._lock:
+            return self._meter
 
     # NOTE: Should this be more protected?
     # This is public because it's needed by splitter policies which update expected SOC when
     # batteries are created or destroyed.
     def set_meter(self, newvalue):
-        self._meter = newvalue
+        with self._lock:
+            self._meter = newvalue
 
     def reset_meter(self):
-        self._meter = self.get_status().state_of_charge
-        
+        with self._lock:
+            self._meter = self.get_status().state_of_charge
+    
 
     _KEY_TYPE = "type"
     
@@ -190,8 +230,8 @@ class Battery(BOSNode):
         return t._deserialize_derived(d)
 
 class BALBattery(Battery):
-    def __init__(self, name: str, iface: Interface, addr: str):
-        super().__init__(name)
+    def __init__(self, name: str, iface: Interface, addr: str, sample_period=-1):
+        super().__init__(name, sample_period)
         assert type(self) != BALBattery # abstract class
         self._iface = iface
         self._addr = addr
@@ -205,7 +245,8 @@ class BALBattery(Battery):
         return super()._serialize_base(d)
 
     def serialize(self) -> str:
-        return self._serialize_base({})
+        with self._lock:
+            return self._serialize_base({})
 
 
 

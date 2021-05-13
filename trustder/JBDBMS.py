@@ -1,4 +1,5 @@
 import pygatt
+import threading
 from binascii import hexlify
 import binascii
 import time
@@ -23,7 +24,7 @@ class JBDBMS(BALBattery):
     exit_factory_mode_command = b'\x00\x00'
 
     def __init__(self, name, addr, staleness=100):
-        super().__init__(name, Interface.BLE, addr)
+        super().__init__(name, Interface.BLE, addr, staleness)
         self.bms_service_uuid = ('0000ff00-0000-1000-8000-00805f9b34fb') # ("ff00") # 
         self.bms_write_uuid = ('0000ff02-0000-1000-8000-00805f9b34fb') # ("ff02") # 
         self.bms_read_uuid = ('0000ff01-0000-1000-8000-00805f9b34fb') # ("ff01") # 
@@ -161,6 +162,7 @@ class JBDBMS(BALBattery):
 
     def refresh(self): 
         self.state = self.get_basic_info()
+        self.staleness = time.time()
         if self.state['remaining charge'] <= 0: 
             self._set_dischargeable(False)
         else: 
@@ -368,7 +370,7 @@ if __name__ == "__main__":
     bms = None
     try:
         address = "A4:C1:38:3C:9D:22"
-        bms = JBDBMS("JBDBMSTest", address)
+        bms = JBDBMS("JBDBMSTest", address, staleness=1000)
         for _ in range(2): 
             try: 
                 # test_query_info(bms)
@@ -384,6 +386,11 @@ if __name__ == "__main__":
                 print("Retrying in 1 second(s)...")
                 time.sleep(1)
                 continue
+
+        lock = threading.Lock()
+        bms.start_background_refresh()
+        time.sleep(10)
+        bms.stop_background_refresh()
     
     finally:
         if bms != None:
