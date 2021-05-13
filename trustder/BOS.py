@@ -17,7 +17,8 @@ class NullBattery(Battery):
         super().__init__(name)
         self._voltage = voltage
 
-    def refresh(self): return
+    def refresh(self):
+        pass
 
     def get_status(self):
         return BatteryStatus(self._voltage, 0, 0, 0, 0, 0)
@@ -50,52 +51,55 @@ class PseudoBattery(BALBattery):
     def type(): return "Pseudo"
 
     def get_status(self):
-        old_meter = self.get_meter()
-        self.update_meter(self._status.current, self._status.current) # update meter
-        new_meter = self.get_meter()
-        self._status.state_of_charge += new_meter - old_meter
-        # self._status.state_of_charge = self.get_meter() # TODO: Why did I add this?
-        return self._status
+        with self._lock:
+            old_meter = self.get_meter()
+            self.update_meter(self._status.current, self._status.current) # update meter
+            new_meter = self.get_meter()
+            self._status.state_of_charge += new_meter - old_meter
+            # self._status.state_of_charge = self.get_meter() # TODO: Why did I add this?
+            return self._status
 
     def set_current(self, target_current):
-        old_current = self.get_status().current
-        if not (target_current >= -self._status.max_charging_current and
-                target_current <= self._status.max_discharging_current):
-            raise BOSErr.CurrentOutOfRange
-        self._status.current = target_current
-        new_current = self.get_status().current
-        self.update_meter(old_current, new_current)
+        with self._lock:
+            old_current = self.get_status().current
+            if not (target_current >= -self._status.max_charging_current and
+                    target_current <= self._status.max_discharging_current):
+                raise BOSErr.CurrentOutOfRange
+            self._status.current = target_current
+            new_current = self.get_status().current
+            self.update_meter(old_current, new_current)
 
     def set_status(self, status):
-        self.update_meter(self._status.current, status.current)
-        self._status = status
+        with self._lock:
+            self.update_meter(self._status.current, status.current)
+            self._status = status
 
     _KEY_IFACE = "iface"
     _KEY_ADDR = "addr"
     _KEY_STATUS = "status"
 
     def serialize(self):
-        return self._serialize_base({self._KEY_STATUS: self._status.serialize()})
+        with self._lock:
+            return self._serialize_base({self._KEY_STATUS: self._status.serialize()})
 
     @staticmethod
     def _deserialize_derived(d):
-        return PseudoBattery(d[PseudoBattery._KEY_IFACE], d[PseudoBattery._KEY_ADDR], d[PseudoBattery._KEY_STATUS])
+        return PseudoBattery(d[PseudoBattery._KEY_IFACE], d[PseudoBattery._KEY_ADDR],
+                             d[PseudoBattery._KEY_STATUS])
 
         
 class AggregatorBattery(Battery):
-    def __init__(self, name, voltage, voltage_tolerance, sample_period, srcnames: T.List[str], lookup):
+    def __init__(self, name, voltage, voltage_tolerance, srcnames: T.List[str], lookup):
         '''
         `voltage` is the reported voltage of the aggregated battery. 
         `voltage_tolerance` indicates how much the source voltages are allowed to differ from the 
         virtual voltage.
-        `sample_period` indicates how frequently the battery should be updated.
         `srcnames` is a list of battery names (strings)
         `lookup` is a function that resolves a battery name into a battery object.
         '''
         super().__init__(name)
         self._lookup = lookup
         self._srcnames = srcnames
-        self._sample_period = sample_period
         self._voltage = voltage
         self._voltage_tolerance = voltage_tolerance
 
@@ -110,9 +114,11 @@ class AggregatorBattery(Battery):
                 raise BOSErr.VoltageMismatch
 
     def refresh(self):
-        for srcname in self._srcnames:
-            self._lookup(srcname).refresh()
+        # for srcname in self._srcnames:
+        #    self._lookup(srcname).refresh()
         # TODO: Check to make sure voltages still in range.
+        current = self.get_current()
+        self.update_meter(current, current)
 
     def get_status(self):
         s_max_capacity = 0
@@ -188,10 +194,9 @@ class AggregatorBattery(Battery):
                                      self._KEY_VOLTAGE_TOLERANCE: self._voltage_tolerance})
 
     @staticmethod
-    def _deserialize_derived(d: dict, sample_period, lookup):
+    def _deserialize_derived(d: dict, lookup):
         return AggregatorBattery(d[AggregatorBattery._KEY_VOLTAGE],
                                  d[AggregatorBattery._KEY_VOLTAGE_TOLERANCE],
-                                 sample_period,
                                  d[AggregatorBattery._KEY_SOURCES],
                                  lookup)
                                  
@@ -214,6 +219,8 @@ class SplitterBattery(Battery):
                      
     def refresh(self):
         self._policy().refresh()
+        current = self.get_current()
+        self.update_meter(current, current)
         
     def get_status(self):
         status = self._policy().get_status(self._name)
@@ -364,8 +371,10 @@ class BOS:
 
     def list(self):
         return self._directory.keys()
-        
-    
+
+    def _make(self, battery: Battery):
+        battery.start_background_refresh()
+
     def make_null(self, name: str, voltage) -> NullBattery:
         battery = NullBattery(name, voltage)
         battery.reset_meter()
@@ -394,11 +403,8 @@ class BOS:
         return battery
     
     
-    def make_aggregator(self, name: str, sources: T.List[str], voltage, voltage_tolerance,
-                        sample_period):
-        battery = AggregatorBattery(name, voltage, voltage_tolerance, sample_period, sources,
-                                    self._lookup
-                                    )
+    def make_aggregator(self, name: str, sources: T.List[str], voltage, voltage_tolerance):
+        battery = AggregatorBattery(name, voltage, voltage_tolerance, sources, self._lookup)
         battery.reset_meter()
         self._directory.add_node(name, battery, set(sources))
         return battery
@@ -433,7 +439,7 @@ class BOS:
         policy.add_child(batteryname, tgt_status, *policyargs)
         battery.reset_meter()
         return battery
-        
+    
 
     def get_status(self, name: str) -> BatteryStatus:
         return self._directory[name][0].get_status()

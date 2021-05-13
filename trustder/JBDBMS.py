@@ -153,14 +153,14 @@ class JBDBMS(BALBattery):
         if ms >= 0: 
             self.staleness = ms
 
-    def check_staleness(self): 
+    def check_staleness(self):
         now = (time.time() * 1000)
         if now - self.last_refresh > self.staleness: 
             self.refresh()
             self.last_refresh = (time.time() * 1000)
         return
 
-    def refresh(self): 
+    def refresh(self):
         self.state = self.get_basic_info()
         self.staleness = time.time()
         if self.state['remaining charge'] <= 0: 
@@ -171,24 +171,30 @@ class JBDBMS(BALBattery):
             self._set_chargeable(False)
         else: 
             self._set_chargeable(True)
+        newcurrent = self.state['current']
+        self.update_meter(newcurrent, newcurrent)
 
-    def get_voltage(self): 
-        self.check_staleness()
-        return self.state['voltage']
+    def get_voltage(self):
+        with self._lock:
+            self.check_staleness()
+            return self.state['voltage']
 
-    def get_current(self): 
-        self.check_staleness()
-        return self.state['current']
+    def get_current(self):
+        with self._lock:
+            self.check_staleness()
+            return self.state['current']
     
-    def get_maximum_capacity(self): 
-        self.check_staleness()
-        return self.state['maximum capacity']
+    def get_maximum_capacity(self):
+        with self._lock:
+            self.check_staleness()
+            return self.state['maximum capacity']
 
-    def get_current_capacity(self): 
-        self.check_staleness()
-        return self.state['remaining charge']
+    def get_current_capacity(self):
+        with self._lock:
+            self.check_staleness()
+            return self.state['remaining charge']
 
-    def _set_chargeable(self, is_chargeable): 
+    def _set_chargeable(self, is_chargeable):
         # self.check_staleness()
         mosfet_status = self.state['MOSFET status']
         assert mosfet_status <= 3
@@ -221,43 +227,46 @@ class JBDBMS(BALBattery):
     #         mosfet_status = (mosfet_status | 2)
     #     return mosfet_status
 
-    def set_current(self, target_current): 
-        if (target_current not in self._current_range): 
-            return False
-        if (target_current > 0 and self.get_current_capacity() <= 0): 
-            # self._set_dischargeable(False)
-            return False
-        if (target_current < 0 and self.get_current_capacity() >= self.get_maximum_capacity()): 
-            # self._set_chargeable(False)
-            return False 
-        # if target_current > 0: 
-        #     # self._set_chargeable(False)
-        #     self._set_dischargeable(True)
-        # elif target_current < 0: 
-        #     self._set_chargeable(True)
-        #     # self._set_dischargeable(False)
-        # else: 
-        #     self._set_chargeable(False)
-        #     self._set_dischargeable(False)
-        # how to limit the current? 
-        
-        return True
+    def set_current(self, target_current):
+        with self._lock:
+            if (target_current not in self._current_range): 
+                return False
+            if (target_current > 0 and self.get_current_capacity() <= 0): 
+                # self._set_dischargeable(False)
+                return False
+            if (target_current < 0 and self.get_current_capacity() >= self.get_maximum_capacity()): 
+                # self._set_chargeable(False)
+                return False 
+            # if target_current > 0: 
+            #     # self._set_chargeable(False)
+            #     self._set_dischargeable(True)
+            # elif target_current < 0: 
+            #     self._set_chargeable(True)
+            #     # self._set_dischargeable(False)
+            # else: 
+            #     self._set_chargeable(False)
+            #     self._set_dischargeable(False)
+            # how to limit the current? 
+            
+            return True
 
-    def get_current_range(self): 
-        """
-        Max discharging current, Max charging current 
-        """
-        return self.current_range
+    def get_current_range(self):
+        with self._lock:
+            """
+            Max discharging current, Max charging current 
+            """
+            return self.current_range
 
     def get_status(self) -> BatteryStatus:
-        self.check_staleness()
-        return BatteryStatus(\
-            self.state['voltage'], 
-            self.state['current'], 
-            self.state['remaining charge'], 
-            self.state['maximum capacity'], 
-            self.current_range[0], 
-            self.current_range[1])
+        with self._lock:
+            self.check_staleness()
+            return BatteryStatus(\
+                self.state['voltage'], 
+                self.state['current'], 
+                self.state['remaining charge'], 
+                self.state['maximum capacity'], 
+                self.current_range[0], 
+                self.current_range[1])
         
 # print(
 #     hexlify(JBDBMS.get_read_register_command(b'\x03')), 

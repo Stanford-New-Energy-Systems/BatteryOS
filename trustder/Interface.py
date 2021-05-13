@@ -105,7 +105,7 @@ class BLEConnection(Connection):
                 print("retrying in 1 second...", file=sys.stderr)
                 time.sleep(1) 
                 continue
-            print("BLEConnection.write: nothing is received", file=sys.stderr)
+            # print("BLEConnection.write: nothing is received", file=sys.stderr)
             break
 
         data_recv = b''.join(self._data_handler.recv_data)

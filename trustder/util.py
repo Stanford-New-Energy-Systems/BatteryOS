@@ -21,7 +21,7 @@ class SystemTime:
         return systime.time()
 
 class DummyTime:
-    def __init__(self, time):
+    def __init__(self, time=0):
         super().__init__()
         self._time = time 
 

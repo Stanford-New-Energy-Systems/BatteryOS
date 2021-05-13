@@ -21,8 +21,9 @@ class SplitterPolicy(Policy):
         return {"source": self._srcname}
 
     def refresh(self):
-        src = self._lookup(self._srcname)
-        src.refresh()
+        # src = self._lookup(self._srcname)
+        # src.refresh()
+        pass
 
     def get_status(self, dstname: str):
         '''
@@ -86,7 +87,7 @@ class ProportionalPolicy(SplitterPolicy):
                              )
     
 
-    def set_current(self, dstname: str):
+    def set_current(self, dstname: str, target_current):
         scale = self._scales[dstname]
         src = self._source()
 

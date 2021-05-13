@@ -52,7 +52,7 @@ class Battery(BOSNode):
     """
     The interface used for communication between BOS & physical batteries and BOS & virtual batteries
     """
-    def __init__(self, name, sample_period=-1):
+    def __init__(self, name, sample_period=1000):
         self._name = name
         self._current = 0    # last measured current current
         self._meter = 0 # expected net charge of this battery. This must be initialized by BOS
@@ -70,17 +70,11 @@ class Battery(BOSNode):
         with self._lock:
             return self._name
 
-    def refresh(self, lock=None): 
+    def refresh(self):
         """
-        Refresh the state of the battery 
-
-        this is the interface for physical battery, but it's required for virtual battery 
-        because we couldn't distinguish between physical battery and virtual battery 
-        i.e. we can use a virtual battery as a underlying battery of a BOS, 
-        the BOS will keep calling this function to refresh the state 
-
-        We need the lock in the multithreaded case where one thread is trying to access the 
-        cached battery status and another is refreshing the battery.
+        Refresh the state of the battery and update the expected SOC (self._meter).
+        For physical batteries, both tasks will be performed.
+        For virtual batteries, only the latter will be performed (updating the expected SOC).
         """
         raise NotImplementedError
 
