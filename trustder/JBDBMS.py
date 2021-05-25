@@ -157,22 +157,22 @@ class JBDBMS(BALBattery):
         now = (time.time() * 1000)
         if now - self.last_refresh > self.staleness: 
             self.refresh()
-            self.last_refresh = (time.time() * 1000)
         return
 
     def refresh(self):
-        self.state = self.get_basic_info()
-        self.staleness = time.time()
-        if self.state['remaining charge'] <= 0: 
-            self._set_dischargeable(False)
-        else: 
-            self._set_dischargeable(True)
-        if self.state['remaining charge'] >= self.get_maximum_capacity(): 
-            self._set_chargeable(False)
-        else: 
-            self._set_chargeable(True)
-        newcurrent = self.state['current']
-        self.update_meter(newcurrent, newcurrent)
+        with self._lock:
+            self.state = self.get_basic_info()
+            if self.state['remaining charge'] <= 0: 
+                self._set_dischargeable(False)
+            else: 
+                self._set_dischargeable(True)
+            if self.state['remaining charge'] >= self.state['maximum capacity']:
+                self._set_chargeable(False)
+            else: 
+                self._set_chargeable(True)
+            newcurrent = self.state['current']
+            self.last_refresh = (time.time() * 1000)
+            self.update_meter(newcurrent, newcurrent)
 
     def get_voltage(self):
         with self._lock:
