@@ -6,7 +6,14 @@ import util
 import threading
 import time
 
-class BatteryStatus: 
+class BatteryStatus:
+    VOLTAGE = 'voltage'
+    CURRENT = 'current'
+    SOC = 'state_of_charge'
+    MAX_CAPACITY = 'max_capacity'
+    MDC = 'max_discharging_current'
+    MCC = 'max_charging_current'
+    
     def __init__(self, 
         voltage, 
         current, 
@@ -23,10 +30,7 @@ class BatteryStatus:
         self.max_charging_current = max_charging_current
 
     def __str__(self):
-        return '{{voltage = {}, current = {}, state_of_charge = {}, max_capacity = {}, '\
-            'max_discharging_current = {}, max_charging_current = {}}}'\
-            .format(self.voltage, self.current, self.state_of_charge, self.max_capacity,
-                    self.max_discharging_current, self.max_charging_current)
+        return json.dumps(self.to_json())
     
     def serialize(self): 
         return {
@@ -47,6 +51,25 @@ class BatteryStatus:
         self.max_discharging_current = data['max_discharging_current']
         self.max_charging_current = data['max_charging_current'] 
         return
+
+    def to_json(self):
+        return {BatteryStatus.VOLTAGE: self.voltage,
+                BatteryStatus.CURRENT: self.current,
+                BatteryStatus.SOC: self.state_of_charge,
+                BatteryStatus.MAX_CAPACITY: self.max_capacity,
+                BatteryStatus.MDC: self.max_discharging_current,
+                BatteryStatus.MCC: self.max_charging_current,
+                }
+
+    @staticmethod
+    def from_json(json):
+        return BatteryStatus(json[BatteryStatus.VOLTAGE],
+                             json[BatteryStatus.CURRENT],
+                             json[BatteryStatus.SOC],
+                             json[BatteryStatus.MAX_CAPACITY],
+                             json[BatteryStatus.MDC],
+                             json[BatteryStatus.MCC],
+                             )
 
 class Battery(BOSNode): 
     """
@@ -99,7 +122,7 @@ class Battery(BOSNode):
         while self._should_background_refresh:
             with self._lock:
                 self.refresh()
-                print('{} status: {}'.format(self._name, self.get_status()))
+                # print('{} status: {}'.format(self._name, self.get_status()))
             time.sleep(self._sample_period / 1000)
 
             
