@@ -28,11 +28,28 @@ class Connection:
     def read(self, nbytes: int, *args, **kwargs) -> bytes:
         raise NotImplementedError
 
+    def readstr(self, *args, **kwargs) -> bytes:
+        raise NotImplementedError
+
     def write(self, data: bytes, *args, **kwargs):
         raise NotImplementedError
 
     def close(self):
         raise NotImplementedError
+
+
+    @staticmethod
+    def create(iface, addr, *args):
+        d = {
+            Interface.BLE: BLEConnection,
+            Interface.UART: UARTConnection,
+            Interface.TCP: TCPConnection,
+            Interface.PSEUDO: None,
+        }
+        if iface not in d:
+            raise BOSErr.InvalidArgument(f'Bad interface "{iface}"')
+        constructor = d[iface]
+        return constructor(addr, *args)
 
     
 class BLEConnection(Connection):
@@ -158,6 +175,25 @@ class TCPConnection(Connection):
             chunks.append(chunk)
             bytes_read += len(chunk)
         return b''.join(chunks)
+
+    def readstr(self, encoding = 'ASCII') -> str:
+        if not self._connected:
+            print("TCPConnection.read: socket not connected, no byte is read", file=sys.stderr)
+            return b''
+        data = bytes()
+        while True:
+            chunk = self._socket.recv(4096)
+            if chunk == b'':
+                print("TCPConnection.read: connection broken", file=sys.stderr)
+                self._socket.close()
+                self._connected = False
+                break
+            data += chunk
+            if 0 in chunk:
+                break
+        data = data.split(bytes([0]))[0] # strip any data after NUL byte
+        return data.decode(encoding)
+    
     
     def write(self, data: bytes) -> int: 
         if not self._connected: 
@@ -181,4 +217,37 @@ class TCPConnection(Connection):
 
 
 
+import serial
+class UARTConnection:
+    def __init__(self, iface: Interface, addr: str):
+        super().__init__(iface, addr)
+        # address is /dev/tty*
+        self._dev = serial.Serial()
+        self._dev.baudrate = 9600
+        self._dev.port = addr
 
+    def is_connected(self) -> bool:
+        return self._dev.is_open
+
+    def connect(self):
+        self._dev.open()
+
+    def read(self, nbytes: int) -> bytes:
+        return self.read(nbytes)
+
+    def readstr(self, encoding = 'ASCII') -> str:
+        data = bytes()
+        while True:
+            chunk = self._dev.read(timeout=0)
+            data += chunk
+            if 0 in chunk:
+                break
+        data = data.split(b'\x00')[0]
+        return data.decode(encoding)
+
+    def write(self, data: bytes):
+        self._dev.write(data)
+    
+    def close(self):
+        self._dev.close()
+        
