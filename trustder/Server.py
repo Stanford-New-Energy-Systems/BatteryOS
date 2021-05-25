@@ -9,27 +9,8 @@ import BOS
 import json
 
 MAXREQLEN = 1024
+MAXRESPLEN = 1024
 
-
-class Message:
-    def __init__(self):
-        pass
-
-class Request:
-    REQTYPE = 'request'
-    
-    def __init__(self, reqtype):
-        pass
-
-    @staticmethod
-    def from_json(d: dict):
-        def get(key):
-            try:    return d[key]
-            except: raise NoField(key)
-
-        return Request(get(Request.REQTYPE))
-        
-        
     
 
 def log(*args):
@@ -145,7 +126,9 @@ class BOSServer:
     def _req_GET_STATUS(self, req):
         name = self._req_lookup(req, 'name')
         status = self._bos.get_status(name)
-        resp = {'response': status.to_json()}
+        resp = {
+            'response': status.to_json(),
+        }
         return resp
 
     def _req_SET_CURRENT(self, req):
