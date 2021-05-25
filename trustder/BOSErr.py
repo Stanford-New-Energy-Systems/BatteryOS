@@ -7,3 +7,5 @@ class BatteryInUse(BOSErr): pass
 class InvalidArgument(BOSErr): pass
 class CurrentOutOfRange(BOSErr): pass
 class NoResources(BOSErr): pass
+class BadResponse(BOSErr): pass
+class ServerError(BOSErr): pass
