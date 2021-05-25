@@ -87,6 +87,66 @@ class PseudoBattery(BALBattery):
         return PseudoBattery(d[PseudoBattery._KEY_IFACE], d[PseudoBattery._KEY_ADDR],
                              d[PseudoBattery._KEY_STATUS])
 
+
+class NetworkBattery(Battery):
+    def __init__(self, name, remote_name, iface, addr, *args):
+        super().__init__(name)
+        self._remote_name = remote_name
+        self._conn = Interface.create(iface, addr, *args)
+        self._conn.connect()
+        self._status = None    # Cached status
+        self._timestamp = None
+
+    def _send_recv(self, req):
+        req_bytes = bytes(json.dumps(req), 'ASCII')
+        self._conn.write(req_bytes)
+        resp_str = self._conn.readstr()
+        resp = json.loads(dump_str)
+        return resp
+
+    def _resp_get_body(self, resp):
+        if 'response' not in resp:
+            raise BOSErr.BadResponse(resp)
+        body = resp['response']
+        if body is None:
+            if 'error' not in resp:
+                raise BOSErr.BadResponse(resp)
+            error = resp['error']
+            print(f'{self._name}: server error; {error}')
+            raise BOSErr.ServerError(error)
+        return body
+
+    def refresh(self):
+        with self._lock: 
+            req = {
+                'request': 'get_status',
+                'name': self._remote_name,
+            }
+            resp = self._send_recv(req)
+            self._status = self._resp_get_body(resp)
+            self._timestamp = time.time() # TODO: need to set true timestamp.
+            current = self._status.current
+            self.update_meter(current, current)
+
+    def set_current(self, target_current):
+        with self._lock:
+            old_current = self._status.current
+            req = {
+                'request': 'set_current',
+                'name': self._remote_name,
+                'current': target_current,
+            }
+            resp = self._send_recv(req)
+            ok = self._resp_get_body(resp)
+            new_current = self.get_current() # TODO: this is expensive
+            self.update_meter(old_current, new_current)
+
+    def get_status(self):
+        with self._lock:
+            if time.time() - self._timestamp >= self._sample_period:
+                self.refresh()
+            self.update_meter(self._status.current, self._status.current)
+        return self._status
         
 class AggregatorBattery(Battery):
     def __init__(self, name, voltage, voltage_tolerance, srcnames: T.List[str], lookup):
@@ -446,6 +506,15 @@ class BOS:
 
     def set_current(self, name: str, current):
         self.lookup(name).set_current(current)
+
+    def start_background_refresh(self, name: str):
+        self.lookup(name).start_background_refresh()
+
+    def stop_background_refresh(self, name: str):
+        self.lookup(name).stop_background_refresh()
+
+    def refresh(self, name: str):
+        self.lookup(name).refresh()
     
     def free_battery(self, name: str): return self._directory.free_battery(name)
     
