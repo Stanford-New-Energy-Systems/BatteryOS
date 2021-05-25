@@ -1,6 +1,7 @@
 import sys
 import argparse
 import traceback
+import time
 
 import BOS
 import util
@@ -31,6 +32,8 @@ class Interpreter:
                           "visualize": self._visualize,
                           "help": self._help,
                           "clock": self._clock,
+                          "refresh": self._refresh,
+                          "sleep": self._sleep,
                           }
         self._aliases = dict()
 
@@ -342,6 +345,28 @@ class Interpreter:
             else:
                 print('clock set: invalid clock type {}'.format(args[1]))
                 return
+
+    def _refresh(self, args):
+        if len(args) != 2:
+            print('Usage: refresh enable|disable|once <name>')
+            return
+        subcmd = args[0]
+        name = args[1]
+        d = {
+            'enable': self._bos.start_background_refresh,
+            'disable': self._bos.stop_background_refresh,
+            'once': self._bos.refresh,
+        }
+        if subcmd not in d:
+            print(f'Unrecognized subcommand "{subcmd}"')
+            return
+        d[subcmd](name)
+
+    def _sleep(self, args):
+        if len(args) != 1:
+            print('Usage: sleep <secs>')
+            return
+        time.sleep(int(args[0]))
 
 
 if __name__ == '__main__':
