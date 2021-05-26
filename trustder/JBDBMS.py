@@ -6,8 +6,8 @@ import time
 import sys
 import typing as T
 from BatteryInterface import BALBattery, BatteryStatus
-from Interface import Interface, BLEConnection
-from BOSErr import NoBattery
+from Interface import Interface, Connection
+import BOSErr
 # import uuid
 # import threading
 DEBUG = True
@@ -23,21 +23,20 @@ class JBDBMS(BALBattery):
     exit_and_save_factory_mode_command = b'\x28\x28'
     exit_factory_mode_command = b'\x00\x00'
 
-    def __init__(self, name, addr, staleness=100):
-        super().__init__(name, Interface.BLE, addr, staleness)
-        self.bms_service_uuid = ('0000ff00-0000-1000-8000-00805f9b34fb') # ("ff00") # 
-        self.bms_write_uuid = ('0000ff02-0000-1000-8000-00805f9b34fb') # ("ff02") # 
-        self.bms_read_uuid = ('0000ff01-0000-1000-8000-00805f9b34fb') # ("ff01") # 
-
-        self.address = addr
-        self.connection = BLEConnection(self.address, self.bms_write_uuid, self.bms_read_uuid)
+    def __init__(self, name, iface, addr, staleness=100):
+        super().__init__(name, iface, addr, staleness)
+        self.connection = Connection.create(iface, addr)
 
         if DEBUG: print("connecting")
         self.connection.connect()
 
+        if self.connection.get_iface() == Interface.UART:
+            # send a byte to wake up the lazy BMS
+            self.connection.write(bytes('Junk', 'ASCII'))
+        
         if not self.connection.is_connected(): 
-            print("JBDBMS: BLE connection failed!", file=sys.stderr)
-            raise NoBattery()
+            print("JBDBMS: connection failed!", file=sys.stderr)
+            raise BOSErr.NoBattery
 
         self.state = self.get_basic_info()
 
@@ -50,7 +49,25 @@ class JBDBMS(BALBattery):
     def type() -> str: return "JBDBMS"
 
     def query_info(self, to_send) -> bytes:
-        return self.connection.write(to_send)
+        self.connection.write(to_send)
+
+        hdr = self.connection.read(4)
+        if hdr[0] != 0xdd:
+            raise BOSErr.DriverError
+        data = self.connection.read(hdr[3])
+        end = self.connection.read(3)
+        if end[-1] != 0x77:
+            raise BOSErr.DriverError
+        cksum = end[1]
+
+        if hdr[1] != to_send[2]:
+            raise BOSErr.DriverError
+
+        resp = hdr + data + end
+
+        # validate checksum
+        self._check_resp_cksum(resp)
+        return resp
 
     def write_without_receive(self, to_send): 
         self.connection.write_without_receive(to_send)
@@ -112,6 +129,22 @@ class JBDBMS(BALBattery):
         data = info[4:-3]
         return (success, length, data)
 
+    def _check_resp_cksum(self, resp):
+        assert len(resp) >= 4
+        cksum = 0
+        for byte in resp[4:-3]:
+            cksum += byte
+        cksum += resp[2] # status code 
+        cksum += resp[3] # opcode
+        cksum = 0xff - cksum
+        cksum += 1
+        cksum %= 256
+        if cksum != resp[-2]:
+            print(resp)
+            raise BOSErr.DriverError('bad checksum: computed {:02x} vs sent {:02x}'
+                                     .format(cksum, resp[-2]))
+
+        
     def get_basic_info(self) -> T.Dict[str, T.Union[int, bytes]]: 
         info = self.query_info(self.get_read_register_command(b'\x03'))
         byte_order = "big"
@@ -202,8 +235,11 @@ class JBDBMS(BALBattery):
             mosfet_status = (mosfet_status & 2)
         else: 
             mosfet_status = (mosfet_status | 1)
-        self.query_info(self.get_write_register_command(b'\xe1', mosfet_status.to_bytes(1, byteorder='big')))
-    
+        try:
+            self.query_info(self.get_write_register_command(b'\xe1', mosfet_status.to_bytes(1, byteorder='big')))
+        except BOSErr.DriverError as err:
+            print(err)
+            
     def _set_dischargeable(self, is_dischargeable): 
         # self.check_staleness()
         mosfet_status = self.state['MOSFET status']
@@ -212,7 +248,11 @@ class JBDBMS(BALBattery):
             mosfet_status = (mosfet_status & 1)
         else: 
             mosfet_status = (mosfet_status | 2)
-        self.query_info(self.get_write_register_command(b'\xe1', mosfet_status.to_bytes(1, byteorder='big')))
+        try: 
+            self.query_info(self.get_write_register_command(b'\xe1', mosfet_status.to_bytes(1, byteorder='big')))
+        except BOSErr.DriverError as err:
+            print(err)
+        
 
     # def get_mosfet_status_data(self, chargeable, dischargeable): 
     #     mosfet_status = self.state['MOSFET status']
@@ -378,8 +418,9 @@ def test_factory_mode(bms: JBDBMS):
 if __name__ == "__main__":
     bms = None
     try:
-        address = "A4:C1:38:3C:9D:22"
-        bms = JBDBMS("JBDBMSTest", address, staleness=1000)
+        # address = "A4:C1:38:3C:9D:22"
+        address = "/dev/ttyUSB0"
+        bms = JBDBMS("JBDBMSTest", Interface.UART, address, staleness=1000)
         for _ in range(2): 
             try: 
                 # test_query_info(bms)
@@ -390,7 +431,7 @@ if __name__ == "__main__":
                 print(bms)
                 
                 break
-            except pygatt.device.exceptions.BLEError: 
+            except Exception as err:
                 # bms.close()
                 print("Retrying in 1 second(s)...")
                 time.sleep(1)
@@ -406,4 +447,3 @@ if __name__ == "__main__":
             bms.close()
     
     exit(0)
-

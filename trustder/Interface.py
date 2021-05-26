@@ -51,6 +51,7 @@ class Connection:
         constructor = d[iface]
         return constructor(addr, *args)
 
+
     
 class BLEConnection(Connection):
     class DataHandler: 
@@ -218,9 +219,9 @@ class TCPConnection(Connection):
 
 
 import serial
-class UARTConnection:
-    def __init__(self, iface: Interface, addr: str):
-        super().__init__(iface, addr)
+class UARTConnection(Connection):
+    def __init__(self, addr: str):
+        super().__init__(Interface.UART, addr)
         # address is /dev/tty*
         self._dev = serial.Serial()
         self._dev.baudrate = 9600
@@ -230,10 +231,12 @@ class UARTConnection:
         return self._dev.is_open
 
     def connect(self):
+        print('connect')
         self._dev.open()
 
     def read(self, nbytes: int) -> bytes:
-        return self.read(nbytes)
+        print(f'read {nbytes}')
+        return self._dev.read(nbytes)
 
     def readstr(self, encoding = 'ASCII') -> str:
         data = bytes()
@@ -246,8 +249,10 @@ class UARTConnection:
         return data.decode(encoding)
 
     def write(self, data: bytes):
+        print(f'write {data}')
         self._dev.write(data)
     
     def close(self):
         self._dev.close()
-        
+
+    

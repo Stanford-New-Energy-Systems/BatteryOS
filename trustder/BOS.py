@@ -444,17 +444,7 @@ class BOS:
         
     def make_battery(self, name: str, kind: str, iface: Interface, addr: str, *args):
         if kind == JBDBMS.type():
-            if iface != Interface.BLE:
-                raise BOSErr.InvalidArgument
-            '''
-            conn = BLEConnection(addr,
-                                "0000ff00-0000-1000-8000-00805f9b34fb",
-                                "0000ff01-0000-1000-8000-00805f9b34fb",
-            )
-            conn.connect()
-            assert conn.is_connected()
-            '''
-            battery = JBDBMS(name, addr)
+            battery = JBDBMS(name, iface, addr, *args)
         else:
             battery_type = self.battery_types[kind]
             battery = battery_type(name, iface, addr, *args)
