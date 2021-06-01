@@ -231,11 +231,10 @@ class UARTConnection(Connection):
         return self._dev.is_open
 
     def connect(self):
-        print('connect')
         self._dev.open()
 
-    def read(self, nbytes: int) -> bytes:
-        print(f'read {nbytes}')
+    def read(self, nbytes: int, timeout=None) -> bytes:
+        self._dev.timeout = timeout
         return self._dev.read(nbytes)
 
     def readstr(self, encoding = 'ASCII') -> str:
@@ -249,7 +248,6 @@ class UARTConnection(Connection):
         return data.decode(encoding)
 
     def write(self, data: bytes):
-        print(f'write {data}')
         self._dev.write(data)
     
     def close(self):
