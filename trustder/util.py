@@ -37,3 +37,5 @@ class DummyTime:
         self._time += duration
 
 bos_time = SystemTime()
+
+verbose = False
