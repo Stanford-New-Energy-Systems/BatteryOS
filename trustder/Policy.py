@@ -124,8 +124,7 @@ class ProportionalPolicy(SplitterPolicy):
         if from_status.current != 0:
             raise BOSErr.BatteryInUse
 
-        if from_status.voltage != target_status.voltage:
-            raise BOSErr.VoltageMismatch
+        target_status.voltage = from_status.voltage
 
         actual_status = BatteryStatus(target_status.voltage,
                                       0,
