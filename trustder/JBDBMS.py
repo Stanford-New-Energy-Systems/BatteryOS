@@ -9,8 +9,9 @@ from BatteryInterface import BALBattery, BatteryStatus
 from Interface import Interface, Connection
 import BOSErr
 # import uuid
+import util
 # import threading
-DEBUG = True
+DEBUG = False
 
 class JBDBMS(BALBattery): 
     dev_info_str = b'\xdd\xa5\x03\x00\xff\xfd\x77'
@@ -39,7 +40,7 @@ class JBDBMS(BALBattery):
             raise BOSErr.NoBattery
 
         self.state = self.get_basic_info()
-
+        
         self.current_range = (120, 120)
         self._current_range = range(-120, 120)
         self.staleness = staleness
@@ -48,26 +49,44 @@ class JBDBMS(BALBattery):
     @staticmethod
     def type() -> str: return "JBDBMS"
 
+    def _read_force(self, count: int, timeout: float):
+        res = self.connection.read(count, timeout)
+        if len(res) != count:
+            raise BOSErr.DriverError
+        return res
+    
     def query_info(self, to_send) -> bytes:
-        self.connection.write(to_send)
+        max_tries = 3
+        err = None
+        for _ in range(0, max_tries):
+            try:
+                self.connection.write(to_send)
+                timeout = 1 # wait 0.25 seconds
+                hdr = self._read_force(4, timeout)
+                if hdr[0] != 0xdd:
+                    raise BOSErr.DriverError
+                data = self._read_force(hdr[3], timeout)
+                end = self._read_force(3, timeout)
+                if end[-1] != 0x77:
+                    raise BOSErr.DriverError
+                cksum = end[1]
+                
+                if hdr[1] != to_send[2]:
+                    raise BOSErr.DriverError
+        
+                resp = hdr + data + end
+        
+                # validate checksum
+                self._check_resp_cksum(resp)
 
-        hdr = self.connection.read(4)
-        if hdr[0] != 0xdd:
-            raise BOSErr.DriverError
-        data = self.connection.read(hdr[3])
-        end = self.connection.read(3)
-        if end[-1] != 0x77:
-            raise BOSErr.DriverError
-        cksum = end[1]
+                return resp
+            
+            except BOSErr.DriverError as err_:
+                err = err_
+                pass
 
-        if hdr[1] != to_send[2]:
-            raise BOSErr.DriverError
+        raise err
 
-        resp = hdr + data + end
-
-        # validate checksum
-        self._check_resp_cksum(resp)
-        return resp
 
     def write_without_receive(self, to_send): 
         self.connection.write_without_receive(to_send)
@@ -104,7 +123,7 @@ class JBDBMS(BALBattery):
 
         reg_addr = register_address
         data_length = len(bytes_to_write).to_bytes(1, byteorder='big', signed=False)
-        sum_of_databytes = (sum(bytes_to_write)) 
+        sum_of_databytes = (sum(bytes_to_write))
         checksum = (
             ~((int.from_bytes(reg_addr, byteorder='big', signed=False) + 
                 int.from_bytes(data_length, byteorder='big', signed=False) + 
@@ -149,9 +168,9 @@ class JBDBMS(BALBattery):
         info = self.query_info(self.get_read_register_command(b'\x03'))
         byte_order = "big"
         basic_info = {
-            "voltage": int.from_bytes(info[4:6], byte_order), 
-            "current": int.from_bytes(info[6:8], byte_order), 
-            "remaining charge": int.from_bytes(info[8:10], byte_order), 
+            "voltage": int.from_bytes(info[4:6], byte_order) / 100, # originally in decivolts
+            "current": int.from_bytes(info[6:8], byte_order),  # units ???
+            "remaining charge": int.from_bytes(info[8:10], byte_order), # units ???
             "maximum capacity": int.from_bytes(info[10:12], byte_order),
             "cycles": int.from_bytes(info[12:14], byte_order), 
             "manufacture": int.from_bytes(info[14:16], byte_order), 
@@ -210,22 +229,22 @@ class JBDBMS(BALBattery):
     def get_voltage(self):
         with self._lock:
             self.check_staleness()
-            return self.state['voltage']
+            return self.get_status().voltage
 
     def get_current(self):
         with self._lock:
             self.check_staleness()
-            return self.state['current']
+            return self.get_status().current
     
     def get_maximum_capacity(self):
         with self._lock:
             self.check_staleness()
-            return self.state['maximum capacity']
+            return self.get_status().max_capacity
 
     def get_current_capacity(self):
         with self._lock:
             self.check_staleness()
-            return self.state['remaining charge']
+            return self.get_status().state_of_charge
 
     def _set_chargeable(self, is_chargeable):
         # self.check_staleness()
@@ -268,6 +287,9 @@ class JBDBMS(BALBattery):
     #     return mosfet_status
 
     def set_current(self, target_current):
+        if util.verbose:
+            print(f'{self.name()}: set current {target_current}')
+        
         with self._lock:
             if (target_current not in self._current_range): 
                 return False
@@ -301,10 +323,10 @@ class JBDBMS(BALBattery):
         with self._lock:
             self.check_staleness()
             return BatteryStatus(\
-                self.state['voltage'], 
+                self.state['voltage'],
                 self.state['current'], 
-                self.state['remaining charge'], 
-                self.state['maximum capacity'], 
+                self.state['remaining charge'] / 100, 
+                self.state['maximum capacity'] / 100,
                 self.current_range[0], 
                 self.current_range[1])
         
@@ -415,35 +437,119 @@ def test_factory_mode(bms: JBDBMS):
             JBDBMS.exit_factory_mode_command))
     print(hexlify(info))
 
+
+# Calibrate BMS by entering factory mode
+# - capacity: in amp-hours (Ah)
+def calibrate(bms: JBDBMS, capacity, voltages: list):
+    if len(voltages) != 6:
+        raise BOSErr.InvalidArgument
+
+    print("------ Entering factory mode ------")
+    info = bms.query_info(
+        JBDBMS.get_write_register_command(
+            JBDBMS.enter_factory_mode_register, 
+            JBDBMS.enter_factory_mode_command))
+
+
+    info = bms.query_info(
+        JBDBMS.get_write_register_command(
+            b'\x10',
+            (int(capacity * 100)).to_bytes(2, 'big', signed=False)
+            ))
+
+    # set voltages
+    print(voltages)
+    regs = [b'\x12', b'\x32', b'\x33', b'\x34', b'\x35', b'\x13']
+    for p in zip(regs, voltages):
+        info = bms.query_info(
+            JBDBMS.get_write_register_command(
+                p[0],
+                (int(p[1] * 100)).to_bytes(2, 'big', signed=False)
+                 ))
+
+    print("------ Exiting factory mode ------")
+    info = bms.query_info(
+        JBDBMS.get_write_register_command(
+            JBDBMS.exit_factory_mode_register, 
+            JBDBMS.exit_factory_mode_command))
+    
+
+class FactoryMode:
+    def __init__(self, bms: JBDBMS):
+        self.bms = bms
+
+    def __enter__(self):
+        bms.query_info(
+            JBDBMS.get_write_register_command(
+                JBDBMS.enter_factory_mode_register,
+                JBDBMS.enter_factory_mode_command))
+
+    def __exit__(self, *args):
+        bms.query_info(
+            JBDBMS.get_write_register_command(
+                JBDBMS.exit_factory_mode_register,
+                JBDBMS.exit_factory_mode_command))
+    
+    
 if __name__ == "__main__":
+    prog = sys.argv[0]
+    if len(sys.argv) < 3:
+        print(f'usage: {prog} calibrate|factory|mdc|mcc <dev> [arg...]', file=sys.stderr)
+        exit(1)
+
+    cmd = sys.argv[1]
+
     bms = None
     try:
         # address = "A4:C1:38:3C:9D:22"
-        address = "/dev/ttyUSB0"
+        address = sys.argv[2]
+        print(address)
         bms = JBDBMS("JBDBMSTest", Interface.UART, address, staleness=1000)
-        for _ in range(2): 
-            try: 
-                # test_query_info(bms)
-                # test_factory_mode(bms)
-                
-                print(bms.state)
-                print(bms.get_status())
-                print(bms)
-                
-                break
-            except Exception as err:
-                # bms.close()
-                print("Retrying in 1 second(s)...")
-                time.sleep(1)
-                continue
+        print(bms.get_status())
 
-        lock = threading.Lock()
-        bms.start_background_refresh()
-        time.sleep(10)
-        bms.stop_background_refresh()
+        args = sys.argv[3:]
+
+        if cmd == "calibrate":
+            if len(args) != 2:
+                print(f'usage: {prog} calibrate <max_capacity> <v100>,<v80>,...<v0>', file=sys.stderr)
+                exit(1)
+            capacity = args[0]
+            voltages = list(map(float, args[1].split(',')))
+            calibrate(bms, float(args[0]), voltages)
+        elif cmd == "factory":
+            if len(args) != 0:
+                print(f'usage: {prog} factory', file=sys.stderr)
+                exit(1)
+            test_factory_mode(bms)
+        elif cmd == "write":
+            if len(args) < 2:
+                print(f'usage: {prog} write <reg> <byte>...')
+                exit(1)
+            regstr = args[0]
+            bytesstr = args[1:]
+            reg = bytes([int(regstr, 0)])
+            data = bytes([int(s, 0) for s in bytesstr])
+            with FactoryMode(bms) as _:
+                bms.query_info(
+                    JBDBMS.get_write_register_command(
+                        reg,
+                        data))
+                        
+            
+        else:
+            print(f'{prog}: unrecognized command {cmd}', file=sys.stderr)
+            exit(1)
+
+        # lock = threading.Lock()
+        # bms.start_background_refresh()
+        # time.sleep(10)
+        # bms.stop_background_refresh()
+
     
     finally:
         if bms != None:
             bms.close()
     
     exit(0)
+
+
