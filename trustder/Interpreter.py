@@ -12,7 +12,7 @@ import Policy
 
 class Interpreter:
     def __init__(self):
-        util.bos_time = util.DummyTime(0)
+        # util.bos_time = util.DummyTime(0)
         self._bos = BOS.BOS()
         self._commands = {"make": self._make,
                           "mk": self._make,
@@ -34,6 +34,7 @@ class Interpreter:
                           "clock": self._clock,
                           "refresh": self._refresh,
                           "sleep": self._sleep,
+                          "verbose": self._verbose,
                           }
         self._aliases = dict()
 
@@ -41,7 +42,8 @@ class Interpreter:
         with open(path) as f:
             lines = f.readlines()
             for line in lines:
-                self.execute(line)
+                if line[0] != '#':
+                    self.execute(line)
         
         
     def run(self):
@@ -51,7 +53,10 @@ class Interpreter:
             except EOFError:
                 print('')
                 return
-            self.execute(line)
+            try:
+                self.execute(line)
+            except Exception as e:
+                print(traceback.format_exc())
 
     def execute(self, line: str):
         args = line.split()
@@ -66,12 +71,7 @@ class Interpreter:
                 args = args[1:]
             else:
                 print("Unrecognized command '{}'.".format(cmd))
-        try:
-            self._commands[cmd](args)
-        except Exception as e:
-            print(traceback.format_exc());
-            # print('Error: {}: {}'.format(type(e), e))
-
+        self._commands[cmd](args)
 
     def _help(self, args):
         for cmd in sorted(self._commands.keys()):
@@ -253,16 +253,17 @@ class Interpreter:
         print(util.bos_time())
 
     def _stat(self, args):
-        if len(args) != 1:
+        if len(args) < 1:
             print("Usage: stat <battery>")
             return
-        battery = args[0]
-        try:
-            status = self._bos.get_status(battery)
-        except BOSErr.BOSErr as e:
-            print('Error: {}'.format(e))
-            return
-        print('{{status = {}, meter = {}}}'.format( status, self._bos.lookup(battery).get_meter()))
+        for battery in args:
+            try:
+                status = self._bos.get_status(battery)
+            except BOSErr.BOSErr as e:
+                print('Error: {}'.format(e))
+                return
+            print('{{status = {}, meter = {}}}'.format(status,
+                                                       self._bos.lookup(battery).get_meter()))
 
     def _load(self, args):
         if len(args) == 0:
@@ -368,6 +369,11 @@ class Interpreter:
             return
         time.sleep(int(args[0]))
 
+    def _verbose(self, args):
+        if len(args) != 0:
+            print('Usage: verbose')
+            return
+        util.verbose = not util.verbose
 
 if __name__ == '__main__':
     interp = Interpreter()
