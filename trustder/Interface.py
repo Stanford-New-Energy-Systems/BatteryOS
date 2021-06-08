@@ -3,6 +3,7 @@ import pygatt
 import socket
 import sys
 import time 
+import BOSErr
 
 class Interface(enum.Enum):
     BLE = "BLE"
@@ -253,4 +254,36 @@ class UARTConnection(Connection):
     def close(self):
         self._dev.close()
 
+    
+class CurrentRegulator: 
+    def __init__(self, address): 
+        self._addr = address
+    
+    def set_current(self, current: float): 
+        raise NotImplementedError
+    
+    def get_current(self) -> float: 
+        raise NotImplementedError
+    
+
+# requirement: rd6006, minimalmodbus
+from rd6006 import RD6006
+class RD6006PowerSupply(CurrentRegulator): 
+    def __init__(self, address):
+        super().__init__(address)
+        self._device = RD6006(address)
+        self._device.enable = 0
+
+    def set_current(self, amps: float):
+        self._device.current = amps
+
+    def get_current(self) -> float:
+        return self._device.current
+    
+    def enable(self):
+        self._device.enable = 1
+    
+    def disable(self): 
+        self._device.enable = 0
+    
     
