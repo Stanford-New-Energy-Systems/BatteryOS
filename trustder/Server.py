@@ -8,6 +8,8 @@ import select
 import BOS
 import json
 
+import util
+
 MAXREQLEN = 1024
 MAXRESPLEN = 1024
 
@@ -79,6 +81,8 @@ class BOSServer:
                     log(e)
     
     def _serve(self, sock):
+        if util.verbose:
+            print(f'incoming connection on {sock}')
         # existing connection
         req_bytes = sock.recv(MAXREQLEN)
         resp_bytes = None
@@ -114,7 +118,7 @@ class BOSServer:
         except: raise InvalidRequest(f'bad type {kind}')
         resp = handler(req)
         respstr = json.dumps(resp)
-        resp_bytes = bytes(respstr, 'ASCII')
+        resp_bytes = bytes(respstr, 'ASCII') + b'\x00'
         return resp_bytes
 
     def _req_lookup(self, d, field):
