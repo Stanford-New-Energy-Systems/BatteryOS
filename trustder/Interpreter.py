@@ -2,6 +2,8 @@ import sys
 import argparse
 import traceback
 import time
+import threading
+import util
 
 import BOS
 import util
@@ -9,6 +11,7 @@ import BOSErr
 from BatteryInterface import BatteryStatus, Battery
 import Interface
 import Policy
+import Server
 
 class Interpreter:
     def __init__(self):
@@ -35,8 +38,11 @@ class Interpreter:
                           "refresh": self._refresh,
                           "sleep": self._sleep,
                           "verbose": self._verbose,
+                          "echo": self._echo,
+                          "server": self._server,
                           }
         self._aliases = dict()
+        self._server = None
 
     def load(self, path):
         with open(path) as f:
@@ -85,9 +91,10 @@ class Interpreter:
             "aggregator": self._make_aggregator,
             "splitter": self._make_splitter,
             "pseudo": self._make_pseudo,
+            "network": self._make_network,
         }
         if len(args) < 1:
-            print("Usage: make null|battery|aggregator|splitter|pseudo [<arg>...]")
+            print(f'Usage: make {"|".join(subcmds.keys())} [<arg>...]')
             return
         if args[0] not in subcmds:
             print("Unrecognized battery kind '{}'".format(args[0]))
@@ -116,6 +123,21 @@ class Interpreter:
             return
         addr = args[3]
         self._bos.make_battery(name, kind, iface, addr)
+
+    def _make_network(self, args):
+        if len(args) != 5:
+            print("Usage: make network <name> <remote_name> <iface> <addr> <port>")
+            return
+        name = args[0]
+        remote_name = args[1]
+        try: 
+            iface = Interface.Interface(args[2])
+        except:
+            print(f'invalid interface {args[2]}')
+            return
+        addr = args[3]
+        port = int(args[4])
+        self._bos.make_network(name, remote_name, iface, addr, port)
 
     def _parse_status(self, args, status=None):
         if status is None:
@@ -374,6 +396,29 @@ class Interpreter:
             print('Usage: verbose')
             return
         util.verbose = not util.verbose
+
+    def _echo(self, args):
+        print(*args)
+
+    def _server(self, args):
+        if len(args) != 1:
+            print('Usage: server start|stop|check')
+            return
+        cmd = args[0]
+        if cmd == 'start':
+            server = Server.BOSServer(self._bos)
+            self._server = threading.Thread(target=server.loop, args=())
+            self._server.start()
+        elif cmd == 'stop':
+            self._server = None
+        elif cmd == 'check':
+            if self._server is not None:
+                print('running')
+            else:
+                print('not started')
+        else:
+            print(f'bad subcommand {cmd}')
+
 
 if __name__ == '__main__':
     interp = Interpreter()

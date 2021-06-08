@@ -8,6 +8,7 @@ from BOSNode import *
 from JBDBMS import JBDBMS
 import Interface
 from Interface import BLEConnection
+from Interface import Connection
 from util import *
 import BOSErr
 from Policy import *
@@ -29,7 +30,7 @@ class NullBattery(Battery):
         
     @staticmethod
     def type(): return "Null"
-
+    
     _KEY_VOLTAGE = "voltage"
     
     def serialize(self):
@@ -92,16 +93,17 @@ class NetworkBattery(Battery):
     def __init__(self, name, remote_name, iface, addr, *args):
         super().__init__(name)
         self._remote_name = remote_name
-        self._conn = Interface.create(iface, addr, *args)
+        self._conn = Connection.create(iface, addr, *args)
         self._conn.connect()
         self._status = None    # Cached status
         self._timestamp = None
+        self.refresh()
 
     def _send_recv(self, req):
         req_bytes = bytes(json.dumps(req), 'ASCII')
         self._conn.write(req_bytes)
         resp_str = self._conn.readstr()
-        resp = json.loads(dump_str)
+        resp = json.loads(resp_str)
         return resp
 
     def _resp_get_body(self, resp):
@@ -123,7 +125,8 @@ class NetworkBattery(Battery):
                 'name': self._remote_name,
             }
             resp = self._send_recv(req)
-            self._status = self._resp_get_body(resp)
+            self._status = BatteryStatus.from_json(self._resp_get_body(resp))
+            # self._status = self._resp_get_body(resp)
             self._timestamp = time.time() # TODO: need to set true timestamp.
             current = self._status.current
             self.update_meter(current, current)
@@ -213,6 +216,9 @@ class AggregatorBattery(Battery):
                              s_max_charge_rate)
 
     def set_current(self, target_current):
+        if verbose:
+            print(f'set current {target_current}')
+        
         old_current = self.get_status().current
         
         (max_discharge_rate, max_charge_rate) = self.get_current_range()
@@ -369,6 +375,14 @@ class BOSDirectory:
         with self._lock:
             raise NotImplementedError
 
+    def isfree(self, name: str) -> bool:
+        return len(self.get_children(name)) == 0
+
+    def isused(self, name: str) -> bool:
+        return not self.isfree(name)
+            
+        
+
 
 #     def refresh(self):
 #         for name in self._directory:
@@ -451,7 +465,11 @@ class BOS:
             battery.reset_meter()
         self._directory.add_node(name, battery)
         return battery
-    
+
+    def make_network(self, name: str, remote_name: str, iface: Interface, addr: str, *args):
+        battery = NetworkBattery(name, remote_name, iface, addr, *args)
+        self._directory.add_node(name, battery)
+        return battery
     
     def make_aggregator(self, name: str, sources: T.List[str], voltage, voltage_tolerance):
         battery = AggregatorBattery(name, voltage, voltage_tolerance, sources, self._lookup)
