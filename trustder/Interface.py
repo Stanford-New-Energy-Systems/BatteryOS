@@ -275,7 +275,9 @@ class RD6006PowerSupply(CurrentRegulator):
         self._device.enable = 0
 
     def set_current(self, amps: float):
+        self.disable()
         self._device.current = amps
+        self.enable()
 
     def get_current(self) -> float:
         return self._device.current
