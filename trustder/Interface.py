@@ -182,8 +182,9 @@ class TCPConnection(Connection):
             print("TCPConnection.read: socket not connected, no byte is read", file=sys.stderr)
             return b''
         data = bytes()
+
         while True:
-            chunk = self._socket.recv(4096)
+            chunk = self._socket.recv(1)
             if chunk == b'':
                 print("TCPConnection.read: connection broken", file=sys.stderr)
                 self._socket.close()
