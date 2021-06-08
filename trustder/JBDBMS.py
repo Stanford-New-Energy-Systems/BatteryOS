@@ -1,4 +1,3 @@
-import pygatt
 import threading
 from binascii import hexlify
 import binascii
@@ -6,7 +5,7 @@ import time
 import sys
 import typing as T
 from BatteryInterface import BALBattery, BatteryStatus
-from Interface import Interface, Connection
+from Interface import Interface, Connection, CurrentRegulator, RD6006PowerSupply
 import BOSErr
 # import uuid
 import util
@@ -24,7 +23,7 @@ class JBDBMS(BALBattery):
     exit_and_save_factory_mode_command = b'\x28\x28'
     exit_factory_mode_command = b'\x00\x00'
 
-    def __init__(self, name, iface, addr, staleness=100):
+    def __init__(self, name, iface, addr, current_regulator: CurrentRegulator=RD6006PowerSupply('/dev/ttyUSB0'), staleness=100):
         super().__init__(name, iface, addr, staleness)
         self.connection = Connection.create(iface, addr)
 
@@ -41,10 +40,12 @@ class JBDBMS(BALBattery):
 
         self.state = self.get_basic_info()
         
-        self.current_range = (120, 120)
-        self._current_range = range(-120, 120)
+        # delibrately make it smaller than the maximum
+        self.current_range = range(-20.0, 20.0)
         self.staleness = staleness
         self.last_refresh = (time.time() * 1000)  # in ms
+
+        self.current_regulator = current_regulator
 
     @staticmethod
     def type() -> str: return "JBDBMS"
@@ -286,12 +287,12 @@ class JBDBMS(BALBattery):
     #         mosfet_status = (mosfet_status | 2)
     #     return mosfet_status
 
-    def set_current(self, target_current):
+    def set_current(self, target_current: float) -> bool:
         if util.verbose:
             print(f'{self.name()}: set current {target_current}')
         
         with self._lock:
-            if (target_current not in self._current_range): 
+            if (target_current not in self.current_range): 
                 return False
             if (target_current > 0 and self.get_current_capacity() <= 0): 
                 # self._set_dischargeable(False)
@@ -299,17 +300,8 @@ class JBDBMS(BALBattery):
             if (target_current < 0 and self.get_current_capacity() >= self.get_maximum_capacity()): 
                 # self._set_chargeable(False)
                 return False 
-            # if target_current > 0: 
-            #     # self._set_chargeable(False)
-            #     self._set_dischargeable(True)
-            # elif target_current < 0: 
-            #     self._set_chargeable(True)
-            #     # self._set_dischargeable(False)
-            # else: 
-            #     self._set_chargeable(False)
-            #     self._set_dischargeable(False)
             # how to limit the current? 
-            
+            self.current_regulator.set_current(target_current)
             return True
 
     def get_current_range(self):
