@@ -110,9 +110,7 @@ class NetworkBattery(Battery):
         if 'response' not in resp:
             raise BOSErr.BadResponse(resp)
         body = resp['response']
-        if body is None:
-            if 'error' not in resp:
-                raise BOSErr.BadResponse(resp)
+        if body is None and 'error' in resp:
             error = resp['error']
             print(f'{self._name}: server error; {error}')
             raise BOSErr.ServerError(error)
