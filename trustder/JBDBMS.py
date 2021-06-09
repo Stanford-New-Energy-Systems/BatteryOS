@@ -23,7 +23,9 @@ class JBDBMS(BALBattery):
     exit_and_save_factory_mode_command = b'\x28\x28'
     exit_factory_mode_command = b'\x00\x00'
 
-    def __init__(self, name, iface, addr, current_regulator: CurrentRegulator=RD6006PowerSupply('/dev/ttyUSB0'), staleness=100):
+    def __init__(self, name, iface, addr,
+                 current_regulator: CurrentRegulator=RD6006PowerSupply('/dev/ttyUSB1'),
+                 staleness=100):
         super().__init__(name, iface, addr, staleness)
         self.connection = Connection.create(iface, addr)
 
@@ -41,7 +43,7 @@ class JBDBMS(BALBattery):
         self.state = self.get_basic_info()
         
         # delibrately make it smaller than the maximum
-        self.current_range = range(-20.0, 20.0)
+        self.current_range = (100, 100)
         self.staleness = staleness
         self.last_refresh = (time.time() * 1000)  # in ms
 
@@ -292,15 +294,17 @@ class JBDBMS(BALBattery):
             print(f'{self.name()}: set current {target_current}')
         
         with self._lock:
-            if (target_current not in self.current_range): 
+            if target_current < -self.current_range[0] or target_current > self.current_range[1]:
                 return False
             if (target_current > 0 and self.get_current_capacity() <= 0): 
                 # self._set_dischargeable(False)
-                return False
+                # return False
+                print('return False')
             if (target_current < 0 and self.get_current_capacity() >= self.get_maximum_capacity()): 
                 # self._set_chargeable(False)
                 return False 
-            # how to limit the current? 
+            # how to limit the current?
+            print(target_current)
             self.current_regulator.set_current(target_current)
             return True
 
@@ -480,7 +484,7 @@ class FactoryMode:
         bms.query_info(
             JBDBMS.get_write_register_command(
                 JBDBMS.exit_factory_mode_register,
-                JBDBMS.exit_factory_mode_command))
+                JBDBMS.exit_and_save_factory_mode_command))
     
     
 if __name__ == "__main__":
