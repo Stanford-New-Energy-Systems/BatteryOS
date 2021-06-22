@@ -14,17 +14,26 @@ import BOSErr
 from Policy import *
 
 class NullBattery(Battery):
+    '''
+    A virtual leaf-node battery whose status is all 0's (except for voltage).
+    Note that the ability to specify the voltage is important so that 
+    it can be aggregated with other batteries.
+    '''
+    
     def __init__(self, name, voltage):
+        '''Construct a null battery with the given name and voltage.'''
         super().__init__(name)
         self._voltage = voltage
 
     def refresh(self):
+        # nothing to refresh, since this battery is a virtual leaf
         pass
 
     def get_status(self):
         return BatteryStatus(self._voltage, 0, 0, 0, 0, 0)
 
     def set_current(self, current):
+        # the current can only ever be 0
         if current != 0:
             raise BOSErr.CurrentOutOfRange
         
@@ -40,8 +49,17 @@ class NullBattery(Battery):
     def _deserialize_derived(d: dict):
         return NullBattery(d[NullBattery._KEY_VOLTAGE])
 
+    
 class PseudoBattery(BALBattery):
+    '''
+    A virtual leaf-node battery that returns a pre-specified status every time it is queried.
+    '''
+    
     def __init__(self, name, iface, addr, status: BatteryStatus):
+        '''
+        Construct a new pseudo battery on the given interface and at the given address with
+        with the specified status.
+        '''
         super().__init__(name, iface, addr)
         self._status = status
         self.set_meter(self._status.state_of_charge)
@@ -71,6 +89,7 @@ class PseudoBattery(BALBattery):
             self.update_meter(old_current, new_current)
 
     def set_status(self, status):
+        '''Set a new status of this battery.'''
         with self._lock:
             self.update_meter(self._status.current, status.current)
             self._status = status
@@ -90,7 +109,19 @@ class PseudoBattery(BALBattery):
 
 
 class NetworkBattery(Battery):
+    '''
+    A virtual battery that mirrors another logical battery on a different BOS node.
+    It connects to a remote BOS node server and queries it about the remote battery.
+
+    For the implementation of the BOS node server, see 'Server.py'.
+    '''
+    
     def __init__(self, name, remote_name, iface, addr, *args):
+        '''
+        Create a network battery with the name 'name' that connects to a remote battery with the
+        name 'remote_name' on another BOS node at the network address 'addr' over the interface
+        'iface'.
+        '''
         super().__init__(name)
         self._remote_name = remote_name
         self._conn = Connection.create(iface, addr, *args)
@@ -117,6 +148,7 @@ class NetworkBattery(Battery):
         return body
 
     def refresh(self):
+        # force a refresh of the remote battery status and cache it.
         with self._lock: 
             req = {
                 'request': 'get_status',
@@ -143,15 +175,22 @@ class NetworkBattery(Battery):
             self.update_meter(old_current, new_current)
 
     def get_status(self):
+        # return the cached status of the remote battery, re-caching it if necessary.
         with self._lock:
             if time.time() - self._timestamp >= self._sample_period:
                 self.refresh()
             self.update_meter(self._status.current, self._status.current)
         return self._status
-        
+
+    
 class AggregatorBattery(Battery):
+    '''
+    A virtual battery that aggregates multiple logical batteries into one logical battery.
+    '''
+    
     def __init__(self, name, voltage, voltage_tolerance, srcnames: T.List[str], lookup):
         '''
+        Construct a new aggregator battery.
         `voltage` is the reported voltage of the aggregated battery. 
         `voltage_tolerance` indicates how much the source voltages are allowed to differ from the 
         virtual voltage.
@@ -175,13 +214,29 @@ class AggregatorBattery(Battery):
                 raise BOSErr.VoltageMismatch
 
     def refresh(self):
-        # for srcname in self._srcnames:
-        #    self._lookup(srcname).refresh()
         # TODO: Check to make sure voltages still in range.
         current = self.get_current()
         self.update_meter(current, current)
 
     def get_status(self):
+        '''
+        Compute the aggregate status.
+        The algorithm (when discharging):
+        - max capacity (MC): sum of source max capacities
+        - state of charge (SOC): sum of source states of charge
+        - current: sum of source currents
+        - max discharging current (MDC):
+          1. Compute SOC C-rate for each source battery, defined as (src.SOC / src.MDC)
+          2. Take the minimum SOC C-rate among the sources and use this as the SOC C-rate of the
+             aggregate battery.
+          3. Multiply this aggregate SOC C-rate by the SOC to get the maximum discharging current.
+        - max charging current (MCC):
+          1. Compute inverse SOC C-rate for each source battery, defined as ((src.MC - src.SOC) / src.MCC).
+          2. Take the minimum inverse SOC C-rate among the sources and use this as the SOC C-rate of
+             the aggregate battery.
+          3. Multiply this aggregate inverse SOC C-rate by (MC - SOC) to get the maximum charging
+             current.
+        '''
         s_max_capacity = 0
         s_cur_capacity = 0
         s_max_discharge_time = 0
@@ -214,6 +269,19 @@ class AggregatorBattery(Battery):
                              s_max_charge_rate)
 
     def set_current(self, target_current):
+        '''
+        Set the discharging/charging current of the aggregate battery.
+        Each source battery must be set to a discharging/charging current proportional to its SOC,
+        so that all source batteries will be depleted / fully charged at the same time.
+        The algorithm:
+        1. Compute the time to discharge/charge (TTD/TTC) for the aggregate battery:
+          TTD = agg.SOC / target_current
+          TTC = (agg.MC - agg.SOC) / -target_current
+        2. For each source battery src, set the current using the aggregator's TTD/TTC:
+          src.set_current(src.SOC / TTD)
+          src.set_current((src.MC - src.SOC) / TTC)
+        '''
+        
         if verbose:
             print(f'set current {target_current}')
         
@@ -267,10 +335,20 @@ class AggregatorBattery(Battery):
 
 class SplitterBattery(Battery):
     '''
-    The splitter battery delegates most of the work to its associated splitter policy.
+    A virtual battery that is a partition of a shared source battery.
+    Splitter batteries are managed by splitter policies, which determine what proportion of the 
+    source resources this battery partition should receive.
+    As a result, most functions are delegated to the associated splitter policy.
+
+    You can create new splitter batteries through splitter policies; DO NOT directly instantiate
+    a new splitter battery.
     '''
     
     def __init__(self, name, sample_period, policyname, lookup):
+        ''' 
+        DO NOT call this function directly; use a splitter policy to create a new splitter 
+        battery instead
+        '''
         super().__init__(name)
         self._sample_period = sample_period
         self._policyname = policyname
@@ -300,29 +378,33 @@ class SplitterBattery(Battery):
     def reset_meter(self):
         self._policy().reset_meter(self._name)
     
-
-# class NetworkedBattery:
-#     def __init__(self, name, iface, addr, *args):
-#         if iface == Interface.TCP:
-#             if len(args) == 1:
-#                 raise BOSErr.InvalidArgument("NetworkedBattery.__init__(): missing additional"\
-#                                              " argument 'port'")
-#             self._conn = TCPConnection(addr, args[0])
-#         else:
-#             raise BOSErr.InvalidArgument("Bad interface {}".format(iface))
-# 
-#         self._conn.connect()
-# 
-#     @staticmethod
-#     def type(): return "Networked"
-# 
-#     def refresh(self):
-#         raise NotImplementedError
-# 
-#     def get_status(self):
-        
             
 class BOSDirectory:
+    '''
+    An structure that stores a map of battery names to battery objects and stores 
+    the logical battery topology of BOS.
+    The topology is a directed acyclic graph (DAG), where the nodes are battery names.
+    
+    This structure has 2 purposes:
+    (i) provide a dynamic mapping of battery names to battery objects that can be changed at runtime
+    (ii) track when a battery is in use or is free.
+    
+    Purpose (i):
+    Having a mapping from battery names to battery objects that is queried at runtime is essential,
+    since this allows batteries to be replaced when BOS is running. Suppose the battery name 
+    "batt" is mapped to the physical battery <battA>. Then, the user can rebind "batt" to <battB>
+    atomically. From the view of the rest of the battery topology, nothing changed, except the
+    status reported by "batt" may change.
+
+    Purpose (ii):
+    BOS somehow needs to know when a battery is free or is in use. One way to achieve this is to
+    maintain a full representation of the battery topology. If a node has no children in the DAG,
+    then it is free; otherwise, it is in use. This is the approach the current implementation of 
+    BOSDirectory takes.
+    An alternative and perhaps superior approach would be to add a reference count to each 
+    battery object. This would make BOSDirectory obsolete.
+    '''
+    
     def __init__(self, lock: threading.RLock):
         self._map = dict() # map battery names to (battery, children)
         self._lock = lock

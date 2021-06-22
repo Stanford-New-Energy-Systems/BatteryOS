@@ -98,6 +98,8 @@ class Battery(BOSNode):
         Refresh the state of the battery and update the expected SOC (self._meter).
         For physical batteries, both tasks will be performed.
         For virtual batteries, only the latter will be performed (updating the expected SOC).
+
+        DOC: doesn't propogate refreshes to source batteries; should be independent
         """
         raise NotImplementedError
 
