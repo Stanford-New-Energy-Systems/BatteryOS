@@ -1,3 +1,25 @@
+##########################
+# An interactive interpreter for BOS.
+# 
+# To run the interpreter, use the following command:
+# $ python3 Interpreter.py [script...]
+# 
+# Command-line arguments are treated as scripts, i.e., a series of interpreter commands
+# (lines beginning with '#' are ignored).
+#
+# For a full list of commands, type 'help' in the interpreter.
+#
+# A brief overview of the most useful commands:
+#   make -- create a new battery
+#   stat -- show a battery's status
+#   list -- show a list of the batteries
+#   load -- run a script
+#   current -- set the (dis)charging current of a battery
+#   refresh -- toggle the background refresh status of a battery
+#   server -- enable/disable the BOS server
+# 
+##########################
+
 import sys
 import argparse
 import traceback

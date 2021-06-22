@@ -1,4 +1,17 @@
-# Server.py -- BOS server
+############
+# BOS Server
+#
+# This contains the implementation of the server module for BOS.
+# It listens on a given port for incoming queries from other BOS nodes.
+# The server basically provides a remote procedure call (RPC) interface for the BAL API to other BOS
+# nodes. For example, the 'get_status' remote query simply causes the BOS server to turn around and
+# call get_status() on the provided battery name, given that it exists on the local BOS node.
+#
+# Server responses are of two types: Ok(data) or Err(err).
+#
+# To see the client-side code for communiating with the server, look at BOS.NetworkBattery.
+# 
+###########
 
 import socket
 import sys
@@ -143,6 +156,9 @@ class BOSServer:
         return resp
         
 
+# TODO:
+#  Delete this. The server has since been included in Interpreter.py, so you shouldn't start the
+#  interpeter here.
 import threading
 import time
 import Interpreter

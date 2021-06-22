@@ -50,7 +50,7 @@ class NullBattery(Battery):
         return NullBattery(d[NullBattery._KEY_VOLTAGE])
 
     
-class PseudoBattery(BALBattery):
+class PseudoBattery(PhysicalBattery):
     '''
     A virtual leaf-node battery that returns a pre-specified status every time it is queried.
     '''
@@ -496,6 +496,9 @@ class BOSDirectory:
 
                   
     def visualize(self):
+        '''
+        This is experimental and hasn't been tested it a while.
+        '''
         with self._lock:
             import networkx as nx
             import matplotlib.pyplot as plt
@@ -509,27 +512,24 @@ class BOSDirectory:
     
         
 class BOS:
+    # Map battery type string to battery class
     battery_types = dict([(battery.type(), battery) for battery in
                          [NullBattery, PseudoBattery, AggregatorBattery, SplitterBattery,
                           JBDBMS]])
     
     def __init__(self, lock=threading.RLock()):
-        # Directory: map from battery names to battery objects
         self._directory = BOSDirectory(lock)
         # self._ble = Interface.BLE()
         self._lookup = lambda name: self._directory[name][0]
 
     def __str__(self):
         return '{{directory = {}}}'.format(self._directory)
-
-
+    
     def list(self):
         return self._directory.keys()
 
-    def _make(self, battery: Battery):
-        battery.start_background_refresh()
-
     def make_null(self, name: str, voltage) -> NullBattery:
+        ''' Construct a null battery with the given name and voltage '''
         battery = NullBattery(name, voltage)
         battery.reset_meter()
         self._directory.add_node(name, battery)
@@ -537,7 +537,16 @@ class BOS:
         
         
     def make_battery(self, name: str, kind: str, iface: Interface, addr: str, *args):
-        if kind == JBDBMS.type():
+        ''' 
+        Make a physical battery.
+        Args:
+        - name: name of the physical battery
+        - kind: battery type, as string (see BOS.battery_types)
+        - iface: interface to connect to battery on
+        - addr: address to connect to battery at
+        - *args: any additional arguments to pass to specific physical battery constructor
+        '''
+        if kind == JBDBMS.type():l
             battery = JBDBMS(name, iface, addr, *args)
         else:
             battery_type = self.battery_types[kind]
@@ -547,11 +556,13 @@ class BOS:
         return battery
 
     def make_network(self, name: str, remote_name: str, iface: Interface, addr: str, *args):
+        ''' Make a networked battery. '''
         battery = NetworkBattery(name, remote_name, iface, addr, *args)
         self._directory.add_node(name, battery)
         return battery
     
     def make_aggregator(self, name: str, sources: T.List[str], voltage, voltage_tolerance):
+        ''' Make an aggregator battery. '''
         battery = AggregatorBattery(name, voltage, voltage_tolerance, sources, self._lookup)
         battery.reset_meter()
         self._directory.add_node(name, battery, set(sources))
@@ -560,11 +571,12 @@ class BOS:
     def make_splitter_policy(self, policyname: str, policytype, parent: str, initname: str, *policyargs) -> SplitterPolicy:
         '''
         Make a splitter policy. Initializes the policy with one managed battery.
-        policyname: name of policy to create
-        policytype: type constructor that will be used to instantiate the battery
-        parent: source of the splitter policy
-        initname: name of the initialization battery
-        *policyargs: subtype-specific arguments to pass to policy constructor
+        Args:
+        - policyname: name of policy to create
+        - policytype: type constructor that will be used to instantiate the battery
+        - parent: source of the splitter policy
+        - initname: name of the initialization battery
+        - *policyargs: subtype-specific arguments to pass to policy constructor
         '''
         if not issubclass(policytype, SplitterPolicy):
             raise BOSErr.InvalidArgument
@@ -581,6 +593,11 @@ class BOS:
 
     def make_splitter_battery(self, batteryname: str, policyname: str, sample_period, tgt_status,
                               *policyargs):
+        '''
+        Make a splitter battery.
+        This creates a new splitter battery under the exiting policy named `policyname`. 
+        It attempts to create the new partition battery with the target status `tgt_status`.
+        '''
         battery = SplitterBattery(batteryname, sample_period, policyname, self._lookup)
         self._directory.add_node(batteryname, battery, {policyname})
         policy = self._lookup(policyname)
@@ -596,17 +613,24 @@ class BOS:
         self.lookup(name).set_current(current)
 
     def start_background_refresh(self, name: str):
+        ''' Start background refresh on the given battery. This spawns another thread that does
+        the refreshing in the background. '''
         self.lookup(name).start_background_refresh()
 
     def stop_background_refresh(self, name: str):
+        ''' Stop background refresh on the given battery. This stops the background refresher 
+        thread. It may take a couple seconds, depending on the sample period, to stop. '''
         self.lookup(name).stop_background_refresh()
 
     def refresh(self, name: str):
         self.lookup(name).refresh()
     
-    def free_battery(self, name: str): return self._directory.free_battery(name)
+    def free_battery(self, name: str):
+        # UNTESTED
+        return self._directory.free_battery(name)
     
     def replace_battery(self, name: str, *args):
+        # UNTESTED
         newbattery = self.make_battery(name, *args)
         self._directory.replace_battery(name, newbattery)
         return battery
@@ -626,6 +650,9 @@ class BOS:
     def get_children(self, name: str):
         return self._directory.get_children(name)
 
+
+# The following is just for basic testing of a hard-coded topology.
+# It's much easier to use the interpreter to prototype topologies -- see Interpreter.py.
 import util
 if __name__ == '__main__':
     util.bos_time = DummyTime(0)

@@ -6,6 +6,12 @@ def all_same(items) -> bool:
     return len(set(items)) == 1
 
 class Time:
+    '''
+    An abstract time class used by the BOS interpreter.
+    TODO: This along with SystemTime, DummyTime, and bos_time
+          belongs in a different file (e.g. Interpreter.py).
+    '''
+    
     def __init__(self):
         pass
 
@@ -14,6 +20,7 @@ class Time:
 
 import time as systime
 class SystemTime:
+    ''' This reports the real system time. This is what you want when testing on a real testbed. '''
     def __init__(self):
         super().__init__()
 
@@ -21,6 +28,9 @@ class SystemTime:
         return systime.time()
 
 class DummyTime:
+    ''' This reports a fake, manipulatable time. This is only useful for testing purely virtual 
+        topologies. 
+    '''
     def __init__(self, time=0):
         super().__init__()
         self._time = time 

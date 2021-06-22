@@ -1,3 +1,17 @@
+###############
+# A collection of battery interfaces.
+#
+# This file defines two battery interfaces: BatteryStatus and Battery. Each is discussed in turn.
+#
+# BatteryStatus:
+# This defines the battery status reported by a logical battery in BOS. This is a structure returned
+# by the get_status() call of the BAL API.
+#
+# Battery:
+# An abstract class representing a BOS logical battery, i.e., an object that conforms to the BAL
+# API. For more info on the BAL API, see the BAL Design Document.
+###############
+
 import json
 from Interface import Interface
 from BOSNode import *
@@ -248,10 +262,10 @@ class Battery(BOSNode):
         t = types[tstr]
         return t._deserialize_derived(d)
 
-class BALBattery(Battery):
+class PhysicalBattery(Battery):
     def __init__(self, name: str, iface: Interface, addr: str, sample_period=-1):
         super().__init__(name, sample_period)
-        assert type(self) != BALBattery # abstract class
+        assert type(self) != PhysicalBattery # abstract class
         self._iface = iface
         self._addr = addr
 
@@ -268,7 +282,7 @@ class BALBattery(Battery):
             return self._serialize_base({})
 
 
-
+# TODO: class Scale belongs in Policy.py, not here.
 class Scale:
     def __init__(self, state_of_charge, max_capacity, max_discharge_rate,
                  max_charge_rate):

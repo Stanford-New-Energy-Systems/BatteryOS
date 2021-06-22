@@ -13,6 +13,12 @@ class Interface(enum.Enum):
     # TODO: add more
     
 class Connection:
+    '''
+    Abstract class representing a connection.
+    Connections are used by physical batteries and networked batteries.
+    Create a new connection using the Connection.create() method.
+    '''
+    
     def __init__(self, iface: Interface, addr: str):
         self._iface = iface
         self._addr = addr
@@ -55,6 +61,11 @@ class Connection:
 
     
 class BLEConnection(Connection):
+    '''
+    Bluetooth Low Energy (BLE) connection.
+    This may not work in its current state.
+    '''
+    
     class DataHandler: 
         def __init__(self, recv_buffer_size: int=10): 
             self.recv_data = [b'' for _ in range(recv_buffer_size)]

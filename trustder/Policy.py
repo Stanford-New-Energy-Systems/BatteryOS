@@ -1,3 +1,12 @@
+################
+# Policies for battery partitioning
+#
+# This file defines an abstract policy class and provides concrete implementations of
+# policies we discussed in Spring 2021.
+#
+# 
+
+
 # Policy.py
 # Policies for splitter battery management
 
@@ -11,6 +20,13 @@ class Policy(BOSNode):
         self._lookup = lookup
 
 class SplitterPolicy(Policy):
+    '''
+    An abstract policy for splitting batteries. 
+
+    Splitter policies decide what status to report for each partition, how to add new partitions,
+    and how to remove existing partitions.
+    '''
+
     def __init__(self, srcname, lookup):
         super().__init__(lookup)
         self._srcname = srcname
@@ -42,6 +58,15 @@ class SplitterPolicy(Policy):
     
 
 class ProportionalPolicy(SplitterPolicy):
+    '''
+    A proportional battery partitioning policy.
+    Each partition receives a fixed proportion of the underlying battery's resources.
+    This means that if the underlying battery's state of charge (SOC), e.g., fluctuates
+    unexpectedly, the surplus or deficit SOC will be split between the different battery partitions
+    based on the propotion of each partition's expected SOC to the shared battery's total expected
+    SOC.
+    '''
+    
     def __init__(self, srcname, lookup, initname):
         super().__init__(srcname, lookup)
         self._scales = dict()   # map from splitter battery name to scale
@@ -74,7 +99,9 @@ class ProportionalPolicy(SplitterPolicy):
         src = self._source()
         status = src.get_status()
         scale = self._scales[dstname]
+        # get this partition's expected SOC
         expected_soc = self._lookup(dstname).get_meter()
+        # get the underlying battery's total expected SOC
         total_expected_soc = sum([self._lookup(name).get_meter() for name in self._parts()])
         total_actual_soc = self._source().get_status().state_of_charge
         actual_soc = expected_soc / total_expected_soc * total_actual_soc
@@ -188,6 +215,14 @@ class ProportionalPolicy(SplitterPolicy):
 
         
 class TranchePolicy(SplitterPolicy):
+    '''
+    A policy managing tranched battery partitions.
+    For a description of how tranched policies work, see the BAL Design Document.
+    NOTE: This code doesn't work, but the ideas behind it are correct, I think. 
+    NOTE: This should be merged with the Reservation Policy into a common implementation that 
+          parameterizes the direction in which surpluses and deficits are distributed.
+    '''
+    
     def __init__(self, srcname, lookup):
         super().__init__(srcname, lookup)
         self._tranches = list()

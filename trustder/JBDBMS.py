@@ -1,10 +1,14 @@
+#########################
+# A driver for JBD BMS. #
+#########################
+
 import threading
 from binascii import hexlify
 import binascii
 import time
 import sys
 import typing as T
-from BatteryInterface import BALBattery, BatteryStatus
+from BatteryInterface import PhysicalBattery, BatteryStatus
 from Interface import Interface, Connection, CurrentRegulator, RD6006PowerSupply
 import BOSErr
 # import uuid
@@ -12,7 +16,7 @@ import util
 # import threading
 DEBUG = False
 
-class JBDBMS(BALBattery): 
+class JBDBMS(PhysicalBattery): 
     dev_info_str = b'\xdd\xa5\x03\x00\xff\xfd\x77'
     bat_info_str = b'\xdd\xa5\x04\x00\xff\xfc\x77'
     ver_info_str = b'\xdd\xa5\x05\x00\xff\xfb\x77'
@@ -486,7 +490,18 @@ class FactoryMode:
                 JBDBMS.exit_factory_mode_register,
                 JBDBMS.exit_and_save_factory_mode_command))
     
-    
+
+'''
+This main function contains a couple utilities for configuring JBD BMSes.
+It supports the following commands:
+- calibrate: this lets you set the maximum capacity and SOC voltage thresholds. Look at the 
+             JBD_REGISTER_MAP.md file for units, etc.
+- factory: prints all the factory mode registers
+- write: writes the given value to the given factory mode register
+
+If you modify this, make sure to exit factory mode and save registers! The FactoryMode context,
+implemented above, takes care of this automatically, so you should probably use that.
+'''
 if __name__ == "__main__":
     prog = sys.argv[0]
     if len(sys.argv) < 3:
