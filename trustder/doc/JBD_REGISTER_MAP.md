@@ -46,6 +46,8 @@ Packets to/from the BMS consist of:
 
 The checksum is simply sum of the payload byte values subtracted from 0x10000 (65536).
 
+NOTE: if the payload is from the BMS, do not include the register address byte!!! 
+
 #### Payload to BMS 
 
 <table border="1">

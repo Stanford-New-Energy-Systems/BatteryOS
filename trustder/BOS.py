@@ -499,9 +499,9 @@ class BOSDirectory:
         '''
         This is experimental and hasn't been tested it a while.
         '''
+        import networkx as nx
+        import matplotlib.pyplot as plt
         with self._lock:
-            import networkx as nx
-            import matplotlib.pyplot as plt
             g = nx.DiGraph()
             for src in self._map:
                 for dst in self._map[src][1]:
@@ -546,7 +546,7 @@ class BOS:
         - addr: address to connect to battery at
         - *args: any additional arguments to pass to specific physical battery constructor
         '''
-        if kind == JBDBMS.type():l
+        if kind == JBDBMS.type():
             battery = JBDBMS(name, iface, addr, *args)
         else:
             battery_type = self.battery_types[kind]
@@ -633,7 +633,7 @@ class BOS:
         # UNTESTED
         newbattery = self.make_battery(name, *args)
         self._directory.replace_battery(name, newbattery)
-        return battery
+        return newbattery
 
     def print_status(self):
         self._directory.print_status()
