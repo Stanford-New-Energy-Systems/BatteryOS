@@ -14,11 +14,10 @@ import csv
 import os
 import typing as T
 import BatteryInterface
-import Interface
+# import Interface
 import BOSErr
-
 class SonnenBattery(BatteryInterface.Battery):
-    def __init__(self, name: str, serial: str, auth_token: str = os.environ["SONNEN_TOKEN"], staleness: int=5000): 
+    def __init__(self, name: str, serial: str, auth_token: str = os.environ.get("SONNEN_TOKEN"), staleness: int=1000): 
         super().__init__(name, staleness)
         self.serial = serial
         self.token = auth_token
@@ -32,8 +31,8 @@ class SonnenBattery(BatteryInterface.Battery):
         self.status = None
         self.refresh()  # initialize the status 
         self.last_refresh = (time.time() * 1000)  # in ms
-        self.MDC = 28
-        self.MCC = 28
+        self.MDC = 28  # max discharging current, delibrately set it smaller
+        self.MCC = 28  # max charging current, delibrately set it smaller
 
     def refresh(self):
         status_endpoint = '/api/v1/status'
@@ -53,7 +52,7 @@ class SonnenBattery(BatteryInterface.Battery):
         return self.status
 
     def check_staleness(self):
-        now = (time.time() * 1000)
+        now = (time.time() * 1000)  # it's in milliseconds
         if now - self.last_refresh > self.staleness: 
             self.refresh()
         return
@@ -87,50 +86,7 @@ class SonnenBattery(BatteryInterface.Battery):
 
         return resp.json()
 
-    # Time of Use (TOU):
-    # This mode allows users to set time windows where it is preferred to employ the use of stored energy
-    # (from PV) rather than consume from the grid.
-
-    def enable_tou(self):
-        tou_endpoint = '/api/setting?EM_OperatingMode=10'
-        try:
-            resp = requests.get(self.url_initial + self.serial + tou_endpoint, headers=self.headers)
-            resp.raise_for_status()
-        except requests.exceptions.HTTPError as err:
-            print(err)
-
-        return resp.json()
-
-    def tou_grid_feedin(self, value=0):
-        # value = 0 disable charging from grid
-        # value = 1 enable charging from grid
-        grid_feedin_endpoint = '/api/setting?EM_US_GRID_ENABLED=' + str(value)
-        try:
-            resp = requests.get(self.url_initial + self.serial + grid_feedin_endpoint, headers=self.headers)
-            resp.raise_for_status()
-        except requests.exceptions.HTTPError as err:
-            print(err)
-
-        return resp.json()
-
-    def tou_window(self, pk_start='[16:00]', pk_end='[21:00]', opk_start='[21:01]'):
-        # value format = [HH:00] in 24hrs format
-        tou_pk_start_endpoint = '/api/setting?EM_US_PEAK_HOUR_START_TIME=' + pk_start
-        tou_pk_end_endpoint = '/api/setting?EM_US_PEAK_HOUR_END_TIME=' + pk_end
-        tou_opk_start_endpoint = '/api/setting?EM_US_LOW_TARIFF_CHARGE_TIME=' + opk_start
-        try:
-            resp1 = requests.get(self.url_initial + self.serial + tou_pk_start_endpoint, headers=self.headers)
-            resp1.raise_for_status()
-            resp2 = requests.get(self.url_initial + self.serial + tou_pk_end_endpoint, headers=self.headers)
-            resp2.raise_for_status()
-            resp3 = requests.get(self.url_initial + self.serial + tou_opk_start_endpoint, headers=self.headers)
-            resp3.raise_for_status()
-
-        except requests.exceptions.HTTPError as err:
-            print(err)
-
-        return [resp1.json(), resp2.json(), resp3.json()]
-
+    
     # Manual Mode
     # This mode allows the user to manually charge or discharge the batteries. The user needs to provide the
     # value for charging or discharging and based on the value, the ecoLinx system will charge until it reaches
@@ -173,8 +129,8 @@ class SonnenBattery(BatteryInterface.Battery):
         return BatteryInterface.BatteryStatus(
             self.status['Uac'],   # Voltage 
             self.status['Pac_total_W'] / self.status['Uac'],  # AC current, need some conversion!!!
-            self.status['USOC'] * 10000 / self.status['Uac'],  # SOC, percentage??? 10kWh * USOC
-            10000 / self.status['Uac'],  # 10kWh 
+            self.status['USOC'] * 10000 / self.status['Uac'],  # SOC, percentage??? 10kWh * USOC, in Ah
+            10000 / self.status['Uac'],  # 10k Wh ==> convert it to Ah
             self.MDC,  # max discharging current, delibrately set it smaller
             self.MCC   # max charging current, delibrately set it smaller
         )
@@ -184,12 +140,12 @@ class SonnenBattery(BatteryInterface.Battery):
             # charging
             if (-target_current) > self.MCC:
                 return False
-            self.manual_mode_control(mode="charge", value=(-target_current)*self.status['Uac'])
+            self.manual_mode_control(mode="charge", value=round((-target_current)*self.status['Uac']))
         else:
             #discharging
             if target_current > self.MDC:
                 return False
-            self.manual_mode_control(mode="discharge", value=target_current*self.status['Uac'])
+            self.manual_mode_control(mode="discharge", value=round(target_current*self.status['Uac']))
         return True
 
     @staticmethod
@@ -198,20 +154,66 @@ class SonnenBattery(BatteryInterface.Battery):
 
 
     # not used below
-    def serialize(self):
-        return super().serialize()
+    # def serialize(self):
+    #     return super().serialize()
 
-    @staticmethod
-    def _deserialize_derived(d: dict):
-        return super()._deserialize_derived(d)
+    # @staticmethod
+    # def _deserialize_derived(d: dict):
+    #     return super()._deserialize_derived(d)
 
-    @staticmethod
-    def deserialize(d: dict, types: dict):
-        return super().deserialize(d, types)
-    
+    # @staticmethod
+    # def deserialize(d: dict, types: dict):
+    #     return super().deserialize(d, types)
+
+    # # Time of Use (TOU):
+    # # This mode allows users to set time windows where it is preferred to employ the use of stored energy
+    # # (from PV) rather than consume from the grid.
+
+    # def enable_tou(self):
+    #     tou_endpoint = '/api/setting?EM_OperatingMode=10'
+    #     try:
+    #         resp = requests.get(self.url_initial + self.serial + tou_endpoint, headers=self.headers)
+    #         resp.raise_for_status()
+    #     except requests.exceptions.HTTPError as err:
+    #         print(err)
+
+    #     return resp.json()
+
+    # def tou_grid_feedin(self, value=0):
+    #     # value = 0 disable charging from grid
+    #     # value = 1 enable charging from grid
+    #     grid_feedin_endpoint = '/api/setting?EM_US_GRID_ENABLED=' + str(value)
+    #     try:
+    #         resp = requests.get(self.url_initial + self.serial + grid_feedin_endpoint, headers=self.headers)
+    #         resp.raise_for_status()
+    #     except requests.exceptions.HTTPError as err:
+    #         print(err)
+
+    #     return resp.json()
+
+    # def tou_window(self, pk_start='[16:00]', pk_end='[21:00]', opk_start='[21:01]'):
+    #     # value format = [HH:00] in 24hrs format
+    #     tou_pk_start_endpoint = '/api/setting?EM_US_PEAK_HOUR_START_TIME=' + pk_start
+    #     tou_pk_end_endpoint = '/api/setting?EM_US_PEAK_HOUR_END_TIME=' + pk_end
+    #     tou_opk_start_endpoint = '/api/setting?EM_US_LOW_TARIFF_CHARGE_TIME=' + opk_start
+    #     try:
+    #         resp1 = requests.get(self.url_initial + self.serial + tou_pk_start_endpoint, headers=self.headers)
+    #         resp1.raise_for_status()
+    #         resp2 = requests.get(self.url_initial + self.serial + tou_pk_end_endpoint, headers=self.headers)
+    #         resp2.raise_for_status()
+    #         resp3 = requests.get(self.url_initial + self.serial + tou_opk_start_endpoint, headers=self.headers)
+    #         resp3.raise_for_status()
+
+    #     except requests.exceptions.HTTPError as err:
+    #         print(err)
+
+    #     return [resp1.json(), resp2.json(), resp3.json()]
+
 
 if __name__ == "__main__": 
-    os.environ["SONNEN_TOKEN"] = '5db92cf858eebce34af146974f49f4d40ec699b99372546c0af628fb48133f61'
+    # os.environ['SONNEN_TOKEN'] = 'Your token here'
+    # code here
+    pass
 
 
 

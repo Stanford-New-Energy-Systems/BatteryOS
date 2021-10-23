@@ -329,9 +329,12 @@ class CurrentRegulator:
     
 
 # requirement: rd6006, minimalmodbus
-from rd6006 import RD6006
 class RD6006PowerSupply(CurrentRegulator): 
     def __init__(self, address):
+        import os
+        import sys
+        sys.path.append(os.path.dirname(__file__), "..", "bosinc", "python")  # this should add the rd6006 file
+        from rd6006 import RD6006
         super().__init__(address)
         self._device = RD6006(address)
         self._device.enable = 0

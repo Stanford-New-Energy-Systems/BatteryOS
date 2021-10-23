@@ -15,7 +15,6 @@
 import json
 from Interface import Interface
 from BOSNode import *
-import BOS
 import BOSErr
 import util
 import threading
@@ -289,52 +288,3 @@ class PhysicalBattery(Battery):
 
 
 # TODO: class Scale belongs in Policy.py, not here.
-class Scale:
-    def __init__(self, state_of_charge, max_capacity, max_discharge_rate,
-                 max_charge_rate):
-        for scale in [state_of_charge, max_capacity, max_discharge_rate, max_charge_rate]:
-            if not (scale >= 0.0 and scale <= 1.0):
-                raise BOSErr.InvalidArgument
-            
-        self._state_of_charge = state_of_charge
-        self._max_capacity = max_capacity
-        self._max_discharge_rate = max_discharge_rate
-        self._max_charge_rate = max_charge_rate
-
-    def __str__(self) -> str:
-        return '{{soc = {}, max_capacity = {}, max_discharge = {}, max_charge = {}}}'.format(
-            self._state_of_charge,
-            self._max_capacity,
-            self._max_discharge_rate,
-            self._max_charge_rate,
-            )
-
-    @staticmethod
-    def scale_all(scale): return BOS.SplitterBattery.Scale(scale, scale, scale, scale)
-    
-    def get_state_of_charge(self): return self._state_of_charge
-    def get_max_capacity(self): return self._max_capacity
-    def get_max_discharge_rate(self): return self._max_discharge_rate
-    def get_max_charge_rate(self): return self._max_charge_rate
-    
-    def serialize(self):
-        return {"state_of_charge": self._state_of_charge,
-                "max_capacity": self._max_capacity,
-                "max_discharge_rate": self._max_discharge_rate,
-                "max_charge_rate": self._max_charge_rate}
-    
-
-    def __sub__(self, other):
-        if self._state_of_charge >= other._state_of_charge and \
-           self._max_capacity >= other._max_capacity and \
-           self._max_discharge_rate >= other._max_discharge_rate and \
-           self._max_charge_rate >= other._max_charge_rate:
-            return Scale(self._state_of_charge - other._state_of_charge,
-                         self._max_capacity - other._max_capacity,
-                         self._max_discharge_rate - other._max_discharge_rate,
-                         self._max_charge_rate - other._max_charge_rate,
-                         )
-        else:
-            raise BOSErr.NoResources
-        
-        
