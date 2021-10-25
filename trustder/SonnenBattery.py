@@ -214,7 +214,7 @@ class SonnenBattery(BatteryInterface.Battery):
 if __name__ == "__main__": 
     # os.environ['SONNEN_TOKEN'] = 'Your token here'
     # code here
-    sb = SonnenBattery("sonnen", serial='66352', auth_token='5db92cf858eebce34af146974f49f4d40ec699b99372546c0af628fb48133f61', staleness=0)
+    sb = SonnenBattery("sonnen", serial='your serial', auth_token='your token', staleness=0)
     sb.enable_manual_mode()
     print(sb.get_status())
     print(sb.refresh())
