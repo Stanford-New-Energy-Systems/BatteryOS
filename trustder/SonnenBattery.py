@@ -53,7 +53,7 @@ class SonnenBattery(BatteryInterface.Battery):
 
     def check_staleness(self):
         now = (time.time() * 1000)  # it's in milliseconds
-        if now - self.last_refresh > self.staleness: 
+        if now - self.last_refresh > self._sample_period: 
             self.refresh()
         return
 
@@ -108,7 +108,7 @@ class SonnenBattery(BatteryInterface.Battery):
         control_endpoint = '/api/v1/setpoint/'
         # Checking if system is in off-grid mode
         # voltage = SonnenBattery(serial=self.serial, auth_token=self.token).refresh()['Uac']
-        voltage = self.refresh['Uac']
+        voltage = self.refresh()['Uac']
         if voltage == 0:
             print('Battery is in off-grid mode... Cannot execute the command')
             return {}
@@ -129,24 +129,25 @@ class SonnenBattery(BatteryInterface.Battery):
         return BatteryInterface.BatteryStatus(
             self.status['Uac'],   # Voltage 
             self.status['Pac_total_W'] / self.status['Uac'],  # AC current, need some conversion!!!
-            self.status['USOC'] * 10000 / self.status['Uac'],  # SOC, percentage??? 10kWh * USOC, in Ah
+            (self.status['USOC']/100) * 10000 / self.status['Uac'],  # SOC, percentage??? 10kWh * USOC, in Ah
             10000 / self.status['Uac'],  # 10k Wh ==> convert it to Ah
             self.MDC,  # max discharging current, delibrately set it smaller
             self.MCC   # max charging current, delibrately set it smaller
         )
 
     def set_current(self, target_current):
+        resp = None
         if target_current < 0:
             # charging
             if (-target_current) > self.MCC:
                 return False
-            self.manual_mode_control(mode="charge", value=round((-target_current)*self.status['Uac']))
+            resp = self.manual_mode_control(mode="charge", value=str(round((-target_current)*self.status['Uac'])))
         else:
             #discharging
             if target_current > self.MDC:
                 return False
-            self.manual_mode_control(mode="discharge", value=round(target_current*self.status['Uac']))
-        return True
+            resp = self.manual_mode_control(mode="discharge", value=str(round(target_current*self.status['Uac'])))
+        return resp
 
     @staticmethod
     def type() -> str: 
@@ -213,6 +214,14 @@ class SonnenBattery(BatteryInterface.Battery):
 if __name__ == "__main__": 
     # os.environ['SONNEN_TOKEN'] = 'Your token here'
     # code here
+    sb = SonnenBattery("sonnen", serial='66352', auth_token='5db92cf858eebce34af146974f49f4d40ec699b99372546c0af628fb48133f61', staleness=0)
+    sb.enable_manual_mode()
+    print(sb.get_status())
+    print(sb.refresh())
+    print(sb.set_current(28))
+
+    sb.enable_self_consumption()
+
     pass
 
 
