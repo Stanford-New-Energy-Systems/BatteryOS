@@ -127,7 +127,71 @@ void error_r(const T &arg, Ts ...args) {
 #define error(...) error_r("Error: In file ", __FILE__, ", line ", __LINE__, ", function ", __func__, ": ", __VA_ARGS__)
 
 
+/**
+ * Serialize a struct as a bunch of int numbers
+ * @param obj the struct to be serialized
+ * @param buffer the buffer to hold the serialized value
+ * @param buffer_size the size of the buffer
+ * @return how many bytes are used in the serialization
+ */
+template <typename T, typename Int>
+size_t serialize_struct_as_int(const T &obj, uint8_t *buffer, size_t buffer_size) {
+    size_t remaining_buffer_size = buffer_size;
+    size_t used_bytes = 0;
+    
+    if (buffer_size < sizeof(T) || (sizeof(T) % sizeof(Int)) != 0) {
+        warning("buffer is not large enough or the size of object is not divisible by sizeof(Int)");
+        return 0; 
+    }
+
+    uint8_t *byte_ptr = (uint8_t*)(&obj);
+
+    for (size_t i = 0; i < sizeof(T); ) {
+        // serialize the struct one by one, each data field is sizeof(Int)-bytes
+        used_bytes = serialize_int<Int>(*((Int*)byte_ptr), buffer, remaining_buffer_size);
+        if (used_bytes < sizeof(Int)) {
+            warning("used_bytes is not sizeof(Int)");
+            used_bytes = sizeof(Int);
+        }
+        byte_ptr += used_bytes;
+        buffer += used_bytes;
+        remaining_buffer_size -= used_bytes;
+        i += used_bytes;
+    }
+
+    return buffer_size - remaining_buffer_size;
+}
+
+/**
+ * Deserialize a struct as a bunch of int numbers from a buffer
+ * @param obj the pointer to the struct to hold the deserialized value
+ * @param buffer the pointer to the buffer, note: buffer size must be greater than 48 bytes
+ * @param buffer_size the size of the buffer
+ * @return the number of bytes read from the buffer 
+ */
+template <typename T, typename Int>
+size_t deserialize_struct_as_int(T *obj, const uint8_t *buffer, size_t buffer_size) {
+    if (buffer_size < sizeof(T) || (sizeof(T) % sizeof(Int)) != 0) {
+        warning("buffer is not large enough or the size of object is not divisible by sizeof(Int)");
+        return 0;
+    }
+
+    uint8_t *byte_ptr = (uint8_t*)obj;
+    for (size_t i = 0; i < sizeof(T); ) {
+        *((Int*)byte_ptr) = deserialize_int<Int>(buffer);
+        buffer += sizeof(Int);
+        byte_ptr += sizeof(Int);
+        i += sizeof(Int);
+    }
+    return sizeof(T);
+}
+
+
+
 #endif // ! UTIL_HPP
+
+
+
 
 
 

@@ -10,81 +10,83 @@ int64_t deserialize_int64(const uint8_t *buffer) {
 }
 
 uint32_t BatteryStatus_serialize(const struct BatteryStatus *status, uint8_t *buffer, uint32_t buffer_size) {
-    uint32_t remaining_buffer_size = buffer_size;
-    uint32_t used_bytes = 0;
+    return serialize_struct_as_int<BatteryStatus, int64_t>(*status, buffer, buffer_size);
+    // uint32_t remaining_buffer_size = buffer_size;
+    // uint32_t used_bytes = 0;
 
-    // uint8_t *b = buffer;
+    // // uint8_t *b = buffer;
     
-    if (buffer_size < sizeof(BatteryStatus)) { 
-        return 0; 
-    }
+    // if (buffer_size < sizeof(BatteryStatus)) { 
+    //     return 0; 
+    // }
 
-    uint8_t *status_ptr = (uint8_t*)status;
+    // uint8_t *status_ptr = (uint8_t*)status;
 
-    for (size_t i = 0; i < sizeof(BatteryStatus); ) {
-        // serialize the BatteryStatus one by one, each data field is 8-bytes
-        used_bytes = serialize_int64(*((int64_t*)status_ptr), buffer, remaining_buffer_size);
-        if (used_bytes < 8) {
-            warning("used_bytes is not 8");
-            used_bytes = 8;
-        }
-        status_ptr += used_bytes;
-        buffer += used_bytes;
-        remaining_buffer_size -= used_bytes;
-        i += used_bytes;
-    }
+    // for (size_t i = 0; i < sizeof(BatteryStatus); ) {
+    //     // serialize the BatteryStatus one by one, each data field is 8-bytes
+    //     used_bytes = serialize_int64(*((int64_t*)status_ptr), buffer, remaining_buffer_size);
+    //     if (used_bytes < 8) {
+    //         warning("used_bytes is not 8");
+    //         used_bytes = 8;
+    //     }
+    //     status_ptr += used_bytes;
+    //     buffer += used_bytes;
+    //     remaining_buffer_size -= used_bytes;
+    //     i += used_bytes;
+    // }
     
-    // used_bytes = serialize_int64(status->voltage_mV, buffer, remaining_buffer_size);
-    // remaining_buffer_size -= used_bytes;
-    // buffer += used_bytes;
+    // // used_bytes = serialize_int64(status->voltage_mV, buffer, remaining_buffer_size);
+    // // remaining_buffer_size -= used_bytes;
+    // // buffer += used_bytes;
 
-    // used_bytes = serialize_int64(status->current_mA, buffer, remaining_buffer_size);
-    // remaining_buffer_size -= used_bytes;
-    // buffer += used_bytes;
+    // // used_bytes = serialize_int64(status->current_mA, buffer, remaining_buffer_size);
+    // // remaining_buffer_size -= used_bytes;
+    // // buffer += used_bytes;
 
-    // used_bytes = serialize_int64(status->state_of_charge_mAh, buffer, remaining_buffer_size);
-    // remaining_buffer_size -= used_bytes;
-    // buffer += used_bytes;
+    // // used_bytes = serialize_int64(status->state_of_charge_mAh, buffer, remaining_buffer_size);
+    // // remaining_buffer_size -= used_bytes;
+    // // buffer += used_bytes;
 
-    // used_bytes = serialize_int64(status->max_capacity_mAh, buffer, remaining_buffer_size);
-    // remaining_buffer_size -= used_bytes;
-    // buffer += used_bytes;
+    // // used_bytes = serialize_int64(status->max_capacity_mAh, buffer, remaining_buffer_size);
+    // // remaining_buffer_size -= used_bytes;
+    // // buffer += used_bytes;
 
-    // used_bytes = serialize_int64(status->max_charging_current_mA, buffer, remaining_buffer_size);
-    // remaining_buffer_size -= used_bytes;
-    // buffer += used_bytes;
+    // // used_bytes = serialize_int64(status->max_charging_current_mA, buffer, remaining_buffer_size);
+    // // remaining_buffer_size -= used_bytes;
+    // // buffer += used_bytes;
 
-    // used_bytes = serialize_int64(status->max_discharging_current_mA, buffer, remaining_buffer_size);
-    // remaining_buffer_size -= used_bytes;
-    // buffer += used_bytes;
+    // // used_bytes = serialize_int64(status->max_discharging_current_mA, buffer, remaining_buffer_size);
+    // // remaining_buffer_size -= used_bytes;
+    // // buffer += used_bytes;
 
-    // print_buffer(b, 48);
+    // // print_buffer(b, 48);
 
-    return buffer_size - remaining_buffer_size;
+    // return buffer_size - remaining_buffer_size;
 }
 
 
 uint32_t BatteryStatus_deserialize(struct BatteryStatus *status, const uint8_t *buffer, uint32_t buffer_size) {
-    if (buffer_size < sizeof(BatteryStatus)) {
-        return 0;
-    }
+    return deserialize_struct_as_int<BatteryStatus, int64_t>(status, buffer, buffer_size);
+    // if (buffer_size < sizeof(BatteryStatus)) {
+    //     return 0;
+    // }
 
-    uint8_t *status_ptr = (uint8_t*)status;
-    for (size_t i = 0; i < sizeof(BatteryStatus); ) {
-        *((int64_t*)status_ptr) = deserialize_int64(buffer);
-        buffer += sizeof(int64_t);
-        status_ptr += sizeof(int64_t);
-        i += sizeof(int64_t);
-    }
+    // uint8_t *status_ptr = (uint8_t*)status;
+    // for (size_t i = 0; i < sizeof(BatteryStatus); ) {
+    //     *((int64_t*)status_ptr) = deserialize_int64(buffer);
+    //     buffer += sizeof(int64_t);
+    //     status_ptr += sizeof(int64_t);
+    //     i += sizeof(int64_t);
+    // }
     
-    // status->voltage_mV                 = deserialize_int64(buffer + (sizeof(int64_t) * 0));
-    // status->current_mA                 = deserialize_int64(buffer + (sizeof(int64_t) * 1));
-    // status->state_of_charge_mAh        = deserialize_int64(buffer + (sizeof(int64_t) * 2));
-    // status->max_capacity_mAh           = deserialize_int64(buffer + (sizeof(int64_t) * 3));
-    // status->max_charging_current_mA    = deserialize_int64(buffer + (sizeof(int64_t) * 4));
-    // status->max_discharging_current_mA = deserialize_int64(buffer + (sizeof(int64_t) * 5));
+    // // status->voltage_mV                 = deserialize_int64(buffer + (sizeof(int64_t) * 0));
+    // // status->current_mA                 = deserialize_int64(buffer + (sizeof(int64_t) * 1));
+    // // status->state_of_charge_mAh        = deserialize_int64(buffer + (sizeof(int64_t) * 2));
+    // // status->max_capacity_mAh           = deserialize_int64(buffer + (sizeof(int64_t) * 3));
+    // // status->max_charging_current_mA    = deserialize_int64(buffer + (sizeof(int64_t) * 4));
+    // // status->max_discharging_current_mA = deserialize_int64(buffer + (sizeof(int64_t) * 5));
 
-    return sizeof(BatteryStatus);
+    // return sizeof(BatteryStatus);
 }
 
 

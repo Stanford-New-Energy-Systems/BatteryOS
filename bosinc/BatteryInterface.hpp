@@ -168,6 +168,8 @@ public:
     }
 };
 
+
+
 #endif // ! BATTERY_INTERFACE_HPP
 
 

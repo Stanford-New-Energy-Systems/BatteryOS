@@ -9,6 +9,7 @@ CPP_FILES += BatteryStatus.cpp
 CPP_FILES += util.cpp
 CPP_FILES += JBDBMS.cpp
 CPP_FILES += BatteryInterface.cpp
+CPP_FILES += RPC.cpp
 
 C_FILES = include/wiringSerial.c
 
