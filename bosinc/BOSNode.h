@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BOSNODE_H
+#define BOSNODE_H
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -14,5 +15,5 @@ typedef struct BOSNode BOSNode;
 }
 #endif
 
-
+#endif // ! BOSNODE_H
 

@@ -1,4 +1,6 @@
 #include "JBDBMS.hpp"
+#include "TestBattery.hpp"
+#include "NetworkBattery.hpp"
 #include <iostream>
 
 void test_uart() {
@@ -16,7 +18,7 @@ void test_uart() {
     std::vector<uint8_t> buf = connection.read(28);
     
     printf("Rx data: \n");
-    Util::print_buffer(buf.data(), buf.size());
+    print_buffer(buf.data(), (size_t)buf.size());
     printf("\nRx data end\n");
 }
 
@@ -37,8 +39,8 @@ void test_python_binding() {
 void test_JBDBMS() {
     JBDBMS bms("jbd", "/dev/ttyUSB1", "current_regulator");
     JBDBMS::State basic_info = bms.get_basic_info();
-    JBDBMS::print_basic_state_to_stream(std::cout, basic_info);
-    Util::print_battery_status_to_stream(std::cout, bms.get_status());
+    std::cout << basic_info << std::endl;
+    std::cout << bms.get_status() << std::endl;
 }
 
 int run() {
@@ -63,7 +65,7 @@ int main() {
     run();
     
     Py_FinalizeEx();
-
+    // error("Just to test abnormal return", ", sys=", sys, ", path=", path);
     return 0;
     
 }

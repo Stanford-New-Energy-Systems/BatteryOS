@@ -6,6 +6,9 @@ PY_LDFLAGS_EMBED = $(shell python3-config --ldflags --embed)
 
 CPP_FILES = main.cpp 
 CPP_FILES += BatteryStatus.cpp 
+CPP_FILES += util.cpp
+CPP_FILES += JBDBMS.cpp
+CPP_FILES += BatteryInterface.cpp
 
 C_FILES = include/wiringSerial.c
 

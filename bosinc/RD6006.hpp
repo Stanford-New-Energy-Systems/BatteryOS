@@ -1,3 +1,5 @@
+#ifndef RD6006_HPP
+#define RD6006_HPP
 #ifndef PY_SSIZE_T_CLEAN
 #define PY_SSIZE_T_CLEAN
 #endif 
@@ -15,12 +17,12 @@ public:
     RD6006PowerSupply(const std::string &address) {
         PyObject *p_name = PyUnicode_DecodeFSDefault("rd6006_c");
         if (p_name == 0) {
-            fprintf(stderr, "ERROR! p_name == 0\n");
+            fprintf(stderr, "RD6006PowerSupply: ERROR! p_name == 0\n");
         }
         PyObject *p_module = PyImport_Import(p_name);
         Py_DECREF(p_name);
         if (p_module == 0) {
-            fprintf(stderr, "ERROR! p_module == 0\n");
+            fprintf(stderr, "RD6006PowerSupply: ERROR! p_module == 0, python file python/rd6006_c.py not found or dependency minimalmodbus not installed\n");
         }
         printf("p_module = %p\n", (p_module));
         Py_DECREF(p_module);
@@ -77,7 +79,7 @@ public:
     }
 };
 
-
+#endif // ! RD6006_HPP
 
 
 

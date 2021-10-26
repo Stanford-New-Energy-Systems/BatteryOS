@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BATTERY_STATUS_H
+#define BATTERY_STATUS_H
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -25,6 +26,8 @@ typedef struct BatteryStatus {
     int64_t max_capacity_mAh;
     int64_t max_charging_current_mA;
     int64_t max_discharging_current_mA;
+    int64_t timestamp_seconds_since_epoch;
+    int64_t timestamp_ms;
 } BatteryStatus;
 
 
@@ -84,7 +87,7 @@ void test_battery_status();
 }
 #endif
 
-
+#endif // ! BATTERY_STATUS_H
 
 
 

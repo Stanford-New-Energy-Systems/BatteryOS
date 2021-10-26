@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CONNECTIONS_HPP
+#define CONNECTIONS_HPP
 #include <vector>
 #include <array>
 #include <termios.h>
@@ -18,6 +19,8 @@
 #include "util.hpp"
 #include "include/wiringSerial.h"
 struct Connection {
+    Connection() {}
+    Connection(const Connection &) = delete;
     virtual ~Connection() {}
     virtual bool is_connected() = 0;
     virtual bool connect() = 0;
@@ -33,6 +36,11 @@ struct UARTConnection : public Connection {
     std::string device_path;
     bool connected;
     UARTConnection(const std::string &device_path) : serial_fd(0), device_path(device_path), connected(false) {}
+    UARTConnection(const UARTConnection &) = delete;
+    UARTConnection(UARTConnection &&other) : serial_fd(other.serial_fd), device_path(std::move(other.device_path)), connected(other.connected) {
+        other.serial_fd = 0;
+        other.connected = false;
+    }
     virtual ~UARTConnection() {
         if (serial_fd) {
             close();
@@ -42,7 +50,8 @@ struct UARTConnection : public Connection {
     bool connect() override {
         serial_fd = serialOpen(device_path.c_str(), 9600);
         if (serial_fd < 0) {
-            fprintf(stderr, "UARTConnection::connect: failed to open serial port %s\n", device_path.c_str());
+            warning("failed to open serial port ", device_path);
+            // fprintf(stderr, "UARTConnection::connect: failed to open serial port %s\n", device_path.c_str());
             serial_fd = 0;
             return false;
         }
@@ -54,7 +63,8 @@ struct UARTConnection : public Connection {
         int num_bytes_available = serialDataAvail(serial_fd);
         std::vector<uint8_t> result;
         if (num_bytes_available < 0) {
-            fprintf(stderr, "UARTConnection::read: Warning: number of bytes available is %d\n", num_bytes_available);
+            warning("number of bytes available is ", num_bytes_available);
+            // fprintf(stderr, "UARTConnection::read: Warning: number of bytes available is %d\n", num_bytes_available);
             return result;
         }
         result.resize(num_bytes, 0);
@@ -66,7 +76,8 @@ struct UARTConnection : public Connection {
                 (result.data() + total_bytes_read), 
                 (num_bytes - total_bytes_read));
             if (num_bytes_read < 0) {
-                fprintf(stderr, "UARTConnection::read: Warning: num_bytes_read = %d, total_bytes_read = %d\n", num_bytes_read, total_bytes_read);
+                warning("num_bytes_read = ", num_bytes_read, ", total_bytes_read = ", total_bytes_read);
+                // fprintf(stderr, "UARTConnection::read: Warning: num_bytes_read = %d, total_bytes_read = %d\n", num_bytes_read, total_bytes_read);
                 return result;
             }
             total_bytes_read += num_bytes_read;
@@ -93,9 +104,11 @@ struct UARTConnection : public Connection {
     ssize_t write(const std::vector<uint8_t> &bytes) override {
         ssize_t nbytes = ::write(serial_fd, bytes.data(), bytes.size());
         if (nbytes < 0) {
-            fprintf(stderr, "UARTConnection::write: Error, nbytes = %d\n", (int)nbytes);
+            warning("write fails, nbytes = ", nbytes);
+            // fprintf(stderr, "UARTConnection::write: Error, nbytes = %d\n", (int)nbytes);
         } else if (nbytes < (ssize_t)bytes.size()) {
-            fprintf(stderr, "UARTConnection::write: Warning, not all bytes are written, written nbytes = %d\n", (int)nbytes);
+            warning("not all bytes are written, written nbytes = ", nbytes);
+            // fprintf(stderr, "UARTConnection::write: Warning, not all bytes are written, written nbytes = %d\n", (int)nbytes);
         }
         usleep(WAIT_TIME);
         return nbytes;
@@ -122,6 +135,17 @@ struct TCPConnection : public Connection {
 
     TCPConnection(const std::string &address, int port, int af_type=AF_INET) : 
         address(address), port(port), af_type(af_type), socket_fd(0), connected(false), server_address() {}
+    TCPConnection(const TCPConnection &) = delete;
+    TCPConnection(TCPConnection &&other) : 
+        address(std::move(other.address)), 
+        port(other.port), 
+        af_type(other.af_type), 
+        socket_fd(other.socket_fd), 
+        connected(other.connected), 
+        server_address(other.server_address) {
+        other.socket_fd = 0;
+        other.connected = false;
+    }
     virtual ~TCPConnection() {
         if (socket_fd) {
             close();
@@ -134,7 +158,8 @@ struct TCPConnection : public Connection {
     bool connect() override {
         socket_fd = socket(af_type, SOCK_STREAM, 0);
         if (socket_fd < 0) {
-            fprintf(stderr, "TCPConnection::connect: Error: socket not created, return value = %d\n", socket_fd);
+            warning("socket not created, return value = ", socket_fd);
+            // fprintf(stderr, "TCPConnection::connect: Error: socket not created, return value = %d\n", socket_fd);
             socket_fd = 0;
             return false;
         }
@@ -146,13 +171,15 @@ struct TCPConnection : public Connection {
         server_address.sin_port = htons(port);
 
         if (inet_pton(af_type, address.c_str(), &(server_address.sin_addr)) <= 0) {
-            fprintf(stderr, "TCPConnection::connect: Error: inet_pton error\n");
+            warning("inet_pton error");
+            // fprintf(stderr, "TCPConnection::connect: Error: inet_pton error\n");
             socket_fd = 0;
             return false;
         } 
 
         if (::connect(socket_fd, (sockaddr*)&server_address, sizeof(server_address)) < 0) {
-            fprintf(stderr, "TCPConnection::connect: Error: connect error\n");
+            warning("connect error");
+            // fprintf(stderr, "TCPConnection::connect: Error: connect error\n");
             socket_fd = 0;
             return false;
         }
@@ -175,7 +202,8 @@ struct TCPConnection : public Connection {
                 (data.data() + total_bytes_read), 
                 (num_bytes - total_bytes_read));
             if (num_bytes_read < 0) {
-                fprintf(stderr, "TCPConnection::read: Warning: num_bytes_read = %d, total_bytes_read = %d\n", num_bytes_read, total_bytes_read);
+                warning("read error, num_bytes_read = ", num_bytes_read, ", total_bytes_read = ", total_bytes_read);
+                // fprintf(stderr, "TCPConnection::read: Warning: num_bytes_read = %d, total_bytes_read = %d\n", num_bytes_read, total_bytes_read);
                 return data;
             }
             total_bytes_read += num_bytes_read;
@@ -186,9 +214,11 @@ struct TCPConnection : public Connection {
     ssize_t write(const std::vector<uint8_t> &bytes) override {
         ssize_t nbytes = ::write(socket_fd, bytes.data(), bytes.size());
         if (nbytes < 0) {
-            fprintf(stderr, "TCPConnection::write: Error, nbytes = %d\n", (int)nbytes);
+            warning("write error, nbytes = ", nbytes);
+            // fprintf(stderr, "TCPConnection::write: Error, nbytes = %d\n", (int)nbytes);
         } else if (nbytes < (ssize_t)bytes.size()) {
-            fprintf(stderr, "TCPConnection::write: Warning, not all bytes are written, written nbytes = %d\n", (int)nbytes);
+            warning("not all bytes are written, written nbytes = ", nbytes);
+            // fprintf(stderr, "TCPConnection::write: Warning, not all bytes are written, written nbytes = %d\n", (int)nbytes);
         }
         return nbytes;
     }
@@ -206,5 +236,34 @@ struct TCPConnection : public Connection {
         return;
     }
 };
+
+
+#endif // ! CONNECTIONS_HPP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
