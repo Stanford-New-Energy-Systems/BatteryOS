@@ -100,69 +100,19 @@ public:
     // end of basic_info
 
 protected: 
-    BatteryStatus refresh() override {
-        this->get_basic_info();
-        status.voltage_mV =                   basic_state.voltage_10mV * 10;
-        status.current_mA =                   basic_state.current_10mA * 10;
-        status.state_of_charge_mAh =          basic_state.remaining_charge_10mAh * 10;
-        status.max_capacity_mAh =             basic_state.max_capacity_10mAh * 10;
-        status.max_charging_current_mA =      this->max_charging_current_mA;
-        status.max_discharging_current_mA =   this->max_discharging_current_mA;
-        this->timestamp = get_system_time();
-        return status;
-    }
-    bool check_staleness_and_refresh() {
-        auto now = get_system_time();
-        if ((now - this->timestamp) > this->max_staleness_ms) {
-            this->refresh();
-            return true;
-        }
-        return false;
-    }
+    BatteryStatus refresh() override;
+    bool check_staleness_and_refresh();
 public: 
-    std::string get_type_string() override {
-        return "JBDBMS";
-    }
-    BatteryStatus get_status() override {
-        lockguard_t lkd(this->lock);
-        check_staleness_and_refresh();
-        return status;
-    }
-    bool set_max_staleness(int64_t new_max_staleness_ms) {
-        lockguard_t lkd(this->lock);
-        if (new_max_staleness_ms < 0) {
-            return false;
-        }
-        this->max_staleness_ms = std::chrono::milliseconds(new_max_staleness_ms);
-        return true;
-    }
-    std::chrono::milliseconds get_max_staleness() {
-        lockguard_t lkd(this->lock);
-        return this->max_staleness_ms;
-    }
+    std::string get_type_string() override;
+    BatteryStatus get_status() override;
     
-    /// > 0 discharging, < 0 charging
-    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set) override {
-        lockguard_t lkd(this->lock);
-        this->get_status();
-        if (target_current_mA < 0 && (-target_current_mA) > this->max_charging_current_mA) {
-            return 0;
-        }
-        if (target_current_mA > 0 && target_current_mA > this->max_discharging_current_mA) {
-            return 0;
-        }
-        // over discharge
-        if (target_current_mA > 0 && this->status.state_of_charge_mAh <= 5) {
-            return 0;
-        }
-        // over charge 
-        if (target_current_mA < 0 && this->status.state_of_charge_mAh + 5 >= this->status.max_capacity_mAh) {
-            return 0;
-        }
-
-        rd6006.set_current_Amps(double(target_current_mA) / 1000);
-        return 1;
-    }
+    /** > 0 discharging, < 0 charging */
+    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set) override;
+    
+    bool set_max_staleness(int64_t new_max_staleness_ms);
+    std::chrono::milliseconds get_max_staleness();
+    
+    
 
 };
 
