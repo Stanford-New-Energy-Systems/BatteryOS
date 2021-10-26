@@ -3,7 +3,8 @@
 CTimestamp get_system_time_c() {
     struct timespec tp;
     if (clock_gettime(CLOCK_REALTIME, &tp) != 0) {
-        fprintf(stderr, "get_time(): clock_gettime fails!!!");
+        warning("clock_gettime fails!!!");
+        // fprintf(stderr, "get_time(): clock_gettime fails!!!");
         return {0, 0};
     }
     CTimestamp timestamp;
@@ -20,7 +21,7 @@ timepoint_t get_system_time() {
     return std::chrono::system_clock::now();
 }
 
-CTimestamp timepoint_to_c_time(timepoint_t tp) {
+CTimestamp timepoint_to_c_time(const timepoint_t &tp) {
     auto duration_since_epoch = tp.time_since_epoch();
     auto secs = std::chrono::duration_cast<std::chrono::seconds>(duration_since_epoch);
     duration_since_epoch -= secs; 
@@ -29,7 +30,7 @@ CTimestamp timepoint_to_c_time(timepoint_t tp) {
 }
 
 
-timepoint_t c_time_to_timepoint(CTimestamp timestamp) {
+timepoint_t c_time_to_timepoint(const CTimestamp &timestamp) {
     timepoint_t tp;
     tp += std::chrono::seconds(timestamp.secs_since_epoch);
     tp += std::chrono::milliseconds(timestamp.msec);
@@ -54,7 +55,6 @@ std::ostream & operator <<(std::ostream &out, const BatteryStatus &status) {
     out << "};\n";
     return out;
 }
-
 
 
 

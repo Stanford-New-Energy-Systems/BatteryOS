@@ -34,14 +34,14 @@ timepoint_t get_system_time();
  * @param tp the timepoint to convert
  * @return the converted CTimestamp struct
  */
-CTimestamp timepoint_to_c_time(timepoint_t tp);
+CTimestamp timepoint_to_c_time(const timepoint_t &tp);
 
 /**
  * Converts the seconds since epoch + milliseconds to chrono::time_point
  * @param timestamp the CTimestamp struct to be converted
  * @return the converted chrono::time_point
  */
-timepoint_t c_time_to_timepoint(CTimestamp timestamp);
+timepoint_t c_time_to_timepoint(const CTimestamp &timestamp);
 
 
 /**
@@ -118,9 +118,12 @@ void error_r(const T &arg, Ts ...args) {
     error_r(args...);
 }
 
-/// Print a warning, arguments should have overloaded << operators 
+/* Print a warning, arguments should have overloaded << operators */
+
 #define warning(...) warning_r("Warning: In file ", __FILE__, ", line ", __LINE__, ", function ", __func__, ": ", __VA_ARGS__)
-/// Print an error and quit, arguments should have overloaded << operators 
+
+/* Print an error and quit, arguments should have overloaded << operators */
+
 #define error(...) error_r("Error: In file ", __FILE__, ", line ", __LINE__, ", function ", __func__, ": ", __VA_ARGS__)
 
 
