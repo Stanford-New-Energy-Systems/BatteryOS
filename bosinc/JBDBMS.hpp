@@ -77,7 +77,7 @@ public:
         const std::string &name, 
         const std::string &device_address, 
         const std::string &current_regulator_address,
-        int64_t max_staleness_ms=100
+        const std::chrono::milliseconds &max_staleness_ms=std::chrono::milliseconds(100)
     );
     
     State get_basic_info();
@@ -106,7 +106,7 @@ public:
     BatteryStatus get_status() override;
     
     /** > 0 discharging, < 0 charging */
-    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set) override;
+    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override;
     
     bool set_max_staleness(int64_t new_max_staleness_ms);
     std::chrono::milliseconds get_max_staleness();

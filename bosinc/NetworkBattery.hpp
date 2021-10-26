@@ -63,7 +63,8 @@ protected:
         std::vector<uint8_t> request_bytes(request_str.begin(), request_str.end());
         std::vector<uint8_t> data = this->send_recv(request_bytes);
         BatteryStatus_deserialize(&(this->status), data.data(), (uint32_t)data.size());
-        this->timestamp = get_system_time();
+        // timestamp is inside BatteryStatus
+        // this->timestamp = get_system_time();
         return this->status;
     }
 public:
@@ -71,7 +72,7 @@ public:
         return this->status;
     }
 
-    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set) override {
+    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override {
         return 0;
     }
 

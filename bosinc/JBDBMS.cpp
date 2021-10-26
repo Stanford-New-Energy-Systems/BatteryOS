@@ -4,7 +4,7 @@ JBDBMS::JBDBMS(
     const std::string &name, 
     const std::string &device_address, 
     const std::string &current_regulator_address,
-    int64_t max_staleness_ms
+    const std::chrono::milliseconds &max_staleness_ms
 ) : 
     PhysicalBattery(name),
     pconnection(nullptr),
@@ -259,13 +259,13 @@ BatteryStatus JBDBMS::refresh() {
     status.max_capacity_mAh =             basic_state.max_capacity_10mAh * 10;
     status.max_charging_current_mA =      this->max_charging_current_mA;
     status.max_discharging_current_mA =   this->max_discharging_current_mA;
-    this->timestamp = get_system_time();
+    status.timestamp = get_system_time_c();
     return status;
 }
 
 bool JBDBMS::check_staleness_and_refresh() {
     auto now = get_system_time();
-    if ((now - this->timestamp) > this->max_staleness_ms) {
+    if ((now - c_time_to_timepoint(this->status.timestamp)) > this->max_staleness_ms) {
         this->refresh();
         return true;
     }
@@ -298,7 +298,7 @@ std::chrono::milliseconds JBDBMS::get_max_staleness() {
 }
 
 /// > 0 discharging, < 0 charging
-uint32_t JBDBMS::set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set) {
+uint32_t JBDBMS::set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) {
     lockguard_t lkd(this->lock);
     this->get_status();
     if (target_current_mA < 0 && (-target_current_mA) > this->max_charging_current_mA) {

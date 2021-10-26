@@ -5,7 +5,7 @@ Battery::Battery(const std::string &name, const int64_t sampling_period) :
     background_refresh_thread(nullptr),
     lock(),
     status(),
-    timestamp(get_system_time()),  // = bos.util.bos_time()
+    // timestamp(get_system_time()),  // = bos.util.bos_time()
     sampling_period(sampling_period),
     estimated_soc(),
     should_background_refresh(false),
@@ -83,7 +83,7 @@ void Battery::update_estimated_soc(int32_t end_current, int32_t new_current) {
 
     timepoint_t end_time = std::chrono::system_clock::now();
     // the microseconds elapsed!
-    std::chrono::duration<int64_t, std::chrono::system_clock::period> duration = end_time - this->timestamp;
+    std::chrono::duration<int64_t, std::chrono::system_clock::period> duration = end_time - c_time_to_timepoint(this->status.timestamp);
     int64_t periods = duration.count();  // on macOS, this is 1usec;
     int64_t msec = periods / (std::chrono::system_clock::period::den / 1000);  // on macOS, period::den / 1000 = 1000, this converts usec to msec
     double hours_elapsed = static_cast<double>(msec) / (3600 * 1000);
@@ -92,7 +92,7 @@ void Battery::update_estimated_soc(int32_t end_current, int32_t new_current) {
     
     this->estimated_soc -= estimated_mAh;
 
-    this->timestamp = end_time;
+    this->status.timestamp = timepoint_to_c_time(end_time);
 }
 
 int32_t Battery::get_estimated_soc() {

@@ -20,7 +20,7 @@ protected:
     BatteryStatus refresh() override {
         // no update on this->status
         // required
-        this->timestamp = get_system_time();
+        this->status.timestamp = get_system_time_c();
         return this->status;
     }
 public:
@@ -29,7 +29,7 @@ public:
         return this->refresh();
     }
 
-    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set) override {
+    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override {
         if (target_current_mA != 0) {
             return 0;
         }
@@ -52,7 +52,7 @@ public:
     }
 protected: 
     BatteryStatus refresh() override {
-        this->timestamp = get_system_time();
+        this->status.timestamp = get_system_time_c();
         return this->status;
     }
 public:
@@ -65,7 +65,7 @@ public:
         return this->status;
     }
 
-    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set) override {
+    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override {
         lockguard_t lkd(this->lock);
         int64_t old_current = this->get_status().current_mA;
         if (!(target_current_mA <= this->status.max_discharging_current_mA || 

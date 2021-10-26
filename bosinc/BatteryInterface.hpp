@@ -30,8 +30,8 @@ protected:
     /// the status of the battery
     BatteryStatus status;
 
-    /// the timestamp of last refresh
-    timepoint_t timestamp;
+    // /// the timestamp of last refresh
+    // timepoint_t timestamp;
 
     /// the wait time in ms between two refreshes if automatic refresh is enabled
     const int64_t sampling_period;
@@ -66,7 +66,7 @@ protected:
     /**
      * Refresh the battery status from the driver,
      * NOTE: Must update the battery status!!!
-     * NOTE: Must update the timestamp!!!
+     * NOTE: Must update the timestamp!!! (in BatteryStatus)
      * NOTE: no need to check lock!!!
      * @return the new status of the battery
      */
@@ -85,9 +85,10 @@ public:
      * @param target_current_mA the target current, target_current_mA > 0: discharging, target_current_mA < 0: charging
      * @param is_greater_than_target require whether the new current >= target_current_mA or <= target_current_mA
      * @param when_to_set a timestamp representing when to set the current to satisfy the request
+     * @param until_when a timestamp representing when to stop setting the current
      * @return something? 
      */
-    virtual uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set) = 0;
+    virtual uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) = 0;
 
     /**
      * Just return the type string of the battery driver
