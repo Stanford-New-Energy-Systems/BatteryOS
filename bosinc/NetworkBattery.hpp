@@ -8,6 +8,8 @@
 #include <string.h>
 /**
  * Refering to a distant battery through TCP connection
+ * Protocol: send 4 bytes indicating the length of data first, in little-endian
+ * then the data
  */
 class NetworkBattery : public Battery {
     std::string remote_name;
@@ -37,7 +39,8 @@ public:
             warning("unknown protocol");
             return {};
         }
-        uint32_t data_length = uint32_t(data[3]) + (uint32_t(data[2]) << 8) + (uint32_t(data[1]) << 16) + (uint32_t(data[0]) << 24);
+        uint32_t data_length = deserialize_int<uint32_t>(data.data());
+        // uint32_t(data[0]) + (uint32_t(data[1]) << 8) + (uint32_t(data[2]) << 16) + (uint32_t(data[3]) << 24);
 
         data = this->pconnection->read(data_length);
         if (data.size() != data_length) {
@@ -48,9 +51,10 @@ public:
 protected: 
     BatteryStatus refresh() override {
         // send the request 
-        std::vector<uint8_t> request_bytes(sizeof(RPCRequestHeader) + remote_name.size() + 1);
-        uint8_t *buffer_ptr = request_bytes.data();
-        RPCRequestHeader header = new_RPC_header(RPCFunctionID::REFRESH, remote_name);
+        std::vector<uint8_t> request_bytes(sizeof(uint32_t) + sizeof(RPCRequestHeader) + remote_name.size() + 1);
+        uint8_t *buffer_ptr = request_bytes.data() + sizeof(uint32_t);
+        // NOTE: please do not call refresh, because the rmeote has its own refreshing pattern
+        RPCRequestHeader header = new_RPC_header(RPCFunctionID::GET_STATUS, remote_name);
         size_t num_header_bytes = RPCRequestHeader_serialize(&header, buffer_ptr, request_bytes.size());
         buffer_ptr += num_header_bytes;
         for (size_t i = 0; i < remote_name.size(); ++i) {
@@ -58,6 +62,13 @@ protected:
             buffer_ptr += 1;
         }
         (*buffer_ptr) = 0;
+        uint32_t data_length = sizeof(RPCRequestHeader) + remote_name.size() + 1;
+        size_t bytes_used = serialize_int<uint32_t>(data_length, request_bytes.data(), sizeof(uint32_t));
+        if (bytes_used != sizeof(uint32_t)) {
+            warning("failed to serialize the data length");
+            return this->status;
+        }
+
         // now send the request
         std::vector<uint8_t> data = this->send_recv(request_bytes);
         BatteryStatus_deserialize(&(this->status), data.data(), (uint32_t)data.size());
@@ -67,29 +78,17 @@ protected:
 public:
     BatteryStatus get_status() override {
         lockguard_t lkd(this->lock);
-        // send the request 
-        std::vector<uint8_t> request_bytes(sizeof(RPCRequestHeader) + remote_name.size() + 1);
-        uint8_t *buffer_ptr = request_bytes.data();
-        RPCRequestHeader header = new_RPC_header(RPCFunctionID::GET_STATUS, remote_name);
-        size_t num_header_bytes = RPCRequestHeader_serialize(&header, buffer_ptr, request_bytes.size());
-        buffer_ptr += num_header_bytes;
-        for (size_t i = 0; i < remote_name.size(); ++i) {
-            (*buffer_ptr) = uint8_t(remote_name[i]);
-            buffer_ptr += 1;
+        if (this->should_background_refresh) {
+            return this->status;
         }
-        (*buffer_ptr) = 0;
-        // now send the request
-        std::vector<uint8_t> data = this->send_recv(request_bytes);
-        BatteryStatus_deserialize(&(this->status), data.data(), (uint32_t)data.size());
-
-        return this->status;
+        return this->refresh();
     }
 
     uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override {
         lockguard_t lkd(this->lock);
         // send the request 
-        std::vector<uint8_t> request_bytes(sizeof(RPCRequestHeader) + remote_name.size() + 1);
-        uint8_t *buffer_ptr = request_bytes.data();
+        std::vector<uint8_t> request_bytes(sizeof(uint32_t) + sizeof(RPCRequestHeader) + remote_name.size() + 1);
+        uint8_t *buffer_ptr = request_bytes.data() + sizeof(uint32_t);
         RPCRequestHeader header = new_RPC_header(RPCFunctionID::SET_CURRENT, remote_name);
         header.current_mA = target_current_mA;
         header.is_greater_than = (int64_t)is_greater_than_target;
@@ -102,6 +101,12 @@ public:
             buffer_ptr += 1;
         }
         (*buffer_ptr) = 0;
+        uint32_t data_length = sizeof(RPCRequestHeader) + remote_name.size() + 1;
+        size_t bytes_used = serialize_int<uint32_t>(data_length, request_bytes.data(), sizeof(uint32_t));
+        if (bytes_used != sizeof(uint32_t)) {
+            warning("failed to serialize the data length");
+            return 0;
+        }
         // now send the request
         std::vector<uint8_t> data = this->send_recv(request_bytes);
 

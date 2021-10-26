@@ -22,11 +22,14 @@ timepoint_t get_system_time() {
 }
 
 CTimestamp timepoint_to_c_time(const timepoint_t &tp) {
-    auto duration_since_epoch = tp.time_since_epoch();
-    auto secs = std::chrono::duration_cast<std::chrono::seconds>(duration_since_epoch);
-    duration_since_epoch -= secs; 
-    auto msecs = std::chrono::duration_cast<std::chrono::milliseconds>(duration_since_epoch);
-    return {secs.count(), msecs.count()};
+    auto secs = std::chrono::time_point_cast<std::chrono::seconds>(tp);
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(tp - secs);
+    return {secs.time_since_epoch().count(), ms.count()};
+    // auto duration_since_epoch = tp.time_since_epoch();
+    // auto secs = std::chrono::duration_cast<std::chrono::seconds>(duration_since_epoch);
+    // duration_since_epoch -= secs; 
+    // auto msecs = std::chrono::duration_cast<std::chrono::milliseconds>(duration_since_epoch);
+    // return {secs.count(), msecs.count()};
 }
 
 

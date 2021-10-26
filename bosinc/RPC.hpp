@@ -3,7 +3,6 @@
 
 #include "util.hpp"
 #include "BatteryStatus.h"
-#include "BatteryInterface.hpp"
 extern "C" {
 typedef struct RPCRequestHeader {
     int64_t func;
@@ -17,7 +16,7 @@ typedef struct RPCRequestHeader {
 }
 
 enum class RPCFunctionID : int64_t {
-    REFRESH = 1,
+    REFRESH = 1, 
     GET_STATUS = 2,
     SET_CURRENT = 3,
 };
