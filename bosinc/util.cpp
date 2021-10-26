@@ -1,38 +1,38 @@
 #include "util.hpp"
 
-bool get_system_time_c(int64_t *sec_since_epoch, int64_t *msec) {
+CTimestamp get_system_time_c() {
     struct timespec tp;
     if (clock_gettime(CLOCK_REALTIME, &tp) != 0) {
         fprintf(stderr, "get_time(): clock_gettime fails!!!");
-        return false;
+        return {0, 0};
     }
-    (*sec_since_epoch) = tp.tv_sec;
-    (*msec) = round(tp.tv_nsec / 1.0e6);
-    if ((*msec) > 999) {
-        (*sec_since_epoch) += 1;
-        (*msec) = 0;
+    CTimestamp timestamp;
+    timestamp.secs_since_epoch = tp.tv_sec;
+    timestamp.msec = round(tp.tv_nsec / 1.0e6);
+    if (timestamp.msec > 999) {
+        timestamp.secs_since_epoch += 1;
+        timestamp.msec = 0;
     }
-    return true;
+    return timestamp;
 }
 
 timepoint_t get_system_time() {
     return std::chrono::system_clock::now();
 }
 
-void timepoint_to_c_time(timepoint_t tp, int64_t *sec_since_epoch, int64_t *msec) {
+CTimestamp timepoint_to_c_time(timepoint_t tp) {
     auto duration_since_epoch = tp.time_since_epoch();
     auto secs = std::chrono::duration_cast<std::chrono::seconds>(duration_since_epoch);
     duration_since_epoch -= secs; 
     auto msecs = std::chrono::duration_cast<std::chrono::milliseconds>(duration_since_epoch);
-    (*sec_since_epoch) = secs.count();
-    (*msec) = msecs.count();
+    return {secs.count(), msecs.count()};
 }
 
 
-timepoint_t c_time_to_timepoint(int64_t sec_since_epoch, int64_t msec) {
+timepoint_t c_time_to_timepoint(CTimestamp timestamp) {
     timepoint_t tp;
-    tp += std::chrono::seconds(sec_since_epoch);
-    tp += std::chrono::milliseconds(msec);
+    tp += std::chrono::seconds(timestamp.secs_since_epoch);
+    tp += std::chrono::milliseconds(timestamp.msec);
     return tp;
 }
 
@@ -54,5 +54,16 @@ std::ostream & operator <<(std::ostream &out, const BatteryStatus &status) {
     out << "};\n";
     return out;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 

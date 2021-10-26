@@ -122,8 +122,8 @@ void test_battery_status() {
     status.max_capacity_mAh = 0x5A5A5A5A;
     status.max_charging_current_mA = 0xA5A5A5A5;
     status.max_discharging_current_mA = 0x5A5A5A5A;
-    status.timestamp_seconds_since_epoch = 0xA5A5A5A5;
-    status.timestamp_ms = 0x5A5A5A5A;
+    status.timestamp.secs_since_epoch = 0xA5A5A5A5;
+    status.timestamp.msec = 0x5A5A5A5A;
 
     uint8_t buffer[sizeof(BatteryStatus)];
     uint32_t buffer_size = sizeof(BatteryStatus);
@@ -154,8 +154,8 @@ void test_battery_status() {
     status3.max_capacity_mAh = 0xFEEBDAED;
     status3.max_charging_current_mA = 0x98765432;
     status3.max_discharging_current_mA = 0xABCD5678;
-    status3.timestamp_seconds_since_epoch = 0xABCD6789;
-    status3.timestamp_ms = 0x6789ABCD;
+    status3.timestamp.secs_since_epoch = 0xABCD6789;
+    status3.timestamp.msec = 0x6789ABCD;
 
 
     if (BatteryStatus_serialize(&status3, buffer, buffer_size) != sizeof(BatteryStatus)) exit(1);

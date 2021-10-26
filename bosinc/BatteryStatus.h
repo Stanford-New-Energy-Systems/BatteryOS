@@ -10,6 +10,19 @@
 extern "C" {
 #endif
 /**
+ * The timestamp that is compatible with C
+ * Fields:  
+ *   secs_since_epoch: the number of seconds since epoch
+ *   msec: the number of seconds since secs_since_epoch
+ */
+typedef struct CTimestamp {
+    /** sec_since_epoch: integer representing the seconds since epoch */
+    int64_t secs_since_epoch;
+    /** msec: integer representing the milliseconds since secs_since_epoch */
+    int64_t msec;
+} CTimestamp;
+
+/**
  * The status of a battery
  * Fields: 
  *   voltage_mV:                      voltage
@@ -26,8 +39,7 @@ typedef struct BatteryStatus {
     int64_t max_capacity_mAh;
     int64_t max_charging_current_mA;
     int64_t max_discharging_current_mA;
-    int64_t timestamp_seconds_since_epoch;
-    int64_t timestamp_ms;
+    struct CTimestamp timestamp;
 } BatteryStatus;
 
 

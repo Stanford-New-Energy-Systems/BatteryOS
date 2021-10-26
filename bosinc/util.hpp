@@ -19,11 +19,9 @@ using timepoint_t = std::chrono::time_point<std::chrono::system_clock>;
  * Retrives the timestamp since epoch, it's like sec_since_epoch.msec seconds since epoch
  * e.g., 1635203842.759 seconds since epoch, 
  *  where sec_since_epoch = 1635203842 and msec = 759
- * @param sec_since_epoch a pointer to the integer representing the seconds
- * @param msec a pointer to the integer representing the msec
- * @return whether it's success or not
+ * @return the CTimestamp struct as the timestamp
  */
-bool get_system_time_c(int64_t *sec_since_epoch, int64_t *msec);
+CTimestamp get_system_time_c();
 
 /**
  * Returns a std::chrono::time_point object representing the current system time
@@ -34,18 +32,16 @@ timepoint_t get_system_time();
 /**
  * Converts chrono::time_point to seconds and milliseconds
  * @param tp the timepoint to convert
- * @param sec_since_epoch the pointer to the seconds 
- * @param msec the pointer to the milliseconds
+ * @return the converted CTimestamp struct
  */
-void timepoint_to_c_time(timepoint_t tp, int64_t *sec_since_epoch, int64_t *msec);
+CTimestamp timepoint_to_c_time(timepoint_t tp);
 
 /**
  * Converts the seconds since epoch + milliseconds to chrono::time_point
- * @param sec_since_epoch the number of seconds since epoch
- * @param msec the milliseconds since sec_since_epoch
+ * @param timestamp the CTimestamp struct to be converted
  * @return the converted chrono::time_point
  */
-timepoint_t c_time_to_timepoint(int64_t sec_since_epoch, int64_t msec);
+timepoint_t c_time_to_timepoint(CTimestamp timestamp);
 
 
 /**
