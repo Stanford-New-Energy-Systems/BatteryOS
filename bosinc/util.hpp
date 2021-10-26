@@ -32,6 +32,23 @@ bool get_system_time_c(int64_t *sec_since_epoch, int64_t *msec);
 timepoint_t get_system_time();
 
 /**
+ * Converts chrono::time_point to seconds and milliseconds
+ * @param tp the timepoint to convert
+ * @param sec_since_epoch the pointer to the seconds 
+ * @param msec the pointer to the milliseconds
+ */
+void timepoint_to_c_time(timepoint_t tp, int64_t *sec_since_epoch, int64_t *msec);
+
+/**
+ * Converts the seconds since epoch + milliseconds to chrono::time_point
+ * @param sec_since_epoch the number of seconds since epoch
+ * @param msec the milliseconds since sec_since_epoch
+ * @return the converted chrono::time_point
+ */
+timepoint_t c_time_to_timepoint(int64_t sec_since_epoch, int64_t msec);
+
+
+/**
  * Print the buffer in hexadecimal
  * @param buffer the buffer to print
  * @param buffer_size the size of the buffer

@@ -19,6 +19,24 @@ timepoint_t get_system_time() {
     return std::chrono::system_clock::now();
 }
 
+void timepoint_to_c_time(timepoint_t tp, int64_t *sec_since_epoch, int64_t *msec) {
+    auto duration_since_epoch = tp.time_since_epoch();
+    auto secs = std::chrono::duration_cast<std::chrono::seconds>(duration_since_epoch);
+    duration_since_epoch -= secs; 
+    auto msecs = std::chrono::duration_cast<std::chrono::milliseconds>(duration_since_epoch);
+    (*sec_since_epoch) = secs.count();
+    (*msec) = msecs.count();
+}
+
+
+timepoint_t c_time_to_timepoint(int64_t sec_since_epoch, int64_t msec) {
+    timepoint_t tp;
+    tp += std::chrono::seconds(sec_since_epoch);
+    tp += std::chrono::milliseconds(msec);
+    return tp;
+}
+
+
 void print_buffer(uint8_t *buffer, size_t buffer_size) {
     for (size_t i = 0; i < buffer_size; ++i) {
         printf("%x ", (int)(*(buffer + i)));

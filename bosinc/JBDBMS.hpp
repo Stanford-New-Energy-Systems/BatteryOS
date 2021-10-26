@@ -16,22 +16,6 @@
 
 class JBDBMS : public PhysicalBattery {
 public:
-    static constexpr uint8_t device_info_str[] = {0xdd, 0xa5, 0x03, 0x00, 0xff, 0xfd, 0x77};
-    static constexpr uint8_t battery_info_str[] = {0xdd, 0xa5, 0x04, 0x00, 0xff, 0xfc, 0x77};
-    static constexpr uint8_t version_info_str[] = {0xdd, 0xa5, 0x05, 0x00, 0xff, 0xfb, 0x77};
-
-    static constexpr uint8_t enter_factory_mode_register = 0x00;
-    static constexpr uint8_t exit_factory_mode_register = 0x01;
-
-    static constexpr uint8_t enter_factory_mode_command[] = {0x56, 0x78};
-    static constexpr uint8_t exit_and_save_factory_mode_command[] = {0x28, 0x28};
-    static constexpr uint8_t exit_without_save_factory_mode_command[] = {0x00, 0x00};
-
-    static constexpr uint8_t starter_byte = 0xdd;
-    static constexpr uint8_t read_indicator_byte = 0xa5;
-    static constexpr uint8_t write_indicator_byte = 0x5a;
-    static constexpr uint8_t ending_byte = 0x77;
-
     struct State {
         uint16_t voltage_10mV;
         int16_t current_10mA;
@@ -49,6 +33,21 @@ public:
         uint8_t num_temperature_sensors;
         // throw away the temperature information
     };
+    static constexpr uint8_t device_info_str[] = {0xdd, 0xa5, 0x03, 0x00, 0xff, 0xfd, 0x77};
+    static constexpr uint8_t battery_info_str[] = {0xdd, 0xa5, 0x04, 0x00, 0xff, 0xfc, 0x77};
+    static constexpr uint8_t version_info_str[] = {0xdd, 0xa5, 0x05, 0x00, 0xff, 0xfb, 0x77};
+
+    static constexpr uint8_t enter_factory_mode_register = 0x00;
+    static constexpr uint8_t exit_factory_mode_register = 0x01;
+
+    static constexpr uint8_t enter_factory_mode_command[] = {0x56, 0x78};
+    static constexpr uint8_t exit_and_save_factory_mode_command[] = {0x28, 0x28};
+    static constexpr uint8_t exit_without_save_factory_mode_command[] = {0x00, 0x00};
+
+    static constexpr uint8_t starter_byte = 0xdd;
+    static constexpr uint8_t read_indicator_byte = 0xa5;
+    static constexpr uint8_t write_indicator_byte = 0x5a;
+    static constexpr uint8_t ending_byte = 0x77;
     
 private:
     std::unique_ptr<Connection> pconnection;
