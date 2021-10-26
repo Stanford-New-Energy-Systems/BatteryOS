@@ -8,8 +8,8 @@
 /**
  * Refering to a distant battery through TCP connection
  * Protocol: 
- * first 4 bytes indicate the data length n, in little endian
- * then the next bytes indicate the data.
+ * first 4 bytes indicate the data length n, in big endian
+ * then the next n bytes are the data.
  */
 class NetworkBattery : public Battery {
     std::string remote_name;
@@ -21,8 +21,6 @@ public:
         this->pconnection.reset(new TCPConnection(address, port));
         if (!this->pconnection->connect()) {
             error("TCP connection failed!");
-            // fprintf(stderr, "NetworkBattery: TCP connection failed\n");
-            // exit(1);
         }
         this->refresh();  // also updates the timestamp
     }
@@ -31,24 +29,21 @@ public:
         ssize_t num_bytes = this->pconnection->write(request);
         if (num_bytes < 0) {
             warning("Failed to send the request!");
-            // fprintf(stderr, "NetworkBattery::send_recv: Failed to send the request\n");
             return {};
         }
         if (static_cast<size_t>(num_bytes) != request.size()) {
             warning("requested to send ", request.size(), " bytes, but sent ", num_bytes, " bytes");
-            // fprintf(stderr, "NetworkBattery::send_recv: requested to send %lu bytes, but sent %lu bytes\n", (unsigned long)request.size(), (unsigned long)num_bytes);
         }
         std::vector<uint8_t> data = this->pconnection->read(4);  // 4 bytes to indicate the length
         if (data.size() != 4) {
             warning("unknown protocol");
-            // fprintf(stderr, "NetworkBattery::send_recv: unknown protocol\n");
+            return {};
         }
         uint32_t data_length = uint32_t(data[3]) + (uint32_t(data[2]) << 8) + (uint32_t(data[1]) << 16) + (uint32_t(data[0]) << 24);
 
         data = this->pconnection->read(data_length);
         if (data.size() != data_length) {
             warning("data length mismatch!");
-            // fprintf(stderr, "NetworkBattery::send_recv: data length mismatch\n");
         }
         return data;
     }

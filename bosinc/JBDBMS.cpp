@@ -283,16 +283,16 @@ BatteryStatus JBDBMS::get_status() {
 }
 
 
-bool JBDBMS::set_max_staleness(int64_t new_max_staleness_ms) {
+bool JBDBMS::set_max_staleness(const std::chrono::milliseconds &new_max_staleness_ms) {
     lockguard_t lkd(this->lock);
-    if (new_max_staleness_ms < 0) {
-        return false;
-    }
-    this->max_staleness_ms = std::chrono::milliseconds(new_max_staleness_ms);
+    // if (new_max_staleness_ms < 0) {
+    //     return false;
+    // }
+    this->max_staleness_ms = new_max_staleness_ms;
     return true;
 }
 
-std::chrono::milliseconds JBDBMS::get_max_staleness() {
+const std::chrono::milliseconds &JBDBMS::get_max_staleness() {
     lockguard_t lkd(this->lock);
     return this->max_staleness_ms;
 }

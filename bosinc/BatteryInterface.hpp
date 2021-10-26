@@ -18,30 +18,30 @@
  */
 class Battery : public BOSNode {
 protected: 
-    /// name of the battery
+    /** name of the battery */
     const std::string name;
 
-    /// the thread that refreshes the battery for a given sampling period 
+    /** the thread that refreshes the battery for a given sampling period */
     std::unique_ptr<std::thread> background_refresh_thread;
-    /// the thread lock for the battery
+    /** the thread lock for the battery */
     std::recursive_mutex lock; 
     using lockguard_t = std::lock_guard<std::recursive_mutex>;
 
-    /// the status of the battery
+    /** the status of the battery */
     BatteryStatus status;
 
-    // /// the timestamp of last refresh
+    // /** the timestamp of last refresh */
     // timepoint_t timestamp;
 
-    /// the wait time in ms between two refreshes if automatic refresh is enabled
+    /** the wait time in ms between two refreshes if automatic refresh is enabled */
     const int64_t sampling_period;
 
-    /// estimated net charge of this battery. This must be initialized by BOS
+    /** estimated net charge of this battery. This must be initialized by BOS */
     int32_t estimated_soc;  
 
-    /// is it doing background refresh?
+    /** is it doing background refresh? */
     bool should_background_refresh;
-    /// tell the background refreshing thread that it should quit
+    /** tell the background refreshing thread that it should quit */
     bool should_cancel_background_refresh;
 
 public: 
