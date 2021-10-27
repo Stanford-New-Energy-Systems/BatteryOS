@@ -76,13 +76,13 @@ protected:
         return this->status;
     }
 public:
-    BatteryStatus get_status() override {
-        lockguard_t lkd(this->lock);
-        // if (this->should_background_refresh) {
-        //     return this->status;
-        // }
-        return this->refresh();
-    }
+    // BatteryStatus get_status() override {
+    //     lockguard_t lkd(this->lock);
+    //     // if (this->should_background_refresh) {
+    //     //     return this->status;
+    //     // }
+    //     return this->refresh();
+    // }
 
     uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override {
         lockguard_t lkd(this->lock);
