@@ -123,6 +123,7 @@ public:
 
     /**
      * Manually refresh the battery status from the driver,
+     * not recommended
      * @return the new status of the battery
      */
     BatteryStatus manual_refresh();
