@@ -16,7 +16,7 @@ class NetworkBattery : public Battery {
     std::unique_ptr<Connection> pconnection;
 public:
     NetworkBattery(const std::string &name, const std::string &remote_name, const std::string &address, int port) : 
-        Battery(name), remote_name(remote_name), pconnection() {
+        Battery(name, std::chrono::milliseconds(0)), remote_name(remote_name), pconnection() {
         
         this->pconnection.reset(new TCPConnection(address, port));
         if (!this->pconnection->connect()) {
@@ -78,9 +78,9 @@ protected:
 public:
     BatteryStatus get_status() override {
         lockguard_t lkd(this->lock);
-        if (this->should_background_refresh) {
-            return this->status;
-        }
+        // if (this->should_background_refresh) {
+        //     return this->status;
+        // }
         return this->refresh();
     }
 

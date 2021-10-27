@@ -8,7 +8,7 @@
  */
 class NullBattery : public Battery {
 public: 
-    NullBattery(const std::string &name, int64_t voltage_mV) : Battery(name) {
+    NullBattery(const std::string &name, int64_t voltage_mV) : Battery(name, std::chrono::milliseconds(0)) {
         this->status.voltage_mV = voltage_mV;
         this->status.current_mA = 0;
         this->status.state_of_charge_mAh = 0;
@@ -46,7 +46,7 @@ public:
  */
 class PseudoBattery : public PhysicalBattery {
 public: 
-    PseudoBattery(const std::string &name, const BatteryStatus &status) : PhysicalBattery(name) {
+    PseudoBattery(const std::string &name, const BatteryStatus &status) : PhysicalBattery(name, std::chrono::milliseconds(0)) {
         this->status = status;
         this->set_estimated_soc(this->status.state_of_charge_mAh);
     }

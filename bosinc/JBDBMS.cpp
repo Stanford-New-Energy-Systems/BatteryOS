@@ -6,10 +6,9 @@ JBDBMS::JBDBMS(
     const std::string &current_regulator_address,
     const std::chrono::milliseconds &max_staleness_ms
 ) : 
-    PhysicalBattery(name),
+    PhysicalBattery(name, max_staleness_ms),
     pconnection(nullptr),
     rd6006(current_regulator_address),
-    max_staleness_ms(max_staleness_ms),
     max_charging_current_mA(10000),         // 10A is enough? 
     max_discharging_current_mA(10000),      // 10A is enough?
     basic_state()
@@ -263,39 +262,17 @@ BatteryStatus JBDBMS::refresh() {
     return status;
 }
 
-bool JBDBMS::check_staleness_and_refresh() {
-    auto now = get_system_time();
-    if ((now - c_time_to_timepoint(this->status.timestamp)) > this->max_staleness_ms) {
-        this->refresh();
-        return true;
-    }
-    return false;
-}
 
 std::string JBDBMS::get_type_string() {
     return "JBDBMS";
 }
 
-BatteryStatus JBDBMS::get_status() {
-    lockguard_t lkd(this->lock);
-    check_staleness_and_refresh();
-    return status;
-}
+// BatteryStatus JBDBMS::get_status() {
+//     lockguard_t lkd(this->lock);
+//     check_staleness_and_refresh();
+//     return status;
+// }
 
-
-bool JBDBMS::set_max_staleness(const std::chrono::milliseconds &new_max_staleness_ms) {
-    lockguard_t lkd(this->lock);
-    // if (new_max_staleness_ms < 0) {
-    //     return false;
-    // }
-    this->max_staleness_ms = new_max_staleness_ms;
-    return true;
-}
-
-const std::chrono::milliseconds &JBDBMS::get_max_staleness() {
-    lockguard_t lkd(this->lock);
-    return this->max_staleness_ms;
-}
 
 /// > 0 discharging, < 0 charging
 uint32_t JBDBMS::set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) {

@@ -52,7 +52,6 @@ public:
 private:
     std::unique_ptr<Connection> pconnection;
     RD6006PowerSupply rd6006;
-    std::chrono::milliseconds max_staleness_ms;
     int64_t max_charging_current_mA;
     int64_t max_discharging_current_mA;
     State basic_state;
@@ -100,17 +99,13 @@ public:
 
 protected: 
     BatteryStatus refresh() override;
-    bool check_staleness_and_refresh();
+    
 public: 
     std::string get_type_string() override;
-    BatteryStatus get_status() override;
+    // BatteryStatus get_status() override;
     
     /** > 0 discharging, < 0 charging */
     uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override;
-    
-    bool set_max_staleness(const std::chrono::milliseconds &new_max_staleness_ms);
-    const std::chrono::milliseconds &get_max_staleness();
-    
     
 
 };
