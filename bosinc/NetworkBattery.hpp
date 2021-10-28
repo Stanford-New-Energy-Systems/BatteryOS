@@ -75,6 +75,10 @@ protected:
         // timestamp is inside BatteryStatus
         return this->status;
     }
+    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target) override {
+        // this does nothing! the scheduling is done via the remote battery
+        return 0;
+    }
 public:
     // BatteryStatus get_status() override {
     //     lockguard_t lkd(this->lock);
@@ -84,7 +88,7 @@ public:
     //     return this->refresh();
     // }
 
-    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override {
+    uint32_t schedule_set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override {
         lockguard_t lkd(this->lock);
         // send the request 
         std::vector<uint8_t> request_bytes(sizeof(uint32_t) + sizeof(RPCRequestHeader) + remote_name.size() + 1);

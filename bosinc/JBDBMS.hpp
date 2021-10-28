@@ -105,7 +105,7 @@ public:
     // BatteryStatus get_status() override;
     
     /** > 0 discharging, < 0 charging */
-    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override;
+    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target) override;
     
 
 };

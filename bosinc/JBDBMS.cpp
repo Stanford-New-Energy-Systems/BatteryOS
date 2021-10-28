@@ -275,9 +275,8 @@ std::string JBDBMS::get_type_string() {
 
 
 /// > 0 discharging, < 0 charging
-uint32_t JBDBMS::set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) {
-    lockguard_t lkd(this->lock);
-    this->get_status();
+uint32_t JBDBMS::set_current(int64_t target_current_mA, bool is_greater_than_target) {
+    this->check_staleness_and_refresh();
     if (target_current_mA < 0 && (-target_current_mA) > this->max_charging_current_mA) {
         return 0;
     }

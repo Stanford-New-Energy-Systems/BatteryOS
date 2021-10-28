@@ -6,15 +6,22 @@ Battery::Battery(const std::string &name, const std::chrono::milliseconds &max_s
     estimated_soc(),
     refresh_mode(RefreshMode::LAZY),
     max_staleness(max_staleness_ms),
-    background_refresh_thread(nullptr),
+    background_thread(),
     lock(),
-    should_cancel_background_refresh(false) 
-    // timestamp(get_system_time()),  // = bos.util.bos_time()
+    cv(),
+    should_quit(false),
+    event_queue()
 {
+    this->background_thread = std::thread(Battery::background_func, this);
 }
 
 Battery::~Battery() {
-    this->stop_background_refresh();
+    {
+        lockguard_t lkd(this->lock);
+        this->should_quit = true;
+    }
+    cv.notify_one();
+    background_thread.join(); 
 }
 
 BatteryStatus Battery::get_status() {
@@ -49,12 +56,12 @@ void Battery::set_max_staleness(const std::chrono::milliseconds &new_staleness_m
 }
 
 std::chrono::milliseconds Battery::get_max_staleness() {
-    lockguard_t lkg(this->lock);
+    // no lock
     return this->max_staleness;
 }
 
 bool Battery::check_staleness_and_refresh() {
-    lockguard_t lkg(this->lock);
+    // no lock
     if (this->refresh_mode != RefreshMode::LAZY) {
         return false;
     }
@@ -66,22 +73,68 @@ bool Battery::check_staleness_and_refresh() {
     return false;
 }
 
-void Battery::background_refresh_func(Battery *bat) {
-    bool should_quit = false;
-    std::chrono::milliseconds sampling_period;
+void Battery::background_func(Battery *bat) {
+    // bool should_quit = false;
+    // std::chrono::milliseconds sampling_period;
+    // while (true) {
+    //     bat->lock.lock();
+    //     should_quit = bat->should_cancel_background_refresh;
+    //     sampling_period = bat->max_staleness;
+    //     if (should_quit) {
+    //         bat->lock.unlock();
+    //         return;
+    //     } 
+    //     bat->status = bat->refresh();
+    //     bat->lock.unlock();
+    //     std::this_thread::sleep_for(sampling_period);
+    // }
+    // return;
+
     while (true) {
-        bat->lock.lock();
-        should_quit = bat->should_cancel_background_refresh;
-        sampling_period = bat->max_staleness;
-        if (should_quit) {
-            bat->lock.unlock();
-            return;
-        } 
-        bat->status = bat->refresh();
-        bat->lock.unlock();
-        std::this_thread::sleep_for(sampling_period);
+        std::unique_lock<lock_t> lk(bat->lock);
+        if (bat->event_queue.size() == 0) {
+            bat->cv.wait(lk, 
+                [bat]{ 
+                    return bat->event_queue.size() > 0 || bat->should_quit; 
+                }
+            );
+            if (bat->should_quit) return;
+        }
+        bat->cv.wait_until(lk, 
+            std::get<0>(bat->event_queue.top()), 
+            [bat] { 
+                return get_system_time() >= std::get<0>(bat->event_queue.top()) || bat->should_quit; 
+            }
+        );
+        if (bat->should_quit) return;
+        bool has_refresh = false;
+        bool has_set_current = false;
+        event_t last_set_current_event;
+        timepoint_t now = get_system_time();
+        while (!(bat->event_queue.empty())) {
+            event_t top = bat->event_queue.top();
+            if (std::get<0>(top) > now) { 
+                break; 
+            }
+            if (std::get<1>(top) == Function::REFRESH) {
+                has_refresh = true;
+            } else if (std::get<1>(top) == Function::SET_CURRENT) {
+                has_set_current = true;
+                last_set_current_event = top;
+            }
+            bat->event_queue.pop();
+            now = get_system_time();
+        }
+        if (has_refresh) {
+            bat->refresh();
+            if (bat->refresh_mode == RefreshMode::ACTIVE) {
+                bat->event_queue.emplace(get_system_time()+bat->max_staleness, Function::REFRESH, int64_t(0), false);
+            }
+        }
+        if (has_set_current) {
+            bat->set_current(std::get<2>(last_set_current_event), std::get<3>(last_set_current_event));
+        }
     }
-    return;
 }
 
 bool Battery::start_background_refresh() {
@@ -89,11 +142,15 @@ bool Battery::start_background_refresh() {
     if (this->max_staleness < 100ms) {
         warning("maximum staleness should not be less than 100ms in background refresh mode");
         return false;
-    } else if (this->background_refresh_thread != nullptr) {
-        return false;
     } else {
-        this->refresh_mode = RefreshMode::ACTIVE;
-        this->background_refresh_thread = std::make_unique<std::thread>(Battery::background_refresh_func, this);
+        {
+            lockguard_t lkd(this->lock);
+            this->refresh_mode = RefreshMode::ACTIVE;
+            // push the first refresh event
+            this->event_queue.emplace(get_system_time()+max_staleness, Function::REFRESH, int64_t(0), false);
+        }
+        // tell the background thread to handle the refresh event
+        cv.notify_one();
     }
     return true;
 }
@@ -101,25 +158,29 @@ bool Battery::start_background_refresh() {
 bool Battery::stop_background_refresh() {
     if (this->refresh_mode == RefreshMode::ACTIVE) {
         // ask the refreshing thread to quit
-        this->lock.lock();
-        this->should_cancel_background_refresh = true;
-        this->lock.unlock();
-        
-        // now wait for the refreshing thread to join
-        this->background_refresh_thread->join();
-        
-        // reset the pointers
-        this->background_refresh_thread.reset();
-        this->refresh_mode = RefreshMode::LAZY;
-        this->should_cancel_background_refresh = false;
-
+        {
+            lockguard_t lkd(this->lock);
+            this->refresh_mode = RefreshMode::LAZY;
+        }
+        cv.notify_one();  // do we need to notify this?
         return true;
     }
     return false;
 }
 
+uint32_t Battery::schedule_set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) {
+    {
+        lockguard_t lkd(this->lock);
+        // enqueue the set current event and cancel current event
+        this->event_queue.emplace(when_to_set, Function::SET_CURRENT, target_current_mA, is_greater_than_target);
+        this->event_queue.emplace(until_when, Function::SET_CURRENT, int64_t(0), false);
+    }
+    cv.notify_one();
+    return 1;
+}
+
 void Battery::update_estimated_soc(int32_t end_current, int32_t new_current) {
-    lockguard_t lkg(this->lock);
+    // lockguard_t lkg(this->lock);  // this should be called by refresh in virtual battery
     int32_t begin_current = this->status.current_mA;
 
     timepoint_t end_time = std::chrono::system_clock::now();
@@ -149,9 +210,11 @@ void Battery::set_estimated_soc(int32_t new_estimated_soc) {
 }
 
 void Battery::reset_estimated_soc() {
-    lockguard_t lkg(this->lock); 
-    // note: get_status() also requires the lock, so we need recursive mutex
-    this->estimated_soc = this->get_status().state_of_charge_mAh;
+    this->get_status();
+    {
+        lockguard_t lkg(this->lock); 
+        this->estimated_soc = this->status.state_of_charge_mAh;
+    }
 }
 
 

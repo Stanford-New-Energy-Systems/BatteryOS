@@ -43,11 +43,27 @@ void test_JBDBMS() {
     std::cout << bms.get_status() << std::endl;
 }
 
+void test_events() {
+    std::cout << std::endl << "---------------------- test events ---------------------------" << std::endl << std::endl;
+    NullBattery nub("null_battery", 1200, std::chrono::milliseconds(1000));
+    std::cout << "starting background refresh" << std::endl;
+    nub.start_background_refresh();
+    nub.schedule_set_current(1000, true, get_system_time()+std::chrono::seconds(3), get_system_time()+std::chrono::seconds(5));
+    std::this_thread::sleep_for(std::chrono::seconds(8));
+    
+    std::cout << "stopping background refresh" << std::endl;
+    nub.stop_background_refresh();
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::cout << "done" << std::endl;
+}
+
 int run() {
     test_battery_status();
     test_python_binding();
     // test_uart();
     // test_JBDBMS(); 
+
+    test_events();
 
     return 0;
 }

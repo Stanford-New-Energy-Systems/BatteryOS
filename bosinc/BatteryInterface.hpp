@@ -7,6 +7,9 @@
 #include <vector>
 #include <thread>
 #include <mutex>
+#include <condition_variable>
+#include <queue>
+#include <tuple>
 #include <memory>
 #include <utility>
 #include <chrono>
@@ -21,6 +24,10 @@ public:
     enum class RefreshMode {
         LAZY, 
         ACTIVE,
+    };
+    enum class Function {
+        REFRESH,
+        SET_CURRENT,
     };
 protected: 
     /** name of the battery */
@@ -47,16 +54,29 @@ protected:
      */
     std::chrono::milliseconds max_staleness;
 
-    // Automatic refreshing related fields
-    /** the thread that refreshes the battery for a given sampling period */
-    std::unique_ptr<std::thread> background_refresh_thread;
+////// Event scheduling fields! 
+    /** the thread that refreshes the battery for a given sampling period, and handles set_current events */
+    std::thread background_thread;
+
+    using lock_t = std::mutex;
     /** the thread lock for the battery */
-    std::recursive_mutex lock; 
-    using lockguard_t = std::lock_guard<std::recursive_mutex>;
-    /** tell the background refreshing thread that it should quit */
-    bool should_cancel_background_refresh;
-    // /** is it doing background refresh? */
-    // bool should_background_refresh;
+    lock_t lock; 
+
+    /** the condition variable to implement the event scheduling */
+    std::condition_variable cv;
+
+    /** the type for the lockguard */
+    using lockguard_t = std::lock_guard<lock_t>;
+
+    /** tell the background thread that it should quit */
+    bool should_quit;
+    
+    /** event_t: at what time, do what, if set current what current, if set current is it greater than or less than */
+    using event_t = std::tuple<timepoint_t, Function, int64_t, bool>;
+
+    /** the queue holding the events */
+    std::priority_queue<event_t, std::vector<event_t>, std::greater<event_t>> event_queue;
+
 
 public: 
     /**
@@ -91,6 +111,14 @@ protected:
      * @return the new status of the battery
      */
     virtual BatteryStatus refresh() = 0;
+
+    /**
+     * Set the current of the battery
+     * NOTE: no need to check lock!!!
+     * @param target_current_mA the target current, target_current_mA > 0: discharging, target_current_mA < 0: charging
+     * @param is_greater_than_target require whether the new current >= target_current_mA or <= target_current_mA
+     */
+    virtual uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target) = 0;
 public:
     /** 
      * (Optional function to override)
@@ -102,7 +130,8 @@ public:
     virtual BatteryStatus get_status();
     
     /**
-     * Set the current to greater than / less than target current in a specific time. 
+     * (Optional function to override)
+     * Schedule to set the current to greater than / less than target current in a specific time. 
      * NOTE: Must add lock!!!!!!
      * @param target_current_mA the target current, target_current_mA > 0: discharging, target_current_mA < 0: charging
      * @param is_greater_than_target require whether the new current >= target_current_mA or <= target_current_mA
@@ -110,7 +139,7 @@ public:
      * @param until_when a timestamp representing when to stop setting the current
      * @return something? 
      */
-    virtual uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) = 0;
+    virtual uint32_t schedule_set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when);
 
     /**
      * Just return the type string of the battery driver
@@ -159,7 +188,7 @@ public:
      * The battery refreshing function, this should be the main function of background refreshing thread!
      * @param bat the pointer to the Battery class
      */
-    static void background_refresh_func(Battery *bat);
+    static void background_func(Battery *bat);
 
     /**
      * Start the background refreshing mechanism
@@ -209,13 +238,24 @@ class PhysicalBattery : public Battery {
 public: 
     PhysicalBattery(
         const std::string &name, 
-        const std::chrono::milliseconds &max_staleness=std::chrono::milliseconds(1000)) : 
-        Battery(name, max_staleness) {}
+        const std::chrono::milliseconds &max_staleness=std::chrono::milliseconds(1000)
+    ) : Battery(name, max_staleness) {}
     std::string get_type_string() override {
         return "PhysicalBattery";
     }
 };
 
+
+class VirtualBattery : public Battery {
+public: 
+    VirtualBattery(
+        const std::string &name, 
+        const std::chrono::milliseconds &max_staleness=std::chrono::milliseconds(1000)
+    ) : Battery(name, max_staleness) {}
+    std::string get_type_string() override {
+        return "VirtualBattery";
+    }
+};
 
 
 #endif // ! BATTERY_INTERFACE_HPP
