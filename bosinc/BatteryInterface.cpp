@@ -100,12 +100,20 @@ void Battery::background_func(Battery *bat) {
             );
             if (bat->should_quit) return;
         }
-        bat->cv.wait_until(lk, 
-            std::get<0>(bat->event_queue.top()), 
-            [bat] { 
-                return get_system_time() >= std::get<0>(bat->event_queue.top()) || bat->should_quit; 
+        while (!(get_system_time() >= std::get<0>(bat->event_queue.top()) || bat->should_quit)) {
+            if (
+                bat->cv.wait_until(lk, 
+                std::get<0>(bat->event_queue.top())
+            ) == std::cv_status::timeout) { 
+                break;
             }
-        );
+        }
+        // bat->cv.wait_until(lk, 
+        //     std::get<0>(bat->event_queue.top()), 
+        //     [bat] { 
+        //         return get_system_time() >= std::get<0>(bat->event_queue.top()) || bat->should_quit; 
+        //     }
+        // );
         if (bat->should_quit) return;
         bool has_refresh = false;
         bool has_set_current = false;
