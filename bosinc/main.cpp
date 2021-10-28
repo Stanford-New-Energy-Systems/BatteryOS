@@ -53,7 +53,11 @@ void test_events() {
     
     std::cout << "stopping background refresh" << std::endl;
     nub.stop_background_refresh();
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    nub.get_status();
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+    nub.start_background_refresh();
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     std::cout << "done" << std::endl;
 }
 

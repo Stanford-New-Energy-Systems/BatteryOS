@@ -125,11 +125,9 @@ void Battery::background_func(Battery *bat) {
             bat->event_queue.pop();
             now = get_system_time();
         }
-        if (has_refresh) {
+        if (has_refresh && bat->refresh_mode == RefreshMode::ACTIVE) {
             bat->refresh();
-            if (bat->refresh_mode == RefreshMode::ACTIVE) {
-                bat->event_queue.emplace(get_system_time()+bat->max_staleness, Function::REFRESH, int64_t(0), false);
-            }
+            bat->event_queue.emplace(get_system_time()+bat->max_staleness, Function::REFRESH, int64_t(0), false);
         }
         if (has_set_current) {
             bat->set_current(std::get<2>(last_set_current_event), std::get<3>(last_set_current_event));
