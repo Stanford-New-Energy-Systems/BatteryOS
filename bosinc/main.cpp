@@ -58,6 +58,14 @@ void test_events() {
     std::this_thread::sleep_for(std::chrono::seconds(3));
     nub.start_background_refresh();
     std::this_thread::sleep_for(std::chrono::seconds(5));
+    std::cout << "---------- now test overlapping ----------" << std::endl;
+    nub.schedule_set_current(100, false, get_system_time()+std::chrono::seconds(3), get_system_time()+std::chrono::seconds(5));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::cout << "---------- set 200mA after 1 second ----------" << std::endl;
+    // notice that this should cancel the previous set current event 
+    nub.schedule_set_current(200, true, get_system_time()+std::chrono::seconds(1), get_system_time()+std::chrono::seconds(5));
+    std::cout << "---------- set !!! ----------" << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(6));
     std::cout << "done" << std::endl;
 }
 

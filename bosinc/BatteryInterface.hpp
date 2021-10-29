@@ -25,9 +25,27 @@ public:
         LAZY, 
         ACTIVE,
     };
-    enum class Function {
-        REFRESH,
-        SET_CURRENT,
+    enum class Function : int {
+        REFRESH = 0,
+        SET_CURRENT_END = 1, 
+        SET_CURRENT = 2,
+        CANCEL_EVENT = 3,  
+    };
+
+    struct event_t {
+        timepoint_t timepoint;
+        uint64_t sequence_number;
+        Function func;
+        int64_t current_mA;
+        bool is_greater_than;
+        event_t(const timepoint_t &tp, uint64_t seq_num, Function fn, int64_t mA, bool is_greater_than) : 
+            timepoint(tp),
+            sequence_number(seq_num),
+            func(fn),
+            current_mA(mA),
+            is_greater_than(is_greater_than) {}
+        event_t() {}
+
     };
 protected: 
     /** name of the battery */
@@ -72,12 +90,12 @@ protected:
     bool should_quit;
     
     /** event_t: at what time, do what, if set current what current, if set current is it greater than or less than */
-    using event_t = std::tuple<timepoint_t, Function, int64_t, bool>;
+    // using event_t = std::tuple<timepoint_t, Function, int64_t, bool>;
 
     /** the queue holding the events */
     std::priority_queue<event_t, std::vector<event_t>, std::greater<event_t>> event_queue;
 
-
+    uint64_t current_sequence_number;
 public: 
     /**
      * Constructor
@@ -203,6 +221,10 @@ public:
      * @return whether the stop is successful or not
      */
     bool stop_background_refresh();
+
+    uint64_t next_sequence_number() {
+        return (this->current_sequence_number++);
+    }
     ////// Ends here
 
     /**
@@ -234,6 +256,8 @@ public:
 
 };
 
+bool operator < (const Battery::event_t &lhs, const Battery::event_t &rhs);
+bool operator > (const Battery::event_t &lhs, const Battery::event_t &rhs);
 
 class PhysicalBattery : public Battery {
 public: 
