@@ -84,8 +84,9 @@ public:
      * @param name the name of the battery
      * @param max_staleness_ms the maximum staleness in milliseconds, notice that in background refresh mode, 
      *   the maximum staleness should be greater than 100ms
+     * @param no_thread whether NOT to invoke a background thread
      */
-    Battery(const std::string &name, const std::chrono::milliseconds &max_staleness_ms);
+    Battery(const std::string &name, const std::chrono::milliseconds &max_staleness_ms, bool no_thread=false);
     
     /// the lock is neither copyable nor moveable
     Battery(const Battery &) = delete;

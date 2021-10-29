@@ -1,6 +1,6 @@
 #include "BatteryInterface.hpp"
 
-Battery::Battery(const std::string &name, const std::chrono::milliseconds &max_staleness_ms) : 
+Battery::Battery(const std::string &name, const std::chrono::milliseconds &max_staleness_ms, bool no_thread) : 
     name(name), 
     status(),
     estimated_soc(),
@@ -12,7 +12,9 @@ Battery::Battery(const std::string &name, const std::chrono::milliseconds &max_s
     should_quit(false),
     event_queue()
 {
-    this->background_thread = std::thread(Battery::background_func, this);
+    if (!no_thread) {
+        this->background_thread = std::thread(Battery::background_func, this);
+    }
 }
 
 Battery::~Battery() {
@@ -92,6 +94,7 @@ void Battery::background_func(Battery *bat) {
 
     while (true) {
         std::unique_lock<lock_t> lk(bat->lock);
+        if (bat->should_quit) return;
         if (bat->event_queue.size() == 0) {
             bat->cv.wait(lk, 
                 [bat]{ 
@@ -100,6 +103,7 @@ void Battery::background_func(Battery *bat) {
             );
             if (bat->should_quit) return;
         }
+        // notice that the event_queue top element may be updated 
         while (!(get_system_time() >= std::get<0>(bat->event_queue.top()) || bat->should_quit)) {
             if (
                 bat->cv.wait_until(lk, 

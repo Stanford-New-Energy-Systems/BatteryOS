@@ -9,15 +9,19 @@
 /**
  * Refering to a distant battery through TCP connection
  * Protocol: send 4 bytes indicating the length of data first, in little-endian
- * then the data
+ * then the data. 
+ * 
+ * The network battery only forwards requests to the remote battery. 
  */
 class NetworkBattery : public Battery {
     std::string remote_name;
     std::unique_ptr<Connection> pconnection;
 public:
     NetworkBattery(const std::string &name, const std::string &remote_name, const std::string &address, int port) : 
-        Battery(name, std::chrono::milliseconds(0)), remote_name(remote_name), pconnection() {
-        
+        Battery(name, std::chrono::milliseconds(0), true),  // no background thread
+        remote_name(remote_name), 
+        pconnection() 
+    {
         this->pconnection.reset(new TCPConnection(address, port));
         if (!this->pconnection->connect()) {
             error("TCP connection failed!");
@@ -80,16 +84,13 @@ protected:
         return 0;
     }
 public:
-    // BatteryStatus get_status() override {
-    //     lockguard_t lkd(this->lock);
-    //     // if (this->should_background_refresh) {
-    //     //     return this->status;
-    //     // }
-    //     return this->refresh();
-    // }
+    BatteryStatus get_status() override {
+        // lockguard_t lkd(this->lock);
+        return this->refresh();
+    }
 
     uint32_t schedule_set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override {
-        lockguard_t lkd(this->lock);
+        // lockguard_t lkd(this->lock);
         // send the request 
         std::vector<uint8_t> request_bytes(sizeof(uint32_t) + sizeof(RPCRequestHeader) + remote_name.size() + 1);
         uint8_t *buffer_ptr = request_bytes.data() + sizeof(uint32_t);

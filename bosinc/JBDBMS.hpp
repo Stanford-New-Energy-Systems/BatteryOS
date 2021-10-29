@@ -96,18 +96,12 @@ public:
         // uint8_t num_batteries;
         // uint8_t num_temperature_sensors;
     // end of basic_info
-
 protected: 
     BatteryStatus refresh() override;
-    
-public: 
-    std::string get_type_string() override;
-    // BatteryStatus get_status() override;
-    
     /** > 0 discharging, < 0 charging */
     uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target) override;
-    
-
+public: 
+    std::string get_type_string() override;    
 };
 
 // note: we are overloading the << operator... 
