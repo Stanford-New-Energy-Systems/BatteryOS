@@ -53,9 +53,13 @@ void test_events() {
     
     std::cout << "stopping background refresh" << std::endl;
     nub.stop_background_refresh();
+    std::cout << "stopped" << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::cout << "Manual refresh" << std::endl;
     nub.get_status();
+    std::cout << "refreshed" << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(3));
+    std::cout << "now restart background refresh" << std::endl;
     nub.start_background_refresh();
     std::this_thread::sleep_for(std::chrono::seconds(5));
     std::cout << "---------- now test overlapping ----------" << std::endl;
