@@ -1,6 +1,7 @@
 #include "JBDBMS.hpp"
 #include "TestBattery.hpp"
 #include "NetworkBattery.hpp"
+#include "AggregatorBattery.hpp"
 #include <iostream>
 
 void test_uart() {

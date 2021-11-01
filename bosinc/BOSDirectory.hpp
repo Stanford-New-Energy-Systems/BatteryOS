@@ -21,7 +21,7 @@ public:
         std::unique_ptr<Battery> battery;
         std::list<BatteryGraphNode*> parents;
         std::list<BatteryGraphNode*> children;
-        BatteryGraphNode(std::unique_ptr<Battery> battery) : battery(std::move(battery)) {}
+        BatteryGraphNode(std::unique_ptr<Battery> &&battery) : battery(std::move(battery)) {}
     };
     /** a mapping from name (string) to the actual battery node */
     std::map<std::string, BatteryGraphNode> name_map;
@@ -30,16 +30,18 @@ public:
     BOSDirectory(const BOSDirectory &) = delete;
     BOSDirectory(BOSDirectory &&) = delete;
     BOSDirectory operator=(const BOSDirectory &) = delete;
-    BOSDirectory operator=(BOSDirector &&) = delete; 
+    BOSDirectory operator=(BOSDirectory &&) = delete; 
 
     BatteryGraphNode *add_battery(std::unique_ptr<Battery> &&battery) {
         std::string name = battery->get_name();
         if (name_map.count(name) > 0) {
             warning("battery name: ", name, " already exists, battery failed to add");
-            return;
+            return nullptr;
         }
-        name_map[name] = BatteryGraphNode(std::move(battery));  // note: named rvalue is lvalue! 
-        return &(name_map[name]);
+        std::pair<decltype(name_map)::iterator, bool> result = name_map.insert(std::make_pair(name, BatteryGraphNode(std::move(battery))));
+        // name_map[name] = ;  // note: named rvalue is lvalue! 
+        // auto &a = name_map[name];
+        return &(result.first->second);  // be careful to avoid the copy constructor! 
     }
 
     // bool remove_battery(const std::string &name) {
@@ -90,7 +92,7 @@ public:
 
     std::vector<std::string> get_names() {
         std::vector<std::string> names;
-        for (std::pair<std::string, BatteryGraphNode> &p : name_map) {
+        for (std::pair<const std::string, BatteryGraphNode> &p : name_map) {
             names.push_back(p.first);
         }
         return names;

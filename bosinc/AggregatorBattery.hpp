@@ -47,6 +47,33 @@ public:
 
 protected:
     BatteryStatus refresh() override {
+        int64_t max_cap_mAh = 0;
+        int64_t current_cap_mAh = 0;
+        int64_t current_mA = 0;
+        double max_discharge_time = 2147483647;
+        double max_charge_time = 2147483647;
+        BOSDirectory::BatteryGraphNode *node = pdirectory->get_node(this->name);
+        Battery *bat;
+        BatteryStatus status;
+        for (BOSDirectory::BatteryGraphNode *c : node->parents) {
+            bat = c->battery.get();
+            status = bat->get_status();
+            if (!(voltage_mV - voltage_tolerance_mV <= status.voltage_mV && status.voltage_mV <= voltage_mV + voltage_tolerance_mV)) {
+                warning("Battery ", bat->get_name(), " is out of voltage tolerance!");
+            }
+            max_cap_mAh += status.max_capacity_mAh;
+            current_cap_mAh += status.state_of_charge_mAh;
+            current_mA += status.current_mA;
+            max_discharge_time = std::min(max_discharge_time, (double)status.state_of_charge_mAh / status.max_discharging_current_mA);
+            max_charge_time = std::min(max_charge_time, (double)(status.max_capacity_mAh - status.state_of_charge_mAh) / status.max_charging_current_mA);
+        }
+        this->status.max_discharging_current_mA = (int64_t)(current_cap_mAh / max_discharge_time);
+        this->status.max_charging_current_mA = (int64_t)((max_cap_mAh - current_cap_mAh) / max_charge_time);
+        this->status.voltage_mV = this->voltage_mV;
+        this->status.current_mA = current_mA;
+        this->status.state_of_charge_mAh = current_cap_mAh;
+        this->status.max_capacity_mAh = max_cap_mAh;
+        this->status.timestamp = get_system_time_c();
         return this->status;
     }
     uint32_t set_current(int64_t current_mA, bool is_greater_than) override {
@@ -57,9 +84,10 @@ public:
         return "AggregatorBattery";
     }
 
-    BatteryStatus get_status() override {
-        return this->status;
-    }
+    // BatteryStatus get_status() override {
+    //     lockguard_t lkd(this->lock);
+    //     return this->refresh();  // always refresh
+    // }
 
     uint32_t schedule_set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override {
         return 0;
