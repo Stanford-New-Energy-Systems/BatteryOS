@@ -21,10 +21,23 @@
  */
 class Battery : public BOSNode {
 public:
+    /**
+     * The refresh mode of the battery
+     * LAZY : refresh if the status is older than maximum staleness
+     * ACTIVE : automatically refresh in background with a period of maximum staleness
+     */
     enum class RefreshMode {
         LAZY, 
         ACTIVE,
     };
+    /**
+     * The event IDs for BAL methods 
+     * NOTE: the order of the events matters!!! 
+     * REFRESH : just call refresh; 
+     * SET_CURRENT_END : indicating when a schedule_set_current event ends; 
+     * SET_CURRENT : indicating when a schedule_set_current event begins; 
+     * CANCEL_EVENT : cancel all the SET_CURRENT_* events in that specific timepoint, REFRESH events are not affected
+     */
     enum class Function : int {
         REFRESH = 0,
         SET_CURRENT_END = 1, 
@@ -32,6 +45,16 @@ public:
         CANCEL_EVENT = 3,  
     };
 
+    /**
+     * A struct representing a BAL event
+     * @param timepoint at what time does this event happen
+     * @param sequence_number the sequence number of this event, 
+     *  roughly represent when the event is queued up, 
+     *  and used for ordering multiple events happening at the same time
+     * @param func what kind of this event is 
+     * @param current_mA if this is a SET_CURRENT_* event, what's the target current 
+     * @param is_greater_than if this is a SET_CURRENT_* event, do you want it to be greater than target current or less than target current
+     */
     struct event_t {
         timepoint_t timepoint;
         uint64_t sequence_number;
@@ -45,7 +68,6 @@ public:
             current_mA(mA),
             is_greater_than(is_greater_than) {}
         event_t() {}
-
     };
 protected: 
     /** name of the battery */
@@ -54,13 +76,8 @@ protected:
     /** the status of the battery */
     BatteryStatus status;
 
-    // /** the timestamp of last refresh */
-    // timepoint_t timestamp;
-
-
     /** estimated net charge of this battery. This must be initialized by BOS */
     int32_t estimated_soc;  
-
 
     /** refresh mode, could be automatic background refreshing or refresh based on staleness */
     RefreshMode refresh_mode;
@@ -88,9 +105,6 @@ protected:
 
     /** tell the background thread that it should quit */
     bool should_quit;
-    
-    /** event_t: at what time, do what, if set current what current, if set current is it greater than or less than */
-    // using event_t = std::tuple<timepoint_t, Function, int64_t, bool>;
 
     /** the queue holding the events */
     std::priority_queue<event_t, std::vector<event_t>, std::greater<event_t>> event_queue;
@@ -222,6 +236,10 @@ public:
      */
     bool stop_background_refresh();
 
+    /** 
+     * Just get the next sequence number for event 
+     * @return the next sequence number
+     */
     uint64_t next_sequence_number() {
         return (this->current_sequence_number++);
     }
@@ -255,8 +273,13 @@ public:
     void reset_estimated_soc();
 
 };
-
+/**
+ * Compare two event_t lexicographically 
+ */
 bool operator < (const Battery::event_t &lhs, const Battery::event_t &rhs);
+/**
+ * Compare two event_t lexicographically 
+ */
 bool operator > (const Battery::event_t &lhs, const Battery::event_t &rhs);
 
 class PhysicalBattery : public Battery {
@@ -269,7 +292,6 @@ public:
         return "PhysicalBattery";
     }
 };
-
 
 class VirtualBattery : public Battery {
 public: 

@@ -52,17 +52,15 @@ protected:
         return this->status;
     }
     uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target) override {
-        // lockguard_t lkd(this->lock);
-        // int64_t old_current = this->get_status().current_mA;
-        // if (!(target_current_mA <= this->status.max_discharging_current_mA || 
-        //     target_current_mA >= -(this->status.max_charging_current_mA))) {
-        //     return 0;
-        // }
-        // this->status.current_mA = target_current_mA;
-        // int64_t new_current = this->get_status().current_mA;
-        // this->update_estimated_soc(old_current, new_current);
-        // return 1;
-        return 0;
+        int64_t old_current = this->get_status().current_mA;
+        if (!(target_current_mA <= this->status.max_discharging_current_mA || 
+            target_current_mA >= -(this->status.max_charging_current_mA))) {
+            return 0;
+        }
+        this->status.current_mA = target_current_mA;
+        int64_t new_current = this->get_status().current_mA;
+        this->update_estimated_soc(old_current, new_current);
+        return 1;
     }
 public:
     BatteryStatus get_status() override {
