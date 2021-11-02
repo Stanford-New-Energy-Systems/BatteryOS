@@ -2,6 +2,7 @@
 #include "TestBattery.hpp"
 #include "NetworkBattery.hpp"
 #include "AggregatorBattery.hpp"
+#include "SplitterPolicy.hpp"
 #include <iostream>
 
 void test_uart() {

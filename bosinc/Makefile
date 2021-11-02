@@ -10,6 +10,7 @@ CPP_FILES += util.cpp
 CPP_FILES += JBDBMS.cpp
 CPP_FILES += BatteryInterface.cpp
 CPP_FILES += RPC.cpp
+CPP_FILES += AggregatorBattery.cpp
 
 C_FILES = include/wiringSerial.c
 

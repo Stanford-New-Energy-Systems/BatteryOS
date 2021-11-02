@@ -5,6 +5,7 @@
 #include "BOSDirectory.hpp"
 /**
  * A virtual battery representing the aggregation of multiple batteries 
+ * NOTE: get_status always forward the requests immediately. 
  */
 class AggregatorBattery : public VirtualBattery {
     BOSDirectory *pdirectory;
@@ -17,84 +18,51 @@ public:
         int64_t voltage_tolerance_mV, 
         const std::vector<std::string> &src_names, 
         BOSDirectory &directory, 
-        const std::chrono::milliseconds &max_staleness=std::chrono::milliseconds(1000)) : 
-        VirtualBattery(name, max_staleness),
-        pdirectory(&directory),
-        voltage_mV(voltage_mV),
-        voltage_tolerance_mV(voltage_tolerance_mV)
-    {
-        bool add_success;
-        Battery *bat;
-        int64_t v; 
-        for (const std::string &src : src_names) {
-            bat = directory.get_battery(src);
-            if (!bat) {
-                warning("Failed to add battery ", name, "as source!");
-                continue;
-            }
-            v = bat->get_status().voltage_mV;
-            if (!(voltage_mV - voltage_tolerance_mV <= v && v <= voltage_mV + voltage_tolerance_mV)) {
-                warning("Battery ", name, " is out of voltage tolerance, not added as source!");
-                continue;
-            }
-            add_success = directory.add_edge(src, name);
-            if (!add_success) {
-                warning("Failed to add battery ", name, " as source!");
-                continue;
-            }
-        }
-    }
-
+        const std::chrono::milliseconds &max_staleness=std::chrono::milliseconds(0)
+    );
 protected:
-    BatteryStatus refresh() override {
-        int64_t max_cap_mAh = 0;
-        int64_t current_cap_mAh = 0;
-        int64_t current_mA = 0;
-        double max_discharge_time = 2147483647;
-        double max_charge_time = 2147483647;
-        BOSDirectory::BatteryGraphNode *node = pdirectory->get_node(this->name);
-        Battery *bat;
-        BatteryStatus status;
-        for (BOSDirectory::BatteryGraphNode *c : node->parents) {
-            bat = c->battery.get();
-            status = bat->get_status();
-            if (!(voltage_mV - voltage_tolerance_mV <= status.voltage_mV && status.voltage_mV <= voltage_mV + voltage_tolerance_mV)) {
-                warning("Battery ", bat->get_name(), " is out of voltage tolerance!");
-            }
-            max_cap_mAh += status.max_capacity_mAh;
-            current_cap_mAh += status.state_of_charge_mAh;
-            current_mA += status.current_mA;
-            max_discharge_time = std::min(max_discharge_time, (double)status.state_of_charge_mAh / status.max_discharging_current_mA);
-            max_charge_time = std::min(max_charge_time, (double)(status.max_capacity_mAh - status.state_of_charge_mAh) / status.max_charging_current_mA);
-        }
-        this->status.max_discharging_current_mA = (int64_t)(current_cap_mAh / max_discharge_time);
-        this->status.max_charging_current_mA = (int64_t)((max_cap_mAh - current_cap_mAh) / max_charge_time);
-        this->status.voltage_mV = this->voltage_mV;
-        this->status.current_mA = current_mA;
-        this->status.state_of_charge_mAh = current_cap_mAh;
-        this->status.max_capacity_mAh = max_cap_mAh;
-        this->status.timestamp = get_system_time_c();
-        return this->status;
-    }
-    uint32_t set_current(int64_t current_mA, bool is_greater_than) override {
-        return 0;
-    }
+    /**
+     * Compute the aggregate status.
+     * The algorithm (when discharging):
+     * - max capacity (MC): sum of source max capacities
+     * - state of charge (SOC): sum of source states of charge
+     * - current: sum of source currents
+     * - max discharging current (MDC):
+     *   1. Compute SOC C-rate for each source battery, defined as (src.SOC / src.MDC)
+     *   2. Take the minimum SOC C-rate among the sources and use this as the SOC C-rate of the aggregate battery.
+     *   3. Multiply this aggregate SOC C-rate by the SOC to get the maximum discharging current.
+     * - max charging current (MCC):
+     *   1. Compute inverse SOC C-rate for each source battery, defined as ((src.MC - src.SOC) / src.MCC).
+     *   2. Take the minimum inverse SOC C-rate among the sources and use this as the SOC C-rate of the aggregate battery.
+     *   3. Multiply this aggregate inverse SOC C-rate by (MC - SOC) to get the maximum charging current.
+     */
+    BatteryStatus refresh() override;
+
+    /** this function should not be called */
+    uint32_t set_current(int64_t current_mA, bool is_greater_than) override;
 public: 
-    std::string get_type_string() override {
-        return "AggregatorBattery";
-    }
+    std::string get_type_string() override;
 
-    // BatteryStatus get_status() override {
-    //     lockguard_t lkd(this->lock);
-    //     return this->refresh();  // always refresh
-    // }
+    /** just forward to refresh */
+    BatteryStatus get_status() override;
 
-    uint32_t schedule_set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override {
-        return 0;
-    }
+    /**
+     * Set the discharging/charging current of the aggregate battery.
+     * Each source battery must be set to a discharging/charging current proportional to its SOC, 
+     *   so that all source batteries will be depleted / fully charged at the same time.
+     * The algorithm:
+     *   1. Compute the time to discharge/charge (TTD/TTC) for the aggregate battery:
+     *     TTD = agg.SOC / target_current; 
+     *     TTC = (agg.MC - agg.SOC) / -target_current; 
+     *   2. For each source battery src, set the current using the aggregator's TTD/TTC:
+     *     src.set_current(src.SOC / TTD); 
+     *     src.set_current(-(src.MC - src.SOC) / TTC); 
+     */
+    uint32_t schedule_set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override;
 
 
 };
 
 #endif // ! AGGREGATOR_BATTERY_HPP 
+
 
