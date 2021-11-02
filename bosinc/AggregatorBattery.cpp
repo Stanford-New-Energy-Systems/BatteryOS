@@ -41,11 +41,9 @@ BatteryStatus AggregatorBattery::refresh() {
     int64_t current_mA = 0;
     double max_discharge_time = 2147483647;
     double max_charge_time = 2147483647;
-    BOSDirectory::BatteryGraphNode *node = pdirectory->get_node(this->name);
-    Battery *bat;
+    const std::list<Battery*> &parents = pdirectory->get_parents(this->name);
     BatteryStatus status;
-    for (BOSDirectory::BatteryGraphNode *c : node->parents) {
-        bat = c->battery.get();
+    for (Battery *bat : parents) {
         status = bat->get_status();
         if (!(voltage_mV - voltage_tolerance_mV <= status.voltage_mV && status.voltage_mV <= voltage_mV + voltage_tolerance_mV)) {
             warning("Battery ", bat->get_name(), " is out of voltage tolerance!");
@@ -100,17 +98,15 @@ uint32_t AggregatorBattery::schedule_set_current(int64_t target_current_mA, bool
         return 0;
     }
 
-    BOSDirectory::BatteryGraphNode *node = pdirectory->get_node(this->name);
+    const std::list<Battery*> &parents= pdirectory->get_parents(this->name);
 
-    Battery *src;
     BatteryStatus status;
     int64_t current;
 
     if (target_current_mA > 0) {
         // discharging 
         double remaining_time = (double)this->status.state_of_charge_mAh / (double)target_current_mA;
-        for (BOSDirectory::BatteryGraphNode *psrc : node->parents) {
-            src = psrc->battery.get();
+        for (Battery *src : parents) {
             status = src->get_status();
             current = (int64_t)(status.state_of_charge_mAh / remaining_time);
             uint32_t success = src->schedule_set_current(current, is_greater_than_target, when_to_set, until_when);
@@ -122,8 +118,7 @@ uint32_t AggregatorBattery::schedule_set_current(int64_t target_current_mA, bool
         // charging 
         int64_t charge = this->status.max_capacity_mAh - this->status.state_of_charge_mAh;
         double charging_time = (double)charge / (double)-target_current_mA;
-        for (BOSDirectory::BatteryGraphNode *psrc : node->parents) {
-            src = psrc->battery.get();
+        for (Battery *src : parents) {
             status = src->get_status();
             current = (int64_t)((status.max_capacity_mAh - status.state_of_charge_mAh) / charging_time);
             uint32_t success = src->schedule_set_current(-current, is_greater_than_target, when_to_set, until_when);
@@ -133,8 +128,8 @@ uint32_t AggregatorBattery::schedule_set_current(int64_t target_current_mA, bool
         }
     } else {
         // target_current_mA == 0
-        for (BOSDirectory::BatteryGraphNode *psrc : node->parents) {
-            uint32_t success = psrc->battery->schedule_set_current(0, is_greater_than_target, when_to_set, until_when);
+        for (Battery *src : parents) {
+            uint32_t success = src->schedule_set_current(0, is_greater_than_target, when_to_set, until_when);
             if (success == 0) {
                 warning("Failed to set current for src battery? Current = ", 0);
             }

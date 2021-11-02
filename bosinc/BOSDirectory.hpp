@@ -10,39 +10,126 @@
  * A graph of the battery topology
  */
 class BOSDirectory {
+    std::map<std::string, std::unique_ptr<Battery>> name_storage_map;
+    std::map<Battery*, std::list<Battery*>> parent_map;
+    std::map<Battery*, std::list<Battery*>> children_map;
 public:
-    /**
-     * Node of the battery topology graph
-     * @param battery the actual battery class
-     * @param parents the parental nodes
-     * @param children the children nodes
-     */
-    struct BatteryGraphNode {
-        std::unique_ptr<Battery> battery;
-        std::list<BatteryGraphNode*> parents;
-        std::list<BatteryGraphNode*> children;
-        BatteryGraphNode(std::unique_ptr<Battery> &&battery) : battery(std::move(battery)) {}
-    };
-    /** a mapping from name (string) to the actual battery node */
-    std::map<std::string, BatteryGraphNode> name_map;
-
     BOSDirectory() {}
-    BOSDirectory(const BOSDirectory &) = delete;
-    BOSDirectory(BOSDirectory &&) = delete;
-    BOSDirectory operator=(const BOSDirectory &) = delete;
-    BOSDirectory operator=(BOSDirectory &&) = delete; 
+    BOSDirectory(BOSDirectory &) = delete;
+    BOSDirectory &operator=(BOSDirectory &) = delete;
+    BOSDirectory(BOSDirectory &&other) : 
+        name_storage_map(std::move(other.name_storage_map)),
+        parent_map(std::move(other.parent_map)),
+        children_map(std::move(other.children_map)) {}
+    BOSDirectory &operator=(BOSDirectory &&other) {
+        name_storage_map.swap(other.name_storage_map);
+        parent_map.swap(other.parent_map);
+        children_map.swap(other.children_map);
+        return (*this);
+    } 
 
-    BatteryGraphNode *add_battery(std::unique_ptr<Battery> &&battery) {
+    Battery *add_battery(std::unique_ptr<Battery> &&battery) {
         std::string name = battery->get_name();
-        if (name_map.count(name) > 0) {
+        if (this->name_storage_map.count(name) > 0) {
             warning("battery name: ", name, " already exists, battery failed to add");
             return nullptr;
         }
-        std::pair<decltype(name_map)::iterator, bool> result = name_map.insert(std::make_pair(name, BatteryGraphNode(std::move(battery))));
-        // name_map[name] = ;  // note: named rvalue is lvalue! 
-        // auto &a = name_map[name];
-        return &(result.first->second);  // be careful to avoid the copy constructor! 
+        std::pair<decltype(this->name_storage_map)::iterator, bool> result = 
+            this->name_storage_map.insert(std::make_pair(name, std::move(battery)));
+
+        Battery *ptr = result.first->second.get();
+        parent_map.insert(std::make_pair(ptr, std::list<Battery*>()));
+        children_map.insert(std::make_pair(ptr, std::list<Battery*>()));
+
+        return ptr;  // be careful to avoid the copy constructor and the default constructor! 
     }
+
+
+    const std::list<Battery*> &get_children(const std::string &name) {
+        auto iter = this->name_storage_map.find(name);
+        if (iter == this->name_storage_map.end()) {
+            warning("battery name: ", name, " does not exist");
+            return {};
+        }
+        return children_map[iter->second.get()];
+    }
+    const std::list<Battery*> &get_children(Battery *bat) {
+        auto iter = children_map.find(bat);
+        if (iter == children_map.end()) {
+            warning("battery does not exist");
+            return {};
+        }
+        return iter->second;
+    }
+
+    const std::list<Battery*> &get_parents(const std::string &name) {
+        auto iter = this->name_storage_map.find(name);
+        if (iter == this->name_storage_map.end()) {
+            warning("battery name: ", name, " does not exist");
+            return {};
+        }
+        return this->parent_map[iter->second.get()];
+    }
+    const std::list<Battery*> &get_parents(Battery *bat) {
+        auto iter = this->parent_map.find(bat);
+        if (iter == this->parent_map.end()) {
+            warning("battery does not exist");
+            return {};
+        }
+        return iter->second;
+    }
+
+
+    bool add_edge(const std::string &from_name, const std::string &to_name) {
+        auto from_iter = this->name_storage_map.find(from_name);
+        auto to_iter = this->name_storage_map.find(to_name);
+        if (from_iter == this->name_storage_map.end()) {
+            warning("battery name: ", from_name, " does not exist");
+            return false;
+        }
+        if (to_iter == this->name_storage_map.end()) {
+            warning("battery name: ", to_name, " does not exist");
+            return false;
+        }
+        Battery *from_ptr = from_iter->second.get();
+        Battery *to_ptr = to_iter->second.get();
+        this->children_map[from_ptr].push_back(to_ptr);
+        this->parent_map[to_ptr].push_back(from_ptr);
+        return true;
+    }
+
+    bool add_edge(Battery *from_battery, Battery *to_battery) {
+        if (this->children_map.count(from_battery) == 0 || this->parent_map.count(to_battery) == 0) {
+            warning("battery does not exist");
+            return false;
+        }
+        this->children_map[from_battery].push_back(to_battery);
+        this->parent_map[to_battery].push_back(from_battery);
+        return true;
+    }
+
+
+    Battery *get_battery(const std::string &name) {
+        auto iter = this->name_storage_map.find(name);
+        if (iter == this->name_storage_map.end()) {
+            warning("name ", name, " does not exist");
+            return nullptr;
+        }
+        return iter->second.get();
+    }
+
+    bool name_exists(const std::string &name) {
+        return (this->name_storage_map.count(name) > 0);
+    }
+
+    std::vector<std::string> get_names() {
+        std::vector<std::string> names;
+        for (auto &p : this->name_storage_map) {
+            names.push_back(p.first);
+        }
+        return names;
+    }
+
 
     // bool remove_battery(const std::string &name) {
     //     decltype(this->name_map)::iterator iter = name_map.find(name);
@@ -54,49 +141,6 @@ public:
     //     remove_battery_recursive(node);
     //     return true;
     // }
-
-    BatteryGraphNode *get_node(const std::string &name) {
-        auto iter = name_map.find(name);
-        if (iter == name_map.end()) {
-            warning("battery name: ", name, " does not exist");
-            return nullptr;
-        }
-        return &(iter->second);
-    }
-
-    Battery *get_battery(const std::string &name) {
-        BatteryGraphNode *node = get_node(name);
-        if (!node) return nullptr;
-        return node->battery.get();
-    }
-
-    bool name_exists(const std::string &name) {
-        return (name_map.count(name) > 0);
-    }
-
-    bool add_edge(const std::string &from_name, const std::string &to_name) {
-        auto from_iter = name_map.find(from_name);
-        auto to_iter = name_map.find(to_name);
-        if (from_iter == name_map.end()) {
-            warning("battery name: ", from_name, " does not exist");
-            return false;
-        }
-        if (to_iter == name_map.end()) {
-            warning("battery name: ", to_name, " does not exist");
-            return false;
-        }
-        from_iter->second.children.push_back(&(to_iter->second));
-        to_iter->second.parents.push_back(&(from_iter->second));
-        return true;
-    }
-
-    std::vector<std::string> get_names() {
-        std::vector<std::string> names;
-        for (std::pair<const std::string, BatteryGraphNode> &p : name_map) {
-            names.push_back(p.first);
-        }
-        return names;
-    }
 
     // void remove_battery_recursive(BatteryGraphNode *node) {
     //     for (BatteryGraphNode *p : node->parents) {

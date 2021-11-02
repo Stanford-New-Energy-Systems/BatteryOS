@@ -12,7 +12,7 @@ protected:
     Battery *source;
 public: 
     SplitterPolicy(const std::string &src_name, BOSDirectory &directory) : src_name(src_name), pdirectory(&directory) {
-        source = pdirectory->get_battery(src_name);
+        source = directory.get_battery(src_name);
         if (!source) {
             warning("source not found!");
         }
@@ -74,7 +74,7 @@ public:
 protected:
     std::map<Battery*, int64_t> current_map;
     std::map<Battery*, Scale> scale_map;
-    std::vector<Battery*> children;
+    std::list<Battery*> children;
 public: 
     ProportionalPolicy(const std::string &src_name, BOSDirectory &directory, Battery *first_battery) : 
         SplitterPolicy(src_name, directory)
@@ -85,14 +85,14 @@ public:
         this->children.push_back(first_battery);
     }
 
-    std::vector<Battery*> get_children() {
+    const std::list<Battery*> &get_children() {
         return this->children;
     }
 
     BatteryStatus get_status_of(Battery *child) {
         Battery *source = this->source;
         BatteryStatus source_status = source->get_status();
-        Scale &scale = this->scale_map.find(child)->second;
+        Scale &scale = this->scale_map[child];
         int64_t estimated_soc = child->get_estimated_soc();
         int64_t total_estimated_soc = 0;
         for (Battery *c : children) {
