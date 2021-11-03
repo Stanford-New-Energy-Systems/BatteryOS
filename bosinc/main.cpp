@@ -3,6 +3,7 @@
 #include "NetworkBattery.hpp"
 #include "AggregatorBattery.hpp"
 #include "SplitterPolicy.hpp"
+#include "SplittedBattery.hpp"
 #include <iostream>
 
 void test_uart() {
@@ -100,6 +101,7 @@ int main() {
     
     Py_FinalizeEx();
     // error("Just to test abnormal return", ", sys=", sys, ", path=", path);
+    // std::cout << std::endl;
     return 0;
     
 }

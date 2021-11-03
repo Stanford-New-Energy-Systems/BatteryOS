@@ -89,6 +89,37 @@ size_t serialize_int(T number, uint8_t *buffer, size_t buffer_size) {
     return sizeof(T);
 }
 
+// class WarningStream : public std::ostream {
+// public: 
+//     static constexpr std::ostream &err = std::cerr;
+//     WarningStream(const char *const file, int line, const char *const func) {
+//         err << "Warning: In file " << file << ", line " << line << ", function " << func << ": ";
+//     }
+//     ~WarningStream() {
+//         #if PROMOTE_WARNINGS_TO_ERRORS
+//         err << "Since PROMOTE_WARNINGS_TO_ERRORS is 1...\n" << "Now exitting with code 2..." << std::endl;
+//         exit(2);
+//         #endif
+//     }
+//     template <typename T>
+//     WarningStream &operator<<(const T &value) { err << value; return *this; }
+//     template <typename T>
+//     WarningStream &operator<<(T &&value) { err << value; return *this; }
+// };
+// class ErrorStream {
+// public: 
+//     static constexpr std::ostream &err = std::cerr;
+//     ErrorStream(const char *file, const char *line, const char *func) {
+//         err << "Error: In file " << file << ", line " << line << ", function " << func << ": ";
+//     }
+//     ~ErrorStream() { err << "Exitting with code 1..." << std::endl; exit(1); }
+//     template <typename T>
+//     ErrorStream &operator<<(const T &value) { err << value; return *this; }
+//     template <typename T>
+//     ErrorStream &operator<<(T &&value) { err << value; return *this; }
+// };
+
+
 
 template <typename T>
 void warning_r(const T &arg) {

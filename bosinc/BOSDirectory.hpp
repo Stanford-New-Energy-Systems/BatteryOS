@@ -121,6 +121,9 @@ public:
     bool name_exists(const std::string &name) {
         return (this->name_storage_map.count(name) > 0);
     }
+    bool battery_exists(Battery *bat) {
+        return (this->children_map.count(bat) > 0);
+    }
 
     std::vector<std::string> get_names() {
         std::vector<std::string> names;
