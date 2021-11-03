@@ -20,17 +20,17 @@ AggregatorBattery::AggregatorBattery(
     for (const std::string &src : src_names) {
         bat = directory.get_battery(src);
         if (!bat) {
-            warning("Failed to add battery ", name, "as source!");
+            WARNING() << "Failed to add battery " << name << "as source!";
             continue;
         }
         v = bat->get_status().voltage_mV;
         if (!(voltage_mV - voltage_tolerance_mV <= v && v <= voltage_mV + voltage_tolerance_mV)) {
-            warning("Battery ", name, " is out of voltage tolerance, not added as source!");
+            WARNING() << "Battery " << name << " is out of voltage tolerance, not added as source!";
             continue;
         }
         add_success = directory.add_edge(src, name);
         if (!add_success) {
-            warning("Failed to add battery ", name, " as source!");
+            WARNING() << "Failed to add battery " << name << " as source!";
             continue;
         }
     }
@@ -48,7 +48,7 @@ BatteryStatus AggregatorBattery::refresh() {
     for (Battery *bat : parents) {
         status = bat->get_status();
         if (!(voltage_mV - voltage_tolerance_mV <= status.voltage_mV && status.voltage_mV <= voltage_mV + voltage_tolerance_mV)) {
-            warning("Battery ", bat->get_name(), " is out of voltage tolerance!");
+            WARNING() << "Battery " << bat->get_name() << " is out of voltage tolerance!";
         }
         max_cap_mAh += status.max_capacity_mAh;
         current_cap_mAh += status.state_of_charge_mAh;
@@ -92,11 +92,10 @@ uint32_t AggregatorBattery::schedule_set_current(int64_t target_current_mA, bool
     int64_t max_charge_current_mA = this->status.max_charging_current_mA;
 
     if (!(max_charge_current_mA <= target_current_mA <= max_discharge_current_mA)) {
-        warning(
-            "target current is out of range, max_charging_current = ", max_charge_current_mA, "mA" 
-            ", and max_discharging_current = ", max_discharge_current_mA, "mA"
-            ", but target current = ", target_current_mA, "mA"
-        );
+        WARNING() << 
+            "target current is out of range, max_charging_current = " << max_charge_current_mA << "mA"
+            ", and max_discharging_current = " << max_discharge_current_mA << "mA"
+            ", but target current = " << target_current_mA << "mA";
         return 0;
     }
 
@@ -113,7 +112,7 @@ uint32_t AggregatorBattery::schedule_set_current(int64_t target_current_mA, bool
             current = (int64_t)(status.state_of_charge_mAh / remaining_time);
             uint32_t success = src->schedule_set_current(current, is_greater_than_target, when_to_set, until_when);
             if (success == 0) {
-                warning("Failed to set current for src battery? Current = ", current);
+                WARNING() << "Failed to set current for src battery? Current = " << current;
             }
         }
     } else if (target_current_mA < 0) {
@@ -125,7 +124,7 @@ uint32_t AggregatorBattery::schedule_set_current(int64_t target_current_mA, bool
             current = (int64_t)((status.max_capacity_mAh - status.state_of_charge_mAh) / charging_time);
             uint32_t success = src->schedule_set_current(-current, is_greater_than_target, when_to_set, until_when);
             if (success == 0) {
-                warning("Failed to set current for src battery? Current = ", current);
+                WARNING() << "Failed to set current for src battery? Current = " << current;
             }
         }
     } else {
@@ -133,7 +132,7 @@ uint32_t AggregatorBattery::schedule_set_current(int64_t target_current_mA, bool
         for (Battery *src : parents) {
             uint32_t success = src->schedule_set_current(0, is_greater_than_target, when_to_set, until_when);
             if (success == 0) {
-                warning("Failed to set current for src battery? Current = ", 0);
+                WARNING() << "Failed to set current for src battery? Current = " << 0;
             }
         }
     }

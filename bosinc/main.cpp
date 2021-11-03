@@ -77,12 +77,13 @@ void test_events() {
 }
 
 int run() {
+    LOG();
     test_battery_status();
     test_python_binding();
     // test_uart();
     // test_JBDBMS(); 
 
-    test_events();
+    // test_events();
 
     return 0;
 }
@@ -100,7 +101,7 @@ int main() {
     run();
     
     Py_FinalizeEx();
-    // error("Just to test abnormal return", ", sys=", sys, ", path=", path);
+    // ERROR() << "Just to test abnormal return" << ", sys=" << sys << ", path=" << path;
     // std::cout << std::endl;
     return 0;
     

@@ -3,7 +3,7 @@
 CTimestamp get_system_time_c() {
     struct timespec tp;
     if (clock_gettime(CLOCK_REALTIME, &tp) != 0) {
-        warning("clock_gettime fails!!!");
+        WARNING() << ("clock_gettime fails!!!");
         // fprintf(stderr, "get_time(): clock_gettime fails!!!");
         return {0, 0};
     }

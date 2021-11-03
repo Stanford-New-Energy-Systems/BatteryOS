@@ -26,7 +26,7 @@ uint32_t BatteryStatus_serialize(const struct BatteryStatus *status, uint8_t *bu
     //     // serialize the BatteryStatus one by one, each data field is 8-bytes
     //     used_bytes = serialize_int64(*((int64_t*)status_ptr), buffer, remaining_buffer_size);
     //     if (used_bytes < 8) {
-    //         warning("used_bytes is not 8");
+    //         WARNING() << ("used_bytes is not 8");
     //         used_bytes = 8;
     //     }
     //     status_ptr += used_bytes;
@@ -134,18 +134,18 @@ void test_battery_status() {
 
     if (BatteryStatus_serialize(&status, buffer, buffer_size) != sizeof(BatteryStatus)) exit(1);
 
-    warning("Buffer: ");
+    WARNING() << ("Buffer dump: ");
     print_buffer(buffer, buffer_size);
     printf("\n");
     if (BatteryStatus_deserialize(&status2, buffer, buffer_size) != sizeof(BatteryStatus)) exit(1);
     
     
     // printf("\nIs equal: %d\n", (int)BatteryStatus_compare(&status, &status2));
-    warning("\nIs equal: ", BatteryStatus_compare(&status, &status2));
+    WARNING() << "\nIs equal: " << BatteryStatus_compare(&status, &status2);
 
 
     if (BatteryStatus_serialize(&status2, buffer, buffer_size) != sizeof(BatteryStatus)) exit(1);
-    warning("Buffer: ");
+    WARNING() << ("Buffer dump: ");
     print_buffer(buffer, buffer_size);
     printf("\n");
 

@@ -21,7 +21,7 @@ JBDBMS::JBDBMS(
     pconnection->flush();  // flush
 
     if (!pconnection->is_connected()) {
-        error("failed to open connections!");
+        ERROR() << "failed to open connections!";
         // fprintf(stderr, "JBDBMS: failed to open connection!\n");
         // exit(1);
     }
@@ -69,18 +69,18 @@ std::vector<uint8_t> JBDBMS::write_register_command(uint8_t register_address, co
 
 bool JBDBMS::verify_recv_checksum(const std::vector<uint8_t> &header, const std::vector<uint8_t> &data, uint16_t checksum, uint8_t ending_byte) {
     if (header.size() != 4) {
-        warning("header size != 4");
+        WARNING() << ("header size != 4");
         // fprintf(stderr, "JBDBMS::verify_checksum: header size != 4\n");
         return false;
     }
     uint8_t starter = header[0];
     if (starter != 0xDD) {
-        warning("starter byte is not 0xdd");
+        WARNING() << ("starter byte is not 0xdd");
         // fprintf(stderr, "JBDBMS::verify_checksum: starter byte is not 0xdd\n");
         return false;
     }
     if (ending_byte != 0x77) {
-        warning("ending byte is not 0x77");
+        WARNING() << ("ending byte is not 0x77");
         // fprintf(stderr, "JBDBMS::verify_checksum: ending byte is not 0x77\n");
         return false;
     }
@@ -88,7 +88,7 @@ bool JBDBMS::verify_recv_checksum(const std::vector<uint8_t> &header, const std:
     uint8_t command_status = header[2];
     uint8_t data_length = header[3];
     if (data.size() != (size_t)data_length) {
-        warning("data length byte is ", data_length, ", but total data received is ", data.size());
+        WARNING() << "data length byte is " << data_length << ", but total data received is " << data.size();
         // fprintf(stderr, "JBDBMS::verify_checksum: data length byte is %u, but total data received is %u\n", (unsigned)data_length, (unsigned)data.size());
         return false;
     }
@@ -98,7 +98,7 @@ bool JBDBMS::verify_recv_checksum(const std::vector<uint8_t> &header, const std:
     }
     uint16_t cksum = compute_checksum(payload);
     if (cksum != checksum) {
-        warning("checksum fails, computed checksum = ", cksum, ", but actual checksum = ", checksum);
+        WARNING() << "checksum fails, computed checksum = " << cksum << ", but actual checksum = " << checksum;
         // fprintf(stderr, "JBDBMS::verify_checksum: checksum fails computed checksum = %u, but actual checksum = %u\n", (unsigned)cksum, (unsigned)checksum);
         return false;
     }
@@ -116,20 +116,20 @@ std::vector<uint8_t> JBDBMS::query_info(const std::vector<uint8_t> &command) {
         data.clear();
         ssize_t bytes_written = pconnection->write(command);
         if (bytes_written < 0) {
-            warning(bytes_written, "bytes written!");
+            WARNING() << bytes_written << "bytes written!";
             // fprintf(stderr, "JBDBMS::query_info: Warning: %d bytes written!\n", (int)bytes_written);
             pconnection->flush();
             continue;
         }
         if ((size_t)bytes_written != command.size()) {
-            warning("intended to write", command.size(), " bytes, but ", bytes_written, " bytes written!");
+            WARNING() << "intended to write" << command.size() << " bytes, but " << bytes_written << " bytes written!";
             // fprintf(stderr, "JBDBMS::query_info: Warning: intended to write %d bytes, but %d bytes written!\n", (int)command.size(), (int)bytes_written);
             pconnection->flush();
             continue;
         }
         header = pconnection->read(4); // data header at least 4 bytes!
         if (header.size() != 4) {
-            warning("data header invalid! Current trial: ", i+1);
+            WARNING() << "data header invalid! Current trial: " << i+1;
             // fprintf(stderr, "JBDBMS::query_info: Warning: data header invalid! current trial: %d\n", i+1);
             pconnection->flush();
             continue;
@@ -138,7 +138,7 @@ std::vector<uint8_t> JBDBMS::query_info(const std::vector<uint8_t> &command) {
         int data_length = header[3];
         data = pconnection->read(data_length + 3);
         if (data.size() != unsigned(data_length + 3)) {
-            warning("data invalid! Current trial: ", i+1);
+            WARNING() << "data invalid! Current trial: " << i+1;
             // fprintf(stderr, "JBDBMS::query_info: Warning: data invalid! current trial: %d\n", i+1);
             pconnection->flush();
             continue;
@@ -150,7 +150,7 @@ std::vector<uint8_t> JBDBMS::query_info(const std::vector<uint8_t> &command) {
         data.pop_back();
         
         if (!verify_recv_checksum(header, data, checksum, ending_byte)) {
-            warning("checksum fails! Current trial: ", i+1);
+            WARNING() << "checksum fails! Current trial: " << i+1;
             // fprintf(stderr, "JBDBMS::query_info: Warning: checksum fails! current trial: %d\n", i+1);
             pconnection->flush();
             continue;

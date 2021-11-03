@@ -89,37 +89,73 @@ size_t serialize_int(T number, uint8_t *buffer, size_t buffer_size) {
     return sizeof(T);
 }
 
-// class WarningStream : public std::ostream {
-// public: 
-//     static constexpr std::ostream &err = std::cerr;
-//     WarningStream(const char *const file, int line, const char *const func) {
-//         err << "Warning: In file " << file << ", line " << line << ", function " << func << ": ";
-//     }
-//     ~WarningStream() {
-//         #if PROMOTE_WARNINGS_TO_ERRORS
-//         err << "Since PROMOTE_WARNINGS_TO_ERRORS is 1...\n" << "Now exitting with code 2..." << std::endl;
-//         exit(2);
-//         #endif
-//     }
-//     template <typename T>
-//     WarningStream &operator<<(const T &value) { err << value; return *this; }
-//     template <typename T>
-//     WarningStream &operator<<(T &&value) { err << value; return *this; }
-// };
-// class ErrorStream {
-// public: 
-//     static constexpr std::ostream &err = std::cerr;
-//     ErrorStream(const char *file, const char *line, const char *func) {
-//         err << "Error: In file " << file << ", line " << line << ", function " << func << ": ";
-//     }
-//     ~ErrorStream() { err << "Exitting with code 1..." << std::endl; exit(1); }
-//     template <typename T>
-//     ErrorStream &operator<<(const T &value) { err << value; return *this; }
-//     template <typename T>
-//     ErrorStream &operator<<(T &&value) { err << value; return *this; }
-// };
+
+class LogStream {
+public: 
+    LogStream(const char *func, const char *file, int line) {
+        this->stream() << "------------------------------ LOG ------------------------------\n";
+        this->stream() << "In file " <<  file << ", line " << line << ", function " << func << ": \n";
+    }
+    ~LogStream() {
+        this->stream() << "\n------------------------------ END ------------------------------" << std::endl;
+    }
+    inline std::ostream &stream() {
+        return std::cout;
+    }
+    inline void flush() {
+        this->stream() << std::endl;
+        this->stream().flush();
+    }
+};
 
 
+class WarningStream {
+public: 
+    WarningStream(const char *func, const char *file, int line) {
+        this->stream() << "------------------------------ WARNING ------------------------------\n";
+        this->stream() << "In file " <<  file << ", line " << line << ", function " << func << ": \n";
+    }
+    ~WarningStream() {
+        this->stream() << "\n-------------------------------- END --------------------------------" << std::endl;
+        #if PROMOTE_WARNINGS_TO_ERRORS
+        this->stream() << "Since PROMOTE_WARNINGS_TO_ERRORS is 1...\n" << "Now exitting with code 2..." << std::endl;
+        exit(2);
+        #endif
+    }
+    inline std::ostream &stream() {
+        return std::cerr;
+    }
+    inline void flush() {
+        this->stream() << std::endl;
+        this->stream().flush();
+    }
+};
+
+class ErrorStream {
+public: 
+    ErrorStream(const char *func, const char *file, int line) {
+        this->stream() << "------------------------------ ERROR ------------------------------\n";
+        this->stream() << "In file " <<  file << ", line " << line << ", function " << func << ": \n";
+    }
+    ~ErrorStream() {
+        this->stream() << "\n------------------------------- END -------------------------------" << std::endl;
+        this->stream() << "Exitting with code 1..." << std::endl;
+        exit(1);
+    }
+    inline std::ostream &stream() {
+        return std::cerr;
+    }
+    inline void flush() {
+        this->stream() << std::endl;
+        this->stream().flush();
+    }
+};
+#define LOG() \
+    LogStream(__func__, __FILE__, __LINE__).stream()
+#define WARNING() \
+    WarningStream(__func__, __FILE__, __LINE__).stream()
+#define ERROR() \
+    ErrorStream(__func__, __FILE__, __LINE__).stream()
 
 template <typename T>
 void warning_r(const T &arg) {
@@ -171,7 +207,7 @@ size_t serialize_struct_as_int(const T &obj, uint8_t *buffer, size_t buffer_size
     size_t used_bytes = 0;
     
     if (buffer_size < sizeof(T) || (sizeof(T) % sizeof(Int)) != 0) {
-        warning("buffer is not large enough or the size of object is not divisible by sizeof(Int)");
+        WARNING() << ("buffer is not large enough or the size of object is not divisible by sizeof(Int)");
         return 0; 
     }
 
@@ -181,7 +217,7 @@ size_t serialize_struct_as_int(const T &obj, uint8_t *buffer, size_t buffer_size
         // serialize the struct one by one, each data field is sizeof(Int)-bytes
         used_bytes = serialize_int<Int>(*((Int*)byte_ptr), buffer, remaining_buffer_size);
         if (used_bytes < sizeof(Int)) {
-            warning("used_bytes is not sizeof(Int)");
+            WARNING() << ("used_bytes is not sizeof(Int)");
             used_bytes = sizeof(Int);
         }
         byte_ptr += used_bytes;
@@ -203,7 +239,7 @@ size_t serialize_struct_as_int(const T &obj, uint8_t *buffer, size_t buffer_size
 template <typename T, typename Int>
 size_t deserialize_struct_as_int(T *obj, const uint8_t *buffer, size_t buffer_size) {
     if (buffer_size < sizeof(T) || (sizeof(T) % sizeof(Int)) != 0) {
-        warning("buffer is not large enough or the size of object is not divisible by sizeof(Int)");
+        WARNING() << ("buffer is not large enough or the size of object is not divisible by sizeof(Int)");
         return 0;
     }
 

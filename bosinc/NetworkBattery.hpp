@@ -24,7 +24,7 @@ public:
     {
         this->pconnection.reset(new TCPConnection(address, port));
         if (!this->pconnection->connect()) {
-            error("TCP connection failed!");
+            ERROR() << "TCP connection failed!";
         }
         this->refresh();  // also updates the timestamp
     }
@@ -32,15 +32,15 @@ public:
     std::vector<uint8_t> send_recv(const std::vector<uint8_t> &request) {
         ssize_t num_bytes = this->pconnection->write(request);
         if (num_bytes < 0) {
-            warning("Failed to send the request!");
+            WARNING() << ("Failed to send the request!");
             return {};
         }
         if (static_cast<size_t>(num_bytes) != request.size()) {
-            warning("requested to send ", request.size(), " bytes, but sent ", num_bytes, " bytes");
+            WARNING() << "requested to send " << request.size() << " bytes, but sent " << num_bytes << " bytes";
         }
         std::vector<uint8_t> data = this->pconnection->read(4);  // 4 bytes to indicate the length
         if (data.size() != 4) {
-            warning("unknown protocol");
+            WARNING() << ("unknown protocol");
             return {};
         }
         uint32_t data_length = deserialize_int<uint32_t>(data.data());
@@ -48,7 +48,7 @@ public:
 
         data = this->pconnection->read(data_length);
         if (data.size() != data_length) {
-            warning("data length mismatch!");
+            WARNING() << ("data length mismatch!");
         }
         return data;
     }
@@ -69,7 +69,7 @@ protected:
         uint32_t data_length = sizeof(RPCRequestHeader) + remote_name.size() + 1;
         size_t bytes_used = serialize_int<uint32_t>(data_length, request_bytes.data(), sizeof(uint32_t));
         if (bytes_used != sizeof(uint32_t)) {
-            warning("failed to serialize the data length");
+            WARNING() << ("failed to serialize the data length");
             return this->status;
         }
 
@@ -109,7 +109,7 @@ public:
         uint32_t data_length = sizeof(RPCRequestHeader) + remote_name.size() + 1;
         size_t bytes_used = serialize_int<uint32_t>(data_length, request_bytes.data(), sizeof(uint32_t));
         if (bytes_used != sizeof(uint32_t)) {
-            warning("failed to serialize the data length");
+            WARNING() << ("failed to serialize the data length");
             return 0;
         }
         // now send the request

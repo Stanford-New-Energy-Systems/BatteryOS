@@ -36,7 +36,7 @@ BatteryStatus Battery::get_status() {
         this->check_staleness_and_refresh();
         return this->status;
     default:
-        warning("unknown refresh mode");
+        WARNING() << ("unknown refresh mode");
         return this->status;
     }
     return this->status;
@@ -155,7 +155,7 @@ void Battery::background_func(Battery *bat) {
 bool Battery::start_background_refresh() {
     using namespace std::chrono_literals;
     if (this->max_staleness < 100ms) {
-        warning("maximum staleness should not be less than 100ms in background refresh mode");
+        WARNING() << ("maximum staleness should not be less than 100ms in background refresh mode");
         return false;
     } else {
         {
@@ -188,7 +188,7 @@ uint32_t Battery::schedule_set_current(int64_t target_current_mA, bool is_greate
         lockguard_t lkd(this->lock);
         timepoint_t now = get_system_time();
         if (when_to_set < now) {
-            warning("when_to_set must be at least now");
+            WARNING() << ("when_to_set must be at least now");
             return 0;
         }
         // if there's overlapping set current events, merge the ranges! 
