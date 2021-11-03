@@ -13,6 +13,7 @@ class BOSDirectory {
     std::map<std::string, std::unique_ptr<Battery>> name_storage_map;
     std::map<Battery*, std::list<Battery*>> parent_map;
     std::map<Battery*, std::list<Battery*>> children_map;
+    std::list<Battery*> temp;
 public:
     BOSDirectory() {}
     BOSDirectory(BOSDirectory &) = delete;
@@ -49,7 +50,7 @@ public:
         auto iter = this->name_storage_map.find(name);
         if (iter == this->name_storage_map.end()) {
             warning("battery name: ", name, " does not exist");
-            return {};
+            return temp;
         }
         return children_map[iter->second.get()];
     }
@@ -57,7 +58,7 @@ public:
         auto iter = children_map.find(bat);
         if (iter == children_map.end()) {
             warning("battery does not exist");
-            return {};
+            return temp;
         }
         return iter->second;
     }
@@ -66,7 +67,7 @@ public:
         auto iter = this->name_storage_map.find(name);
         if (iter == this->name_storage_map.end()) {
             warning("battery name: ", name, " does not exist");
-            return {};
+            return temp;
         }
         return this->parent_map[iter->second.get()];
     }
@@ -74,11 +75,10 @@ public:
         auto iter = this->parent_map.find(bat);
         if (iter == this->parent_map.end()) {
             warning("battery does not exist");
-            return {};
+            return temp;
         }
         return iter->second;
     }
-
 
     bool add_edge(const std::string &from_name, const std::string &to_name) {
         auto from_iter = this->name_storage_map.find(from_name);

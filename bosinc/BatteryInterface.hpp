@@ -1,6 +1,6 @@
 #ifndef BATTERY_INTERFACE_HPP
 #define BATTERY_INTERFACE_HPP
-#include "BOSNode.h"
+#include "BOSNode.hpp"
 #include "BatteryStatus.h"
 
 #include <string>
@@ -283,11 +283,14 @@ bool operator < (const Battery::event_t &lhs, const Battery::event_t &rhs);
 bool operator > (const Battery::event_t &lhs, const Battery::event_t &rhs);
 
 class PhysicalBattery : public Battery {
+protected: 
 public: 
     PhysicalBattery(
         const std::string &name, 
         const std::chrono::milliseconds &max_staleness=std::chrono::milliseconds(1000)
-    ) : Battery(name, max_staleness) {}
+    ) : Battery(name, max_staleness) {
+        this->type = BatteryType::PHYSICAL;
+    }
     std::string get_type_string() override {
         return "PhysicalBattery";
     }
@@ -298,10 +301,15 @@ public:
     VirtualBattery(
         const std::string &name, 
         const std::chrono::milliseconds &max_staleness=std::chrono::milliseconds(1000)
-    ) : Battery(name, max_staleness) {}
+    ) : Battery(name, max_staleness) {
+
+    }
     std::string get_type_string() override {
         return "VirtualBattery";
     }
+
+    void mutex_lock() {this->lock.lock();}
+    void mutex_unlock() {this->lock.unlock();}
 };
 
 

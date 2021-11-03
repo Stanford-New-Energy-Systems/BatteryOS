@@ -3,15 +3,20 @@
 
 #include "BatteryInterface.hpp"
 #include "BOSDirectory.hpp"
-#include "BOSNode.h"
 
-class SplitterPolicy : public BOSNode {
+class SplitterPolicy : public VirtualBattery {
 protected: 
     std::string src_name;
     BOSDirectory *pdirectory;
     Battery *source;
 public: 
-    SplitterPolicy(const std::string &src_name, BOSDirectory &directory) : src_name(src_name), pdirectory(&directory) {
+    SplitterPolicy(
+        const std::string &policy_name, 
+        const std::string &src_name, 
+        BOSDirectory &directory
+    ) : VirtualBattery(policy_name), src_name(src_name), pdirectory(&directory) 
+    {
+        this->type = BatteryType::SPLIT_POLICY;
         source = directory.get_battery(src_name);
         if (!source) {
             warning("source not found!");
@@ -20,6 +25,13 @@ public:
     Battery *get_source() {
         return this->source;
     }
+    BatteryStatus refresh() override {
+        return this->status;
+    }
+    uint32_t set_current(int64_t current_mA, bool is_greater_than) override {
+        return 0;
+    }
+
 };
 
 
@@ -76,8 +88,8 @@ protected:
     std::map<Battery*, Scale> scale_map;
     std::list<Battery*> children;
 public: 
-    ProportionalPolicy(const std::string &src_name, BOSDirectory &directory, Battery *first_battery) : 
-        SplitterPolicy(src_name, directory)
+    ProportionalPolicy(const std::string &policy_name, const std::string &src_name, BOSDirectory &directory, Battery *first_battery) : 
+        SplitterPolicy(policy_name, src_name, directory)
     {
         // note: the first battery should be created and inserted already 
         this->current_map.insert(std::make_pair(first_battery, 0));
@@ -100,6 +112,7 @@ public:
         }
         int64_t total_actual_soc = source_status.state_of_charge_mAh;
         int64_t actual_soc = (int64_t)((double)estimated_soc / (double)total_estimated_soc * (double)total_actual_soc);
+        
         BatteryStatus status;
         status.voltage_mV = source_status.voltage_mV;
         status.current_mA = current_map[child];
@@ -112,10 +125,23 @@ public:
 
     uint32_t schedule_set_current_of(Battery *child, int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) {
         // 
+        Scale &scale = this->scale_map[child];
+        Battery *source = this->source;
+        BatteryStatus source_status = source->get_status();
+
+        if (target_current_mA > source_status.max_discharging_current_mA * scale.max_discharge_rate || 
+            -target_current_mA > source_status.max_charging_current_mA * scale.max_charge_rate) {
+            warning("target current too high, event not scheduled");
+            return 0;
+        }
+        this->current_map[child] = target_current_mA;
+        int64_t new_currents = 0;
+        for (auto &p : this->current_map) {
+            new_currents += p.second;
+        }
+        source->schedule_set_current(new_currents, is_greater_than_target, when_to_set, until_when);
         return 0;
     }
-
-
 
 
 

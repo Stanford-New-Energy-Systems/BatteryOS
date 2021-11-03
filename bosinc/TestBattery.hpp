@@ -6,10 +6,10 @@
 /**
  * Virtual battery whose status are all 0, except for voltage
  */
-class NullBattery : public Battery {
+class NullBattery : public PhysicalBattery {
 public: 
     NullBattery(const std::string &name, int64_t voltage_mV, const std::chrono::milliseconds &max_staleness=std::chrono::milliseconds(1000)) : 
-        Battery(name, max_staleness) {
+        PhysicalBattery(name, max_staleness) {
         this->status.voltage_mV = voltage_mV;
         this->status.current_mA = 0;
         this->status.state_of_charge_mAh = 0;

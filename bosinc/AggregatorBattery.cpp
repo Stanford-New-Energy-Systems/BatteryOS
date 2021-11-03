@@ -13,6 +13,7 @@ AggregatorBattery::AggregatorBattery(
     voltage_mV(voltage_mV),
     voltage_tolerance_mV(voltage_tolerance_mV)
 {
+    this->type = BatteryType::AGGREGATE;
     bool add_success;
     Battery *bat;
     int64_t v; 
@@ -36,6 +37,7 @@ AggregatorBattery::AggregatorBattery(
 }
 
 BatteryStatus AggregatorBattery::refresh() {
+    lockguard_t lkg(this->lock);
     int64_t max_cap_mAh = 0;
     int64_t current_cap_mAh = 0;
     int64_t current_mA = 0;
@@ -74,13 +76,13 @@ std::string AggregatorBattery::get_type_string() {
 }
 
 BatteryStatus AggregatorBattery::get_status() {
-    // lockguard_t lkd(this->lock);  // we should lock this if we are doing background refresh, or if not, leave it commented out
+    lockguard_t lkd(this->lock);  // we should lock this if we are doing background refresh, or if not, leave it commented out
     return this->refresh();  // always refresh, or do something else? 
 }
 
 uint32_t AggregatorBattery::schedule_set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) {
     // forward the requests to its sources, immediately! 
-    // lockguard_t lkd(this->lock);  // we can comment this out if we are not doing automatic refresh
+    lockguard_t lkd(this->lock);  // we can comment this out if we are not doing automatic refresh
     
     // refresh once 
     this->refresh();
