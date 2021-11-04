@@ -28,6 +28,7 @@ public:
         remote_name(remote_name), 
         pconnection() 
     {
+        this->type = BatteryType::Physical;
         this->pconnection.reset(new TCPConnection(address, port));
         if (!this->pconnection->connect()) {
             ERROR() << "TCP connection failed!";

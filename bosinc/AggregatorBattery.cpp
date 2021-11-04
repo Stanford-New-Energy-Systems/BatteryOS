@@ -13,31 +13,31 @@ AggregatorBattery::AggregatorBattery(
     voltage_mV(voltage_mV),
     voltage_tolerance_mV(voltage_tolerance_mV)
 {
-    this->type = BatteryType::AGGREGATE;
-    bool add_success;
+    this->type = BatteryType::Aggregate;
+    // bool add_success;
     Battery *bat;
     int64_t v; 
     for (const std::string &src : src_names) {
         bat = directory.get_battery(src);
         if (!bat) {
-            WARNING() << "Failed to add battery " << name << "as source!";
+            ERROR() << "Battery " << name << "not found!";
             continue;
         }
         v = bat->get_status().voltage_mV;
         if (!(voltage_mV - voltage_tolerance_mV <= v && v <= voltage_mV + voltage_tolerance_mV)) {
-            WARNING() << "Battery " << name << " is out of voltage tolerance, not added as source!";
+            ERROR() << "Battery " << name << " is out of voltage tolerance!";
             continue;
         }
-        add_success = directory.add_edge(src, name);
-        if (!add_success) {
-            WARNING() << "Failed to add battery " << name << " as source!";
-            continue;
-        }
+        // please add the topology outside of this! 
+        // add_success = directory.add_edge(src, name);
+        // if (!add_success) {
+        //     WARNING() << "Failed to add battery " << name << " as source!";
+        //     continue;
+        // }
     }
 }
 
 BatteryStatus AggregatorBattery::refresh() {
-    lockguard_t lkg(this->lock);
     int64_t max_cap_mAh = 0;
     int64_t current_cap_mAh = 0;
     int64_t current_mA = 0;
@@ -143,5 +143,7 @@ uint32_t AggregatorBattery::schedule_set_current(int64_t target_current_mA, bool
 
     return 1;
 }
+
+
 
 

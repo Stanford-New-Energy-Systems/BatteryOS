@@ -3,10 +3,10 @@
 #include <stdint.h>
 
 enum class BatteryType : int {
-    PHYSICAL,
-    AGGREGATE, 
-    SPLIT_POLICY,
-    SPLITTED,
+    Physical,
+    Aggregate, 
+    SplitterPolicy,
+    Splitted,
 };
 
 /**

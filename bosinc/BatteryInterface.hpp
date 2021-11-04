@@ -289,7 +289,7 @@ public:
         const std::string &name, 
         const std::chrono::milliseconds &max_staleness=std::chrono::milliseconds(1000)
     ) : Battery(name, max_staleness) {
-        this->type = BatteryType::PHYSICAL;
+        this->type = BatteryType::Physical;
     }
     std::string get_type_string() override {
         return "PhysicalBattery";

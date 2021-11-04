@@ -27,7 +27,7 @@ public:
         pdirectory(&directory), 
         policy_type(policy_type)
     {
-        this->type = BatteryType::SPLIT_POLICY;
+        this->type = BatteryType::SplitterPolicy;
         source = directory.get_battery(src_name);
         if (!source) {
             WARNING() << ("source not found!");
@@ -102,7 +102,6 @@ public:
         const std::string &name, 
         const std::string &to_name
     ) = 0;
-
 
 
 };
@@ -216,6 +215,7 @@ public:
         status.max_capacity_mAh = source_status.max_capacity_mAh * scale.max_capacity;
         status.max_charging_current_mA = source_status.max_charging_current_mA * scale.max_charge_rate;
         status.max_discharging_current_mA = source_status.max_discharging_current_mA * scale.max_discharge_rate;
+        status.timestamp = get_system_time_c();
         return status;
     }
 
@@ -244,6 +244,25 @@ public:
         }
         source->schedule_set_current(new_currents, is_greater_than_target, when_to_set, until_when);
         return 0;
+    }
+
+    bool reset_estimated_soc_for_all() {
+        lockguard_t lkg(this->lock);
+        BatteryStatus source_status = source->get_status();
+        std::list<Battery*> children = this->get_children();
+        decltype(this->scale_map)::iterator iter;
+        bool success = true;
+        for (Battery *child : children) {
+            iter = this->scale_map.find(child->get_name());
+            if (iter == this->scale_map.end()) {
+                WARNING() << "Splitted Battery " << child->get_name() << " not found!";
+                success = false;
+                continue;
+            }
+            Scale &scale = iter->second;
+            child->set_estimated_soc(source_status.state_of_charge_mAh * scale.state_of_charge);
+        }
+        return success;
     }
     
     
@@ -291,7 +310,7 @@ public:
         this->scale_map[child_name] = scale;
         this->current_map[child_name] = 0;
         this->scale_map[from_name] = this->scale_map[from_name] - scale;
-        from_battery->reset_estimated_soc();
+        this->reset_estimated_soc_for_all();
         return actual_status;
     }
 

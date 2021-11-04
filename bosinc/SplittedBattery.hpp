@@ -16,13 +16,14 @@ public:
         VirtualBattery(name, sample_period), 
         policy_name(policy_name)
     {
-        this->type = BatteryType::SPLITTED;
+        this->type = BatteryType::Splitted;
         this->pdirectory = &directory;
     }
 protected: 
     BatteryStatus refresh() override {
+        int64_t prev_current_mA = this->status.current_mA;
         Battery *policy_battery = pdirectory->get_battery(this->policy_name);
-        if (policy_battery->get_battery_type() != BatteryType::SPLIT_POLICY) {
+        if (policy_battery->get_battery_type() != BatteryType::SplitterPolicy) {
             WARNING() << ("the policy is not a policy");
             return this->status;
         }
@@ -30,6 +31,7 @@ protected:
         SplitterPolicy *sp = dynamic_cast<SplitterPolicy*>(policy_battery);
         BatteryStatus status = sp->get_status_of(this->name);
         this->status = status;
+        this->update_estimated_soc(prev_current_mA, this->status.current_mA);
         return this->status;
     }
 
@@ -44,9 +46,10 @@ public:
     // }
 
     uint32_t schedule_set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override {
+        lockguard_t lkg(this->lock);
         // forward this to the Policy
         Battery *policy_battery = pdirectory->get_battery(this->policy_name);
-        if (policy_battery->get_battery_type() != BatteryType::SPLIT_POLICY) {
+        if (policy_battery->get_battery_type() != BatteryType::SplitterPolicy) {
             WARNING() << "the policy is not a policy";
             return 0;
         }

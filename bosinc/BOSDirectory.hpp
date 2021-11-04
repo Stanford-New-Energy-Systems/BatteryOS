@@ -76,8 +76,26 @@ public:
         }
         Battery *from_ptr = from_iter->second.get();
         Battery *to_ptr = to_iter->second.get();
+
+        // add locks here
+
+        VirtualBattery *from_vb = dynamic_cast<VirtualBattery*>(from_ptr);
+        if (from_vb != nullptr) {
+            from_vb->mutex_lock();
+        }
         this->children_map[from_name].push_back(to_ptr);
+        if (from_vb != nullptr) {
+            from_vb->mutex_unlock();
+        }
+
+        VirtualBattery *to_vb = dynamic_cast<VirtualBattery*>(to_ptr);
+        if (to_vb != nullptr) {
+            to_vb->mutex_lock();
+        }
         this->parent_map[to_name].push_back(from_ptr);
+        if (to_vb != nullptr) {
+            to_vb->mutex_unlock();
+        }
         return true;
     }
 
