@@ -6,7 +6,6 @@
 class SplittedBattery : public VirtualBattery {
     std::string policy_name;
     BOSDirectory *pdirectory;
-    SplitterPolicy *policy;
 public: 
     SplittedBattery(
         const std::string &name, 
@@ -18,7 +17,6 @@ public:
         policy_name(policy_name)
     {
         this->type = BatteryType::SPLITTED;
-        this->policy = dynamic_cast<SplitterPolicy*>(directory.get_battery(policy_name));
         this->pdirectory = &directory;
     }
 protected: 
