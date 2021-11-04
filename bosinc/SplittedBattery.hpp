@@ -23,16 +23,15 @@ public:
     }
 protected: 
     BatteryStatus refresh() override {
-        // do something 
-        Battery *policy = pdirectory->get_battery(this->policy_name);
-        if (policy->get_battery_type() != BatteryType::SPLIT_POLICY) {
+        Battery *policy_battery = pdirectory->get_battery(this->policy_name);
+        if (policy_battery->get_battery_type() != BatteryType::SPLIT_POLICY) {
             WARNING() << ("the policy is not a policy");
             return this->status;
         }
-        // SplitterPolicy *spolicy = dynamic_cast<SplitterPolicy*>(policy);
-        // BatteryStatus status = spolicy->get_status_of(spolicy->get_name());
-
-
+        // just cast it to the policy pointer 
+        SplitterPolicy *sp = dynamic_cast<SplitterPolicy*>(policy_battery);
+        BatteryStatus status = sp->get_status_of(this->name);
+        this->status = status;
         return this->status;
     }
 
@@ -41,17 +40,21 @@ protected:
         return 0;
     }
 public: 
-    BatteryStatus get_status() override {
-        // always refresh?? 
-        return this->status;
-    }
+    // BatteryStatus get_status() override {
+    //     // always refresh?? Or use the default one... 
+    //     return this->status;
+    // }
 
     uint32_t schedule_set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override {
         // forward this to the Policy
-        return 0;
+        Battery *policy_battery = pdirectory->get_battery(this->policy_name);
+        if (policy_battery->get_battery_type() != BatteryType::SPLIT_POLICY) {
+            WARNING() << "the policy is not a policy";
+            return 0;
+        }
+        SplitterPolicy *sp = dynamic_cast<SplitterPolicy*>(policy_battery);
+        return sp->schedule_set_current_of(this->name, target_current_mA, is_greater_than_target, when_to_set, until_when);
     }
-
-
 
 
 };

@@ -67,25 +67,23 @@ BatteryStatus AggregatorBattery::refresh() {
 }
 
 uint32_t AggregatorBattery::set_current(int64_t current_mA, bool is_greater_than) {
-    // nothing here
+    // nothing here, use schedule_set_current instead 
     return 0;
 }
 
-std::string AggregatorBattery::get_type_string() {
-    return "AggregatorBattery";
-}
+std::string AggregatorBattery::get_type_string() { return "AggregatorBattery"; }
 
-BatteryStatus AggregatorBattery::get_status() {
-    lockguard_t lkd(this->lock);  // we should lock this if we are doing background refresh, or if not, leave it commented out
-    return this->refresh();  // always refresh, or do something else? 
-}
+// BatteryStatus AggregatorBattery::get_status() {
+//     lockguard_t lkd(this->lock);  // we should lock this if we are doing background refresh, or if not, leave it commented out
+//     return this->refresh();  // always refresh, or do something else? 
+// }
 
 uint32_t AggregatorBattery::schedule_set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) {
+    // quickly refresh once, before the lock; 
+    this->get_status();
+
     // forward the requests to its sources, immediately! 
-    lockguard_t lkd(this->lock);  // we can comment this out if we are not doing automatic refresh
-    
-    // refresh once 
-    this->refresh();
+    this->lock.lock();
 
     // int64_t old_current_mA = this->status.current_mA;
     int64_t max_discharge_current_mA = this->status.max_discharging_current_mA;
@@ -96,6 +94,8 @@ uint32_t AggregatorBattery::schedule_set_current(int64_t target_current_mA, bool
             "target current is out of range, max_charging_current = " << max_charge_current_mA << "mA"
             ", and max_discharging_current = " << max_discharge_current_mA << "mA"
             ", but target current = " << target_current_mA << "mA";
+        
+        this->lock.unlock();  // don't forget to unlock
         return 0;
     }
 
@@ -136,6 +136,8 @@ uint32_t AggregatorBattery::schedule_set_current(int64_t target_current_mA, bool
             }
         }
     }
+
+    this->lock.unlock();
 
     // next step? 
 

@@ -1,6 +1,10 @@
 #include "BatteryInterface.hpp"
 
-Battery::Battery(const std::string &name, const std::chrono::milliseconds &max_staleness_ms, bool no_thread) : 
+Battery::Battery(
+    const std::string &name, 
+    const std::chrono::milliseconds &max_staleness_ms, 
+    bool no_thread
+) : 
     name(name), 
     status(),
     estimated_soc(),

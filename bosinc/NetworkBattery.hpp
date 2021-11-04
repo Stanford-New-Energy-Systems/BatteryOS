@@ -17,8 +17,14 @@ class NetworkBattery : public Battery {
     std::string remote_name;
     std::unique_ptr<Connection> pconnection;
 public:
-    NetworkBattery(const std::string &name, const std::string &remote_name, const std::string &address, int port) : 
-        Battery(name, std::chrono::milliseconds(0), true),  // no background thread
+    NetworkBattery(
+        const std::string &name, 
+        const std::string &remote_name, 
+        const std::string &address, 
+        int port,
+        std::chrono::milliseconds max_staleness=std::chrono::milliseconds(1000)
+    ) : 
+        Battery(name, max_staleness),
         remote_name(remote_name), 
         pconnection() 
     {
@@ -84,10 +90,10 @@ protected:
         return 0;
     }
 public:
-    BatteryStatus get_status() override {
-        // lockguard_t lkd(this->lock);
-        return this->refresh();
-    }
+    // BatteryStatus get_status() override {
+    //     // lockguard_t lkd(this->lock);
+    //     return this->refresh();
+    // }
 
     uint32_t schedule_set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override {
         // lockguard_t lkd(this->lock);

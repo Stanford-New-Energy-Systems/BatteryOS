@@ -43,8 +43,9 @@ protected:
 public: 
     std::string get_type_string() override;
 
-    /** just forward to refresh */
-    BatteryStatus get_status() override;
+    // /** just forward to refresh */
+    // BatteryStatus get_status() override;
+    // NOTE: get_status() has default implementation 
 
     /**
      * Set the discharging/charging current of the aggregate battery.
