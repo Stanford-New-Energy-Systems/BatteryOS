@@ -47,43 +47,94 @@ void test_JBDBMS() {
 }
 
 void test_events() {
+    using namespace std::chrono_literals;
     std::cout << std::endl << "---------------------- test events ---------------------------" << std::endl << std::endl;
-    NullBattery nub("null_battery", 1200, std::chrono::milliseconds(1000));
-    std::cout << "starting background refresh" << std::endl;
-    nub.start_background_refresh();
-    nub.schedule_set_current(1000, true, get_system_time()+std::chrono::seconds(3), get_system_time()+std::chrono::seconds(5));
-    std::this_thread::sleep_for(std::chrono::seconds(8));
     
-    std::cout << "stopping background refresh" << std::endl;
-    nub.stop_background_refresh();
-    std::cout << "stopped" << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(2));
-    std::cout << "Manual refresh" << std::endl;
-    nub.get_status();
-    std::cout << "refreshed" << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(3));
-    std::cout << "now restart background refresh" << std::endl;
+    NullBattery nub("null_battery", 1200, 1s);  // 1200mV, 1s refresh time
+    timepoint_t now;
+    // std::cout << "starting background refresh" << std::endl;
+    // nub.start_background_refresh();
+
+    // now = get_system_time();
+    // nub.schedule_set_current(1000, true, now+3s, now+5s);
+
+    // std::this_thread::sleep_for(8s);
+    
+    // std::cout << "stopping background refresh" << std::endl;
+    // nub.stop_background_refresh();
+    // std::cout << "stopped" << std::endl;
+
+    // std::this_thread::sleep_for(2s);
+    // std::cout << "Manual refresh" << std::endl;
+    // nub.get_status();
+    // std::cout << "refreshed" << std::endl;
+
+    // std::this_thread::sleep_for(3s);
+    // std::cout << "now restart background refresh" << std::endl;
+    // nub.start_background_refresh();
+
+    // std::this_thread::sleep_for(5s);
+
+    // std::cout << "---------- now test overlapping ----------" << std::endl;
+    // std::cout << "---------- set 100mA after 3s, for 2s ----------" << std::endl;
+    // now = get_system_time();
+    // nub.schedule_set_current(100, false, now+3s, now+5s);
+    // std::this_thread::sleep_for(1s);
+    
+    // std::cout << "---------- set 200mA after 1s, for 4s ----------" << std::endl;
+    // // notice that this should cancel the previous set current event 
+    // now = get_system_time();
+    // nub.schedule_set_current(200, true, now+1s, now+5s);
+    // std::cout << "---------- set !!! ----------" << std::endl;
+    // std::this_thread::sleep_for(6s);
+    
+    // std::cout << "stop background refresh" << std::endl;
+    // nub.stop_background_refresh();
+    // std::this_thread::sleep_for(2s);
+
     nub.start_background_refresh();
-    std::this_thread::sleep_for(std::chrono::seconds(5));
-    std::cout << "---------- now test overlapping ----------" << std::endl;
-    nub.schedule_set_current(100, false, get_system_time()+std::chrono::seconds(3), get_system_time()+std::chrono::seconds(5));
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    std::cout << "---------- set 200mA after 1 second ----------" << std::endl;
-    // notice that this should cancel the previous set current event 
-    nub.schedule_set_current(200, true, get_system_time()+std::chrono::seconds(1), get_system_time()+std::chrono::seconds(5));
-    std::cout << "---------- set !!! ----------" << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(6));
+    std::cout << std::endl << "---------- now test 4 cases of overlapping ----------" << std::endl;
+    
+    std::cout << "Case 1: " << std::endl;
+    now = get_system_time();
+    nub.schedule_set_current(300, true, now+1s, now+3s);
+    nub.schedule_set_current(200, true, now+2s, now+4s);
+    std::this_thread::sleep_for(5s);
+    std::cout << "End of case 1" << std::endl << std::endl; 
+
+    std::cout << "Case 2: " << std::endl;
+    now = get_system_time();
+    nub.schedule_set_current(200, true, now+1s, now+4s);
+    nub.schedule_set_current(300, false, now+2s, now+3s);
+    std::this_thread::sleep_for(5s);
+    std::cout << "End of case 2" << std::endl << std::endl; 
+
+    std::cout << "Case 3: " << std::endl;
+    now = get_system_time();
+    nub.schedule_set_current(200, false, now+2s, now+4s);
+    nub.schedule_set_current(300, true, now+1s, now+3s);
+    std::this_thread::sleep_for(5s);
+    std::cout << "End of case 3" << std::endl << std::endl; 
+
+    std::cout << "Case 4: " << std::endl;
+    now = get_system_time();
+    nub.schedule_set_current(200, true, now+1s, now+2s);
+    nub.schedule_set_current(300, true, now+2s, now+3s);
+    std::this_thread::sleep_for(5s);
+    std::cout << "End of case 4" << std::endl << std::endl; 
+
+
     std::cout << "done" << std::endl;
 }
 
 int run() {
     LOG();
-    test_battery_status();
-    test_python_binding();
+    // test_battery_status();
+    // test_python_binding();
     // test_uart();
     // test_JBDBMS(); 
 
-    // test_events();
+    test_events();
 
     return 0;
 }

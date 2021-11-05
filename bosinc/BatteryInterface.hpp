@@ -13,6 +13,7 @@
 #include <memory>
 #include <utility>
 #include <chrono>
+#include <set>
 
 #include "util.hpp"
 
@@ -48,7 +49,8 @@ public:
     /**
      * A struct representing a BAL event
      * @param timepoint at what time does this event happen
-     * @param sequence_number the sequence number of this event, 
+     * @param time_added when this event is added 
+     * @param sequence_number the sequence number of this event 
      *  roughly represent when the event is queued up, 
      *  and used for ordering multiple events happening at the same time
      * @param func what kind of this event is 
@@ -57,18 +59,29 @@ public:
      */
     struct event_t {
         timepoint_t timepoint;
+        timepoint_t time_added; 
         uint64_t sequence_number;
         Function func;
         int64_t current_mA;
         bool is_greater_than;
-        event_t(const timepoint_t &tp, uint64_t seq_num, Function fn, int64_t mA, bool is_greater_than) : 
+        event_t(
+            timepoint_t tp, 
+            uint64_t seq_num, 
+            Function fn, 
+            int64_t mA, 
+            bool is_greater_than
+        ) : 
             timepoint(tp),
+            time_added(get_system_time()),
             sequence_number(seq_num),
             func(fn),
             current_mA(mA),
             is_greater_than(is_greater_than) {}
         event_t() {}
     };
+
+    typedef std::set<event_t> EventQueue;
+
 protected: 
     /** name of the battery */
     const std::string name;
@@ -107,7 +120,7 @@ protected:
     bool should_quit;
 
     /** the queue holding the events */
-    std::priority_queue<event_t, std::vector<event_t>, std::greater<event_t>> event_queue;
+    EventQueue event_queue;
 
     uint64_t current_sequence_number;
 public: 
@@ -306,6 +319,11 @@ public:
     }
     std::string get_type_string() override {
         return "VirtualBattery";
+    }
+
+    void set_status(BatteryStatus target) {
+        lockguard_t lkg(this->lock);
+        this->status = target;
     }
 
     void mutex_lock() {this->lock.lock();}

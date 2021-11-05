@@ -20,9 +20,10 @@ public:
         const std::string &policy_name, 
         const std::string &src_name, 
         BOSDirectory &directory,
-        SplitterPolicyType policy_type
+        SplitterPolicyType policy_type,
+        std::chrono::milliseconds max_staleness
     ) : 
-        VirtualBattery(policy_name), 
+        VirtualBattery(policy_name, max_staleness), 
         src_name(src_name), 
         pdirectory(&directory), 
         policy_type(policy_type)
@@ -178,9 +179,10 @@ public:
         const std::string &policy_name, 
         const std::string &src_name, 
         BOSDirectory &directory, 
-        Battery *first_battery
+        Battery *first_battery,
+        std::chrono::milliseconds max_staleness=std::chrono::milliseconds(1000)
     ) : 
-        SplitterPolicy(policy_name, src_name, directory, SplitterPolicyType::Proportional)
+        SplitterPolicy(policy_name, src_name, directory, SplitterPolicyType::Proportional, max_staleness)
     {
         // note: the first battery should be created and inserted already 
         this->current_map.insert(std::make_pair(first_battery->get_name(), 0));
@@ -242,8 +244,7 @@ public:
         for (auto &p : this->current_map) {
             new_currents += p.second;
         }
-        source->schedule_set_current(new_currents, is_greater_than_target, when_to_set, until_when);
-        return 0;
+        return source->schedule_set_current(new_currents, is_greater_than_target, when_to_set, until_when);
     }
 
     bool reset_estimated_soc_for_all() {
@@ -277,8 +278,12 @@ public:
             WARNING() << "Battery " << from_name << " does not exist";
             return target_status;
         }
-        if (pdirectory->name_exists(child_name)) {
-            WARNING() << "Battery " << child_name << "exists";
+        if (!pdirectory->name_exists(child_name)) {
+            WARNING() << "Battery " << child_name << " does not exist";
+            return target_status;
+        }
+        if (!dynamic_cast<VirtualBattery*>(this->pdirectory->get_battery(child_name))) {
+            WARNING() << "Battery " << child_name << " is not a virtual battery";
             return target_status;
         }
 
@@ -311,6 +316,8 @@ public:
         this->current_map[child_name] = 0;
         this->scale_map[from_name] = this->scale_map[from_name] - scale;
         this->reset_estimated_soc_for_all();
+        
+        dynamic_cast<VirtualBattery*>(this->pdirectory->get_battery(child_name))->set_status(actual_status);
         return actual_status;
     }
 

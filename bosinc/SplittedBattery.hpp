@@ -11,6 +11,7 @@ public:
         const std::string &name, 
         const std::chrono::milliseconds &sample_period, 
         const std::string &policy_name, 
+        // BatteryStatus initial_status,
         BOSDirectory &directory
     ) : 
         VirtualBattery(name, sample_period), 
@@ -18,6 +19,7 @@ public:
     {
         this->type = BatteryType::Splitted;
         this->pdirectory = &directory;
+        // this->status = initial_status;
     }
 protected: 
     BatteryStatus refresh() override {

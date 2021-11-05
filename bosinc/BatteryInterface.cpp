@@ -93,10 +93,10 @@ void Battery::background_func(Battery *bat) {
             if (bat->should_quit) return;
         }
         // notice that the event_queue top element may be updated 
-        while (!(get_system_time() >= bat->event_queue.top().timepoint || bat->should_quit)) {
+        while (!(get_system_time() >= bat->event_queue.begin()->timepoint || bat->should_quit)) {
             if (
                 bat->cv.wait_until(lk, 
-                bat->event_queue.top().timepoint
+                bat->event_queue.begin()->timepoint
             ) == std::cv_status::timeout) { 
                 break;
             }
@@ -114,8 +114,10 @@ void Battery::background_func(Battery *bat) {
         bool has_cancel_event = false;
         event_t last_set_current_event;
         timepoint_t now = get_system_time();
+        EventQueue::iterator top_iterator;
         while (!(bat->event_queue.empty())) {
-            event_t top = bat->event_queue.top();
+            top_iterator = bat->event_queue.begin();
+            event_t top = (*top_iterator);
             if (top.timepoint > now) { 
                 break; 
             }
@@ -141,12 +143,19 @@ void Battery::background_func(Battery *bat) {
             default:
                 break;
             }
-            bat->event_queue.pop();
+            bat->event_queue.erase(top_iterator);
             now = get_system_time();
         }
         if (has_refresh && bat->refresh_mode == RefreshMode::ACTIVE) {
             bat->refresh();
-            bat->event_queue.emplace(get_system_time()+bat->max_staleness, bat->next_sequence_number(), Function::REFRESH, int64_t(0), false);
+            // schedule the next refresh event
+            bat->event_queue.emplace(
+                get_system_time()+bat->max_staleness, 
+                bat->next_sequence_number(), 
+                Function::REFRESH, 
+                int64_t(0), 
+                false
+            );
         }
         if (!has_cancel_event) {
             if (has_set_current || has_set_current_end) {
@@ -187,7 +196,12 @@ bool Battery::stop_background_refresh() {
     return false;
 }
 
-uint32_t Battery::schedule_set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) {
+uint32_t Battery::schedule_set_current(
+    int64_t target_current_mA, 
+    bool is_greater_than_target, 
+    timepoint_t when_to_set, 
+    timepoint_t until_when
+) {
     {
         lockguard_t lkd(this->lock);
         timepoint_t now = get_system_time();
@@ -198,30 +212,83 @@ uint32_t Battery::schedule_set_current(int64_t target_current_mA, bool is_greate
         // if there's overlapping set current events, merge the ranges! 
         // this might cause problems??? 
         // pop out the events that are earlier than when_to_set and save them
-        std::vector<event_t> events_before_time;
-        while (!this->event_queue.empty()) {
-            if (this->event_queue.top().timepoint < when_to_set) {
-                events_before_time.push_back(this->event_queue.top());
-                this->event_queue.pop();
-            } else {
+
+        // preview the current events from now to until_when 
+        // and determine how much current to resume to 
+
+        int64_t current_value_up_to_now = 0;
+        bool is_greater_than_up_to_now = false;
+        std::vector<EventQueue::iterator> iterators_to_remove;
+        for (
+            EventQueue::iterator event_iterator = event_queue.begin(); 
+            event_iterator != event_queue.end(); 
+            ++event_iterator
+        ) {
+            if (event_iterator->timepoint > until_when) {
+                // now we know about what current to resume to! 
+                // but, be careful when multiple events are colliding
                 break;
             }
-        }
-        // discard the events that are between when_to_set and until_when
-        while (!this->event_queue.empty()) {
-            if (this->event_queue.top().timepoint <= until_when) {
-                this->event_queue.pop();
-            } else {
-                break;
+            if (event_iterator->func == Function::REFRESH) {
+                // refresh events are not participating in this preview 
+                continue;
+            }
+            // ok now we have set_current events, preview the current
+            current_value_up_to_now = event_iterator->current_mA;
+            is_greater_than_up_to_now = event_iterator->is_greater_than;
+            // and if this event is between when_to_set and until_when, we can remove it now 
+            if (
+                when_to_set <= event_iterator->timepoint && 
+                event_iterator->timepoint <= until_when
+            ) {
+                iterators_to_remove.push_back(event_iterator);
             }
         }
-        // push back the events that happen before when_to_set
-        for (auto &e : events_before_time) {
-            this->event_queue.push(e);
-        }        
-        // now enqueue the set current event and cancel current event
-        this->event_queue.emplace(when_to_set, this->next_sequence_number(), Function::SET_CURRENT, target_current_mA, is_greater_than_target);
-        this->event_queue.emplace(until_when, this->next_sequence_number(), Function::SET_CURRENT_END, int64_t(0), false); 
+        // now remove all iterators in iterators_to_remove
+        for (EventQueue::iterator itr : iterators_to_remove) {
+            event_queue.erase(itr);
+        }
+        // enqueue our new events, but now at the end of this event, resume the previewed current 
+        this->event_queue.emplace(
+            when_to_set, 
+            this->next_sequence_number(), 
+            Function::SET_CURRENT, 
+            target_current_mA, 
+            is_greater_than_target
+        );
+
+        this->event_queue.emplace(
+            until_when, 
+            this->next_sequence_number(), 
+            Function::SET_CURRENT_END, 
+            current_value_up_to_now, 
+            is_greater_than_up_to_now
+        );
+
+        // std::vector<event_t> events_before_time;
+        // while (!this->event_queue.empty()) {
+        //     if (this->event_queue.top().timepoint < when_to_set) {
+        //         events_before_time.push_back(this->event_queue.top());
+        //         this->event_queue.pop();
+        //     } else {
+        //         break;
+        //     }
+        // }
+        // // discard the events that are between when_to_set and until_when
+        // while (!this->event_queue.empty()) {
+        //     if (this->event_queue.top().timepoint <= until_when) {
+        //         this->event_queue.pop();
+        //     } else {
+        //         break;
+        //     }
+        // }
+        // // push back the events that happen before when_to_set
+        // for (auto &e : events_before_time) {
+        //     this->event_queue.push(e);
+        // }        
+        // // now enqueue the set current event and cancel current event
+        // this->event_queue.emplace(when_to_set, this->next_sequence_number(), Function::SET_CURRENT, target_current_mA, is_greater_than_target);
+        // this->event_queue.emplace(until_when, this->next_sequence_number(), Function::SET_CURRENT_END, int64_t(0), false); 
     }
     cv.notify_one();
     return 1;
@@ -268,6 +335,8 @@ void Battery::reset_estimated_soc() {
 bool operator < (const Battery::event_t &lhs, const Battery::event_t &rhs) {
     if (lhs.timepoint < rhs.timepoint) return true;
     else if (lhs.timepoint > rhs.timepoint) return false;
+    else if (lhs.time_added < rhs.time_added) return true;
+    else if (lhs.time_added > rhs.time_added) return false;
     else if (lhs.sequence_number < rhs.sequence_number) return true;
     else if (lhs.sequence_number > rhs.sequence_number) return false;
     else if (lhs.func < rhs.func) return true;
@@ -277,6 +346,8 @@ bool operator < (const Battery::event_t &lhs, const Battery::event_t &rhs) {
 bool operator > (const Battery::event_t &lhs, const Battery::event_t &rhs) {
     if (lhs.timepoint > rhs.timepoint) return true;
     else if (lhs.timepoint < rhs.timepoint) return false;
+    else if (lhs.time_added > rhs.time_added) return true;
+    else if (lhs.time_added < rhs.time_added) return false;
     else if (lhs.sequence_number > rhs.sequence_number) return true;
     else if (lhs.sequence_number < rhs.sequence_number) return false;
     else if (lhs.func > rhs.func) return true;
