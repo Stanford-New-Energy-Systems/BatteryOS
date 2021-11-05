@@ -2,7 +2,7 @@
 #include "TestBattery.hpp"
 #include "NetworkBattery.hpp"
 #include "AggregatorBattery.hpp"
-#include "SplitterPolicy.hpp"
+#include "ProportionalPolicy.hpp"
 #include "SplittedBattery.hpp"
 #include <iostream>
 
