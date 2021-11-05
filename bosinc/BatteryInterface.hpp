@@ -123,6 +123,10 @@ protected:
     EventQueue event_queue;
 
     uint64_t current_sequence_number;
+
+    /** the requested current right now */
+    int64_t current_now;
+    bool is_greater_than_current_now;
 public: 
     /**
      * Constructor

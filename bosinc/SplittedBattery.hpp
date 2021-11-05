@@ -26,7 +26,7 @@ protected:
         int64_t prev_current_mA = this->status.current_mA;
         Battery *policy_battery = pdirectory->get_battery(this->policy_name);
         if (policy_battery->get_battery_type() != BatteryType::SplitterPolicy) {
-            WARNING() << ("the policy is not a policy");
+            ERROR() << ("the policy is not a policy");
             return this->status;
         }
         // just cast it to the policy pointer 
@@ -38,16 +38,16 @@ protected:
     }
 
     uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target) override {
-        // nothing here
+        ERROR() << "This function shouldn't be called!";
         return 0;
     }
 public: 
-    // BatteryStatus get_status() override {
-    //     // always refresh?? Or use the default one... 
-    //     return this->status;
-    // }
-
-    uint32_t schedule_set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when) override {
+    uint32_t schedule_set_current(
+        int64_t target_current_mA, 
+        bool is_greater_than_target, 
+        timepoint_t when_to_set, 
+        timepoint_t until_when
+    ) override {
         lockguard_t lkg(this->lock);
         // forward this to the Policy
         Battery *policy_battery = pdirectory->get_battery(this->policy_name);

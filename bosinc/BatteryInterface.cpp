@@ -15,7 +15,9 @@ Battery::Battery(
     cv(),
     should_quit(false),
     event_queue(),
-    current_sequence_number(0)
+    current_sequence_number(0),
+    current_now(0),
+    is_greater_than_current_now(false)
 {
     if (!no_thread) {
         this->background_thread = std::thread(Battery::background_func, this);
@@ -159,7 +161,10 @@ void Battery::background_func(Battery *bat) {
         }
         if (!has_cancel_event) {
             if (has_set_current || has_set_current_end) {
-                bat->set_current(last_set_current_event.current_mA, last_set_current_event.is_greater_than);
+                if (bat->set_current(last_set_current_event.current_mA, last_set_current_event.is_greater_than)) {
+                    bat->current_now = last_set_current_event.current_mA;
+                    bat->is_greater_than_current_now = last_set_current_event.is_greater_than;
+                }
             }
         }
     }
@@ -175,7 +180,12 @@ bool Battery::start_background_refresh() {
             lockguard_t lkd(this->lock);
             this->refresh_mode = RefreshMode::ACTIVE;
             // push the first refresh event
-            this->event_queue.emplace(get_system_time()+max_staleness, this->next_sequence_number(), Function::REFRESH, int64_t(0), false);
+            this->event_queue.emplace(
+                get_system_time()+max_staleness, 
+                this->next_sequence_number(), 
+                Function::REFRESH, 
+                int64_t(0), 
+                false);
         }
         // tell the background thread to handle the refresh event
         cv.notify_one();
@@ -216,8 +226,8 @@ uint32_t Battery::schedule_set_current(
         // preview the current events from now to until_when 
         // and determine how much current to resume to 
 
-        int64_t current_value_up_to_now = 0;
-        bool is_greater_than_up_to_now = false;
+        int64_t current_value_up_to_now = this->current_now;
+        bool is_greater_than_up_to_now = this->is_greater_than_current_now;
         std::vector<EventQueue::iterator> iterators_to_remove;
         for (
             EventQueue::iterator event_iterator = event_queue.begin(); 

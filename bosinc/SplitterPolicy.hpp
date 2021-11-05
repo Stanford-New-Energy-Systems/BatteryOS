@@ -10,11 +10,21 @@ enum class SplitterPolicyType : int {
 };
 
 class SplitterPolicy : public VirtualBattery {
+public:
+    struct child_current_event_t {
+        timepoint_t timepoint;
+        std::string childname;
+        int64_t current_mA;
+        bool is_greater_than_target;
+    };
 protected: 
     std::string src_name;
     BOSDirectory *pdirectory;
     Battery *source;
     SplitterPolicyType policy_type;
+    
+    std::map<std::string, int64_t> current_map;
+    std::list<child_current_event_t> children_current_events;
 public: 
     SplitterPolicy(
         const std::string &policy_name, 
@@ -36,12 +46,10 @@ public:
     }
     
     BatteryStatus refresh() override {
-        // nothing
         ERROR() << "This function shouldn't be called";
         return this->status;
     }
     uint32_t set_current(int64_t current_mA, bool is_greater_than) override {
-        // nothing
         ERROR() << "This function shouldn't be called";
         return 0;
     }

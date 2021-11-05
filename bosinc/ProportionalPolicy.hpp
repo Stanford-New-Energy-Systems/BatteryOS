@@ -65,7 +65,6 @@ struct Scale {
 
 class ProportionalPolicy : public SplitterPolicy {
 protected:
-    std::map<std::string, int64_t> current_map;
     std::map<std::string, Scale> scale_map;
 public: 
     ProportionalPolicy(
@@ -84,19 +83,13 @@ public:
 
     BatteryStatus get_status_of(const std::string &child_name) override {
         lockguard_t lkg(this->lock);
-
-        Battery *source = this->source;
-
-        BatteryStatus source_status = source->get_status();
-
+        BatteryStatus source_status = this->source->get_status();
         Scale &scale = this->scale_map[child_name];
-
         const std::list<Battery*> &children = this->pdirectory->get_children(this->name);
 
         int64_t estimated_soc = this->pdirectory->get_battery(child_name)->get_estimated_soc();
 
         int64_t total_estimated_soc = 0;
-
         for (Battery *c : children) {
             total_estimated_soc += c->get_estimated_soc();
         }

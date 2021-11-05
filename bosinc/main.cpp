@@ -97,8 +97,8 @@ void test_events() {
     
     std::cout << "Case 1: " << std::endl;
     now = get_system_time();
-    nub.schedule_set_current(300, true, now+1s, now+3s);
-    nub.schedule_set_current(200, true, now+2s, now+4s);
+    nub.schedule_set_current(200, true, now+1s, now+3s);
+    nub.schedule_set_current(300, true, now+2s, now+4s);
     std::this_thread::sleep_for(5s);
     std::cout << "End of case 1" << std::endl << std::endl; 
 
