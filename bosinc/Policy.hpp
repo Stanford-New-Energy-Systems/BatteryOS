@@ -118,7 +118,12 @@ public:
             lockguard_t lkd(this->lock);
             timepoint_t now = get_system_time();
             if (when_to_set < now) {
-                WARNING() << ("when_to_set must be at least now");
+                WARNING() << "when_to_set must be at least now";
+                return 0;
+            }
+            if (target_current_mA > children_status_now[child_name].max_discharging_current_mA || 
+                (-target_current_mA) > children_status_now[child_name].max_charging_current_mA) {
+                WARNING() << "target current too high, event not scheduled";
                 return 0;
             }
             // if there's overlapping set current events, merge the ranges! 
@@ -279,3 +284,17 @@ public:
 
 
 #endif // ! POLICY_HPP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
