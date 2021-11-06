@@ -6,32 +6,52 @@
 class SplittedBattery : public VirtualBattery {
     std::string policy_name;
     BOSDirectory *pdirectory;
+    SplitterPolicy *policy;
 public: 
     SplittedBattery(
         const std::string &name, 
-        const std::chrono::milliseconds &sample_period, 
-        const std::string &policy_name, 
-        // BatteryStatus initial_status,
-        BOSDirectory &directory
+        BOSDirectory &directory,
+        const std::chrono::milliseconds &sample_period 
     ) : 
         VirtualBattery(name, sample_period), 
-        policy_name(policy_name)
+        policy_name(), 
+        pdirectory(&directory), 
+        policy(nullptr)
     {
         this->type = BatteryType::Splitted;
-        this->pdirectory = &directory;
-        // this->status = initial_status;
     }
 protected: 
+    bool attach_to_policy(const std::string &policy_name) {
+        if (!this->pdirectory->name_exists(policy_name)) {
+            WARNING() << "policy " << policy_name << " does not exist";
+            return false;
+        }
+        Battery *b = this->pdirectory->get_battery(policy_name);
+        if (!b) {
+            WARNING() << "battery " << policy_name << " does not exist";
+            return false;
+        }
+        if (b->get_battery_type() != BatteryType::SplitterPolicy) {
+            WARNING() << "battery " << policy_name << " is not a splitter policy";
+            return false;
+        }
+        SplitterPolicy *sp = dynamic_cast<SplitterPolicy*>(b);
+        if (!sp) {
+            WARNING() << "battery " << policy_name << " is not a splitter policy";
+            return false;
+        }
+        this->policy = sp;
+        this->policy_name = policy_name;
+        return true; 
+    }
+
     BatteryStatus refresh() override {
-        int64_t prev_current_mA = this->status.current_mA;
-        Battery *policy_battery = pdirectory->get_battery(this->policy_name);
-        if (policy_battery->get_battery_type() != BatteryType::SplitterPolicy) {
-            ERROR() << ("the policy is not a policy");
+        if (!(this->policy)) {
+            WARNING() << "battery is not attached to policy";
             return this->status;
         }
-        // just cast it to the policy pointer 
-        SplitterPolicy *sp = dynamic_cast<SplitterPolicy*>(policy_battery);
-        BatteryStatus status = sp->get_status_of(this->name);
+        int64_t prev_current_mA = this->status.current_mA;
+        BatteryStatus status = this->policy->get_status_of(this->name);
         this->status = status;
         this->update_estimated_soc(prev_current_mA, this->status.current_mA);
         return this->status;
@@ -49,14 +69,12 @@ public:
         timepoint_t until_when
     ) override {
         lockguard_t lkg(this->lock);
-        // forward this to the Policy
-        Battery *policy_battery = pdirectory->get_battery(this->policy_name);
-        if (policy_battery->get_battery_type() != BatteryType::SplitterPolicy) {
-            WARNING() << "the policy is not a policy";
+        if (!(this->policy)) {
+            WARNING() << "battery is not attached to policy";
             return 0;
         }
-        SplitterPolicy *sp = dynamic_cast<SplitterPolicy*>(policy_battery);
-        return sp->schedule_set_current_of(this->name, target_current_mA, is_greater_than_target, when_to_set, until_when);
+        // forward this to the Policy
+        return this->policy->schedule_set_current_of(this->name, target_current_mA, is_greater_than_target, when_to_set, until_when);
     }
 
 

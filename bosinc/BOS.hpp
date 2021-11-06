@@ -93,55 +93,55 @@ public:
         return agg;
     }
 
-    Battery *make_proportional_policy(
-        const std::string &name, 
-        const std::string &src_name, 
-        const std::string &first_battery_name,
-        int64_t first_battery_max_staleness_ms,
-        int64_t max_staleness_ms = 1000
-    ) {
-        BOS_NAME_CHECK(this, name);
-        BOS_NAME_CHECK(this, first_battery_name);
-        if (!(this->directory.name_exists(src_name))) {
-            WARNING() << "Battery source " << src_name << " does not exist";
-            return nullptr;
-        }
-        std::unique_ptr<Battery> first_battery(
-            new SplittedBattery(
-                first_battery_name, 
-                std::chrono::milliseconds(first_battery_max_staleness_ms), 
-                name, 
-                this->directory
-            )
-        );
+    // Battery *make_proportional_policy(
+    //     const std::string &name, 
+    //     const std::string &src_name, 
+    //     const std::string &first_battery_name,
+    //     int64_t first_battery_max_staleness_ms,
+    //     int64_t max_staleness_ms = 1000
+    // ) {
+    //     BOS_NAME_CHECK(this, name);
+    //     BOS_NAME_CHECK(this, first_battery_name);
+    //     if (!(this->directory.name_exists(src_name))) {
+    //         WARNING() << "Battery source " << src_name << " does not exist";
+    //         return nullptr;
+    //     }
+    //     std::unique_ptr<Battery> first_battery(
+    //         new SplittedBattery(
+    //             first_battery_name, 
+    //             std::chrono::milliseconds(first_battery_max_staleness_ms), 
+    //             name, 
+    //             this->directory
+    //         )
+    //     );
 
-        Battery *pfirst_battery = first_battery.get();
+    //     Battery *pfirst_battery = first_battery.get();
 
-        this->directory.add_battery(std::move(first_battery));
+    //     this->directory.add_battery(std::move(first_battery));
 
-        std::unique_ptr<Battery> policy(
-            new ProportionalPolicy(
-                name, 
-                src_name, 
-                this->directory, 
-                pfirst_battery, 
-                std::chrono::milliseconds(max_staleness_ms)
-            )
-        );
-        Battery *ppolicy = this->directory.add_battery(std::move(policy));
+    //     std::unique_ptr<Battery> policy(
+    //         new ProportionalPolicy(
+    //             name, 
+    //             src_name, 
+    //             this->directory, 
+    //             pfirst_battery, 
+    //             std::chrono::milliseconds(max_staleness_ms)
+    //         )
+    //     );
+    //     Battery *ppolicy = this->directory.add_battery(std::move(policy));
 
-        this->directory.add_edge(name, first_battery_name);
-        return ppolicy;
-    }
+    //     this->directory.add_edge(name, first_battery_name);
+    //     return ppolicy;
+    // }
 
-    Battery *fork_from(
-        const std::string &new_battery_name,
-        const std::string &policy_name, 
-        const std::string &from_battery,
-        BatteryStatus target_status
-    ) {
-        return nullptr;
-    }
+    // Battery *fork_from(
+    //     const std::string &new_battery_name,
+    //     const std::string &policy_name, 
+    //     const std::string &from_battery,
+    //     BatteryStatus target_status
+    // ) {
+    //     return nullptr;
+    // }
 
 
 

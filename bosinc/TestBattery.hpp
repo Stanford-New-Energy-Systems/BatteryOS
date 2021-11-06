@@ -12,7 +12,7 @@ public:
         PhysicalBattery(name, max_staleness) {
         this->status.voltage_mV = voltage_mV;
         this->status.current_mA = 0;
-        this->status.state_of_charge_mAh = 0;
+        this->status.capacity_mAh = 0;
         this->status.max_capacity_mAh = 0;
         this->status.max_charging_current_mA = 0;
         this->status.max_discharging_current_mA = 0;
@@ -44,7 +44,7 @@ class PseudoBattery : public PhysicalBattery {
 public: 
     PseudoBattery(const std::string &name, const BatteryStatus &status) : PhysicalBattery(name, std::chrono::milliseconds(0)) {
         this->status = status;
-        this->set_estimated_soc(this->status.state_of_charge_mAh);
+        this->set_estimated_soc(this->status.capacity_mAh);
     }
 protected: 
     BatteryStatus refresh() override {
@@ -68,7 +68,7 @@ public:
         int32_t old_soc = this->get_estimated_soc();
         this->update_estimated_soc(this->status.current_mA, this->status.current_mA);
         int32_t new_soc = this->get_estimated_soc();
-        this->status.state_of_charge_mAh += (new_soc - old_soc);
+        this->status.capacity_mAh += (new_soc - old_soc);
         return this->status;
     }
 

@@ -43,7 +43,7 @@ uint32_t BatteryStatus_serialize(const struct BatteryStatus *status, uint8_t *bu
     // // remaining_buffer_size -= used_bytes;
     // // buffer += used_bytes;
 
-    // // used_bytes = serialize_int64(status->state_of_charge_mAh, buffer, remaining_buffer_size);
+    // // used_bytes = serialize_int64(status->capacity_mAh, buffer, remaining_buffer_size);
     // // remaining_buffer_size -= used_bytes;
     // // buffer += used_bytes;
 
@@ -81,7 +81,7 @@ uint32_t BatteryStatus_deserialize(struct BatteryStatus *status, const uint8_t *
     
     // // status->voltage_mV                 = deserialize_int64(buffer + (sizeof(int64_t) * 0));
     // // status->current_mA                 = deserialize_int64(buffer + (sizeof(int64_t) * 1));
-    // // status->state_of_charge_mAh        = deserialize_int64(buffer + (sizeof(int64_t) * 2));
+    // // status->capacity_mAh        = deserialize_int64(buffer + (sizeof(int64_t) * 2));
     // // status->max_capacity_mAh           = deserialize_int64(buffer + (sizeof(int64_t) * 3));
     // // status->max_charging_current_mA    = deserialize_int64(buffer + (sizeof(int64_t) * 4));
     // // status->max_discharging_current_mA = deserialize_int64(buffer + (sizeof(int64_t) * 5));
@@ -103,7 +103,7 @@ int32_t BatteryStatus_compare(const BatteryStatus *a, const BatteryStatus *b) {
     return true;
     // return (a->voltage_mV == b->voltage_mV) && 
     //     (a->current_mA == b->current_mA) && 
-    //     (a->state_of_charge_mAh == b->state_of_charge_mAh) && 
+    //     (a->capacity_mAh == b->capacity_mAh) && 
     //     (a->max_capacity_mAh == b->max_capacity_mAh) && 
     //     (a->max_charging_current_mA == b->max_charging_current_mA) && 
     //     (a->max_discharging_current_mA == b->max_discharging_current_mA);
@@ -120,7 +120,7 @@ void test_battery_status() {
     
     status.voltage_mV = 0xA5A5A5A5;
     status.current_mA = 0x5A5A5A5A;
-    status.state_of_charge_mAh = 0xA5A5A5A5;
+    status.capacity_mAh = 0xA5A5A5A5;
     status.max_capacity_mAh = 0x5A5A5A5A;
     status.max_charging_current_mA = 0xA5A5A5A5;
     status.max_discharging_current_mA = 0x5A5A5A5A;
@@ -152,7 +152,7 @@ void test_battery_status() {
     struct BatteryStatus status3;
     status3.voltage_mV = 0x12345678;
     status3.current_mA = 0x9ABCEF12;
-    status3.state_of_charge_mAh = 0xDEADBEEF;
+    status3.capacity_mAh = 0xDEADBEEF;
     status3.max_capacity_mAh = 0xFEEBDAED;
     status3.max_charging_current_mA = 0x98765432;
     status3.max_discharging_current_mA = 0xABCD5678;

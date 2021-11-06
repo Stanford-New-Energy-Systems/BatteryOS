@@ -363,7 +363,7 @@ void Battery::reset_estimated_soc() {
     this->get_status();
     {
         lockguard_t lkg(this->lock); 
-        this->estimated_soc = this->status.state_of_charge_mAh;
+        this->estimated_soc = this->status.capacity_mAh;
     }
 }
 

@@ -27,7 +27,7 @@ typedef struct CTimestamp {
  * Fields: 
  *   voltage_mV:                      voltage
  *   current_mA:                     current 
- *   state_of_charge_mAh:             the current state of charge of the battery
+ *   capacity_mAh:             the current state of charge of the battery
  *   max_capacity_mAh:                max capacity of the battery
  *   max_discharging_current_mA:     max discharging current of the battery
  *   max_charging_current_mA:        max charging current of the battery
@@ -35,7 +35,7 @@ typedef struct CTimestamp {
 typedef struct BatteryStatus {
     int64_t voltage_mV; 
     int64_t current_mA;
-    int64_t state_of_charge_mAh;
+    int64_t capacity_mAh;
     int64_t max_capacity_mAh;
     int64_t max_charging_current_mA;
     int64_t max_discharging_current_mA;

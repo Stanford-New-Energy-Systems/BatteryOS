@@ -51,7 +51,7 @@ std::ostream & operator <<(std::ostream &out, const BatteryStatus &status) {
     out << "BatteryStatus status = {\n";
     out << "    .voltage_mV =                 " << status.voltage_mV << "mV, \n";
     out << "    .current_mA =                 " << status.current_mA << "mA, \n";
-    out << "    .state_of_charge_mAh =        " << status.state_of_charge_mAh << "mAh, \n";
+    out << "    .capacity_mAh =        " << status.capacity_mAh << "mAh, \n";
     out << "    .max_capacity_mAh =           " << status.max_capacity_mAh << "mAh, \n";
     out << "    .max_charging_current_mA =    " << status.max_charging_current_mA << "mA, \n";
     out << "    .max_discharging_current_mA = " << status.max_discharging_current_mA << "mA, \n";

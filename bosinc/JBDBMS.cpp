@@ -254,7 +254,7 @@ BatteryStatus JBDBMS::refresh() {
     this->get_basic_info();
     status.voltage_mV =                   basic_state.voltage_10mV * 10;
     status.current_mA =                   basic_state.current_10mA * 10;
-    status.state_of_charge_mAh =          basic_state.remaining_charge_10mAh * 10;
+    status.capacity_mAh =          basic_state.remaining_charge_10mAh * 10;
     status.max_capacity_mAh =             basic_state.max_capacity_10mAh * 10;
     status.max_charging_current_mA =      this->max_charging_current_mA;
     status.max_discharging_current_mA =   this->max_discharging_current_mA;
@@ -284,11 +284,11 @@ uint32_t JBDBMS::set_current(int64_t target_current_mA, bool is_greater_than_tar
         return 0;
     }
     // over discharge
-    if (target_current_mA > 0 && this->status.state_of_charge_mAh <= 5) {
+    if (target_current_mA > 0 && this->status.capacity_mAh <= 5) {
         return 0;
     }
     // over charge 
-    if (target_current_mA < 0 && this->status.state_of_charge_mAh + 5 >= this->status.max_capacity_mAh) {
+    if (target_current_mA < 0 && this->status.capacity_mAh + 5 >= this->status.max_capacity_mAh) {
         return 0;
     }
 

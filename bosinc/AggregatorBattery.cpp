@@ -51,16 +51,16 @@ BatteryStatus AggregatorBattery::refresh() {
             WARNING() << "Battery " << bat->get_name() << " is out of voltage tolerance!";
         }
         max_cap_mAh += status.max_capacity_mAh;
-        current_cap_mAh += status.state_of_charge_mAh;
+        current_cap_mAh += status.capacity_mAh;
         current_mA += status.current_mA;
-        max_discharge_time = std::min(max_discharge_time, (double)status.state_of_charge_mAh / status.max_discharging_current_mA);
-        max_charge_time = std::min(max_charge_time, (double)(status.max_capacity_mAh - status.state_of_charge_mAh) / status.max_charging_current_mA);
+        max_discharge_time = std::min(max_discharge_time, (double)status.capacity_mAh / status.max_discharging_current_mA);
+        max_charge_time = std::min(max_charge_time, (double)(status.max_capacity_mAh - status.capacity_mAh) / status.max_charging_current_mA);
     }
     this->status.max_discharging_current_mA = (int64_t)(current_cap_mAh / max_discharge_time);
     this->status.max_charging_current_mA = (int64_t)((max_cap_mAh - current_cap_mAh) / max_charge_time);
     this->status.voltage_mV = this->voltage_mV;
     this->status.current_mA = current_mA;
-    this->status.state_of_charge_mAh = current_cap_mAh;
+    this->status.capacity_mAh = current_cap_mAh;
     this->status.max_capacity_mAh = max_cap_mAh;
     this->status.timestamp = get_system_time_c();
     return this->status;
@@ -106,10 +106,10 @@ uint32_t AggregatorBattery::schedule_set_current(int64_t target_current_mA, bool
 
     if (target_current_mA > 0) {
         // discharging 
-        double remaining_time = (double)this->status.state_of_charge_mAh / (double)target_current_mA;
+        double remaining_time = (double)this->status.capacity_mAh / (double)target_current_mA;
         for (Battery *src : parents) {
             status = src->get_status();
-            current = (int64_t)(status.state_of_charge_mAh / remaining_time);
+            current = (int64_t)(status.capacity_mAh / remaining_time);
             uint32_t success = src->schedule_set_current(current, is_greater_than_target, when_to_set, until_when);
             if (success == 0) {
                 WARNING() << "Failed to set current for src battery? Current = " << current;
@@ -117,11 +117,11 @@ uint32_t AggregatorBattery::schedule_set_current(int64_t target_current_mA, bool
         }
     } else if (target_current_mA < 0) {
         // charging 
-        int64_t charge = this->status.max_capacity_mAh - this->status.state_of_charge_mAh;
+        int64_t charge = this->status.max_capacity_mAh - this->status.capacity_mAh;
         double charging_time = (double)charge / (double)-target_current_mA;
         for (Battery *src : parents) {
             status = src->get_status();
-            current = (int64_t)((status.max_capacity_mAh - status.state_of_charge_mAh) / charging_time);
+            current = (int64_t)((status.max_capacity_mAh - status.capacity_mAh) / charging_time);
             uint32_t success = src->schedule_set_current(-current, is_greater_than_target, when_to_set, until_when);
             if (success == 0) {
                 WARNING() << "Failed to set current for src battery? Current = " << current;

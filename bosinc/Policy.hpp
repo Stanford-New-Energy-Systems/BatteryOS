@@ -9,64 +9,354 @@ enum class SplitterPolicyType : int {
     Reservation,
 };
 
+struct Scale {
+    double capacity;
+    double max_capacity;
+    double max_discharge_rate;
+    double max_charge_rate;
+    static bool within_01_range(double num) { return 0.0 <= num && num <= 1.0; }
+    Scale(double soc, double max_cap, double max_discharge_rate, double max_charge_rate) {
+        if (!(within_01_range(soc) && within_01_range(max_cap) && within_01_range(max_discharge_rate) && within_01_range(max_charge_rate))) {
+            WARNING() << "Scale parameter not within range [0.0, 1.0]";
+            this->capacity = this->max_capacity = this->max_discharge_rate = this->max_charge_rate = 0.0;
+        } else {
+            this->capacity = soc;
+            this->max_capacity = max_cap;
+            this->max_discharge_rate = max_discharge_rate;
+            this->max_charge_rate = max_charge_rate;
+        }
+    }
+    Scale(double proportion=0.0) {
+        if (!within_01_range(proportion)) {
+            WARNING() << "Scale parameter not within range [0.0, 1.0]";
+            this->capacity = this->max_capacity = this->max_discharge_rate = this->max_charge_rate = 0.0;
+        } else {
+            this->capacity = this->max_capacity = this->max_discharge_rate = this->max_charge_rate = proportion;
+        }
+    }
+    Scale operator-(const Scale &other) {
+        if (this->capacity >= other.capacity && 
+            this->max_capacity >= other.max_capacity && 
+            this->max_discharge_rate >= other.max_discharge_rate && 
+            this->max_charge_rate >= other.max_charge_rate) 
+        {
+            return Scale(
+                this->capacity - other.capacity, 
+                this->max_capacity - other.max_capacity, 
+                this->max_discharge_rate - other.max_discharge_rate, 
+                this->max_charge_rate - other.max_charge_rate);
+        } else {
+            WARNING() << ("not enough resource to subtract!");
+            return Scale(0.0);
+        }
+    }
+
+    Scale operator+(const Scale &other) {
+        if (within_01_range(this->capacity + other.capacity) && 
+            within_01_range(this->max_capacity + other.max_capacity) && 
+            within_01_range(this->max_discharge_rate + other.max_discharge_rate) && 
+            within_01_range(this->max_charge_rate >= other.max_charge_rate)) 
+        {
+            return Scale(
+                this->capacity + other.capacity, 
+                this->max_capacity + other.max_capacity, 
+                this->max_discharge_rate + other.max_discharge_rate, 
+                this->max_charge_rate + other.max_charge_rate);
+        } else {
+            WARNING() << ("sum not within [0, 1] range!");
+            return Scale(0.0);
+        }
+    }
+    bool is_zero() {
+        return this->capacity == 0 || this->max_capacity == 0 || this->max_discharge_rate == 0 || this->max_charge_rate == 0;
+    }
+};
+
 /**
  * Policy must start background refresh after construction!!! 
  */
 class SplitterPolicy : public VirtualBattery {
 protected: 
+    /** the name of the source battery */
     std::string src_name;
+    /** the directory of batteries */
     BOSDirectory *pdirectory;
+    /** the pointer to the source battery */
     Battery *source;
+    /** the type of policy */
     SplitterPolicyType policy_type;
-    /// the requested currents of each children 
-    std::map<std::string, int64_t> children_current_now;
-    /// the status of each children 
-    std::map<std::string, BatteryStatus> children_status_now;
+
+
+    std::vector<std::string> child_names;
+    std::vector<Scale> child_scales; 
+
+    /** the original request status of each child */
+    std::vector<BatteryStatus> child_original_status;
+    /** the requested currents of each child */
+    std::vector<int64_t> children_current_now;
+    /** the estimated charge for each child */
+    std::vector<int64_t> children_estimated_charge_now;
+    /** the status of each children */
+    std::vector<BatteryStatus> children_status_now;
+    
+    /** the mapping from name to its index */
+    std::map<std::string, size_t> name_lookup;
+
+    
 public: 
     SplitterPolicy(
         const std::string &policy_name, 
         const std::string &src_name, 
         BOSDirectory &directory,
+        const std::vector<std::string> &child_names, 
+        const std::vector<Scale> &child_scales, 
         SplitterPolicyType policy_type,
         std::chrono::milliseconds max_staleness
     ) : 
         VirtualBattery(policy_name, max_staleness), 
         src_name(src_name), 
         pdirectory(&directory), 
-        policy_type(policy_type)
+        policy_type(policy_type),
+        child_names(child_names),
+        child_scales(child_scales)
     {
         this->type = BatteryType::SplitterPolicy;
         source = directory.get_battery(src_name);
-        if (!source) { ERROR() << ("source not found!"); }
+        if (!source) { ERROR() << "source not found!"; }
+        if (child_names.size() != child_scales.size()) {
+            ERROR() << "number of child batteries != number of child percentages";
+        }
+        child_original_status.resize(child_names.size());
+        children_current_now.resize(child_names.size());
+        children_estimated_charge_now.resize(child_names.size());
+        children_status_now.resize(child_names.size());
+
+        // check if the scales sum up to 1
+        Scale total_sum(0.0);
+        for (size_t i = 0; i < child_names.size(); ++i) {
+            name_lookup[child_names[i]] = i;
+            total_sum = total_sum + child_scales[i];
+            if (total_sum.is_zero()) {
+                ERROR() << "sum of child scales is not within [0, 1]";
+            }
+        }
+        // 
+        // now initialize the children status 
+        BatteryStatus source_status = this->source->get_status();
+        for (size_t i = 0; i < child_names.size(); ++i) {
+            BatteryStatus child_status;
+            
+            // the set_current value now to be 0
+            children_current_now[i] = 0;
+
+            // the estimated charge of each child, initially they are reserved 
+            children_estimated_charge_now[i] = source_status.capacity_mAh * child_scales[i].capacity;
+
+            // the voltage is always the source voltage, and current is always initially 0 
+            child_status.voltage_mV = source_status.voltage_mV;
+            child_status.current_mA = 0;
+
+            // initially the capacity and max_capacity are reserved 
+            child_status.capacity_mAh = source_status.capacity_mAh * child_scales[i].capacity;
+            child_status.max_capacity_mAh = source_status.max_capacity_mAh * child_scales[i].max_capacity;
+
+            // the max currents should be scaled 
+            child_status.max_discharging_current_mA = source_status.max_discharging_current_mA * child_scales[i].max_discharge_rate;
+            child_status.max_charging_current_mA = source_status.max_charging_current_mA * child_scales[i].max_charge_rate;
+
+            // timestamp is just the source timestamp 
+            child_status.timestamp = source_status.timestamp;
+
+            // now the child status is the initial status 
+            children_status_now[i] = child_status;
+            
+            // this is the original status requested by the virtual battery 
+            child_original_status[i] = child_status;
+        }
     }
 protected: 
-    /* 
-        Please override refresh in derived classes 
-        because different policies will have different schemes for determining children status 
-    */
-    // BatteryStatus refresh() override {
-    //     return this->status;
-    // }
+    /**
+     * A refresh will update the status of all its children!  
+     */
+    BatteryStatus refresh() override {
+        // lock should be already acquired!!! 
+        BatteryStatus source_status = this->source->get_status();
+        const std::list<Battery*> &children = this->pdirectory->get_children(this->name);
+        int64_t total_actual_charge = source_status.capacity_mAh;
+        int64_t total_estimated_charge = 0;
+        int64_t total_net_currents = 0;
+        for (size_t i = 0; i < this->child_names.size(); ++i) {
+            total_estimated_charge += this->children_estimated_charge_now[i];
+            total_net_currents += this->children_current_now[i];
+        }
+
+        int64_t source_charge_remaining = source_status.capacity_mAh;
+        int64_t source_max_charge_remaining = source_status.max_capacity_mAh;
+
+        for (Battery *c : children) {
+            const std::string &child_name = c->get_name();
+            size_t child_id = this->name_lookup[child_name];
+            Scale &scale = this->child_scales[child_id];
+
+            BatteryStatus status;
+
+            // this is always the source voltage 
+            status.voltage_mV = source_status.voltage_mV;
+
+
+            // current should be proportional! (and it must be)
+            status.current_mA = (int64_t)(
+                (double)children_current_now[child_id] / (double)total_net_currents * (double)source_status.current_mA);
+            
+            // now the charge status is reported according to the policy  
+            
+            // this is the estimated charge according to its charge/discharge history 
+            int64_t estimated_charge = this->children_estimated_charge_now[child_id];
+
+            // the charge depends on policy             
+            if (this->policy_type == SplitterPolicyType::Proportional) {
+                // proportional! 
+                // proportionally distribute all charges 
+                status.capacity_mAh = (int64_t)(
+                    (double)estimated_charge / (double)total_estimated_charge * (double)total_actual_charge);
+                // the max_capacity should be scaled accordingly  
+                status.max_capacity_mAh = source_status.max_capacity_mAh * scale.max_capacity;
+            } else {
+                // tranche and reserved
+                // charge are just the estimated charge 
+                status.capacity_mAh = this->children_estimated_charge_now[child_id];
+                source_charge_remaining -= status.capacity_mAh;
+                // and the max capacities should be equal to their originally reserved max_capacity 
+                status.max_capacity_mAh = this->child_original_status[child_id].max_capacity_mAh;
+                source_max_charge_remaining -= status.max_capacity_mAh;
+            }
+
+            // the max currents should be scaled according to the initial scales 
+            status.max_charging_current_mA = source_status.max_charging_current_mA * scale.max_charge_rate;
+            status.max_discharging_current_mA = source_status.max_discharging_current_mA * scale.max_discharge_rate;
+            
+            // timestamp is just the source timestamp 
+            status.timestamp = source_status.timestamp;
+            
+            this->children_status_now[child_id] = status;
+        }
+        // now in tranche and reserved policies, the remaining charges are put to the specific batteries 
+        // if (this->policy_type == SplitterPolicyType::Reservation) {
+        //     // reservation policy: everything goes to the last battery, 
+        //     // if the last battery is full or empty, go to the second last 
+        //     for (size_t cid = this->child_names.size() - 1; cid >= 0; --cid) {
+        //         if (source_max_charge_remaining == 0 && source_charge_remaining == 0) break;
+        //         if (this->children_status_now[cid].max_capacity_mAh + source_max_charge_remaining <= 0) {
+        //             WARNING() << "estimation failed: there are batteries with non-positive max capacity!";
+        //             source_max_charge_remaining += this->children_status_now[cid].max_capacity_mAh;
+        //             this->children_status_now[cid].max_capacity_mAh = 0;
+        //         } else {
+        //             this->children_status_now[cid].max_capacity_mAh += source_max_charge_remaining;
+        //             source_max_charge_remaining = 0;
+        //         }
+        //         // capacity 
+        //         if (this->children_status_now[cid].capacity_mAh + source_charge_remaining <= 0) {
+        //             LOG() << "estimation: there's a battery with non-positive capacity!";
+        //             source_charge_remaining += this->children_status_now[cid].capacity_mAh;
+        //             this->children_status_now[cid].capacity_mAh = 0;
+        //         } else if (
+        //             this->children_status_now[cid].capacity_mAh + source_charge_remaining > this->children_status_now[cid].max_capacity_mAh
+        //         ) {
+        //             LOG() << "estimation: there's a battery with exceeding capacity!";
+        //             source_charge_remaining -= (this->children_status_now[cid].max_capacity_mAh - this->children_status_now[cid].capacity_mAh);
+        //             this->children_status_now[cid].capacity_mAh = this->children_status_now[cid].max_capacity_mAh;
+        //         } else {
+        //             this->children_status_now[cid].capacity_mAh += source_charge_remaining;
+        //             source_charge_remaining = 0;
+        //         }
+        //     }
+        //     if (source_max_charge_remaining != 0 && source_charge_remaining != 0) {
+        //         WARNING() << "estimation failure!!! failed to distribute the remaining charge!!!";
+        //     }
+        // }  
+        if (this->policy_type == SplitterPolicyType::Tranche || this->policy_type == SplitterPolicyType::Reservation) {
+            // distribute the max_charge 
+            if (source_max_charge_remaining >= 0) {
+                if (this->policy_type == SplitterPolicyType::Tranche)
+                    this->children_status_now.front().max_capacity_mAh += source_max_charge_remaining;
+                else if (this->policy_type == SplitterPolicyType::Reservation)
+                    this->children_status_now.back().max_capacity_mAh += source_max_charge_remaining;
+                source_max_charge_remaining = 0;
+            } else {
+                for (size_t cid = this->child_names.size() - 1; cid >= 0; --cid) {
+                    if (this->children_status_now[cid].max_capacity_mAh + source_max_charge_remaining <= 0) {
+                        WARNING() << "estimation failed: there are batteries with non-positive max capacity!";
+                        source_max_charge_remaining += this->children_status_now[cid].max_capacity_mAh;
+                        this->children_status_now[cid].max_capacity_mAh = 0;
+                    } else {
+                        this->children_status_now[cid].max_capacity_mAh += source_max_charge_remaining;
+                        source_max_charge_remaining = 0;
+                        break;
+                    }
+                }
+            }
+            // distribute the charge 
+            if (source_charge_remaining >= 0) {
+                if (this->policy_type == SplitterPolicyType::Tranche) {
+                    for (size_t cid = 0; cid < this->child_names.size(); ++cid) {
+                        if (this->children_status_now[cid].capacity_mAh + source_charge_remaining > this->children_status_now[cid].max_capacity_mAh) {
+                            source_charge_remaining -= (this->children_status_now[cid].max_capacity_mAh - this->children_status_now[cid].capacity_mAh);
+                            this->children_status_now[cid].capacity_mAh = this->children_status_now[cid].max_capacity_mAh;
+                        } else {
+                            this->children_status_now[cid].capacity_mAh += source_charge_remaining;
+                            source_charge_remaining = 0;
+                            break;
+                        }
+                    }
+                } else if (this->policy_type == SplitterPolicyType::Reservation) {
+                    for (size_t cid = this->child_names.size() - 1; cid >= 0; --cid) {
+                        if (this->children_status_now[cid].capacity_mAh + source_charge_remaining > this->children_status_now[cid].max_capacity_mAh) {
+                            source_charge_remaining -= (this->children_status_now[cid].max_capacity_mAh - this->children_status_now[cid].capacity_mAh);
+                            this->children_status_now[cid].capacity_mAh = this->children_status_now[cid].max_capacity_mAh;
+                        } else {
+                            this->children_status_now[cid].capacity_mAh += source_charge_remaining;
+                            source_charge_remaining = 0;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                for (size_t cid = this->child_names.size() - 1; cid >= 0; --cid) {
+                    if (this->children_status_now[cid].capacity_mAh + source_charge_remaining <= 0) {
+                        LOG() << "estimation: there's a battery with non-positive capacity!";
+                        source_charge_remaining += this->children_status_now[cid].capacity_mAh;
+                        this->children_status_now[cid].capacity_mAh = 0;
+                    } else {
+                        this->children_status_now[cid].capacity_mAh += source_charge_remaining;
+                        source_charge_remaining = 0;
+                        break;
+                    }
+                }
+            }
+
+            if (source_charge_remaining != 0 || source_max_charge_remaining != 0) {
+                WARNING() << "the charge or max_charge remaining fail to distribute!!!";
+            }
+        }
+
+        return this->status;  // this return value is meaningless 
+    }
 
     /** 
      * set current is to update the theoretic currents of its children! 
      * the real set current is already forwarded to the source battery already 
      */
-    uint32_t set_current(int64_t current_mA, bool is_greater_than, void *child_name_vptr) override {
-        if (!child_name_vptr) return 0;
-        std::string *child_name_ptr = (std::string*)child_name_vptr;
-        if (!child_name_ptr) return 0;
-        this->children_current_now[*child_name_ptr] = current_mA;
-        // NOTE: please do delete the pointer! 
-        delete child_name_ptr;
+    uint32_t set_current(int64_t current_mA, bool is_greater_than, void *child_vid) override {
+        size_t child_id = reinterpret_cast<size_t>(child_vid);
+        this->children_current_now[child_id] = current_mA;
         return 1;
     }
 public: 
-    /// get_status is forbidden 
+    /** get_status is forbidden */
     BatteryStatus get_status() override { ERROR() << "This function shouldn't be called"; return this->status; }
-    /// schedule_set_current is forbidden
-    uint32_t schedule_set_current(int64_t, bool, timepoint_t, timepoint_t) override {
-        ERROR() << "This function shouldn't be called"; return 0; }
+    /** schedule_set_current is forbidden */
+    uint32_t schedule_set_current(
+        int64_t, bool, timepoint_t, timepoint_t) override { ERROR() << "This function shouldn't be called"; return 0; }
     
     /**
      * Get its source battery 
@@ -91,17 +381,23 @@ public:
      */
     virtual BatteryStatus get_status_of(const std::string &child_name) {
         lockguard_t lkg(this->lock);
+        auto iter = name_lookup.find(child_name);
+        if (iter == name_lookup.end()) {
+            WARNING() << "battery " << child_name << " is not my child"; 
+            return this->status;
+        }
+        size_t child_id = iter->second;
         switch (this->refresh_mode) {
         case RefreshMode::ACTIVE:
-            return children_status_now[child_name];
+            return children_status_now[child_id];
         case RefreshMode::LAZY: 
             this->check_staleness_and_refresh();
-            return children_status_now[child_name];
+            return children_status_now[child_id];
         default: 
             WARNING() << "unknown refresh mode"; 
-            return children_status_now[child_name];
+            return children_status_now[child_id];
         }
-        return children_status_now[child_name];
+        return children_status_now[child_id];
     }
 
     /**
@@ -122,8 +418,14 @@ public:
                 WARNING() << "when_to_set must be at least now";
                 return 0;
             }
-            if (target_current_mA > children_status_now[child_name].max_discharging_current_mA || 
-                (-target_current_mA) > children_status_now[child_name].max_charging_current_mA) {
+            auto iter = this->name_lookup.find(child_name);
+            if (iter == name_lookup.end()) {
+                WARNING() << "battery " << child_name << " is not my child";
+                return 0;
+            }
+            size_t child_id = iter->second;
+            if (target_current_mA > children_status_now[child_id].max_discharging_current_mA || 
+                (-target_current_mA) > children_status_now[child_id].max_charging_current_mA) {
                 WARNING() << "target current too high, event not scheduled";
                 return 0;
             }
@@ -134,12 +436,12 @@ public:
             // preview the current events from now to until_when 
             // and determine how much current to resume to 
 
-            std::map<std::string, int64_t> current_up_to_now = this->children_current_now; // copy! 
+            decltype(this->children_current_now) current_up_to_now = this->children_current_now; // copy! 
 
             int64_t child_current_backup = 0;
             
             int64_t total_currents_to_set = 0;
-            int64_t total_currents_to_resume = 0;
+            // int64_t total_currents_to_resume = 0;
 
             std::vector<EventQueue::iterator> events_to_remove;
  
@@ -150,7 +452,7 @@ public:
                 event_iterator != event_queue.end(); 
                 ++event_iterator
             ) {
-                std::string *pchild_name = (std::string*)event_iterator->other_data;
+                size_t echild_id = reinterpret_cast<size_t>(event_iterator->other_data);
                 if (event_iterator->timepoint > when_to_set) {
                     // now we know about the current situations on when_to_set 
                     break;
@@ -159,7 +461,7 @@ public:
                     // refresh events are not participating in this preview 
                     continue;
                 }
-                if (*pchild_name == child_name && 
+                if (echild_id == child_id && 
                     when_to_set <= event_iterator->timepoint && 
                     event_iterator->timepoint <= until_when
                 ) {
@@ -167,32 +469,32 @@ public:
                     events_to_remove.push_back(event_iterator);
                 }
                 // preview the events  
-                current_up_to_now[*pchild_name] = event_iterator->current_mA;
+                current_up_to_now[echild_id] = event_iterator->current_mA;
             }
-            child_current_backup = current_up_to_now[child_name];
+            child_current_backup = current_up_to_now[child_id];
             // now compute what's the current right now... 
-            current_up_to_now[child_name] = target_current_mA;
-            for (auto &p : current_up_to_now) {
-                total_currents_to_set += p.second;
+            current_up_to_now[child_id] = target_current_mA;
+            for (auto p : current_up_to_now) {
+                total_currents_to_set += p;
             }
             // now total_currents_to_set is the current we need to set 
             
-            current_up_to_now[child_name] = child_current_backup;
+            current_up_to_now[child_id] = child_current_backup;
             
             
             // now continue the preview, until until_when 
             for ( ; event_iterator != event_queue.end(); ++event_iterator) {
-                std::string *pchild_name = (std::string*)event_iterator->other_data;
+                size_t echild_id = reinterpret_cast<size_t>(event_iterator->other_data);
                 if (event_iterator->timepoint > until_when) { break; }
                 if (event_iterator->func == Function::REFRESH) { continue; }
-                if (*pchild_name == child_name && 
+                if (echild_id == child_id && 
                     when_to_set <= event_iterator->timepoint && 
                     event_iterator->timepoint <= until_when
                 ) {
                     // remove the events related to this child in between 
                     events_to_remove.push_back(event_iterator);
                 }
-                current_up_to_now[*pchild_name] = event_iterator->current_mA;
+                current_up_to_now[echild_id] = event_iterator->current_mA;
             }
             // for (auto &p : current_up_to_now) {
             //     total_currents_to_resume += p.second;
@@ -200,10 +502,6 @@ public:
             // now total_currents_to_resume is the current we need to resume 
 
             for (EventQueue::iterator itr : events_to_remove) {
-                if (itr->other_data) {
-                    std::string *ps = (std::string*)(itr->other_data);
-                    delete ps;
-                }
                 event_queue.erase(itr);
             }
             
@@ -214,16 +512,16 @@ public:
                 Function::SET_CURRENT, 
                 target_current_mA, 
                 is_greater_than_target,
-                new std::string(child_name)
+                reinterpret_cast<void*>(child_id)
             );
 
             this->event_queue.emplace(
                 until_when, 
                 this->next_sequence_number(), 
                 Function::SET_CURRENT_END, 
-                current_up_to_now[child_name], 
+                current_up_to_now[child_id], 
                 is_greater_than_target,
-                new std::string(child_name)
+                reinterpret_cast<void*>(child_id)
             );
 
             // now forward the request to the source 
@@ -254,30 +552,30 @@ public:
         // return source->schedule_set_current(new_currents, is_greater_than_target, when_to_set, until_when);
     }
 
-    /**
-     * fork battery child_name from child_name, 
-     * and the status is target_status (might not be fulfilled)
-     * @param from_name the name of the battery to fork from
-     * @param to_name the child battery, notice that this must be created first 
-     * @param target_status the target status of the child battery 
-     * @return the actual status of the child battery 
-     */
-    virtual BatteryStatus fork_from(
-        const std::string &from_name, 
-        const std::string &child_name, 
-        BatteryStatus target_status
-    ) = 0;
+    // /**
+    //  * fork battery child_name from child_name, 
+    //  * and the status is target_status (might not be fulfilled)
+    //  * @param from_name the name of the battery to fork from
+    //  * @param to_name the child battery, notice that this must be created first 
+    //  * @param target_status the target status of the child battery 
+    //  * @return the actual status of the child battery 
+    //  */
+    // virtual BatteryStatus fork_from(
+    //     const std::string &from_name, 
+    //     const std::string &child_name, 
+    //     BatteryStatus target_status
+    // ) = 0;
 
-    /**
-     * Merge a battery to another battery
-     * @param name the name of the battery to merge 
-     * @param to_name the name of the battery to receive the portion 
-     * @return the status of the battery to_name after the merge 
-     */
-    virtual void merge_to(
-        const std::string &name, 
-        const std::string &to_name
-    ) = 0;
+    // /**
+    //  * Merge a battery to another battery
+    //  * @param name the name of the battery to merge 
+    //  * @param to_name the name of the battery to receive the portion 
+    //  * @return the status of the battery to_name after the merge 
+    //  */
+    // virtual void merge_to(
+    //     const std::string &name, 
+    //     const std::string &to_name
+    // ) = 0;
 
 
 };
