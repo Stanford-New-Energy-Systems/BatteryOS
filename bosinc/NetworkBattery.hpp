@@ -86,7 +86,7 @@ protected:
         // timestamp is inside BatteryStatus
         return this->status;
     }
-    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target) override {
+    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, void *other_data) override {
         // this does nothing! the scheduling is done via the remote battery
         return 0;
     }

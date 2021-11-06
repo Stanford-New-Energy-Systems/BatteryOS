@@ -1,7 +1,7 @@
 #ifndef SPLITTED_BATTERY_HPP
 #define SPLITTED_BATTERY_HPP
 #include "BatteryInterface.hpp"
-#include "SplitterPolicy.hpp"
+#include "Policy.hpp"
 
 class SplittedBattery : public VirtualBattery {
     std::string policy_name;
@@ -37,7 +37,7 @@ protected:
         return this->status;
     }
 
-    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target) override {
+    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, void *other_data) override {
         ERROR() << "This function shouldn't be called!";
         return 0;
     }

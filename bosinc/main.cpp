@@ -123,6 +123,14 @@ void test_events() {
     std::this_thread::sleep_for(5s);
     std::cout << "End of case 4" << std::endl << std::endl; 
 
+    std::cout << "Case 5: " << std::endl;
+    now = get_system_time();
+    nub.schedule_set_current(100, true, now, now+5s);
+    std::this_thread::sleep_for(2s);
+    now = get_system_time();
+    nub.schedule_set_current(200, true, now, now+2s);
+    std::this_thread::sleep_for(4s);
+
 
     std::cout << "done" << std::endl;
 }

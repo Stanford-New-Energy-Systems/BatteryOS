@@ -39,7 +39,7 @@ protected:
     BatteryStatus refresh() override;
 
     /** this function should not be called */
-    uint32_t set_current(int64_t current_mA, bool is_greater_than) override;
+    uint32_t set_current(int64_t current_mA, bool is_greater_than, void*) override;
 public: 
     std::string get_type_string() override;
 

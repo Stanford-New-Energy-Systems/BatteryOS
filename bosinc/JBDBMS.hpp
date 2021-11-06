@@ -99,7 +99,7 @@ public:
 protected: 
     BatteryStatus refresh() override;
     /** > 0 discharging, < 0 charging */
-    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target) override;
+    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, void *other_data) override;
 public: 
     std::string get_type_string() override;    
 };

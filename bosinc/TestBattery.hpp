@@ -24,7 +24,7 @@ protected:
         std::cout << "NullBattery: refresh" << std::endl;
         return this->status;
     }
-    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target) override {
+    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, void*) override {
         // if (target_current_mA != 0) {
         //     return 0;
         // }
@@ -51,7 +51,7 @@ protected:
         this->status.timestamp = get_system_time_c();
         return this->status;
     }
-    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target) override {
+    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, void*) override {
         int64_t old_current = this->get_status().current_mA;
         if (!(target_current_mA <= this->status.max_discharging_current_mA || 
             target_current_mA >= -(this->status.max_charging_current_mA))) {

@@ -96,10 +96,7 @@ void Battery::background_func(Battery *bat) {
         }
         // notice that the event_queue top element may be updated 
         while (!(get_system_time() >= bat->event_queue.begin()->timepoint || bat->should_quit)) {
-            if (
-                bat->cv.wait_until(lk, 
-                bat->event_queue.begin()->timepoint
-            ) == std::cv_status::timeout) { 
+            if (bat->cv.wait_until(lk, bat->event_queue.begin()->timepoint) == std::cv_status::timeout) { 
                 break;
             }
         }
@@ -111,10 +108,11 @@ void Battery::background_func(Battery *bat) {
         // );
         if (bat->should_quit) return;
         bool has_refresh = false;
-        bool has_set_current = false;
-        bool has_set_current_end = false;
+        // bool has_set_current = false;
+        // bool has_set_current_end = false;
         bool has_cancel_event = false;
-        event_t last_set_current_event;
+        std::vector<event_t> set_current_events;
+        // event_t last_set_current_event;
         timepoint_t now = get_system_time();
         EventQueue::iterator top_iterator;
         while (!(bat->event_queue.empty())) {
@@ -128,16 +126,19 @@ void Battery::background_func(Battery *bat) {
                 has_refresh = true;
                 break;
             case Function::SET_CURRENT_END:
-                if (!has_set_current) {
-                    has_set_current_end = true;
-                    last_set_current_event = top;
-                }
-                break;
+                // if (!has_set_current) {
+                //     has_set_current_end = true;
+                //     last_set_current_event = top;
+                // }
+                // break;
+                [[fallthrough]];
             case Function::SET_CURRENT:
-                has_set_current = true;
-                last_set_current_event = top;
+                // has_set_current = true;
+                // last_set_current_event = top;
+                set_current_events.push_back(top);
                 break;
             case Function::CANCEL_EVENT:
+                // not used 
                 // As an important note: 
                 // the only way to insert cancel event is when a newer set_current overlaps the current events!!!
                 has_cancel_event = true;
@@ -153,15 +154,33 @@ void Battery::background_func(Battery *bat) {
             // schedule the next refresh event
             bat->event_queue.emplace(
                 get_system_time()+bat->max_staleness, 
-                bat->next_sequence_number(), 
+                0, // bat->next_sequence_number(), 
                 Function::REFRESH, 
                 int64_t(0), 
                 false
             );
         }
-        if (!has_cancel_event) {
-            if (has_set_current || has_set_current_end) {
-                if (bat->set_current(last_set_current_event.current_mA, last_set_current_event.is_greater_than)) {
+        // oh we have special rules for splitter policy
+        if (bat->type == BatteryType::SplitterPolicy) {
+            // splitter policy: perform all the set current events! 
+            // because each event might correspond to a different children 
+            for (event_t &set_current_event : set_current_events) {
+                bat->set_current(
+                    set_current_event.current_mA, 
+                    set_current_event.is_greater_than, 
+                    set_current_event.other_data
+                );
+            }
+            // what about the current_now and is_greater_than_current_now? 
+            // we just don't use them 
+        } else {
+            if (!has_cancel_event && !set_current_events.empty()) {
+                event_t &last_set_current_event = set_current_events.back();
+                if (bat->set_current(
+                        last_set_current_event.current_mA, 
+                        last_set_current_event.is_greater_than,
+                        last_set_current_event.other_data)
+                ) {
                     bat->current_now = last_set_current_event.current_mA;
                     bat->is_greater_than_current_now = last_set_current_event.is_greater_than;
                 }
@@ -182,7 +201,7 @@ bool Battery::start_background_refresh() {
             // push the first refresh event
             this->event_queue.emplace(
                 get_system_time()+max_staleness, 
-                this->next_sequence_number(), 
+                0, // this->next_sequence_number(), 
                 Function::REFRESH, 
                 int64_t(0), 
                 false);
@@ -254,10 +273,16 @@ uint32_t Battery::schedule_set_current(
                 iterators_to_remove.push_back(event_iterator);
             }
         }
+        // for splitter policy, we don't remove any event! 
+        // because events might be from different children 
+        // but splitter policy should have this function rewritten 
+
         // now remove all iterators in iterators_to_remove
         for (EventQueue::iterator itr : iterators_to_remove) {
             event_queue.erase(itr);
         }
+
+        
         // enqueue our new events, but now at the end of this event, resume the previewed current 
         this->event_queue.emplace(
             when_to_set, 

@@ -66,7 +66,7 @@ BatteryStatus AggregatorBattery::refresh() {
     return this->status;
 }
 
-uint32_t AggregatorBattery::set_current(int64_t current_mA, bool is_greater_than) {
+uint32_t AggregatorBattery::set_current(int64_t current_mA, bool is_greater_than, void *other_data) {
     // nothing here, use schedule_set_current instead 
     return 0;
 }

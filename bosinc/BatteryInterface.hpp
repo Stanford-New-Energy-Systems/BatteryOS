@@ -64,19 +64,22 @@ public:
         Function func;
         int64_t current_mA;
         bool is_greater_than;
+        void *other_data;
         event_t(
             timepoint_t tp, 
             uint64_t seq_num, 
             Function fn, 
             int64_t mA, 
-            bool is_greater_than
+            bool is_greater_than,
+            void *other_data = nullptr
         ) : 
             timepoint(tp),
             time_added(get_system_time()),
             sequence_number(seq_num),
             func(fn),
             current_mA(mA),
-            is_greater_than(is_greater_than) {}
+            is_greater_than(is_greater_than),
+            other_data(other_data) {}
         event_t() {}
     };
 
@@ -168,7 +171,7 @@ protected:
      * @param target_current_mA the target current, target_current_mA > 0: discharging, target_current_mA < 0: charging
      * @param is_greater_than_target require whether the new current >= target_current_mA or <= target_current_mA
      */
-    virtual uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target) = 0;
+    virtual uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, void *other_data) = 0;
 public:
     /** 
      * (Optional function to override)
@@ -304,8 +307,9 @@ protected:
 public: 
     PhysicalBattery(
         const std::string &name, 
-        const std::chrono::milliseconds &max_staleness=std::chrono::milliseconds(1000)
-    ) : Battery(name, max_staleness) {
+        const std::chrono::milliseconds &max_staleness=std::chrono::milliseconds(1000),
+        bool no_thread = false
+    ) : Battery(name, max_staleness, no_thread) {
         this->type = BatteryType::Physical;
     }
     std::string get_type_string() override {
@@ -317,8 +321,9 @@ class VirtualBattery : public Battery {
 public: 
     VirtualBattery(
         const std::string &name, 
-        const std::chrono::milliseconds &max_staleness=std::chrono::milliseconds(1000)
-    ) : Battery(name, max_staleness) {
+        const std::chrono::milliseconds &max_staleness=std::chrono::milliseconds(1000),
+        bool no_thread = false
+    ) : Battery(name, max_staleness, no_thread) {
 
     }
     std::string get_type_string() override {

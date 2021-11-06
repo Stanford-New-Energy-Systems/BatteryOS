@@ -1,7 +1,7 @@
 #ifndef PROPORTIONAL_POLICY_HPP
 #define PROPORTIONAL_POLICY_HPP
 
-#include "SplitterPolicy.hpp"
+#include "Policy.hpp"
 
 struct Scale {
     double state_of_charge;
@@ -77,59 +77,40 @@ public:
         SplitterPolicy(policy_name, src_name, directory, SplitterPolicyType::Proportional, max_staleness)
     {
         // note: the first battery should be created and inserted already 
-        this->current_map.insert(std::make_pair(first_battery->get_name(), 0));
+        this->children_current_now.insert(std::make_pair(first_battery->get_name(), 0));
         this->scale_map.insert(std::make_pair(first_battery->get_name(), Scale(1.0)));
     }
 
-    BatteryStatus get_status_of(const std::string &child_name) override {
-        lockguard_t lkg(this->lock);
+    /**
+     * A refresh will update the status of all its children!  
+     */
+    BatteryStatus refresh() override {
+        // lock should be already acquired!!! 
         BatteryStatus source_status = this->source->get_status();
-        Scale &scale = this->scale_map[child_name];
         const std::list<Battery*> &children = this->pdirectory->get_children(this->name);
-
-        int64_t estimated_soc = this->pdirectory->get_battery(child_name)->get_estimated_soc();
-
+        int64_t total_actual_soc = source_status.state_of_charge_mAh;
         int64_t total_estimated_soc = 0;
         for (Battery *c : children) {
             total_estimated_soc += c->get_estimated_soc();
         }
-        int64_t total_actual_soc = source_status.state_of_charge_mAh;
-        int64_t actual_soc = (int64_t)((double)estimated_soc / (double)total_estimated_soc * (double)total_actual_soc);
-        
-        BatteryStatus status;
-        status.voltage_mV = source_status.voltage_mV;
-        status.current_mA = current_map[child_name];
-        status.state_of_charge_mAh = actual_soc;
-        status.max_capacity_mAh = source_status.max_capacity_mAh * scale.max_capacity;
-        status.max_charging_current_mA = source_status.max_charging_current_mA * scale.max_charge_rate;
-        status.max_discharging_current_mA = source_status.max_discharging_current_mA * scale.max_discharge_rate;
-        status.timestamp = get_system_time_c();
-        return status;
-    }
 
-    uint32_t schedule_set_current_of(
-        const std::string &child_name, 
-        int64_t target_current_mA, 
-        bool is_greater_than_target, 
-        timepoint_t when_to_set, 
-        timepoint_t until_when
-    ) override {
-        lockguard_t lkg(this->lock);
-        Scale &scale = this->scale_map[child_name];
-        Battery *source = this->source;
-        BatteryStatus source_status = source->get_status();
-
-        if (target_current_mA > source_status.max_discharging_current_mA * scale.max_discharge_rate || 
-            (-target_current_mA) > source_status.max_charging_current_mA * scale.max_charge_rate) {
-            WARNING() << ("target current too high, event not scheduled");
-            return 0;
+        for (Battery *c : children) {
+            const std::string &child_name = c->get_name();
+            Scale &scale = this->scale_map[child_name];
+            
+            int64_t estimated_soc = c->get_estimated_soc();
+            int64_t actual_soc = (int64_t)((double)estimated_soc / (double)total_estimated_soc * (double)total_actual_soc);
+            BatteryStatus status;
+            status.voltage_mV = source_status.voltage_mV;
+            status.current_mA = children_current_now[child_name];
+            status.state_of_charge_mAh = actual_soc;
+            status.max_capacity_mAh = source_status.max_capacity_mAh * scale.max_capacity;
+            status.max_charging_current_mA = source_status.max_charging_current_mA * scale.max_charge_rate;
+            status.max_discharging_current_mA = source_status.max_discharging_current_mA * scale.max_discharge_rate;
+            status.timestamp = get_system_time_c();
+            children_status_now[child_name] = status;
         }
-        this->current_map[child_name] = target_current_mA;
-        int64_t new_currents = 0;
-        for (auto &p : this->current_map) {
-            new_currents += p.second;
-        }
-        return source->schedule_set_current(new_currents, is_greater_than_target, when_to_set, until_when);
+        return this->status;  // meaningless 
     }
 
     bool reset_estimated_soc_for_all() {
@@ -198,7 +179,7 @@ public:
         );
 
         this->scale_map[child_name] = scale;
-        this->current_map[child_name] = 0;
+        this->children_current_now[child_name] = 0;
         this->scale_map[from_name] = this->scale_map[from_name] - scale;
         this->reset_estimated_soc_for_all();
         
@@ -208,7 +189,7 @@ public:
 
 
     void merge_to(const std::string &name, const std::string &to_name) override {
-        // TODO 
+        // not sure how to implement this...  
         ERROR() << "Unimplemented"; 
         return;
     }
