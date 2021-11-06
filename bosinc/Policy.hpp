@@ -114,6 +114,7 @@ public:
         timepoint_t when_to_set, 
         timepoint_t until_when
     ) {
+        uint32_t success = 0;
         {
             lockguard_t lkd(this->lock);
             timepoint_t now = get_system_time();
@@ -226,7 +227,7 @@ public:
             );
 
             // now forward the request to the source 
-            this->source->schedule_set_current(
+            success = this->source->schedule_set_current(
                 total_currents_to_set, 
                 is_greater_than_target, 
                 when_to_set, 
@@ -234,7 +235,7 @@ public:
             );
         }
         cv.notify_one();
-        return 1;
+        return success;
 
         // lockguard_t lkg(this->lock);
         // Scale &scale = this->scale_map[child_name];

@@ -89,7 +89,7 @@ uint32_t AggregatorBattery::schedule_set_current(int64_t target_current_mA, bool
     int64_t max_discharge_current_mA = this->status.max_discharging_current_mA;
     int64_t max_charge_current_mA = this->status.max_charging_current_mA;
 
-    if (!(max_charge_current_mA <= target_current_mA <= max_discharge_current_mA)) {
+    if (target_current_mA > max_discharge_current_mA || (-target_current_mA) > max_charge_current_mA) {
         WARNING() << 
             "target current is out of range, max_charging_current = " << max_charge_current_mA << "mA"
             ", and max_discharging_current = " << max_discharge_current_mA << "mA"

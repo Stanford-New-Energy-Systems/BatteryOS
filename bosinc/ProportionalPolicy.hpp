@@ -189,7 +189,7 @@ public:
 
 
     void merge_to(const std::string &name, const std::string &to_name) override {
-        // not sure how to implement this...  
+        // Please think carefully on the locking, not sure how to implement this... 
         ERROR() << "Unimplemented"; 
         return;
     }
@@ -222,3 +222,9 @@ public:
 
 
 #endif // ! PROPORTIONAL_POLICY_HPP 
+
+
+
+
+
+
