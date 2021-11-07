@@ -217,7 +217,7 @@ protected:
 
             // current should be proportional! (and it must be)
             status.current_mA = (int64_t)(
-                (double)children_current_now[child_id] / (double)total_net_currents * (double)source_status.current_mA);
+                (double)children_current_now[child_id] * ((double)source_status.current_mA) / (double)total_net_currents);
             
             // now the charge status is reported according to the policy  
             
