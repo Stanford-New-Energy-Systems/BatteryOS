@@ -38,16 +38,18 @@ public:
 };
 
 /**
- * A battery that returns the pre-specified status every time.
+ * A battery that returns has pre-specified status 
  */
 class PseudoBattery : public PhysicalBattery {
 public: 
     PseudoBattery(const std::string &name, const BatteryStatus &status) : PhysicalBattery(name, std::chrono::milliseconds(0)) {
+        lockguard_t lkg(this->lock);
         this->status = status;
     }
 protected: 
     BatteryStatus refresh() override {
         this->status.timestamp = get_system_time_c();
+        std::cout << "PseudoBattery::refresh() -> " << this->status << std::endl;
         return this->status;
     }
     uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, void*) override {
@@ -55,6 +57,7 @@ protected:
             target_current_mA >= -(this->status.max_charging_current_mA))) {
             return 0;
         }
+        std::cout << "PseudoBattery::set_current(" << target_current_mA << " mA)" << std::endl;
         this->status.current_mA = target_current_mA;
         return 1;
     }
@@ -67,8 +70,28 @@ public:
     void set_status(const BatteryStatus &new_status) {
         lockguard_t lkd(this->lock);
         this->status = new_status;
+        std::cout << "PseudoBattery::set_status with " << this->status << std::endl;
     }
 };
+
+// class FakeBattery : public PhysicalBattery {
+// public:
+//     FakeBattery(const std::string &name, const BatteryStatus &status, std::chrono::milliseconds max_staleness) : 
+//         PhysicalBattery(name, max_staleness) 
+//     {
+//         lockguard_t lkg(this->lock);
+//         this->status = status;
+//     }
+// protected: 
+//     BatteryStatus refresh() override {
+//         this->status.timestamp = get_system_time_c();
+//         return this->status;
+//     }
+//     uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, void*) override {
+//         this->status.current_mA = target_current_mA;
+//         return 1;
+//     }
+// };
 
 #endif // ! TEST_BATTERY_HPP
 

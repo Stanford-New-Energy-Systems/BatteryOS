@@ -39,6 +39,19 @@ public:
         );
         return this->directory.add_battery(std::move(pseudo_battery));
     }
+    void _test_pseudo_set_status(const std::string &name, BatteryStatus new_status) {
+        Battery *bat = this->directory.get_battery(name);
+        if (!bat) {
+            WARNING() << "battery " << name << " does not exist";
+            return;
+        }
+        PseudoBattery *pbat = dynamic_cast<PseudoBattery*>(bat);
+        if (!pbat) {
+            WARNING() << "battery " << name << " is not a pseduo battery";
+            return;
+        }
+        pbat->set_status(new_status);
+    }
 
     Battery *make_JBDBMS(
         const std::string &name, 
@@ -230,6 +243,8 @@ public:
     }
     
 };
+
+
 
 
 
