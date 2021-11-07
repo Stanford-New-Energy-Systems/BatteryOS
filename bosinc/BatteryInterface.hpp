@@ -304,12 +304,21 @@ public:
         this->status = target;
     }
 
+    // this function is used to lock the local topology when BOSDirectory is trying to add an edge 
     void mutex_lock() {this->lock.lock();}
+    // this function is used to lock the local topology when BOSDirectory is trying to add an edge 
     void mutex_unlock() {this->lock.unlock();}
+    
 };
 
 
 #endif // ! BATTERY_INTERFACE_HPP
+
+
+
+
+
+
 
 
 

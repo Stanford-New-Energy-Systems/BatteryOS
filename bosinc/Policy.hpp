@@ -4,9 +4,9 @@
 #include "BatteryInterface.hpp"
 #include "BOSDirectory.hpp"
 enum class SplitterPolicyType : int {
-    Proportional, 
-    Tranche, 
-    Reservation,
+    Proportional = 0, 
+    Tranche = 1, 
+    Reservation = 2,
 };
 
 struct Scale {
