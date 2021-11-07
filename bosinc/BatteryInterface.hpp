@@ -92,9 +92,6 @@ protected:
     /** the status of the battery */
     BatteryStatus status;
 
-    /** estimated net charge of this battery. This must be initialized by BOS */
-    int32_t estimated_soc;  
-
     /** refresh mode, could be automatic background refreshing or refresh based on staleness */
     RefreshMode refresh_mode;
 
@@ -264,34 +261,6 @@ public:
         return (this->current_sequence_number++);
     }
     ////// Ends here
-
-    /**
-     * Approximate the total charge that has passed through the battery. 
-     * This function is general enough to work for background refresh() updates, which will call 
-     * this with `end_current == new_current`, as well as set_current() requests, which will generally
-     * call this with `end_current != new_current`.
-     * @param end_current the current that the battery has just been measured at (before modification).
-     * @param new_current the current that the battery has just been set to (after modification).
-     */
-    void update_estimated_soc(int32_t end_current, int32_t new_current);
-
-    /** 
-     * Getter of estimated soc 
-     * @return estimated soc
-     */
-    int32_t get_estimated_soc();
-
-    /** 
-     * Setter of estimated soc 
-     * @param new_estimated_soc the new value 
-     */
-    void set_estimated_soc(int32_t new_estimated_soc);
-
-    /**
-     * Resets the estimated soc to the state of charge in status
-     */
-    void reset_estimated_soc();
-
 };
 /**
  * Compare two event_t lexicographically 

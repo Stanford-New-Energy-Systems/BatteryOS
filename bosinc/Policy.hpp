@@ -94,6 +94,8 @@ protected:
     std::vector<BatteryStatus> child_original_status;
     /** the requested currents of each child */
     std::vector<int64_t> children_current_now;
+    /** the last charge estimation timepoint */
+    std::vector<timepoint_t> children_last_charge_estimate_timepoint;
     /** the estimated charge for each child */
     std::vector<int64_t> children_estimated_charge_now;
     /** the status of each children */
@@ -128,6 +130,7 @@ public:
         }
         child_original_status.resize(child_names.size());
         children_current_now.resize(child_names.size());
+        children_last_charge_estimate_timepoint.resize(child_names.size());
         children_estimated_charge_now.resize(child_names.size());
         children_status_now.resize(child_names.size());
 
@@ -151,6 +154,7 @@ public:
 
             // the estimated charge of each child, initially they are reserved 
             children_estimated_charge_now[i] = source_status.capacity_mAh * child_scales[i].capacity;
+            children_last_charge_estimate_timepoint[i] = get_system_time();
 
             // the voltage is always the source voltage, and current is always initially 0 
             child_status.voltage_mV = source_status.voltage_mV;
@@ -185,14 +189,21 @@ protected:
         int64_t total_actual_charge = source_status.capacity_mAh;
         int64_t total_estimated_charge = 0;
         int64_t total_net_currents = 0;
+
+        timepoint_t now = get_system_time();
+        std::chrono::duration<double, std::ratio<3600>> hours_elapsed;
+
         for (size_t i = 0; i < this->child_names.size(); ++i) {
+            hours_elapsed = now - this->children_last_charge_estimate_timepoint[i];
+            this->children_estimated_charge_now[i] -= this->children_current_now[i] * (hours_elapsed.count());
+            this->children_last_charge_estimate_timepoint[i] = now;
             total_estimated_charge += this->children_estimated_charge_now[i];
             total_net_currents += this->children_current_now[i];
         }
 
         int64_t source_charge_remaining = source_status.capacity_mAh;
         int64_t source_max_charge_remaining = source_status.max_capacity_mAh;
-
+        
         for (Battery *c : children) {
             const std::string &child_name = c->get_name();
             size_t child_id = this->name_lookup[child_name];
@@ -348,6 +359,12 @@ protected:
      */
     uint32_t set_current(int64_t current_mA, bool is_greater_than, void *child_vid) override {
         size_t child_id = reinterpret_cast<size_t>(child_vid);
+        timepoint_t now = get_system_time();
+        std::chrono::duration<double, std::ratio<3600>> hours_elapsed = 
+            (now - this->children_last_charge_estimate_timepoint[child_id]);
+        this->children_estimated_charge_now[child_id] -= 
+            (this->children_current_now[child_id] * hours_elapsed.count());
+        this->children_last_charge_estimate_timepoint[child_id] = now;
         this->children_current_now[child_id] = current_mA;
         return 1;
     }
@@ -534,48 +551,29 @@ public:
         }
         cv.notify_one();
         return success;
-
-        // lockguard_t lkg(this->lock);
-        // Scale &scale = this->scale_map[child_name];
-        // Battery *source = this->source;
-        // BatteryStatus source_status = source->get_status();
-        // if (target_current_mA > source_status.max_discharging_current_mA * scale.max_discharge_rate || 
-        //     (-target_current_mA) > source_status.max_charging_current_mA * scale.max_charge_rate) {
-        //     WARNING() << ("target current too high, event not scheduled");
-        //     return 0;
-        // }
-        // this->children_current_now[child_name] = target_current_mA;
-        // int64_t new_currents = 0;
-        // for (auto &p : this->children_current_now) {
-        //     new_currents += p.second;
-        // }
-        // return source->schedule_set_current(new_currents, is_greater_than_target, when_to_set, until_when);
     }
 
-    // /**
-    //  * fork battery child_name from child_name, 
-    //  * and the status is target_status (might not be fulfilled)
-    //  * @param from_name the name of the battery to fork from
-    //  * @param to_name the child battery, notice that this must be created first 
-    //  * @param target_status the target status of the child battery 
-    //  * @return the actual status of the child battery 
-    //  */
-    // virtual BatteryStatus fork_from(
-    //     const std::string &from_name, 
-    //     const std::string &child_name, 
-    //     BatteryStatus target_status
-    // ) = 0;
+    // bool reset_children() {
+    //     lockguard_t lkg(this->lock);
+    //     BatteryStatus source_status = this->source->get_status();
+    //     for (size_t i = 0; i < child_names.size(); ++i) {
+    //         BatteryStatus child_status;
+    //         // the estimated charge of each child, reset them to scaled source_status 
+    //         children_estimated_charge_now[i] = source_status.capacity_mAh * child_scales[i].capacity;
+    //         children_last_charge_estimate_timepoint[i] = get_system_time();
+    //         child_status.voltage_mV = source_status.voltage_mV;
+    //         // reset the capacity and max_capacity  
+    //         child_status.capacity_mAh = source_status.capacity_mAh * child_scales[i].capacity;
+    //         child_status.max_capacity_mAh = source_status.max_capacity_mAh * child_scales[i].max_capacity;
+    //         // the max currents should be scaled 
+    //         child_status.max_discharging_current_mA = source_status.max_discharging_current_mA * child_scales[i].max_discharge_rate;
+    //         child_status.max_charging_current_mA = source_status.max_charging_current_mA * child_scales[i].max_charge_rate;
+    //         // timestamp is just the source timestamp 
+    //         child_status.timestamp = source_status.timestamp;
+    //         children_status_now[i] = child_status;
+    //     }
+    // }
 
-    // /**
-    //  * Merge a battery to another battery
-    //  * @param name the name of the battery to merge 
-    //  * @param to_name the name of the battery to receive the portion 
-    //  * @return the status of the battery to_name after the merge 
-    //  */
-    // virtual void merge_to(
-    //     const std::string &name, 
-    //     const std::string &to_name
-    // ) = 0;
 
 
 };

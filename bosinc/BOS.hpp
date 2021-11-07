@@ -29,7 +29,6 @@ public:
             name, 
             voltage_mV, 
             std::chrono::milliseconds(max_staleness_ms)));
-        null_battery->reset_estimated_soc();
         return this->directory.add_battery(std::move(null_battery));
     }
 
@@ -49,7 +48,6 @@ public:
             device_address, 
             rd6006_address, 
             std::chrono::milliseconds(max_staleness_ms)));
-        jbd->reset_estimated_soc();
         return this->directory.add_battery(std::move(jbd));
     }
 
@@ -155,102 +153,16 @@ public:
 
 
 
-// struct BOS {
-//     BOSDirectory directory;
-// };
-
-// #ifdef __cplusplus
-// extern "C" {
-// #endif 
-
-// BOS *new_BOS() { return new BOS; }
-
-// void free_BOS(BOS *bos) { if (bos) { delete bos; } }
 
 
 
-// Battery *make_null(
-//     BOS *bos,
-//     const char *name,
-//     int64_t voltage_mV, 
-//     int64_t max_staleness_ms
-// ) {
-//     BOS_NAME_CHECK(bos, name);
-//     std::unique_ptr<Battery> null_battery(new NullBattery(
-//         name, 
-//         voltage_mV, 
-//         std::chrono::milliseconds(max_staleness_ms)));
-//     null_battery->reset_estimated_soc();
-//     return bos->directory.add_battery(std::move(null_battery));
-// }
 
-// Battery *make_JBDBMS(
-//     BOS *bos, 
-//     const char *name, 
-//     const char *device_address,
-//     const char *rd6006_address, 
-//     int64_t max_staleness_ms
-// ) {
-//     BOS_NAME_CHECK(bos, name);
-//     std::unique_ptr<Battery> jbd(new JBDBMS(
-//         std::string(name), 
-//         std::string(device_address), 
-//         std::string(rd6006_address), 
-//         std::chrono::milliseconds(max_staleness_ms)));
-//     jbd->reset_estimated_soc();
-//     return bos->directory.add_battery(std::move(jbd));
-// }
 
-// Battery *make_network(
-//     BOS *bos, 
-//     const char *name, 
-//     const char *remote_name, 
-//     const char *address,
-//     int32_t port,
-//     int64_t max_staleness_ms
-// ) {
-//     BOS_NAME_CHECK(bos, name);
-//     std::unique_ptr<Battery> network(new NetworkBattery(
-//         std::string(name), 
-//         std::string(remote_name), 
-//         std::string(address), 
-//         port, 
-//         std::chrono::milliseconds(max_staleness_ms)));
-//     return bos->directory.add_battery(std::move(network));
-// }
 
-// Battery *make_aggergator(
-//     BOS *bos, 
-//     const char *name, 
-//     int64_t voltage_mV, 
-//     int64_t voltage_tolerance_mV, 
-//     const char **src_array,
-//     int64_t src_array_size,
-//     const std::vector<std::string> &src_names, 
-//     int64_t max_staleness_ms
-// ) {
-//     if (bos->directory.name_exists(name)) {
-//         WARNING() << "Battery name " << name << " already exists!";
-//         return nullptr;
-//     }
-//     std::unique_ptr<Battery> aggregator(
-//         new AggregatorBattery(
-//             std::string(name), 
-//             voltage_mV, 
-//             voltage_tolerance_mV, 
-//             src_names, 
-//             bos->directory, 
-//             std::chrono::milliseconds(max_staleness_ms)));
-    
-//     Battery *agg = bos->directory.add_battery(std::move(aggregator));
-    
-//     for (const std::string &src : src_names) {
-//         bos->directory.add_edge(src, name);
-//     }
-//     return agg;
-// }
 
-// #ifdef __cplusplus
-// }
-// #endif 
+
+
+
+
+
 

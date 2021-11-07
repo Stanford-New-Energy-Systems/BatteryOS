@@ -7,7 +7,6 @@ Battery::Battery(
 ) : 
     name(name), 
     status(),
-    estimated_soc(),
     refresh_mode(RefreshMode::LAZY),
     max_staleness(max_staleness_ms),
     background_thread(),
@@ -329,43 +328,6 @@ uint32_t Battery::schedule_set_current(
     return 1;
 }
 
-void Battery::update_estimated_soc(int32_t end_current, int32_t new_current) {
-    // lockguard_t lkg(this->lock);  // this should be called by refresh in virtual battery
-    int32_t begin_current = this->status.current_mA;
-
-    timepoint_t end_time = std::chrono::system_clock::now();
-    // the microseconds elapsed!
-    std::chrono::duration<int64_t, std::chrono::system_clock::period> duration = end_time - c_time_to_timepoint(this->status.timestamp);
-    int64_t periods = duration.count();  // on macOS, this is 1usec;
-    int64_t msec = periods / (std::chrono::system_clock::period::den / 1000);  // on macOS, period::den / 1000 = 1000, this converts usec to msec
-    double hours_elapsed = static_cast<double>(msec) / (3600 * 1000);
-
-    int32_t estimated_mAh = ((begin_current + end_current) / 2) * hours_elapsed;
-    
-    this->estimated_soc -= estimated_mAh;
-
-    this->status.timestamp = timepoint_to_c_time(end_time);
-}
-
-int32_t Battery::get_estimated_soc() {
-    lockguard_t lkg(this->lock);
-    uint32_t esoc = this->estimated_soc;
-    return esoc;
-}
-
-void Battery::set_estimated_soc(int32_t new_estimated_soc) {
-    lockguard_t lkg(this->lock);
-    this->estimated_soc = new_estimated_soc;
-    return;
-}
-
-void Battery::reset_estimated_soc() {
-    this->get_status();
-    {
-        lockguard_t lkg(this->lock); 
-        this->estimated_soc = this->status.capacity_mAh;
-    }
-}
 
 bool operator < (const Battery::event_t &lhs, const Battery::event_t &rhs) {
     if (lhs.timepoint < rhs.timepoint) return true;

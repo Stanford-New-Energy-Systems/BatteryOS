@@ -50,10 +50,8 @@ protected:
             WARNING() << "battery is not attached to policy";
             return this->status;
         }
-        int64_t prev_current_mA = this->status.current_mA;
         BatteryStatus status = this->policy->get_status_of(this->name);
         this->status = status;
-        this->update_estimated_soc(prev_current_mA, this->status.current_mA);
         return this->status;
     }
 
