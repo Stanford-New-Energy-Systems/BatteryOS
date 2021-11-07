@@ -125,10 +125,10 @@ void test_events() {
 
     std::cout << "Case 5: " << std::endl;
     now = get_system_time();
-    nub.schedule_set_current(100, true, now, now+5s);
+    nub.schedule_set_current(100, true, now+100ms, now+5s);
     std::this_thread::sleep_for(2s);
     now = get_system_time();
-    nub.schedule_set_current(200, true, now, now+2s);
+    nub.schedule_set_current(200, true, now+100ms, now+2s);
     std::this_thread::sleep_for(4s);
 
 
