@@ -21,6 +21,21 @@ public:
         this->type = BatteryType::Splitted;
     }
 protected: 
+    BatteryStatus refresh() override {
+        if (!(this->policy)) {
+            WARNING() << "battery is not attached to policy";
+            return this->status;
+        }
+        BatteryStatus status = this->policy->get_status_of(this->name);
+        this->status = status;
+        return this->status;
+    }
+
+    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, void *other_data) override {
+        ERROR() << "This function shouldn't be called!";
+        return 0;
+    }
+public: 
     bool attach_to_policy(const std::string &policy_name) {
         if (!this->pdirectory->name_exists(policy_name)) {
             WARNING() << "policy " << policy_name << " does not exist";
@@ -44,22 +59,6 @@ protected:
         this->policy_name = policy_name;
         return true; 
     }
-
-    BatteryStatus refresh() override {
-        if (!(this->policy)) {
-            WARNING() << "battery is not attached to policy";
-            return this->status;
-        }
-        BatteryStatus status = this->policy->get_status_of(this->name);
-        this->status = status;
-        return this->status;
-    }
-
-    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, void *other_data) override {
-        ERROR() << "This function shouldn't be called!";
-        return 0;
-    }
-public: 
     uint32_t schedule_set_current(
         int64_t target_current_mA, 
         bool is_greater_than_target, 

@@ -4,6 +4,7 @@
 #include "AggregatorBattery.hpp"
 #include "Policy.hpp"
 #include "SplittedBattery.hpp"
+#include "BOS.hpp"
 #include <iostream>
 
 void test_uart() {

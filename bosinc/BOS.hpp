@@ -2,16 +2,16 @@
 #include "TestBattery.hpp"
 #include "NetworkBattery.hpp"
 #include "AggregatorBattery.hpp"
-#include "ProportionalPolicy.hpp"
+#include "Policy.hpp"
 #include "SplittedBattery.hpp"
 
 #ifndef BOS_NAME_CHECK
-#define BOS_NAME_CHECK(bos, name) \ 
-    do { \
-        if ((bos)->directory.name_exists(name)) { \
-            WARNING() << "Battery name " << (name) << " already exists!"; \
-            return NULL; \
-        } \
+#define BOS_NAME_CHECK(bos, name)\
+    do {\
+        if ((bos)->directory.name_exists(name)) {\
+            WARNING() << "Battery name " << (name) << " already exists!";\
+            return NULL;\
+        }\
     } while (0)
 #endif  // ! BOS_NAME_CHECK
 
@@ -122,11 +122,11 @@ public:
             WARNING() << "source battery " << src_name << " does not exist";
             return nullptr;
         }
-        if (!(child_names.size() == child_scales.size() && child_names.size() == child_max_stalenesses.size())) {
+        if (!(child_names.size() == child_scales.size() && child_names.size() == child_max_stalenesses_ms.size())) {
             WARNING() << "array size mismatch";
             return nullptr; 
         }
-        for (std::string &cn : child_names) {
+        for (const std::string &cn : child_names) {
             if (this->directory.name_exists(cn)) {
                 WARNING() << "child name " << cn << " already exists!";
                 return nullptr;
@@ -134,7 +134,7 @@ public:
         }
         for (size_t i = 0; i < child_names.size(); ++i) {
             std::unique_ptr<Battery> child(new SplittedBattery(
-                child_names.size(), 
+                child_names[i], 
                 this->directory, 
                 std::chrono::milliseconds(child_max_stalenesses_ms[i])));
             this->directory.add_battery(std::move(child));
@@ -152,12 +152,13 @@ public:
         this->directory.add_battery(std::move(policy));
         this->directory.add_edge(src_name, policy_name);
 
-        for (std::string &cn : child_names) {
+        for (const std::string &cn : child_names) {
             this->directory.add_edge(policy_name, cn);
             SplittedBattery *cp = dynamic_cast<SplittedBattery*>(this->directory.get_battery(cn));
             cp->attach_to_policy(policy_name);
         }
         pptr->start_background_refresh();
+        return (Battery*)pptr;
     }
 
     BatteryStatus get_status(const std::string &name) {
@@ -166,7 +167,7 @@ public:
             WARNING() << "battery " << name << " does not exist";
             return BatteryStatus();
         }
-        if (bat->get_battery_type == BatteryType::SplitterPolicy) {
+        if (bat->get_battery_type() == BatteryType::SplitterPolicy) {
             WARNING() << "battery " << name << " is a splitter policy, it does not support this operation";
             return BatteryStatus();
         }
@@ -182,11 +183,11 @@ public:
         Battery *bat = this->directory.get_battery(name);
         if (!bat) {
             WARNING() << "battery " << name << " does not exist";
-            return BatteryStatus;
+            return 0;
         }
-        if (bat->get_battery_type == BatteryType::SplitterPolicy) {
+        if (bat->get_battery_type() == BatteryType::SplitterPolicy) {
             WARNING() << "battery " << name << " is a splitter policy, it does not support this operation";
-            return BatteryStatus();
+            return 0;
         }
         timepoint_t at_what_timepoint = c_time_to_timepoint(at_what_time);
         timepoint_t until_what_timepoint = c_time_to_timepoint(until_when);
@@ -202,7 +203,7 @@ public:
         return bat->get_type_string();
     }
 
-    void set_max_staleness(const std::string &name, int64_t max_stalness_ms) {
+    void set_max_staleness(const std::string &name, int64_t max_staleness_ms) {
         Battery *bat = this->directory.get_battery(name);
         if (!bat) {
             WARNING() << "battery " << name << " does not exist";
@@ -235,7 +236,7 @@ public:
             WARNING() << "battery " << name << " does not exist";
             return false;
         }
-        if (bat->get_battery_type == BatteryType::SplitterPolicy) {
+        if (bat->get_battery_type() == BatteryType::SplitterPolicy) {
             WARNING() << "battery " << name << " is a splitter policy, it does not support turning off background refresh";
             return false;
         }
