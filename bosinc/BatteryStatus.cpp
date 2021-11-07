@@ -109,9 +109,9 @@ int32_t BatteryStatus_compare(const BatteryStatus *a, const BatteryStatus *b) {
     //     (a->max_discharging_current_mA == b->max_discharging_current_mA);
 }
 
-void print_buffer(uint8_t *buffer, uint32_t buffer_size) {
-    print_buffer(buffer, (size_t)buffer_size); 
-}
+// void print_buffer(uint8_t *buffer, uint32_t buffer_size) {
+//     print_buffer(buffer, (size_t)buffer_size); 
+// }
 
 
 void test_battery_status() {

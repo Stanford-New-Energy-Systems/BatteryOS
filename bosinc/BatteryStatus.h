@@ -78,12 +78,12 @@ uint32_t BatteryStatus_serialize(const struct BatteryStatus *status, uint8_t *bu
  */
 uint32_t BatteryStatus_deserialize(struct BatteryStatus *status, const uint8_t *buffer, uint32_t buffer_size);
 
-/**
- * Print the buffer in hexadecimal for each byte
- * @param buffer the buffer to print
- * @param buffer_size the size of the buffer
- */
-void print_buffer(uint8_t *buffer, uint32_t buffer_size);
+// /**
+//  * Print the buffer in hexadecimal for each byte
+//  * @param buffer the buffer to print
+//  * @param buffer_size the size of the buffer
+//  */
+// void print_buffer(uint8_t *buffer, uint32_t buffer_size);
 
 /**
  * Compare two BatteryStatus
