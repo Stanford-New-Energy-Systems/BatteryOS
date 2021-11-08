@@ -41,8 +41,8 @@ AggregatorBattery::AggregatorBattery(
         //     continue;
         // }
     }
-    double max_discharge_time = 2147483647;
-    double max_charge_time = 2147483647;
+    double max_discharge_time = 0;
+    double max_charge_time = 0;
     this->status.voltage_mV = voltage_mV;
     this->status.current_mA = 0;
     // to be initialized 
@@ -53,17 +53,18 @@ AggregatorBattery::AggregatorBattery(
         pstatus = bat->get_status();
         this->status.capacity_mAh += pstatus.capacity_mAh;
         this->status.max_capacity_mAh += pstatus.max_capacity_mAh;
-        max_discharge_time = std::min(max_discharge_time, (double)pstatus.capacity_mAh / pstatus.max_discharging_current_mA);
-        max_charge_time = std::min(max_charge_time, (double)(pstatus.max_capacity_mAh - pstatus.capacity_mAh) / pstatus.max_charging_current_mA);
+        // this is the inv C-rate 
+        max_discharge_time = std::max(max_discharge_time, (double)pstatus.capacity_mAh / pstatus.max_discharging_current_mA);
+        max_charge_time = std::max(max_charge_time, (double)(pstatus.max_capacity_mAh - pstatus.capacity_mAh) / pstatus.max_charging_current_mA);
     }
     if (fabs(max_discharge_time) < 1e-6) {
-        WARNING() << "battery is empty: max_discharging_current is 0";
+        LOG() << "battery is empty: max_discharging_current is 0";
         this->status.max_discharging_current_mA = 1;
     } else {
         this->status.max_discharging_current_mA = (int64_t)(this->status.capacity_mAh / max_discharge_time);
     }
     if (fabs(max_charge_time) < 1e-6) {
-        WARNING() << "battery is full: max_charging_current is 0";
+        LOG() << "battery is full: max_charging_current is 0";
         this->status.max_charging_current_mA = 1;
     } else {
         this->status.max_charging_current_mA = (int64_t)((this->status.max_capacity_mAh - this->status.capacity_mAh) / max_charge_time);
@@ -75,8 +76,8 @@ BatteryStatus AggregatorBattery::refresh() {
     int64_t max_cap_mAh = 0;
     int64_t current_cap_mAh = 0;
     int64_t current_mA = 0;
-    double max_discharge_time = 2147483647;
-    double max_charge_time = 2147483647;
+    double max_discharge_time = 0;
+    double max_charge_time = 0;
     const std::list<Battery*> &parents = pdirectory->get_parents(this->name);
     BatteryStatus status;
     for (Battery *bat : parents) {
@@ -87,17 +88,18 @@ BatteryStatus AggregatorBattery::refresh() {
         max_cap_mAh += status.max_capacity_mAh;
         current_cap_mAh += status.capacity_mAh;
         current_mA += status.current_mA;
-        max_discharge_time = std::min(max_discharge_time, (double)status.capacity_mAh / status.max_discharging_current_mA);
-        max_charge_time = std::min(max_charge_time, (double)(status.max_capacity_mAh - status.capacity_mAh) / status.max_charging_current_mA);
+        // this is the inv C-rate 
+        max_discharge_time = std::max(max_discharge_time, (double)status.capacity_mAh / status.max_discharging_current_mA);
+        max_charge_time = std::max(max_charge_time, (double)(status.max_capacity_mAh - status.capacity_mAh) / status.max_charging_current_mA);
     }
     if (fabs(max_charge_time) < 1e-6) {
-        WARNING() << "battery is full: max_charging_current is 0";
+        LOG() << "battery is full: max_charging_current is 0";
         this->status.max_charging_current_mA = 1;
     } else {
         this->status.max_charging_current_mA = (int64_t)((max_cap_mAh - current_cap_mAh) / max_charge_time);
     }
     if (fabs(max_discharge_time) < 1e-6) {
-        WARNING() << "battery is empty: max_discharging_current is 0";
+        LOG() << "battery is empty: max_discharging_current is 0";
         this->status.max_discharging_current_mA = 1;
     } else {
         this->status.max_discharging_current_mA = (int64_t)(current_cap_mAh / max_discharge_time);
