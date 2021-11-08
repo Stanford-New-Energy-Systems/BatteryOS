@@ -211,7 +211,7 @@ public:
      * The name of the battery
      * @return the battery name
      */
-    const std::string &get_name();
+    std::string get_name();
 
     /**
      * Update the maximum staleness
@@ -259,6 +259,14 @@ public:
      */
     uint64_t next_sequence_number() {
         return (this->current_sequence_number++);
+    }
+    void quit() {
+        {
+            lockguard_t lkd(this->lock);
+            this->should_quit = true;
+        }
+        cv.notify_one();
+        background_thread.join(); 
     }
     ////// Ends here
 };

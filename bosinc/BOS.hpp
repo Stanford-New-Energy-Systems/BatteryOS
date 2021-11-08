@@ -16,9 +16,8 @@
 #endif  // ! BOS_NAME_CHECK
 
 class BOS {
-    BOSDirectory directory;
 public: 
-
+    BOSDirectory directory;
     Battery *make_null(
         const std::string &name, 
         int64_t voltage_mV, 
@@ -32,10 +31,14 @@ public:
         return this->directory.add_battery(std::move(null_battery));
     }
 
-    Battery *make_pseudo(const std::string &name, BatteryStatus status) {
+    Battery *make_pseudo(
+        const std::string &name, 
+        BatteryStatus status,
+        int64_t max_staleness_ms
+    ) {
         BOS_NAME_CHECK(this, name);
         std::unique_ptr<Battery> pseudo_battery(
-            new PseudoBattery(name, status)
+            new PseudoBattery(name, status, std::chrono::milliseconds(max_staleness_ms))
         );
         return this->directory.add_battery(std::move(pseudo_battery));
     }
@@ -99,7 +102,7 @@ public:
                 voltage_mV, 
                 voltage_tolerance_mV, 
                 src_names, 
-                directory, 
+                this->directory, 
                 std::chrono::milliseconds(max_staleness_ms)));
         Battery *agg = this->directory.add_battery(std::move(aggregator));
         for (const std::string &src : src_names) {
@@ -177,8 +180,8 @@ public:
     uint32_t schedule_set_current(
         const std::string &name, 
         int64_t target_current_mA, 
-        CTimestamp at_what_time, 
-        CTimestamp until_when
+        timepoint_t at_what_time, 
+        timepoint_t until_when
     ) {
         Battery *bat = this->directory.get_battery(name);
         if (!bat) {
@@ -189,9 +192,7 @@ public:
             WARNING() << "battery " << name << " is a splitter policy, it does not support this operation";
             return 0;
         }
-        timepoint_t at_what_timepoint = c_time_to_timepoint(at_what_time);
-        timepoint_t until_what_timepoint = c_time_to_timepoint(until_when);
-        return bat->schedule_set_current(target_current_mA, true, at_what_timepoint, until_what_timepoint);
+        return bat->schedule_set_current(target_current_mA, true, at_what_time, until_when);
     }
 
     std::string get_type_string(const std::string &name) {

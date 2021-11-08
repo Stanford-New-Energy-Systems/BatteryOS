@@ -24,12 +24,9 @@ Battery::Battery(
 }
 
 Battery::~Battery() {
-    {
-        lockguard_t lkd(this->lock);
-        this->should_quit = true;
+    if (!should_quit) {
+        quit();
     }
-    cv.notify_one();
-    background_thread.join(); 
 }
 
 BatteryStatus Battery::get_status() {
@@ -53,7 +50,7 @@ BatteryStatus Battery::manual_refresh() {
     return this->refresh();
 }
 
-const std::string &Battery::get_name() {
+std::string Battery::get_name() {
     return this->name;
 }
 

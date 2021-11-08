@@ -17,15 +17,21 @@ AggregatorBattery::AggregatorBattery(
     // bool add_success;
     Battery *bat;
     int64_t v; 
+    BatteryStatus pstatus;
     for (const std::string &src : src_names) {
         bat = directory.get_battery(src);
         if (!bat) {
             ERROR() << "Battery " << name << "not found!";
             continue;
         }
-        v = bat->get_status().voltage_mV;
+        pstatus = bat->get_status();
+        v = pstatus.voltage_mV;
         if (!(voltage_mV - voltage_tolerance_mV <= v && v <= voltage_mV + voltage_tolerance_mV)) {
             ERROR() << "Battery " << name << " is out of voltage tolerance!";
+            continue;
+        }
+        if (pstatus.current_mA != 0) {
+            ERROR() << "Battery in use!";
             continue;
         }
         // please add the topology outside of this! 
@@ -35,6 +41,23 @@ AggregatorBattery::AggregatorBattery(
         //     continue;
         // }
     }
+    double max_discharge_time = 2147483647;
+    double max_charge_time = 2147483647;
+    this->status.voltage_mV = voltage_mV;
+    this->status.current_mA = 0;
+    // to be initialized 
+    this->status.capacity_mAh = 0;
+    this->status.max_capacity_mAh = 0;
+    for (const std::string &src : src_names) {
+        bat = directory.get_battery(src);
+        pstatus = bat->get_status();
+        this->status.capacity_mAh += pstatus.capacity_mAh;
+        this->status.max_capacity_mAh += pstatus.max_capacity_mAh;
+        max_discharge_time = std::min(max_discharge_time, (double)pstatus.capacity_mAh / pstatus.max_discharging_current_mA);
+        max_charge_time = std::min(max_charge_time, (double)(pstatus.max_capacity_mAh - pstatus.capacity_mAh) / pstatus.max_charging_current_mA);
+    }
+    this->status.max_discharging_current_mA = (int64_t)(this->status.capacity_mAh / max_discharge_time);
+    this->status.max_charging_current_mA = (int64_t)((this->status.max_capacity_mAh - this->status.capacity_mAh) / max_charge_time);
 }
 
 BatteryStatus AggregatorBattery::refresh() {
@@ -89,7 +112,8 @@ uint32_t AggregatorBattery::schedule_set_current(int64_t target_current_mA, bool
     int64_t max_discharge_current_mA = this->status.max_discharging_current_mA;
     int64_t max_charge_current_mA = this->status.max_charging_current_mA;
 
-    if (target_current_mA > max_discharge_current_mA || (-target_current_mA) > max_charge_current_mA) {
+    if ((target_current_mA >= 0 && target_current_mA > max_discharge_current_mA) || 
+        (target_current_mA < 0 && (-target_current_mA) > max_charge_current_mA)) {
         WARNING() << 
             "target current is out of range, max_charging_current = " << max_charge_current_mA << "mA"
             ", and max_discharging_current = " << max_discharge_current_mA << "mA"

@@ -136,14 +136,91 @@ void test_events() {
     std::cout << "done" << std::endl;
 }
 
+void test_agg_management() {
+    using namespace std::chrono_literals;
+    BOS bos;
+    bos.make_pseudo("ps1", BatteryStatus {
+        .voltage_mV=3000, 
+        .current_mA=0, 
+        .capacity_mAh=60000, 
+        .max_capacity_mAh=60000, 
+        .max_charging_current_mA=40000, 
+        .max_discharging_current_mA=40000,
+        .timestamp = get_system_time_c()
+    }, 1000);
+    bos.make_pseudo("ps2", BatteryStatus {
+        .voltage_mV=3000, 
+        .current_mA=0, 
+        .capacity_mAh=40000, 
+        .max_capacity_mAh=40000, 
+        .max_charging_current_mA=60000, 
+        .max_discharging_current_mA=60000,
+        .timestamp = get_system_time_c()
+    }, 1000);
+    bos.make_aggergator("agg1", 3000, 1000, {"ps1", "ps2"}, 1000);
+    if (!bos.directory.name_exists("agg1")) {
+        ERROR() << "agg1 not exists?";
+    }
+    std::cout << "OK" << std::endl;
+    std::this_thread::sleep_for(1s);
+    std::cout << "OK" << std::endl;
+    // bos.start_background_refresh("ps1");
+    // bos.start_background_refresh("ps2");
+    bos.start_background_refresh("agg1");
+    std::cout << "agg background started" << std::endl;
+    timepoint_t now = get_system_time();
+    bos.schedule_set_current("agg1", 1000, (now+1s), (now+3s));
+
+    std::this_thread::sleep_for(5s);
+    std::cout << "done" << std::endl;
+    return;
+}
+
+void test_split_proportional_management() {
+    using namespace std::chrono_literals;
+    BOS bos;
+    bos.make_pseudo("ps1", BatteryStatus{
+        .voltage_mV = 3000,
+        .current_mA = 0,
+        .capacity_mAh = 200000,
+        .max_capacity_mAh = 200000,
+        .max_discharging_current_mA = 100000,
+        .max_charging_current_mA = 80000
+    }, 1000);
+
+    bos.make_policy(
+        "split_proportional", 
+        "ps1",
+        {"s1", "s2", "s3"}, 
+        {Scale(0.5), Scale(0.3), Scale(0.2)}, 
+        {1000, 1000, 1000}, 
+        int(SplitterPolicyType::Proportional), 
+        1000
+    );
+
+    std::this_thread::sleep_for(1s);
+    std::cout << "s1: " << bos.get_status("s1") << std::endl;
+    std::this_thread::sleep_for(1s);
+    std::cout << "s2: " << bos.get_status("s2") << std::endl;
+    std::this_thread::sleep_for(1s);
+    std::cout << "s3: " << bos.get_status("s3") << std::endl;
+    std::this_thread::sleep_for(1s);
+
+    std::cout << "done" << std::endl;
+    return;
+}
+
 int run() {
-    LOG();
+    // LOG();
     // test_battery_status();
     // test_python_binding();
     // test_uart();
     // test_JBDBMS(); 
 
-    test_events();
+    // test_events();
+
+    // test_agg_management();  // seems ok! 
+    test_split_proportional_management();
 
     return 0;
 }

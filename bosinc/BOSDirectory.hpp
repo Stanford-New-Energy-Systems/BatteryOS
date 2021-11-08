@@ -28,6 +28,11 @@ public:
         children_map.swap(other.children_map);
         return (*this);
     } 
+    ~BOSDirectory() {
+        for (auto &p : name_storage_map) {
+            p.second->quit();
+        }
+    }
 
     Battery *add_battery(std::unique_ptr<Battery> &&battery) {
         std::string name = battery->get_name();
