@@ -186,14 +186,14 @@ void test_split_proportional_management() {
         .max_capacity_mAh = 200000,
         .max_discharging_current_mA = 100000,
         .max_charging_current_mA = 80000
-    }, 1000);
+    }, 500);
 
     bos.make_policy(
         "split_proportional", 
         "ps1",
         {"s1", "s2", "s3"}, 
         {Scale(0.5), Scale(0.3), Scale(0.2)}, 
-        {1000, 1000, 1000}, 
+        {500, 500, 500}, 
         int(SplitterPolicyType::Proportional), 
         1000
     );
@@ -205,6 +205,20 @@ void test_split_proportional_management() {
     std::this_thread::sleep_for(1s);
     std::cout << "s3: " << bos.get_status("s3") << std::endl;
     std::this_thread::sleep_for(1s);
+
+
+    std::cout << "---------- get ready for a current change! ------" << std::endl;;
+
+    std::this_thread::sleep_for(1s);
+    timepoint_t now = get_system_time();
+    bos.schedule_set_current("s1", 1000, now+100ms, now+5s);
+
+    std::this_thread::sleep_for(2s);
+    std::cout << "s1: " << bos.get_status("s1") << std::endl;
+    std::cout << "s2: " << bos.get_status("s2") << std::endl;
+    std::cout << "s3: " << bos.get_status("s3") << std::endl;
+    std::cout << "ps1: " << bos.get_status("ps1") << std::endl;
+    std::this_thread::sleep_for(5s);
 
     std::cout << "done" << std::endl;
     return;

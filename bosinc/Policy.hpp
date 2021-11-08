@@ -97,7 +97,7 @@ protected:
     /** the last charge estimation timepoint */
     std::vector<timepoint_t> children_last_charge_estimate_timepoint;
     /** the estimated charge for each child */
-    std::vector<int64_t> children_estimated_charge_now;
+    std::vector<double> children_estimated_charge_now;
     /** the status of each children */
     std::vector<BatteryStatus> children_status_now;
     
@@ -187,7 +187,7 @@ protected:
         BatteryStatus source_status = this->source->get_status();
         const std::list<Battery*> &children = this->pdirectory->get_children(this->name);
         int64_t total_actual_charge = source_status.capacity_mAh;
-        int64_t total_estimated_charge = 0;
+        double total_estimated_charge = 0;
         int64_t total_net_currents = 0;
         int64_t total_pos_currents = 0;
         int64_t total_neg_currents = 0;
@@ -243,27 +243,26 @@ protected:
             // now the charge status is reported according to the policy  
             
             // this is the estimated charge according to its charge/discharge history 
-            int64_t estimated_charge = this->children_estimated_charge_now[child_id];
+            double estimated_charge = this->children_estimated_charge_now[child_id];
 
             // the charge depends on policy             
             if (this->policy_type == SplitterPolicyType::Proportional) {
                 // proportional! 
                 // proportionally distribute all charges 
-                if (total_estimated_charge == 0) {
+                if (fabs(total_estimated_charge) < 1e-6) {
                     // reset the charges...... because estimation failed...
                     WARNING() << "estimation failed: total estimated charge is 0 but the source still has charge, resetting...";
                     cstatus.capacity_mAh = total_actual_charge * child_scales[child_id].capacity;
-                    children_estimated_charge_now[child_id] = cstatus.capacity_mAh;
+                    children_estimated_charge_now[child_id] = total_actual_charge * child_scales[child_id].capacity;
                 } else {
-                    cstatus.capacity_mAh = (int64_t)(
-                        (double)estimated_charge / (double)total_estimated_charge * (double)total_actual_charge);
+                    cstatus.capacity_mAh = round(estimated_charge / total_estimated_charge * (double)total_actual_charge);
                 }
                 // the max_capacity should be scaled accordingly  
                 cstatus.max_capacity_mAh = source_status.max_capacity_mAh * scale.max_capacity;
             } else {
                 // tranche and reserved
                 // charge are just the estimated charge 
-                cstatus.capacity_mAh = this->children_estimated_charge_now[child_id];
+                cstatus.capacity_mAh = round(this->children_estimated_charge_now[child_id]);
                 source_charge_remaining -= cstatus.capacity_mAh;
                 // and the max capacities should be equal to their originally reserved max_capacity 
                 cstatus.max_capacity_mAh = this->child_original_status[child_id].max_capacity_mAh;
@@ -394,6 +393,7 @@ protected:
             (this->children_current_now[child_id] * hours_elapsed.count());
         this->children_last_charge_estimate_timepoint[child_id] = now;
         this->children_current_now[child_id] = current_mA;
+        // LOG() << "child_id: " << child_id << " current = " << current_mA << "mA";
         return 1;
     }
 public: 

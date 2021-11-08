@@ -63,7 +63,7 @@ protected:
             WARNING() << "set current failed, target current = " << target_current_mA << "mA";
             return 0;
         }
-        // std::cout << "PseudoBattery::set_current(" << target_current_mA << " mA)" << std::endl;
+        std::cout << "PseudoBattery::set_current(" << target_current_mA << " mA)" << std::endl;
         this->status.current_mA = target_current_mA;
         return 1;
     }

@@ -145,17 +145,6 @@ void Battery::background_func(Battery *bat) {
             bat->event_queue.erase(top_iterator);
             now = get_system_time();
         }
-        if (has_refresh && bat->refresh_mode == RefreshMode::ACTIVE) {
-            bat->refresh();
-            // schedule the next refresh event
-            bat->event_queue.emplace(
-                get_system_time()+bat->max_staleness, 
-                0, // bat->next_sequence_number(), 
-                Function::REFRESH, 
-                int64_t(0), 
-                false
-            );
-        }
         // oh we have special rules for splitter policy
         if (bat->type == BatteryType::SplitterPolicy) {
             // splitter policy: perform all the set current events! 
@@ -182,6 +171,18 @@ void Battery::background_func(Battery *bat) {
                 }
             }
         }
+        // refresh would be the last event to execute 
+        if (has_refresh && bat->refresh_mode == RefreshMode::ACTIVE) {
+            bat->refresh();
+            // schedule the next refresh event
+            bat->event_queue.emplace(
+                get_system_time()+bat->max_staleness, 
+                2147483647, // bat->next_sequence_number(), 
+                Function::REFRESH, 
+                int64_t(0), 
+                false
+            );
+        }
     }
 }
 
@@ -197,7 +198,7 @@ bool Battery::start_background_refresh() {
             // push the first refresh event
             this->event_queue.emplace(
                 get_system_time()+max_staleness, 
-                0, // this->next_sequence_number(), 
+                2147483647, // this->next_sequence_number(), 
                 Function::REFRESH, 
                 int64_t(0), 
                 false);
