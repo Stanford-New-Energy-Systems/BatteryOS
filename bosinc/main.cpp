@@ -233,8 +233,8 @@ int run() {
 
     // test_events();
 
-    // test_agg_management();  // seems ok! 
-    test_split_proportional_management();
+    test_agg_management();  // seems ok! 
+    // test_split_proportional_management();
 
     return 0;
 }
