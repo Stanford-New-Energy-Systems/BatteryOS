@@ -3,13 +3,16 @@ import pygatt
 import socket
 import sys
 import time 
+import requests
+import json
 import BOSErr
-
 class Interface(enum.Enum):
     BLE = "BLE"
     UART = "UART"
     TCP = "TCP"
+    HTTP = "HTTP"
     PSEUDO = "PSEUDO"
+    
     # TODO: add more
     
 class Connection:
@@ -32,13 +35,22 @@ class Connection:
     def connect(self, *args, **kwargs):
         raise NotImplementedError
 
-    def read(self, nbytes: int, *args, **kwargs) -> bytes:
+    def read(self, *args, **kwargs):
+        """
+        Read from the device
+        """
         raise NotImplementedError
 
-    def readstr(self, *args, **kwargs) -> bytes:
+    def readstr(self, *args, **kwargs):
+        """
+        Reads from the device, but returns a string this time
+        """
         raise NotImplementedError
 
-    def write(self, data: bytes, *args, **kwargs):
+    def write(self, data, *args, **kwargs):
+        """
+        Write without reading from the device
+        """
         raise NotImplementedError
 
     def close(self):
@@ -46,11 +58,12 @@ class Connection:
 
 
     @staticmethod
-    def create(iface, addr, *args):
+    def create(iface: Interface, addr, *args):
         d = {
             Interface.BLE: BLEConnection,
             Interface.UART: UARTConnection,
             Interface.TCP: TCPConnection,
+            Interface.HTTP: HTTPConnection,
             Interface.PSEUDO: None,
         }
         if iface not in d:
@@ -58,7 +71,44 @@ class Connection:
         constructor = d[iface]
         return constructor(addr, *args)
 
+class HTTPConnection(Connection):
+    """
+    HTTP request connection type
+    """
+    def __init__(self, iface: Interface, request_url_prefix: str):
+        assert iface == Interface.HTTP  # must be http
+        super().__init__(iface, request_url_prefix)
+    
+    def is_connected(self) -> bool:
+        """Dummy, always true"""
+        return True
 
+    def connect(self): 
+        return
+    
+    def read(self, endpoint: str, headers: dict=None, params: dict=None):
+        """
+        HTTP GET methods
+        """
+        try:
+            resp = requests.get(self._addr + endpoint, headers=headers, params=params)
+            resp.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            print(err)
+        return resp.json()
+
+    def readstr(self, endpoint: str, headers: dict=None, params: dict=None):
+        """
+        GET and serialize
+        """
+        return json.dumps(self.read(endpoint, headers, params))
+    
+    def write(self, endpoint: str, data):
+        pass
+
+    def close(self): 
+        return
+    
     
 class BLEConnection(Connection):
     '''
@@ -279,9 +329,12 @@ class CurrentRegulator:
     
 
 # requirement: rd6006, minimalmodbus
-from rd6006 import RD6006
 class RD6006PowerSupply(CurrentRegulator): 
     def __init__(self, address):
+        import os
+        import sys
+        sys.path.append(os.path.dirname(__file__), "..", "bosinc", "python")  # this should add the rd6006 file
+        from rd6006 import RD6006
         super().__init__(address)
         self._device = RD6006(address)
         self._device.enable = 0
