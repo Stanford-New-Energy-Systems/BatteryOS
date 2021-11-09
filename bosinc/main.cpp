@@ -5,6 +5,7 @@
 #include "Policy.hpp"
 #include "SplittedBattery.hpp"
 #include "BOS.hpp"
+#include "sonnen.hpp"
 #include <iostream>
 
 void test_uart() {
@@ -224,6 +225,44 @@ void test_split_proportional_management() {
     return;
 }
 
+void test_sonnen() {
+    using namespace std::chrono_literals;
+    Sonnen sonnen("s1", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(5000));
+    BatteryStatus status = sonnen.get_status();
+    LOG() << status << std::endl;
+    timepoint_t now = get_system_time();
+    double watts = -3500;
+    sonnen.schedule_set_current(round(watts / (status.voltage_mV/1000) * 1000), true, now+1s, now+5min);
+    std::this_thread::sleep_for(6min);
+}
+
+void test_sonnen_split() {
+    using namespace std::chrono_literals;
+    BOS bos;
+    bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "son1", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(5000))
+        )
+    );
+    bos.make_policy(
+        "split_proportional", 
+        "son1",
+        {"s1", "s2"}, 
+        {Scale(0.6), Scale(0.4)}, 
+        {500, 500}, 
+        int(SplitterPolicyType::Proportional), 
+        1000
+    );
+    double volt = 233;
+    double w1 = 2000;
+    double w2 = 2500;
+    timepoint_t now = get_system_time();
+    bos.schedule_set_current("s1", w1/volt*1000, now+1s, now+5min);
+    bos.schedule_set_current("s2", w2/volt*1000, now+2min, now+5min);
+    std::this_thread::sleep_for(6min);
+}
+
 int run() {
     // LOG();
     // test_battery_status();
@@ -233,15 +272,18 @@ int run() {
 
     // test_events();
 
-    test_agg_management();  // seems ok! 
+    // test_agg_management();  // seems ok! 
     // test_split_proportional_management();
+    // std::cout << std::chrono::duration_cast<std::chrono::seconds>(get_system_time().time_since_epoch()).count() << std::endl;
+    // test_sonnen();
+    test_sonnen_split();
 
     return 0;
 }
 
 int main() {
     Py_Initialize();
-
+    // PyEval_InitThreads();
     // add the current path to the module search path!
     PyObject *sys = PyImport_ImportModule("sys");
     PyObject *path = PyObject_GetAttrString(sys, "path");
@@ -249,7 +291,12 @@ int main() {
     Py_DECREF(path);
     Py_DECREF(sys);
 
+    
+    // Py_BEGIN_ALLOW_THREADS
     run();
+    // Py_END_ALLOW_THREADS
+
+    
     
     Py_FinalizeEx();
     // ERROR() << "Just to test abnormal return" << ", sys=" << sys << ", path=" << path;

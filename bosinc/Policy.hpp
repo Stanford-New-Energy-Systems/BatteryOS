@@ -227,7 +227,7 @@ protected:
                     cstatus.current_mA = 
                         (double)source_status.current_mA * (double)children_current_now[child_id] / (double)total_neg_currents;
                 } else {
-                    cstatus.current_mA = 0;
+                    cstatus.current_mA = (children_current_now[child_id]);
                 }
             } else {
                 // current should be proportional! (and it must be)
@@ -471,8 +471,12 @@ public:
             size_t child_id = iter->second;
             if ((target_current_mA >= 0 && target_current_mA > children_status_now[child_id].max_discharging_current_mA) || 
                 (target_current_mA < 0 && (-target_current_mA) > children_status_now[child_id].max_charging_current_mA)) {
-                WARNING() << "target current too high, event not scheduled";
-                return 0;
+                WARNING() << "target current too high, event not scheduled" << 
+                    " childname = " << child_name <<
+                    ", target = " << target_current_mA << 
+                    ", max_discharge = " << 
+                    children_status_now[child_id].max_charging_current_mA;
+                    return 0;
             }
             // if there's overlapping set current events, merge the ranges! 
             // this might cause problems??? 
