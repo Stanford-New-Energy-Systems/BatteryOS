@@ -81,7 +81,7 @@ public:
         int64_t uac = json_resp["Uac"].GetInt64();
         int64_t pac_total_w = json_resp["Pac_total_W"].GetInt64();
         int64_t usoc = json_resp["USOC"].GetInt64();
-        std::string sonnen_time(json_resp["Timestamp"].GetString());
+        // std::string sonnen_time(json_resp["Timestamp"].GetString());
         std::tm ts{};
         strptime(json_resp["Timestamp"].GetString(), "%Y-%m-%d %H:%M:%S", &ts);
         ts.tm_hour -= 3;  // EST --> PST (localtime)
