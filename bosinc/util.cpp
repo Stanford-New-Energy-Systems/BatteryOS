@@ -48,13 +48,19 @@ void print_buffer(uint8_t *buffer, size_t buffer_size) {
 }
 
 std::ostream & operator <<(std::ostream &out, const BatteryStatus &status) {
+    constexpr size_t tbuff_size = 20;
+    char tbuff[tbuff_size];
+    time_t now_ts = std::chrono::system_clock::to_time_t(c_time_to_timepoint(status.timestamp));
+    strftime(tbuff, 20, "%Y-%m-%d %H:%M:%S", localtime(&now_ts));  // note: this is in local time
+    tbuff[tbuff_size-1] = '\0';
     out << "BatteryStatus status = {\n";
     out << "    .voltage_mV =                 " << status.voltage_mV << "mV, \n";
     out << "    .current_mA =                 " << status.current_mA << "mA, \n";
-    out << "    .capacity_mAh =        " << status.capacity_mAh << "mAh, \n";
+    out << "    .capacity_mAh =               " << status.capacity_mAh << "mAh, \n";
     out << "    .max_capacity_mAh =           " << status.max_capacity_mAh << "mAh, \n";
     out << "    .max_charging_current_mA =    " << status.max_charging_current_mA << "mA, \n";
     out << "    .max_discharging_current_mA = " << status.max_discharging_current_mA << "mA, \n";
+    out << "    .timestamp =                  " << tbuff << "\n";
     out << "};\n";
     return out;
 }
