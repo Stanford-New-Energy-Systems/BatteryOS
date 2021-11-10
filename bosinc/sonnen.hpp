@@ -27,7 +27,10 @@ public:
         max_capacity_Wh(max_capacity_Wh), 
         max_discharging_current_mA(max_discharging_current_mA), 
         max_charging_current_mA(max_charging_current_mA), 
-        serial(serial) {}
+        serial(serial) 
+    {
+        this->refresh();
+    }
 
     std::string get_type_string() override {
         return "SonnenBattery";
@@ -78,6 +81,11 @@ public:
         int64_t uac = json_resp["Uac"].GetInt64();
         int64_t pac_total_w = json_resp["Pac_total_W"].GetInt64();
         int64_t usoc = json_resp["USOC"].GetInt64();
+        // std::string sonnen_time(json_resp["Timestamp"].GetString());
+        std::tm ts{};
+        strptime(json_resp["Timestamp"].GetString(), "%Y-%m-%d %H:%M:%S", &ts);
+        ts.tm_hour -= 3;  // EST --> PST (localtime)
+        timepoint_t tp = std::chrono::system_clock::from_time_t(std::mktime(&ts));
 
         this->status.voltage_mV = uac * 1000;
         this->status.current_mA = round((double)pac_total_w/(double)uac*1000);
@@ -85,7 +93,7 @@ public:
         this->status.max_capacity_mAh = round((double)max_capacity_Wh / (double)uac * 1000);
         this->status.max_charging_current_mA = this->max_charging_current_mA;
         this->status.max_discharging_current_mA = this->max_discharging_current_mA;
-        this->status.timestamp = get_system_time_c();
+        this->status.timestamp = timepoint_to_c_time(tp);
         curl_easy_cleanup(curl);
 
         return this->status;

@@ -225,6 +225,13 @@ void test_split_proportional_management() {
     return;
 }
 
+void test_sonnen_getstatus() {
+    using namespace std::chrono_literals;
+    Sonnen sonnen("s1", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(5000));
+    LOG() << sonnen.get_status() << std::endl;
+    return;
+}
+
 void test_sonnen() {
     using namespace std::chrono_literals;
     Sonnen sonnen("s1", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(5000));
@@ -276,7 +283,8 @@ int run() {
     // test_split_proportional_management();
     // std::cout << std::chrono::duration_cast<std::chrono::seconds>(get_system_time().time_since_epoch()).count() << std::endl;
     // test_sonnen();
-    test_sonnen_split();
+    // test_sonnen_split();
+    test_sonnen_getstatus();
 
     return 0;
 }
