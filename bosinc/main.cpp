@@ -185,8 +185,8 @@ void test_split_proportional_management() {
         .current_mA = 0,
         .capacity_mAh = 200000,
         .max_capacity_mAh = 200000,
+        .max_charging_current_mA = 80000,
         .max_discharging_current_mA = 100000,
-        .max_charging_current_mA = 80000
     }, 500);
 
     bos.make_policy(
@@ -227,8 +227,11 @@ void test_split_proportional_management() {
 
 void test_sonnen_getstatus() {
     using namespace std::chrono_literals;
-    Sonnen sonnen("s1", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(5000));
-    LOG() << sonnen.get_status() << std::endl;
+    Sonnen sonnen("s1", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(1000));
+    for (int i = 0; i < 10; ++i) {
+        std::this_thread::sleep_for(3s);
+        std::cout << sonnen.get_status() << std::endl;
+    }
     return;
 }
 

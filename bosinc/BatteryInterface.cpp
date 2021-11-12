@@ -244,12 +244,13 @@ uint32_t Battery::schedule_set_current(
 
         int64_t current_value_up_to_now = this->current_now;
         bool is_greater_than_up_to_now = this->is_greater_than_current_now;
+
+        int64_t current_value_before_set = this->current_now;  // the current right before when_to_set, approximated
         std::vector<EventQueue::iterator> iterators_to_remove;
-        for (
-            EventQueue::iterator event_iterator = event_queue.begin(); 
-            event_iterator != event_queue.end(); 
-            ++event_iterator
-        ) {
+        for (EventQueue::iterator event_iterator = event_queue.begin(); event_iterator != event_queue.end(); ++event_iterator) {
+            if (event_iterator->timepoint <= when_to_set) {
+                current_value_before_set = event_iterator->current_mA;
+            }
             if (event_iterator->timepoint > until_when) {
                 // now we know about what current to resume to! 
                 // but, be careful when multiple events are colliding
@@ -262,17 +263,32 @@ uint32_t Battery::schedule_set_current(
             // ok now we have set_current events, preview the current
             current_value_up_to_now = event_iterator->current_mA;
             is_greater_than_up_to_now = event_iterator->is_greater_than;
-            // and if this event is between when_to_set and until_when, we can remove it now 
-            if (
-                when_to_set <= event_iterator->timepoint && 
-                event_iterator->timepoint <= until_when
-            ) {
-                iterators_to_remove.push_back(event_iterator);
-            }
         }
+        int64_t current_value_to_resume = current_value_up_to_now;  // the current right at until_when 
+
+        // now let's factor in the delay, notice that this is only an approximation! 
+        // event_begin delay 
+        // this is approximated... 
+        when_to_set -= get_delay(current_value_before_set, target_current_mA);
+        until_when -= get_delay(target_current_mA, current_value_to_resume);
+        current_value_up_to_now = this->current_now;
+        is_greater_than_up_to_now = this->is_greater_than_current_now;
+        // now remove the events in between 
+        for (EventQueue::iterator event_iterator = event_queue.begin(); event_iterator != event_queue.end(); ++event_iterator) {
+            if (event_iterator->func == Function::REFRESH) { continue; }
+            // and if this event is between when_to_set and until_when, we can remove it now 
+            if (when_to_set <= event_iterator->timepoint && event_iterator->timepoint <= until_when) {
+                iterators_to_remove.push_back(event_iterator);
+            } else if (event_iterator->timepoint > until_when) { 
+                break; 
+            }
+            current_value_up_to_now = event_iterator->current_mA;
+            is_greater_than_up_to_now = event_iterator->is_greater_than;
+        }
+
         // for splitter policy, we don't remove any event! 
         // because events might be from different children 
-        // but splitter policy should have this function rewritten 
+        // but splitter policy should have this function rewritten anyways 
 
         // now remove all iterators in iterators_to_remove
         for (EventQueue::iterator itr : iterators_to_remove) {
