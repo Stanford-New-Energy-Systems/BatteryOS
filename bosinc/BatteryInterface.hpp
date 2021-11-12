@@ -192,6 +192,17 @@ public:
     virtual uint32_t schedule_set_current(int64_t target_current_mA, bool is_greater_than_target, timepoint_t when_to_set, timepoint_t until_when);
 
     /**
+     * (Optional function to override)
+     * What's the delay if I set my current from from_current to to_current? Default = 0. 
+     * @param from_current the current when the event is to set
+     * @param to_current the current after the event is set 
+     * @return the delay  
+     */
+    virtual std::chrono::milliseconds get_delay(int64_t from_current, int64_t to_current) {
+        return std::chrono::milliseconds(0);
+    }
+
+    /**
      * Just return the type string of the battery driver
      * @return the string representing the type of the driver
      */

@@ -36,16 +36,21 @@ public:
         return "SonnenBattery";
     }
 
-    BatteryStatus refresh() override {
+    std::chrono::milliseconds get_delay(int64_t from_current, int64_t to_current) override {
+        if (from_current == to_current) { return std::chrono::milliseconds(0); }
+        else if (from_current == 0 && to_current != 0) { return std::chrono::milliseconds(30000); }
+        else { return std::chrono::milliseconds(5000); }
+    }
+
+    std::string send_request(const std::string &endpoint) {
         CURL* curl = curl_easy_init();
         if (!curl) {
             WARNING() << "curl initialization failure" << std::endl;
-            return this->status;
+            return "";
         }
         CURLcode res;
-        
-        std::string url = std::string("https://core-api.sonnenbatterie.de/proxy/")+std::to_string(serial)+"/api/v1/status";
-        
+        std::string url = std::string("https://core-api.sonnenbatterie.de/proxy/")+std::to_string(serial)+endpoint;
+
         // the actual code has the actual url string in place of <my_url>
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         struct curl_slist* headers = NULL;
@@ -75,6 +80,13 @@ public:
         if (res != CURLE_OK) {
             WARNING() << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
         }
+        curl_easy_cleanup(curl);
+        return response_string;
+    }
+
+    BatteryStatus refresh() override {
+        std::string response_string = this->send_request("/api/v1/status");
+        LOG() << response_string;
 
         rapidjson::Document json_resp; 
         json_resp.Parse(response_string.c_str());
@@ -94,8 +106,7 @@ public:
         this->status.max_charging_current_mA = this->max_charging_current_mA;
         this->status.max_discharging_current_mA = this->max_discharging_current_mA;
         this->status.timestamp = timepoint_to_c_time(tp);
-        curl_easy_cleanup(curl);
-
+        
         return this->status;
     }
 
@@ -105,57 +116,15 @@ public:
         LOG() << "now is (secs since epoch)" << 
             std::chrono::duration_cast<std::chrono::seconds>(get_system_time().time_since_epoch()).count() << std::endl;
 
-        CURL* curl = curl_easy_init();
-        if (!curl) {
-            WARNING() << "curl initialization failure" << std::endl;
-            return 0;
-        }
-        CURLcode res;
-        
-        std::string url = 
-            std::string("https://core-api.sonnenbatterie.de/proxy/")+
-            std::to_string(serial)+
+        std::string response_string = this->send_request(
             "/api/v1/setpoint/"+
             ((target_current_mA > 0) ? std::string("discharge/") : std::string("charge/"))+
-            std::to_string(std::abs((target_current_mA/1000) * (this->status.voltage_mV/1000)));
-        
-        LOG() << url << std::endl;
-        
-        // the actual code has the actual url string in place of <my_url>
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        struct curl_slist* headers = NULL;
-        /*
-            self.headers = {
-                'Accept': 'application/vnd.sonnenbatterie.api.core.v1+json',
-                'Authorization': 'Bearer ' + self.token, 
-            }
-        */
-        // headers = curl_slist_append(headers, "Content-Type: application/json");
-        std::string header_accept = "Accept: application/vnd.sonnenbatterie.api.core.v1+json";
-        headers = curl_slist_append(headers, header_accept.c_str());
-        std::string header_bearer = std::string("Authorization: Bearer ") + std::getenv("SONNEN_TOKEN"); 
-        
-        // the actual code has the actual token in place of <my_token>
-        headers = curl_slist_append(headers, header_bearer.c_str());
-
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-
-
-        std::string response_string;
-        std::string header_string;
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, Sonnen::curl_write_function);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
-        curl_easy_setopt(curl, CURLOPT_HEADERDATA, &header_string);
-
-        res = curl_easy_perform(curl);
-        if (res != CURLE_OK) {
-            WARNING() << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
-        }
+            std::to_string(std::abs((target_current_mA/1000) * (this->status.voltage_mV/1000)))
+        );
         std::cout << response_string << std::endl;
         // rapidjson::Document json_resp; 
         // json_resp.Parse(response_string.c_str()); 
         int64_t retcode = 1;
-        curl_easy_cleanup(curl);
         // LOG() << retcode << std::endl;
         return (uint32_t)retcode;
     }
