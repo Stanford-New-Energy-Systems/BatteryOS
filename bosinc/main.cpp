@@ -273,6 +273,33 @@ void test_sonnen_split() {
     std::this_thread::sleep_for(6min);
 }
 
+void test_sonnen_aggregate() {
+    using namespace std::chrono_literals;
+    BOS bos; 
+    bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "slac", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(5000))
+        )
+    );
+    bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "home1", std::stoi(std::getenv("SONNEN_SERIAL2")), 10000, 30000, 30000, std::chrono::milliseconds(1000))
+        )
+    );
+    bos.make_aggergator("agg1", 235000, 10000, {"slac", "home1"}, 1000);  // 235 +- 10
+    double volt = 239.0;
+    double w1 = 4000.0;
+    timepoint_t now = get_system_time();
+
+    // LOG() << bos.get_status("agg1");
+    bos.schedule_set_current("agg1", round(w1/volt*1000), now+35s, now+5min+35s);
+
+    std::this_thread::sleep_for(6min+30s);
+
+}
+
 int run() {
     // LOG();
     // test_battery_status();
@@ -287,7 +314,9 @@ int run() {
     // std::cout << std::chrono::duration_cast<std::chrono::seconds>(get_system_time().time_since_epoch()).count() << std::endl;
     // test_sonnen();
     // test_sonnen_split();
-    test_sonnen_getstatus();
+    // test_sonnen_getstatus();
+
+    test_sonnen_aggregate();
 
     return 0;
 }
