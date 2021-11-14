@@ -281,13 +281,13 @@ void test_sonnen_aggregate() {
             new Sonnen(
                 "slac", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(5000))
         )
-    );
+    ); // 74% by the time testing it 
     bos.directory.add_battery(
         std::unique_ptr<Battery>(
             new Sonnen(
                 "home1", std::stoi(std::getenv("SONNEN_SERIAL2")), 10000, 30000, 30000, std::chrono::milliseconds(1000))
         )
-    );
+    ); // 100% by the time testing it 
     bos.make_aggergator("agg1", 235000, 10000, {"slac", "home1"}, 1000);  // 235 +- 10
     double volt = 239.0;
     double w1 = 4000.0;
