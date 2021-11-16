@@ -158,7 +158,7 @@ void test_agg_management() {
         .max_discharging_current_mA=60000,
         .timestamp = get_system_time_c()
     }, 1000);
-    bos.make_aggergator("agg1", 3000, 1000, {"ps1", "ps2"}, 1000);
+    bos.make_aggregator("agg1", 3000, 1000, {"ps1", "ps2"}, 1000);
     if (!bos.directory.name_exists("agg1")) {
         ERROR() << "agg1 not exists?";
     }
@@ -225,10 +225,10 @@ void test_split_proportional_management() {
     return;
 }
 
-void test_sonnen_getstatus() {
+void test_sonnen_getstatus(int serial = std::stoi(std::getenv("SONNEN_SERIAL1")), int iterations = 1) {
     using namespace std::chrono_literals;
-    Sonnen sonnen("s1", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(1000));
-    for (int i = 0; i < 10; ++i) {
+    Sonnen sonnen("s1", serial, 10000, 30000, 30000, std::chrono::milliseconds(1000));
+    for (int i = 0; i < iterations; ++i) {
         std::this_thread::sleep_for(3s);
         std::cout << sonnen.get_status() << std::endl;
     }
@@ -288,7 +288,7 @@ void test_sonnen_aggregate() {
                 "home1", std::stoi(std::getenv("SONNEN_SERIAL2")), 10000, 30000, 30000, std::chrono::milliseconds(1000))
         )
     ); // 100% by the time testing it 
-    bos.make_aggergator("agg1", 235000, 10000, {"slac", "home1"}, 1000);  // 235 +- 10
+    bos.make_aggregator("agg1", 235000, 10000, {"slac", "home1"}, 1000);  // 235 +- 10
     double volt = 239.0;
     double w1 = 4000.0;
     timepoint_t now = get_system_time();
@@ -314,9 +314,9 @@ int run() {
     // std::cout << std::chrono::duration_cast<std::chrono::seconds>(get_system_time().time_since_epoch()).count() << std::endl;
     // test_sonnen();
     // test_sonnen_split();
-    // test_sonnen_getstatus();
+    test_sonnen_getstatus(std::stoi(std::getenv("SONNEN_SERIAL1")));
 
-    test_sonnen_aggregate();
+    // test_sonnen_aggregate();
 
     return 0;
 }

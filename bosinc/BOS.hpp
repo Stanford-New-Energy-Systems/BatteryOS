@@ -88,7 +88,7 @@ public:
         return this->directory.add_battery(std::move(network));
     }
 
-    Battery *make_aggergator(
+    Battery *make_aggregator(
         const std::string &name, 
         int64_t voltage_mV, 
         int64_t voltage_tolerance_mV, 
