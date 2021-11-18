@@ -2,7 +2,7 @@
 #include "TestBattery.hpp"
 #include "NetworkBattery.hpp"
 #include "AggregatorBattery.hpp"
-#include "Policy.hpp"
+#include "BALSplitter.hpp"
 #include "SplittedBattery.hpp"
 #include "BOS.hpp"
 #include "sonnen.hpp"
@@ -158,7 +158,7 @@ void test_agg_management() {
         .max_discharging_current_mA=60000,
         .timestamp = get_system_time_c()
     }, 1000);
-    bos.make_aggergator("agg1", 3000, 1000, {"ps1", "ps2"}, 1000);
+    bos.make_aggregator("agg1", 3000, 1000, {"ps1", "ps2"}, 1000);
     if (!bos.directory.name_exists("agg1")) {
         ERROR() << "agg1 not exists?";
     }
@@ -177,7 +177,7 @@ void test_agg_management() {
     return;
 }
 
-void test_split_proportional_management() {
+void test_split_management(int policy = int(BALSplitterType::Proportional)) {
     using namespace std::chrono_literals;
     BOS bos;
     bos.make_pseudo("ps1", BatteryStatus{
@@ -195,7 +195,7 @@ void test_split_proportional_management() {
         {"s1", "s2", "s3"}, 
         {Scale(0.5), Scale(0.3), Scale(0.2)}, 
         {500, 500, 500}, 
-        int(SplitterPolicyType::Proportional), 
+        policy, 
         1000
     );
 
@@ -225,10 +225,10 @@ void test_split_proportional_management() {
     return;
 }
 
-void test_sonnen_getstatus() {
+void test_sonnen_getstatus(int serial = std::stoi(std::getenv("SONNEN_SERIAL1")), int iterations = 1) {
     using namespace std::chrono_literals;
-    Sonnen sonnen("s1", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(1000));
-    for (int i = 0; i < 10; ++i) {
+    Sonnen sonnen("s1", serial, 10000, 30000, 30000, std::chrono::milliseconds(1000));
+    for (int i = 0; i < iterations; ++i) {
         std::this_thread::sleep_for(3s);
         std::cout << sonnen.get_status() << std::endl;
     }
@@ -239,11 +239,22 @@ void test_sonnen() {
     using namespace std::chrono_literals;
     Sonnen sonnen("s1", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(5000));
     BatteryStatus status = sonnen.get_status();
-    LOG() << status << std::endl;
+    LOG() << "s1:\n" << status << std::endl;
+
     timepoint_t now = get_system_time();
     double watts = -3500;
-    sonnen.schedule_set_current(round(watts / (status.voltage_mV/1000) * 1000), true, now+1s, now+5min);
-    std::this_thread::sleep_for(6min);
+    sonnen.schedule_set_current(round(watts / (status.voltage_mV/1000) * 1000), true, now+35s, now+5min+35s);
+    // std::this_thread::sleep_for(6min);
+
+    std::this_thread::sleep_for(35s);
+    LOG() << "the power should be ramped up now, now is (secs since epoch)" << 
+            std::chrono::duration_cast<std::chrono::seconds>(get_system_time().time_since_epoch()).count() << std::endl;
+
+    std::this_thread::sleep_for(5min);
+    LOG() << "the power should be ramped down now, now is (secs since epoch)" << 
+            std::chrono::duration_cast<std::chrono::seconds>(get_system_time().time_since_epoch()).count() << std::endl;
+
+    std::this_thread::sleep_for(10s);
 }
 
 void test_sonnen_split() {
@@ -261,7 +272,7 @@ void test_sonnen_split() {
         {"s1", "s2"}, 
         {Scale(0.6), Scale(0.4)}, 
         {500, 500}, 
-        int(SplitterPolicyType::Proportional), 
+        int(BALSplitterType::Proportional), 
         1000
     );
     double volt = 233;
@@ -271,6 +282,95 @@ void test_sonnen_split() {
     bos.schedule_set_current("s1", w1/volt*1000, now+1s, now+5min);
     bos.schedule_set_current("s2", w2/volt*1000, now+2min, now+5min);
     std::this_thread::sleep_for(6min);
+}
+
+void test_sonnen_aggregate() {
+    using namespace std::chrono_literals;
+    BOS bos; 
+    bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "slac", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(5000))
+        )
+    ); // 74% by the time testing it 
+    bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "home1", std::stoi(std::getenv("SONNEN_SERIAL2")), 10000, 30000, 30000, std::chrono::milliseconds(1000))
+        )
+    ); // 100% by the time testing it 
+    bos.make_aggregator("agg1", 235000, 10000, {"slac", "home1"}, 1000);  // 235 +- 10
+    double volt = 239.0;
+    double w1 = 4000.0;
+    timepoint_t now = get_system_time();
+
+    LOG() << "STATUS OF agg1: \n" << bos.get_status("agg1");
+    bos.schedule_set_current("agg1", round(w1/volt*1000), now+35s, now+5min+35s);
+
+    std::this_thread::sleep_for(35s);
+    LOG() << "the power should be ramped up now, now is (secs since epoch)" << 
+            std::chrono::duration_cast<std::chrono::seconds>(get_system_time().time_since_epoch()).count() << std::endl;
+
+    std::this_thread::sleep_for(5min);
+    LOG() << "the power should be ramped down now, now is (secs since epoch)" << 
+            std::chrono::duration_cast<std::chrono::seconds>(get_system_time().time_since_epoch()).count() << std::endl;
+
+
+    std::this_thread::sleep_for(10s);
+
+}
+
+void test_sonnen_aggregate_split(int policy = int(BALSplitterType::Proportional)) {
+    using namespace std::chrono_literals;
+    BOS bos; 
+    Battery *slac = bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "slac", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(50000))
+        )
+    ); 
+    Battery *home1 = bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "home1", std::stoi(std::getenv("SONNEN_SERIAL2")), 10000, 30000, 30000, std::chrono::milliseconds(50000))
+        )
+    );
+    bos.make_aggregator("agg1", 235000, 10000, {"slac", "home1"}, 10);  // 235 +- 10
+
+    bos.make_policy("sp1", "agg1", {"vb", "vc"}, {Scale(0.6), Scale(0.4)}, {0, 0}, policy, 1000);
+
+    BatteryStatus slac_status = bos.get_status("slac");
+    BatteryStatus home1_status = bos.get_status("home1");
+    std::cout << "---------- before the change ----------" << std::endl;
+    LOG() << "slac:\n" << slac_status;
+    LOG() << "home1:\n" << home1_status;
+    LOG() << "vb:\n" << bos.get_status("vb");
+    LOG() << "vc:\n" << bos.get_status("vc");
+    LOG() << "agg1\n" << bos.get_status("agg1");
+    
+    // int64_t prev_cap = slac_status.capacity_mAh;
+
+    slac_status.capacity_mAh = 0;
+    slac->set_status(slac_status);
+    std::this_thread::sleep_for(2s);
+    std::cout << "---------- after changing slac to 0 ----------" << std::endl;
+    LOG() << "slac:\n" << slac_status;
+    LOG() << "home1:\n" << home1_status;
+    LOG() << "vb:\n" << bos.get_status("vb");
+    LOG() << "vc:\n" << bos.get_status("vc");
+    LOG() << "agg1\n" << bos.get_status("agg1");
+
+    
+    slac_status.capacity_mAh = slac_status.max_capacity_mAh * 0.8;
+    slac->set_status(slac_status);
+    std::this_thread::sleep_for(2s);
+    std::cout << "---------- after changing slac to max_cap * 0.8 ----------" << std::endl;
+    LOG() << "slac:\n" << slac_status;
+    LOG() << "home1:\n" << home1_status;
+    LOG() << "vb:\n" << bos.get_status("vb");
+    LOG() << "vc:\n" << bos.get_status("vc");
+    LOG() << "agg1\n" << bos.get_status("agg1");
+
 }
 
 int run() {
@@ -283,11 +383,15 @@ int run() {
     // test_events();
 
     // test_agg_management();  // seems ok! 
-    // test_split_proportional_management();
+    // test_split_management(int(BALSplitterType::Reservation));
     // std::cout << std::chrono::duration_cast<std::chrono::seconds>(get_system_time().time_since_epoch()).count() << std::endl;
     // test_sonnen();
     // test_sonnen_split();
-    test_sonnen_getstatus();
+    // test_sonnen_getstatus(std::stoi(std::getenv("SONNEN_SERIAL2")));
+
+    // test_sonnen_aggregate();
+
+    // test_sonnen_aggregate_split(int(BALSplitterType::Reservation));
 
     return 0;
 }

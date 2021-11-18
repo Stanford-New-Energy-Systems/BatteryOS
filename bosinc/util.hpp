@@ -151,11 +151,11 @@ public:
     }
 };
 #define LOG() \
-    LogStream(__func__, __FILE__, __LINE__).stream()
+    LogStream(__PRETTY_FUNCTION__, __FILE__, __LINE__).stream()
 #define WARNING() \
-    WarningStream(__func__, __FILE__, __LINE__).stream()
+    WarningStream(__PRETTY_FUNCTION__, __FILE__, __LINE__).stream()
 #define ERROR() \
-    ErrorStream(__func__, __FILE__, __LINE__).stream()
+    ErrorStream(__PRETTY_FUNCTION__, __FILE__, __LINE__).stream()
 
 template <typename T>
 void warning_r(const T &arg) {
@@ -187,11 +187,11 @@ void error_r(const T &arg, Ts ...args) {
 
 /* Print a warning, arguments should have overloaded << operators */
 
-#define warning(...) warning_r("Warning: In file ", __FILE__, ", line ", __LINE__, ", function ", __func__, ": ", __VA_ARGS__)
+#define warning(...) warning_r("Warning: In file ", __FILE__, ", line ", __LINE__, ", function ", __PRETTY_FUNCTION__, ": ", __VA_ARGS__)
 
 /* Print an error and quit, arguments should have overloaded << operators */
 
-#define error(...) error_r("Error: In file ", __FILE__, ", line ", __LINE__, ", function ", __func__, ": ", __VA_ARGS__)
+#define error(...) error_r("Error: In file ", __FILE__, ", line ", __LINE__, ", function ", __PRETTY_FUNCTION__, ": ", __VA_ARGS__)
 
 
 /**

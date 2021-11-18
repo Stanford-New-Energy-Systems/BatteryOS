@@ -2,7 +2,7 @@
 #include "TestBattery.hpp"
 #include "NetworkBattery.hpp"
 #include "AggregatorBattery.hpp"
-#include "Policy.hpp"
+#include "BALSplitter.hpp"
 #include "SplittedBattery.hpp"
 
 #ifndef BOS_NAME_CHECK
@@ -88,7 +88,7 @@ public:
         return this->directory.add_battery(std::move(network));
     }
 
-    Battery *make_aggergator(
+    Battery *make_aggregator(
         const std::string &name, 
         int64_t voltage_mV, 
         int64_t voltage_tolerance_mV, 
@@ -142,16 +142,16 @@ public:
                 std::chrono::milliseconds(child_max_stalenesses_ms[i])));
             this->directory.add_battery(std::move(child));
         }
-        std::unique_ptr<Battery> policy(new SplitterPolicy(
+        std::unique_ptr<Battery> policy(new BALSplitter(
             policy_name, 
             src_name, 
             this->directory, 
             child_names, 
             child_scales, 
-            SplitterPolicyType(policy_type), 
+            BALSplitterType(policy_type), 
             std::chrono::milliseconds(max_staleness_ms)
         ));
-        SplitterPolicy *pptr = dynamic_cast<SplitterPolicy*>(policy.get());
+        BALSplitter *pptr = dynamic_cast<BALSplitter*>(policy.get());
         this->directory.add_battery(std::move(policy));
         this->directory.add_edge(src_name, policy_name);
 
@@ -170,7 +170,7 @@ public:
             WARNING() << "battery " << name << " does not exist";
             return BatteryStatus();
         }
-        if (bat->get_battery_type() == BatteryType::SplitterPolicy) {
+        if (bat->get_battery_type() == BatteryType::BALSplitter) {
             WARNING() << "battery " << name << " is a splitter policy, it does not support this operation";
             return BatteryStatus();
         }
@@ -188,7 +188,7 @@ public:
             WARNING() << "battery " << name << " does not exist";
             return 0;
         }
-        if (bat->get_battery_type() == BatteryType::SplitterPolicy) {
+        if (bat->get_battery_type() == BatteryType::BALSplitter) {
             WARNING() << "battery " << name << " is a splitter policy, it does not support this operation";
             return 0;
         }
@@ -237,7 +237,7 @@ public:
             WARNING() << "battery " << name << " does not exist";
             return false;
         }
-        if (bat->get_battery_type() == BatteryType::SplitterPolicy) {
+        if (bat->get_battery_type() == BatteryType::BALSplitter) {
             WARNING() << "battery " << name << " is a splitter policy, it does not support turning off background refresh";
             return false;
         }

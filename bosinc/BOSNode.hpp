@@ -5,7 +5,7 @@
 enum class BatteryType : int {
     Physical,
     Aggregate, 
-    SplitterPolicy,
+    BALSplitter,
     Splitted,
 };
 

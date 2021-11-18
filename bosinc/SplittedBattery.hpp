@@ -1,12 +1,12 @@
 #ifndef SPLITTED_BATTERY_HPP
 #define SPLITTED_BATTERY_HPP
 #include "BatteryInterface.hpp"
-#include "Policy.hpp"
+#include "BALSplitter.hpp"
 
 class SplittedBattery : public VirtualBattery {
     std::string policy_name;
     BOSDirectory *pdirectory;
-    SplitterPolicy *policy;
+    BALSplitter *policy;
 public: 
     SplittedBattery(
         const std::string &name, 
@@ -46,11 +46,11 @@ public:
             WARNING() << "battery " << policy_name << " does not exist";
             return false;
         }
-        if (b->get_battery_type() != BatteryType::SplitterPolicy) {
+        if (b->get_battery_type() != BatteryType::BALSplitter) {
             WARNING() << "battery " << policy_name << " is not a splitter policy";
             return false;
         }
-        SplitterPolicy *sp = dynamic_cast<SplitterPolicy*>(b);
+        BALSplitter *sp = dynamic_cast<BALSplitter*>(b);
         if (!sp) {
             WARNING() << "battery " << policy_name << " is not a splitter policy";
             return false;
