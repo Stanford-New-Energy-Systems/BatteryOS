@@ -146,7 +146,7 @@ void Battery::background_func(Battery *bat) {
             now = get_system_time();
         }
         // oh we have special rules for splitter policy
-        if (bat->type == BatteryType::SplitterPolicy) {
+        if (bat->type == BatteryType::BALSplitter) {
             // splitter policy: perform all the set current events! 
             // because each event might correspond to a different children 
             for (event_t &set_current_event : set_current_events) {

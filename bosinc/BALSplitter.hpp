@@ -1,9 +1,9 @@
-#ifndef POLICY_HPP
-#define POLICY_HPP
+#ifndef SPLITTER_HPP
+#define SPLITTER_HPP
 
 #include "BatteryInterface.hpp"
 #include "BOSDirectory.hpp"
-enum class SplitterPolicyType : int {
+enum class BALSplitterType : int {
     Proportional = 0, 
     Tranche = 1, 
     Reservation = 2,
@@ -75,7 +75,7 @@ struct Scale {
 /**
  * Policy must start background refresh after construction!!! 
  */
-class SplitterPolicy : public VirtualBattery {
+class BALSplitter : public VirtualBattery {
 protected: 
     /** the name of the source battery */
     std::string src_name;
@@ -84,7 +84,7 @@ protected:
     /** the pointer to the source battery */
     Battery *source;
     /** the type of policy */
-    SplitterPolicyType policy_type;
+    BALSplitterType policy_type;
 
 
     std::vector<std::string> child_names;
@@ -106,13 +106,13 @@ protected:
 
     
 public: 
-    SplitterPolicy(
+    BALSplitter(
         const std::string &policy_name, 
         const std::string &src_name, 
         BOSDirectory &directory,
         const std::vector<std::string> &child_names, 
         const std::vector<Scale> &child_scales, 
-        SplitterPolicyType policy_type,
+        BALSplitterType policy_type,
         std::chrono::milliseconds max_staleness
     ) : 
         VirtualBattery(policy_name, max_staleness), 
@@ -122,7 +122,7 @@ public:
         child_names(child_names),
         child_scales(child_scales)
     {
-        this->type = BatteryType::SplitterPolicy;
+        this->type = BatteryType::BALSplitter;
         source = directory.get_battery(src_name);
         if (!source) { ERROR() << "source not found!"; }
         if (child_names.size() != child_scales.size()) {
@@ -182,203 +182,11 @@ protected:
     /**
      * A refresh will update the status of all its children!  
      */
-    BatteryStatus refresh() override {
-        // lock should be already acquired!!! 
-        BatteryStatus source_status = this->source->get_status();
-        const std::list<Battery*> &children = this->pdirectory->get_children(this->name);
-        int64_t total_actual_charge = source_status.capacity_mAh;
-        double total_estimated_charge = 0;
-        int64_t total_net_currents = 0;
-        int64_t total_pos_currents = 0;
-        int64_t total_neg_currents = 0;
+    BatteryStatus refresh() override;
 
-        timepoint_t now = get_system_time();
-        std::chrono::duration<double, std::ratio<3600>> hours_elapsed;
-
-        for (size_t i = 0; i < this->child_names.size(); ++i) {
-            hours_elapsed = now - this->children_last_charge_estimate_timepoint[i];
-            this->children_estimated_charge_now[i] -= this->children_current_now[i] * (hours_elapsed.count());
-            this->children_last_charge_estimate_timepoint[i] = now;
-            total_estimated_charge += this->children_estimated_charge_now[i];
-            total_net_currents += this->children_current_now[i];
-            if (this->children_current_now[i] > 0) total_pos_currents += this->children_current_now[i];
-            else if (this->children_current_now[i] < 0) total_neg_currents += this->children_current_now[i];
-        }
-
-        int64_t source_charge_remaining = source_status.capacity_mAh;
-        int64_t source_max_charge_remaining = source_status.max_capacity_mAh;
-        
-        for (Battery *c : children) {
-            std::string child_name = c->get_name();
-            size_t child_id = this->name_lookup[child_name];
-            Scale &scale = this->child_scales[child_id];
-
-            BatteryStatus cstatus;
-
-            // this is always the source voltage 
-            cstatus.voltage_mV = source_status.voltage_mV;
-
-            if (total_net_currents == 0) {
-                // embarrasing situation... please handle this correctly! 
-                if (source_status.current_mA > 0 && children_current_now[child_id] > 0) {
-                    cstatus.current_mA = 
-                        (double)source_status.current_mA * (double)children_current_now[child_id] / (double)total_pos_currents;
-                } else if (source_status.current_mA < 0 && children_current_now[child_id] < 0) {
-                    cstatus.current_mA = 
-                        (double)source_status.current_mA * (double)children_current_now[child_id] / (double)total_neg_currents;
-                } else {
-                    cstatus.current_mA = (children_current_now[child_id]);
-                }
-            } else {
-                // current should be proportional! (and it must be)
-                cstatus.current_mA = (int64_t)(
-                    (double)children_current_now[child_id] * (double)source_status.current_mA / (double)total_net_currents);
-            }
-
-            // LOG() << "cstatus.current_mA = " << cstatus.current_mA << std::endl 
-            //     << "(double)children_current_now[child_id] = " << (double)children_current_now[child_id] << std::endl
-            //     << "(double)source_status.current_mA = " <<  (double)source_status.current_mA << std::endl
-            //     << "(double)total_net_currents = " << (double)total_net_currents << std::endl;
-            
-            // now the charge status is reported according to the policy  
-            
-            // this is the estimated charge according to its charge/discharge history 
-            double estimated_charge = this->children_estimated_charge_now[child_id];
-
-            // the charge depends on policy             
-            if (this->policy_type == SplitterPolicyType::Proportional) {
-                // proportional! 
-                // proportionally distribute all charges 
-                if (fabs(total_estimated_charge) < 1e-6) {
-                    // reset the charges...... because estimation failed...
-                    WARNING() << "estimation failed: total estimated charge is 0 but the source still has charge, resetting...";
-                    cstatus.capacity_mAh = total_actual_charge * child_scales[child_id].capacity;
-                    children_estimated_charge_now[child_id] = total_actual_charge * child_scales[child_id].capacity;
-                } else {
-                    cstatus.capacity_mAh = round(estimated_charge / total_estimated_charge * (double)total_actual_charge);
-                }
-                // the max_capacity should be scaled accordingly  
-                cstatus.max_capacity_mAh = source_status.max_capacity_mAh * scale.max_capacity;
-            } else {
-                // tranche and reserved
-                // charge are just the estimated charge 
-                cstatus.capacity_mAh = round(this->children_estimated_charge_now[child_id]);
-                source_charge_remaining -= cstatus.capacity_mAh;
-                // and the max capacities should be equal to their originally reserved max_capacity 
-                cstatus.max_capacity_mAh = this->child_original_status[child_id].max_capacity_mAh;
-                source_max_charge_remaining -= cstatus.max_capacity_mAh;
-            }
-
-            // the max currents should be scaled according to the initial scales 
-            cstatus.max_charging_current_mA = source_status.max_charging_current_mA * scale.max_charge_rate;
-            cstatus.max_discharging_current_mA = source_status.max_discharging_current_mA * scale.max_discharge_rate;
-            
-            // timestamp is just the source timestamp 
-            cstatus.timestamp = source_status.timestamp;
-            
-            this->children_status_now[child_id] = cstatus;
-        }
-        // now in tranche and reserved policies, the remaining charges are put to the specific batteries 
-        // if (this->policy_type == SplitterPolicyType::Reservation) {
-        //     // reservation policy: everything goes to the last battery, 
-        //     // if the last battery is full or empty, go to the second last 
-        //     for (size_t cid = this->child_names.size() - 1; cid >= 0; --cid) {
-        //         if (source_max_charge_remaining == 0 && source_charge_remaining == 0) break;
-        //         if (this->children_status_now[cid].max_capacity_mAh + source_max_charge_remaining <= 0) {
-        //             WARNING() << "estimation failed: there are batteries with non-positive max capacity!";
-        //             source_max_charge_remaining += this->children_status_now[cid].max_capacity_mAh;
-        //             this->children_status_now[cid].max_capacity_mAh = 0;
-        //         } else {
-        //             this->children_status_now[cid].max_capacity_mAh += source_max_charge_remaining;
-        //             source_max_charge_remaining = 0;
-        //         }
-        //         // capacity 
-        //         if (this->children_status_now[cid].capacity_mAh + source_charge_remaining <= 0) {
-        //             LOG() << "estimation: there's a battery with non-positive capacity!";
-        //             source_charge_remaining += this->children_status_now[cid].capacity_mAh;
-        //             this->children_status_now[cid].capacity_mAh = 0;
-        //         } else if (
-        //             this->children_status_now[cid].capacity_mAh + source_charge_remaining > this->children_status_now[cid].max_capacity_mAh
-        //         ) {
-        //             LOG() << "estimation: there's a battery with exceeding capacity!";
-        //             source_charge_remaining -= (this->children_status_now[cid].max_capacity_mAh - this->children_status_now[cid].capacity_mAh);
-        //             this->children_status_now[cid].capacity_mAh = this->children_status_now[cid].max_capacity_mAh;
-        //         } else {
-        //             this->children_status_now[cid].capacity_mAh += source_charge_remaining;
-        //             source_charge_remaining = 0;
-        //         }
-        //     }
-        //     if (source_max_charge_remaining != 0 && source_charge_remaining != 0) {
-        //         WARNING() << "estimation failure!!! failed to distribute the remaining charge!!!";
-        //     }
-        // }  
-        if (this->policy_type == SplitterPolicyType::Tranche || this->policy_type == SplitterPolicyType::Reservation) {
-            // distribute the max_charge 
-            if (source_max_charge_remaining >= 0) {
-                if (this->policy_type == SplitterPolicyType::Tranche)
-                    this->children_status_now.front().max_capacity_mAh += source_max_charge_remaining;
-                else if (this->policy_type == SplitterPolicyType::Reservation)
-                    this->children_status_now.back().max_capacity_mAh += source_max_charge_remaining;
-                source_max_charge_remaining = 0;
-            } else {
-                for (size_t cid = this->child_names.size() - 1; cid >= 0; --cid) {
-                    if (this->children_status_now[cid].max_capacity_mAh + source_max_charge_remaining <= 0) {
-                        WARNING() << "estimation failed: there are batteries with non-positive max capacity!";
-                        source_max_charge_remaining += this->children_status_now[cid].max_capacity_mAh;
-                        this->children_status_now[cid].max_capacity_mAh = 0;
-                    } else {
-                        this->children_status_now[cid].max_capacity_mAh += source_max_charge_remaining;
-                        source_max_charge_remaining = 0;
-                        break;
-                    }
-                }
-            }
-            // distribute the charge 
-            if (source_charge_remaining >= 0) {
-                if (this->policy_type == SplitterPolicyType::Tranche) {
-                    for (size_t cid = 0; cid < this->child_names.size(); ++cid) {
-                        if (this->children_status_now[cid].capacity_mAh + source_charge_remaining > this->children_status_now[cid].max_capacity_mAh) {
-                            source_charge_remaining -= (this->children_status_now[cid].max_capacity_mAh - this->children_status_now[cid].capacity_mAh);
-                            this->children_status_now[cid].capacity_mAh = this->children_status_now[cid].max_capacity_mAh;
-                        } else {
-                            this->children_status_now[cid].capacity_mAh += source_charge_remaining;
-                            source_charge_remaining = 0;
-                            break;
-                        }
-                    }
-                } else if (this->policy_type == SplitterPolicyType::Reservation) {
-                    for (size_t cid = this->child_names.size() - 1; cid >= 0; --cid) {
-                        if (this->children_status_now[cid].capacity_mAh + source_charge_remaining > this->children_status_now[cid].max_capacity_mAh) {
-                            source_charge_remaining -= (this->children_status_now[cid].max_capacity_mAh - this->children_status_now[cid].capacity_mAh);
-                            this->children_status_now[cid].capacity_mAh = this->children_status_now[cid].max_capacity_mAh;
-                        } else {
-                            this->children_status_now[cid].capacity_mAh += source_charge_remaining;
-                            source_charge_remaining = 0;
-                            break;
-                        }
-                    }
-                }
-            } else {
-                for (size_t cid = this->child_names.size() - 1; cid >= 0; --cid) {
-                    if (this->children_status_now[cid].capacity_mAh + source_charge_remaining <= 0) {
-                        LOG() << "estimation: there's a battery with non-positive capacity!";
-                        source_charge_remaining += this->children_status_now[cid].capacity_mAh;
-                        this->children_status_now[cid].capacity_mAh = 0;
-                    } else {
-                        this->children_status_now[cid].capacity_mAh += source_charge_remaining;
-                        source_charge_remaining = 0;
-                        break;
-                    }
-                }
-            }
-
-            if (source_charge_remaining != 0 || source_max_charge_remaining != 0) {
-                WARNING() << "the charge or max_charge remaining fail to distribute!!!";
-            }
-        }
-
-        return this->status;  // this return value is meaningless 
-    }
+    BatteryStatus refresh_proportional();
+    BatteryStatus refresh_tranche();
+    BatteryStatus refresh_reservation();
 
     /** 
      * set current is to update the theoretic currents of its children! 
@@ -612,7 +420,7 @@ public:
 
 
 
-#endif // ! POLICY_HPP
+#endif // ! SPLITTER_HPP
 
 
 

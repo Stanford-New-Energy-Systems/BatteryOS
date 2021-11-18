@@ -280,6 +280,13 @@ public:
         background_thread.join(); 
     }
     ////// Ends here
+
+    /// hack, don't use
+    void set_status(BatteryStatus target) {
+        lockguard_t lkg(this->lock);
+        this->status = target;
+    } 
+
 };
 /**
  * Compare two event_t lexicographically 
@@ -316,11 +323,6 @@ public:
     }
     std::string get_type_string() override {
         return "VirtualBattery";
-    }
-
-    void set_status(BatteryStatus target) {
-        lockguard_t lkg(this->lock);
-        this->status = target;
     }
 
     // this function is used to lock the local topology when BOSDirectory is trying to add an edge 
