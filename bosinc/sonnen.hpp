@@ -86,6 +86,7 @@ public:
 
     BatteryStatus refresh() override {
         std::string response_string = this->send_request("/api/v1/status");
+
         // LOG() << response_string;
 
         rapidjson::Document json_resp; 
