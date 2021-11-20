@@ -382,6 +382,7 @@ BatteryStatus BALSplitter::refresh_tranche() {
             }
         }
     } else {
+
         for (size_t i = children_status_now.size()-1; i >= 0; --i) {
             if (children_status_now[i].capacity_mAh + source_status.capacity_mAh <= 0) {
                 LOG() << "estimation: there's a battery with non-positive capacity!";
