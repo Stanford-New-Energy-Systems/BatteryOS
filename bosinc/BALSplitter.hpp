@@ -184,9 +184,9 @@ protected:
      */
     BatteryStatus refresh() override;
 
-    BatteryStatus refresh_proportional();
-    BatteryStatus refresh_tranche();
-    BatteryStatus refresh_reservation();
+    virtual BatteryStatus refresh_proportional();
+    virtual BatteryStatus refresh_tranche();
+    virtual BatteryStatus refresh_reservation();
 
     /** 
      * set current is to update the theoretic currents of its children! 
@@ -245,6 +245,7 @@ public:
             return children_status_now[child_id];
         case RefreshMode::LAZY: 
             this->check_staleness_and_refresh();
+            // WARNING() << children_status_now[child_id];
             return children_status_now[child_id];
         default: 
             WARNING() << "unknown refresh mode"; 

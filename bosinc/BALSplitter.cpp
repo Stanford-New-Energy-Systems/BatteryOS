@@ -2,15 +2,18 @@
 BatteryStatus BALSplitter::refresh() {
     switch (this->policy_type) {
     case BALSplitterType::Proportional:
-        return this->refresh_proportional();
+        this->refresh_proportional();
+        break;
     case BALSplitterType::Tranche:
-        return this->refresh_tranche();
+        this->refresh_tranche();
+        break;
     case BALSplitterType::Reservation:
-        return this->refresh_reservation();
+        this->refresh_reservation();
+        break;
     default: 
         WARNING() << "Unknown policy type, falling back to proportional!";
-        return this->refresh_proportional();
     }
+    return this->status;
 }
 // BatteryStatus BALSplitter::refresh() {
 //     // lock should be already acquired!!! 
@@ -303,6 +306,7 @@ BatteryStatus BALSplitter::refresh_tranche() {
         cstatus.timestamp = source_status.timestamp;
         // update the status 
         children_status_now[cid] = cstatus;
+        // WARNING() << children_status_now[cid];
     }
 
     // now we try to distribute the remaining
@@ -378,12 +382,14 @@ BatteryStatus BALSplitter::refresh_tranche() {
             }
         }
     } else {
-        for (size_t i = children_status_now.size(); i >= 0; --i) {
+        for (size_t i = children_status_now.size()-1; i >= 0; --i) {
             if (children_status_now[i].capacity_mAh + source_status.capacity_mAh <= 0) {
                 LOG() << "estimation: there's a battery with non-positive capacity!";
                 source_status.capacity_mAh += (children_status_now[i].capacity_mAh - 1);
                 children_status_now[i].capacity_mAh = 1;
+                // WARNING() << children_status_now[i];
             } else {
+                // WARNING() << children_status_now[i];
                 children_status_now[i].capacity_mAh += source_status.capacity_mAh;
                 source_status.capacity_mAh = 0;
                 break;
@@ -498,7 +504,7 @@ BatteryStatus BALSplitter::refresh_reservation() {
 
     // capacity 
     if (source_status.capacity_mAh >= 0) {
-        for (size_t i = children_status_now.size(); i >= 0; --i) {
+        for (size_t i = children_status_now.size()-1; i >= 0; --i) {
             if (children_status_now[i].capacity_mAh + source_status.capacity_mAh > this->children_status_now[i].max_capacity_mAh) {
                 source_status.capacity_mAh -= (children_status_now[i].max_capacity_mAh - this->children_status_now[i].capacity_mAh);
                 children_status_now[i].capacity_mAh = children_status_now[i].max_capacity_mAh;
@@ -509,7 +515,7 @@ BatteryStatus BALSplitter::refresh_reservation() {
             }
         }
     } else {
-        for (size_t i = children_status_now.size(); i >= 0; --i) {
+        for (size_t i = children_status_now.size()-1; i >= 0; --i) {
             if (children_status_now[i].capacity_mAh + source_status.capacity_mAh <= 0) {
                 LOG() << "estimation: there's a battery with non-positive capacity!";
                 source_status.capacity_mAh += (children_status_now[i].capacity_mAh - 1);

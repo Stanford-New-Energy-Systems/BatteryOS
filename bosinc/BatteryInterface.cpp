@@ -71,7 +71,7 @@ bool Battery::check_staleness_and_refresh() {
         return false;
     }
     auto now = get_system_time();
-    if ((now - c_time_to_timepoint(this->status.timestamp)) > this->max_staleness) {
+    if ((now - c_time_to_timepoint(this->status.timestamp)) >= this->max_staleness) {
         this->refresh();
         return true;
     }

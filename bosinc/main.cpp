@@ -228,9 +228,21 @@ void test_split_management(int policy = int(BALSplitterType::Proportional)) {
 void test_sonnen_getstatus(int serial = std::stoi(std::getenv("SONNEN_SERIAL1")), int iterations = 1) {
     using namespace std::chrono_literals;
     Sonnen sonnen("s1", serial, 10000, 30000, 30000, std::chrono::milliseconds(1000));
+    Sonnen sonnen2("s2", std::stoi(std::getenv("SONNEN_SERIAL2")), 10000, 30000, 30000, std::chrono::milliseconds(1000));
+    Sonnen sonnen3("s3", std::stoi(std::getenv("SONNEN_SERIAL3")), 10000, 30000, 30000, std::chrono::milliseconds(1000));
+    CSVOutput csv(
+        "test_sonnen_get_status.csv", 
+        {"Date & Time", "Unix_date1", "Power1",
+         "Date & Time", "Unix_date2", "Power2",
+         "Date & Time", "Unix_date3", "Power3"}
+    );
     for (int i = 0; i < iterations; ++i) {
-        std::this_thread::sleep_for(3s);
-        std::cout << sonnen.get_status() << std::endl;
+        std::this_thread::sleep_for(1s);
+        BatteryStatus status = sonnen.get_status();
+        BatteryStatus status2 = sonnen2.get_status();
+        BatteryStatus status3 = sonnen3.get_status();
+        output_status_to_csv(csv, {status, status2, status3});
+        std::cout << status << status2 << status3 << std::endl;
     }
     return;
 }
@@ -326,21 +338,34 @@ void test_sonnen_aggregate_split(int policy = int(BALSplitterType::Proportional)
     Battery *slac = bos.directory.add_battery(
         std::unique_ptr<Battery>(
             new Sonnen(
-                "slac", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(50000))
+                "slac", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, 60s)
         )
     ); 
+    
+
     Battery *home1 = bos.directory.add_battery(
         std::unique_ptr<Battery>(
             new Sonnen(
-                "home1", std::stoi(std::getenv("SONNEN_SERIAL2")), 10000, 30000, 30000, std::chrono::milliseconds(50000))
+                "home1", std::stoi(std::getenv("SONNEN_SERIAL3")), 10000, 30000, 30000, 60s)
         )
     );
-    bos.make_aggregator("agg1", 235000, 10000, {"slac", "home1"}, 10);  // 235 +- 10
+    // // hack, so that we can get the status anyways 
+    // BatteryStatus slacstatus = slac->get_status();
+    // BatteryStatus homestatus = home1->get_status();
+    // slacstatus.current_mA = 0;
+    // homestatus.current_mA = 0;
+    // slac->set_status(slacstatus);
+    // home1->set_status(homestatus);
+    // // end of hack 
 
-    bos.make_policy("sp1", "agg1", {"vb", "vc"}, {Scale(0.6), Scale(0.4)}, {0, 0}, policy, 1000);
+    // LOG() << slac->get_status() << home1->get_status();
 
-    BatteryStatus slac_status = bos.get_status("slac");
-    BatteryStatus home1_status = bos.get_status("home1");
+    bos.make_aggregator("agg1", 235000, 10000, {"slac", "home1"}, 0);  // 235 +- 10
+
+    bos.make_policy("sp1", "agg1", {"vb", "vc"}, {Scale(0.6), Scale(0.4)}, {0, 0}, policy, 0);
+
+    BatteryStatus slac_status = slac->get_status();
+    BatteryStatus home1_status = home1->get_status();
     std::cout << "---------- before the change ----------" << std::endl;
     LOG() << "slac:\n" << slac_status;
     LOG() << "home1:\n" << home1_status;
@@ -352,10 +377,10 @@ void test_sonnen_aggregate_split(int policy = int(BALSplitterType::Proportional)
 
     slac_status.capacity_mAh = 0;
     slac->set_status(slac_status);
-    std::this_thread::sleep_for(2s);
+    std::this_thread::sleep_for(5s);
     std::cout << "---------- after changing slac to 0 ----------" << std::endl;
-    LOG() << "slac:\n" << slac_status;
-    LOG() << "home1:\n" << home1_status;
+    LOG() << "slac:\n" << slac->get_status();
+    LOG() << "home1:\n" << home1->get_status();
     LOG() << "vb:\n" << bos.get_status("vb");
     LOG() << "vc:\n" << bos.get_status("vc");
     LOG() << "agg1\n" << bos.get_status("agg1");
@@ -363,7 +388,7 @@ void test_sonnen_aggregate_split(int policy = int(BALSplitterType::Proportional)
     
     slac_status.capacity_mAh = slac_status.max_capacity_mAh * 0.8;
     slac->set_status(slac_status);
-    std::this_thread::sleep_for(2s);
+    std::this_thread::sleep_for(5s);
     std::cout << "---------- after changing slac to max_cap * 0.8 ----------" << std::endl;
     LOG() << "slac:\n" << slac_status;
     LOG() << "home1:\n" << home1_status;
@@ -387,11 +412,11 @@ int run() {
     // std::cout << std::chrono::duration_cast<std::chrono::seconds>(get_system_time().time_since_epoch()).count() << std::endl;
     // test_sonnen();
     // test_sonnen_split();
-    // test_sonnen_getstatus(std::stoi(std::getenv("SONNEN_SERIAL2")));
+    // test_sonnen_getstatus(std::stoi(std::getenv("SONNEN_SERIAL1")), 10);
 
     // test_sonnen_aggregate();
 
-    // test_sonnen_aggregate_split(int(BALSplitterType::Reservation));
+    test_sonnen_aggregate_split(int(BALSplitterType::Proportional));
 
     return 0;
 }
