@@ -28,17 +28,20 @@ void test_uart() {
 }
 
 void test_python_binding() {
-    std::string addr = "/dev/ttyUSB2";
-    RD6006PowerSupply rd6006(addr);
-    rd6006.enable();
-    rd6006.set_current_Amps(123.456);
-
-    printf("%f\n", rd6006.get_current_Amps());
-    
-    std::string addr2 = "/dev/ttyUSB2";
-    RD6006PowerSupply rd60062(addr2);
-    rd60062.enable();
-    rd60062.set_current_Amps(456.123);
+    std::thread test_thread([](){
+        std::string addr = "/dev/ttyUSB2";
+        RD6006PowerSupply rd6006(addr);
+        rd6006.enable();
+        rd6006.set_current_Amps(123.456);
+        printf("%f\n", rd6006.get_current_Amps());
+        std::string addr2 = "/dev/ttyUSB2";
+        RD6006PowerSupply rd60062(addr2);
+        rd60062.enable();
+        rd60062.set_current_Amps(456.123);
+        return;
+    });
+    test_thread.join();
+    return;
 }
 
 void test_JBDBMS() {
@@ -401,7 +404,7 @@ void test_sonnen_aggregate_split(int policy = int(BALSplitterType::Proportional)
 int run() {
     // LOG();
     // test_battery_status();
-    // test_python_binding();
+    test_python_binding();
     // test_uart();
     // test_JBDBMS(); 
 
@@ -416,7 +419,7 @@ int run() {
 
     // test_sonnen_aggregate();
 
-    test_sonnen_aggregate_split(int(BALSplitterType::Proportional));
+    // test_sonnen_aggregate_split(int(BALSplitterType::Proportional));
 
     return 0;
 }
@@ -432,9 +435,9 @@ int main() {
     Py_DECREF(sys);
 
     
-    // Py_BEGIN_ALLOW_THREADS
+    Py_BEGIN_ALLOW_THREADS
     run();
-    // Py_END_ALLOW_THREADS
+    Py_END_ALLOW_THREADS
 
     
     
