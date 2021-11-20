@@ -24,6 +24,6 @@ mac:
 
 .PHONY: rpi
 rpi:
-	g++ -std=c++17 $(PY_CFLAGS) $(PY_LDFLAGS) $(CPP_FILES) $(C_FILES) -g $(CURL_LDFLAGS) -lpthread 
+	g++ -std=c++17 $(PY_CFLAGS) $(PY_LDFLAGS) $(CPP_FILES) $(C_FILES) -g $(CURL_LDFLAGS) -lpthread -fPIE
 	
 
