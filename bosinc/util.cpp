@@ -67,7 +67,22 @@ std::ostream & operator <<(std::ostream &out, const BatteryStatus &status) {
 
 
 
-
+void output_status_to_csv(CSVOutput &csv, const std::vector<BatteryStatus> &statuses) {
+    constexpr size_t tbuff_size = 20;
+    for (int i = 0; i < int(statuses.size()); ++i) {
+        const BatteryStatus &status = statuses[i];
+        char tbuff[tbuff_size];
+        time_t now_ts = std::chrono::system_clock::to_time_t(c_time_to_timepoint(status.timestamp));
+        strftime(tbuff, 20, "%Y-%m-%d %H:%M:%S", localtime(&now_ts));  // note: this is in local time
+        tbuff[tbuff_size-1] = '\0';
+        csv.stream() 
+            << tbuff << ',' 
+            << now_ts << ',' 
+            << ((double)status.voltage_mV / 1000 * (double)status.current_mA / 1000)
+            << ( (i < int(statuses.size() - 1)) ? ',' : '\n' );
+    }
+    
+}
 
 
 

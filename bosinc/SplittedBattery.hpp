@@ -57,6 +57,7 @@ public:
         }
         this->policy = sp;
         this->policy_name = policy_name;
+        this->status = sp->get_status_of(this->name);
         return true; 
     }
     uint32_t schedule_set_current(
