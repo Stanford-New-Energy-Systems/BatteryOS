@@ -28,5 +28,5 @@ rpi:
 	
 .PHONY: wsl
 wsl:
-	g++ -std=c++17 $(PY_CFLAGS_EMBED) $(PY_LDFLAGS_EMBED) $(CPP_FILES) $(C_FILES) -g $(CURL_LDFLAGS) -lpthread -fPIE
+	g++ -std=c++17 $(PY_CFLAGS_EMBED) $(CPP_FILES) $(C_FILES) -g $(CURL_LDFLAGS) -lpthread $(PY_LDFLAGS_EMBED) -fPIE
 
