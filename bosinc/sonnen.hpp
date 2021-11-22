@@ -106,23 +106,23 @@ public:
         this->status.max_capacity_mAh = round((double)max_capacity_Wh / (double)uac * 1000);
         this->status.max_charging_current_mA = this->max_charging_current_mA;
         this->status.max_discharging_current_mA = this->max_discharging_current_mA;
-        this->status.timestamp = timepoint_to_c_time(tp);
+        this->status.timestamp = get_system_time_c();
         
         return this->status;
     }
 
     uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, void *other_data) override {
-        LOG() << "set_current: " << target_current_mA << std::endl;
+        // LOG() << "set_current: " << target_current_mA << std::endl;
 
-        LOG() << "now is (secs since epoch)" << 
-            std::chrono::duration_cast<std::chrono::seconds>(get_system_time().time_since_epoch()).count() << std::endl;
+        // LOG() << "now is (secs since epoch)" << 
+        //     std::chrono::duration_cast<std::chrono::seconds>(get_system_time().time_since_epoch()).count() << std::endl;
 
         std::string response_string = this->send_request(
             "/api/v1/setpoint/"+
             ((target_current_mA > 0) ? std::string("discharge/") : std::string("charge/"))+
             std::to_string(std::abs((target_current_mA/1000) * (this->status.voltage_mV/1000)))
         );
-        std::cout << response_string << std::endl;
+        // std::cout << response_string << std::endl;
         // rapidjson::Document json_resp; 
         // json_resp.Parse(response_string.c_str()); 
         int64_t retcode = 1;
