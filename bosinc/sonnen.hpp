@@ -84,6 +84,16 @@ public:
         return response_string;
     }
 
+    void enter_manual_mode() {
+        this->send_request("/api/setting?EM_OperatingMode=1");
+    }
+    void enter_self_comsumption() {
+        this->send_request("/api/setting?EM_OperatingMode=8");
+    }
+    void enter_tou_mode() {
+        this->send_request("/api/setting?EM_OperatingMode=10");
+    }
+
     BatteryStatus refresh() override {
         std::string response_string = this->send_request("/api/v1/status");
 

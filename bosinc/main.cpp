@@ -801,15 +801,22 @@ void experiment2_dryrun(double watts = 4000.0) {
     }
 }
 
-void experiment3_dryrun(double watt1 = 2000.0, double watt2 = 2500.0) {
+void experiment3_dryrun(double watt1 = 1000.0, double watt2 = 1500.0) {
     using namespace std::chrono_literals;
     BOS bos;
-    bos.directory.add_battery(
+    Battery *slac_battery = bos.directory.add_battery(
         std::unique_ptr<Battery>(
             new Sonnen(
                 "slac", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(500))
         )
     );
+
+    Sonnen *slac_sonnen = dynamic_cast<Sonnen*>(slac_battery);
+    slac_sonnen->enter_manual_mode();
+    std::this_thread::sleep_for(10s);
+    slac_sonnen->set_current(0, false, nullptr);
+    std::this_thread::sleep_for(10s);
+
     BatteryStatus slac_status = bos.get_status("slac");
     LOG() << "initial status for slac:" << slac_status;
     bos.make_policy(
@@ -826,8 +833,8 @@ void experiment3_dryrun(double watt1 = 2000.0, double watt2 = 2500.0) {
     timepoint_t now = get_system_time();
     time_t now_ts = std::chrono::system_clock::to_time_t(now);
     time_t now_ts1up = std::chrono::system_clock::to_time_t(now+35s);
-    time_t now_ts1down = std::chrono::system_clock::to_time_t(now+5min+35s);
-    time_t now_ts2up = std::chrono::system_clock::to_time_t(now+2min+35s);
+    time_t now_ts1down = std::chrono::system_clock::to_time_t(now+3min+35s);
+    time_t now_ts2up = std::chrono::system_clock::to_time_t(now+1min+35s);
     time_t now_ts2down = std::chrono::system_clock::to_time_t(now+4min+35s);
     
     LOG() << "now is: (unix timestamp): " << now_ts << "\n"
@@ -845,10 +852,10 @@ void experiment3_dryrun(double watt1 = 2000.0, double watt2 = 2500.0) {
         }
     );
 
-    // bos.schedule_set_current("s1", watt1/volt*1000, now+35s, now+5min+35s);
-    // bos.schedule_set_current("s2", watt2/volt*1000, now+2min+35s, now+4min+35s);
+    bos.schedule_set_current("s1", watt1/volt*1000, now+35s, now+3min+35s);
+    bos.schedule_set_current("s2", watt2/volt*1000, now+1min+35s, now+4min+35s);
     
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 275; ++i) {
         std::this_thread::sleep_for(1s);
         BatteryStatus slac_status = bos.get_status("slac");
         BatteryStatus s1_status = bos.get_status("s1");
@@ -856,6 +863,7 @@ void experiment3_dryrun(double watt1 = 2000.0, double watt2 = 2500.0) {
         output_status_to_csv(csv, {slac_status, s1_status, s2_status});
         LOG() << "slac:\n" << slac_status << "s1:\n" << s1_status << "s2:\n" << s2_status;
     }
+    slac_sonnen->enter_self_comsumption();
 }
 /////////////////////////////////////////////////////////// DRYRUNS //////////////////////////////////////////////////////////////
 

@@ -339,20 +339,26 @@ public:
             
             current_up_to_now[child_id] = child_current_backup;
             
-            
+            std::vector<std::pair<timepoint_t, int64_t>> events_inbetween_for_others;
             // now continue the preview, until until_when 
             for ( ; event_iterator != event_queue.end(); ++event_iterator) {
                 size_t echild_id = reinterpret_cast<size_t>(event_iterator->other_data);
                 if (event_iterator->timepoint > until_when) { break; }
                 if (event_iterator->func == Function::REFRESH) { continue; }
-                if (echild_id == child_id && 
-                    when_to_set <= event_iterator->timepoint && 
-                    event_iterator->timepoint <= until_when
-                ) {
-                    // remove the events related to this child in between 
-                    events_to_remove.push_back(event_iterator);
-                }
                 current_up_to_now[echild_id] = event_iterator->current_mA;
+                if (when_to_set <= event_iterator->timepoint && event_iterator->timepoint <= until_when) {
+                    if (echild_id == child_id) {
+                        events_to_remove.push_back(event_iterator);
+                    } else if (when_to_set < event_iterator->timepoint && event_iterator->timepoint < until_when) {
+                        int64_t net_currents_now = 0;
+                        for (auto p : current_up_to_now) {
+                            net_currents_now += p;
+                        }
+                        net_currents_now -= current_up_to_now[child_id];
+                        net_currents_now += target_current_mA;
+                        events_inbetween_for_others.push_back({event_iterator->timepoint, net_currents_now});
+                    }
+                }
             }
             // for (auto &p : current_up_to_now) {
             //     total_currents_to_resume += p.second;
@@ -389,6 +395,15 @@ public:
                 when_to_set, 
                 until_when
             );
+            // the set-current requests for the other batteries shouldn't be distracted 
+            for (auto &p : events_inbetween_for_others) {
+                this->source->schedule_set_current(
+                    p.second, 
+                    true, 
+                    p.first, 
+                    until_when
+                );
+            }
         }
         cv.notify_one();
         return success;
