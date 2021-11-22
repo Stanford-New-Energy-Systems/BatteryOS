@@ -401,25 +401,496 @@ void test_sonnen_aggregate_split(int policy = int(BALSplitterType::Proportional)
 
 }
 
+/////////////////////////////////////////////////////////// EXPERIMENTS //////////////////////////////////////////////////////////////
+/**
+ * watts > 0: discharge, ;
+ * watts < 0: charge 
+ */
+void experiment1(double watts = 3500.0) {
+    using namespace std::chrono_literals;
+    BOS bos; 
+    Battery *slac = bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "slac", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, 500ms)
+        )
+    ); 
+
+    BatteryStatus status = slac->get_status();
+    LOG() << "initial slac status:\n" << status << std::endl;
+
+    timepoint_t now = get_system_time();
+    time_t now_ts = std::chrono::system_clock::to_time_t(now);
+    time_t now_ts1 = std::chrono::system_clock::to_time_t(now+35s);
+    time_t now_ts2 = std::chrono::system_clock::to_time_t(now+5min+35s);
+    LOG() << "now is: (unix timestamp): " << now_ts << "\n"
+        << "scheduled rampup time: (unix timestamp): " << now_ts1 << "\n"
+        << "and scheduled rampdown time: (unix timestamp): " << now_ts2; 
+
+    slac->schedule_set_current(round(watts / (status.voltage_mV/1000) * 1000), true, now+35s, now+5min+35s);
+    CSVOutput csv(
+        std::string("experiment1_")+std::to_string(watts)+std::string("W.csv"), 
+        {"slac_date & time", "slac_unix_date", "slac_power"}
+    );
+    for (int i = 0; i < 335; ++i) {
+        std::this_thread::sleep_for(1s);
+        BatteryStatus status = slac->get_status();
+        output_status_to_csv(csv, {status});
+        std::cout << status;
+    }
+}
+
+void experiment2(double watts = 4000.0) {
+    using namespace std::chrono_literals;
+    BOS bos; 
+    bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "slac", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(1000))
+        )
+    );
+    bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "home1", std::stoi(std::getenv("SONNEN_SERIAL2")), 10000, 30000, 30000, std::chrono::milliseconds(1000))
+        )
+    ); 
+    // if it says voltage out of range, change 235000 to something else, 
+    // or change 10000 to something else 
+    // current voltage is 235,000 +- 10,000 mV which is 235+-10 V
+    bos.make_aggregator("agg1", 235000, 10000, {"slac", "home1"}, 1000);  // 235 +- 10
+    double volt = 235.0;
+
+    LOG() << "initital status of agg1: \n" << bos.get_status("agg1");
+
+    timepoint_t now = get_system_time();
+    time_t now_ts = std::chrono::system_clock::to_time_t(now);
+    time_t now_ts1 = std::chrono::system_clock::to_time_t(now+35s);
+    time_t now_ts2 = std::chrono::system_clock::to_time_t(now+5min+35s);
+
+    LOG() << "now is: (unix timestamp): " << now_ts << "\n"
+        << "scheduled rampup time: (unix timestamp): " << now_ts1 << "\n"
+        << "and scheduled rampdown time: (unix timestamp): " << now_ts2; 
+    
+    bos.schedule_set_current("agg1", round(watts/volt*1000), now+35s, now+5min+35s);
+    CSVOutput csv(
+        std::string("experiment2_")+std::to_string(watts)+std::string("W.csv"), 
+        {
+            "slac_date & time", "slac_unix_date", "slac_power", 
+            "home1_date & time", "home1_unix_date", "home1_power", 
+            "agg1_date & time", "agg1_unix_date", "agg1_power",
+        }
+    );
+    for (int i = 0; i < 335; ++i) {
+        std::this_thread::sleep_for(1s);
+        BatteryStatus slac_status = bos.get_status("slac");
+        BatteryStatus home1_status = bos.get_status("home1");
+        BatteryStatus agg1_status = bos.get_status("agg1");
+        output_status_to_csv(csv, {slac_status, home1_status, agg1_status});
+        LOG() << "slac:\n" << slac_status << "home1:\n" << home1_status << "agg1:\n" << agg1_status;
+    }
+}
+
+void experiment3(double watt1 = 2000.0, double watt2 = 2500.0) {
+    using namespace std::chrono_literals;
+    BOS bos;
+    bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "slac", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(500))
+        )
+    );
+    BatteryStatus slac_status = bos.get_status("slac");
+    LOG() << "initial status for slac:" << slac_status;
+    bos.make_policy(
+        "split_proportional", 
+        "slac",
+        {"s1", "s2"}, 
+        {Scale(0.6), Scale(0.4)}, 
+        {500, 500}, 
+        int(BALSplitterType::Proportional), 
+        1000
+    );
+    double volt = slac_status.voltage_mV / 1000;
+
+    timepoint_t now = get_system_time();
+    time_t now_ts = std::chrono::system_clock::to_time_t(now);
+    time_t now_ts1up = std::chrono::system_clock::to_time_t(now+35s);
+    time_t now_ts1down = std::chrono::system_clock::to_time_t(now+5min+35s);
+    time_t now_ts2up = std::chrono::system_clock::to_time_t(now+2min+35s);
+    time_t now_ts2down = std::chrono::system_clock::to_time_t(now+4min+35s);
+    
+    LOG() << "now is: (unix timestamp): " << now_ts << "\n"
+        << "s1 should ramp up at: (unix timestamp): " << now_ts1up << "\n"
+        << "s1 should ramp down at: (unix timestamp): " << now_ts1down << "\n"
+        << "s2 should ramp up at: (unix timestamp): " << now_ts2up << "\n"
+        << "s2 should ramp down at: (unix timestamp): " << now_ts2down; 
+
+    CSVOutput csv(
+        std::string("experiment3_")+std::to_string(watt1)+"W_"+std::to_string(watt2)+std::string("W.csv"), 
+        {
+            "slac_date & time", "slac_unix_date", "slac_power", 
+            "s1_date & time", "s1_unix_date", "s1_power", 
+            "s2_date & time", "s2_unix_date", "s2_power",
+        }
+    );
+
+    bos.schedule_set_current("s1", watt1/volt*1000, now+35s, now+5min+35s);
+    bos.schedule_set_current("s2", watt2/volt*1000, now+2min+35s, now+4min+35s);
+    
+    for (int i = 0; i < 335; ++i) {
+        std::this_thread::sleep_for(1s);
+        BatteryStatus slac_status = bos.get_status("slac");
+        BatteryStatus s1_status = bos.get_status("s1");
+        BatteryStatus s2_status = bos.get_status("s2");
+        output_status_to_csv(csv, {slac_status, s1_status, s2_status});
+        LOG() << "slac:\n" << slac_status << "s1:\n" << s1_status << "s2:\n" << s2_status;
+    }
+}
+
+void experiment4(double watt1 = 2000.0, double watt2 = -1500.0) {
+    using namespace std::chrono_literals;
+    BOS bos; 
+    bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "slac", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(500))
+        )
+    );
+    bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "home1", std::stoi(std::getenv("SONNEN_SERIAL2")), 10000, 30000, 30000, std::chrono::milliseconds(500))
+        )
+    ); 
+    bos.make_aggregator("agg1", 235000, 10000, {"slac", "home1"}, 500);  // 235 +- 10
+    double volt = 235.0;
+
+    LOG() << "initital status of agg1: \n" << bos.get_status("agg1");
+
+    bos.make_policy(
+        "split_reservation", 
+        "agg1",
+        {"s1", "s2"}, 
+        {Scale(0.6), Scale(0.4)}, 
+        {500, 500}, 
+        int(BALSplitterType::Reservation), 
+        1000
+    );
+
+    CSVOutput csv(
+        std::string("experiment4_")+std::to_string(watt1)+"W_"+std::to_string(watt2)+std::string("W.csv"), 
+        {
+            "slac_date & time", "slac_unix_date", "slac_power", 
+            "home1_date & time", "home1_unix_date", "home1_power", 
+            "agg1_date & time", "agg1_unix_date", "agg1_power",
+            "s1_date & time", "s1_unix_date", "s1_power", 
+            "s2_date & time", "s2_unix_date", "s2_power",
+        }
+    );
+
+    
+    timepoint_t now = get_system_time();
+    time_t now_ts = std::chrono::system_clock::to_time_t(now);
+    time_t now_ts1up = std::chrono::system_clock::to_time_t(now+35s);
+    time_t now_ts1down = std::chrono::system_clock::to_time_t(now+4min+35s);
+    time_t now_ts2up = std::chrono::system_clock::to_time_t(now+2min+35s);
+    time_t now_ts2down = std::chrono::system_clock::to_time_t(now+5min+35s);
+    
+    LOG() << "now is: (unix timestamp): " << now_ts << "\n"
+        << "s1 should ramp up at: (unix timestamp): " << now_ts1up << "\n"
+        << "s1 should ramp down at: (unix timestamp): " << now_ts1down << "\n"
+        << "s2 should ramp up at: (unix timestamp): " << now_ts2up << "\n"
+        << "s2 should ramp down at: (unix timestamp): " << now_ts2down; 
+
+    bos.schedule_set_current("s1", watt1/volt*1000, now+35s, now+4min+35s);
+    bos.schedule_set_current("s2", watt2/volt*1000, now+2min+35s, now+5min+35s);
+
+
+    for (int i = 0; i < 335; ++i) {
+        std::this_thread::sleep_for(1s);
+        BatteryStatus slac_status = bos.get_status("slac");
+        BatteryStatus home1_status = bos.get_status("home1");
+        BatteryStatus agg1_status = bos.get_status("agg1");
+        BatteryStatus s1_status = bos.get_status("s1");
+        BatteryStatus s2_status = bos.get_status("s2");
+        output_status_to_csv(csv, {slac_status, home1_status, agg1_status, s1_status, s2_status});
+        LOG() << "slac:\n" << slac_status 
+            << "home1:\n" << home1_status 
+            << "agg1:\n" << agg1_status 
+            << "s1:\n" << s1_status 
+            << "s2:\n" << s2_status;
+    }
+}
+
+void experiment5(double watt1 = -2000.0, double watt2 = 2500.0) {
+    using namespace std::chrono_literals;
+    BOS bos; 
+    bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "slac", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(500))
+        )
+    );
+    bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "home1", std::stoi(std::getenv("SONNEN_SERIAL2")), 10000, 30000, 30000, std::chrono::milliseconds(500))
+        )
+    ); 
+    bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "home2", std::stoi(std::getenv("SONNEN_SERIAL3")), 10000, 30000, 30000, std::chrono::milliseconds(500))
+        )
+    ); 
+    bos.make_aggregator("agg1", 235000, 10000, {"slac", "home1"}, 500);  // 235 +- 10
+    double volt = 235.0;
+
+    LOG() << "initital status of agg1: \n" << bos.get_status("agg1");
+
+    bos.make_policy(
+        "split_tranche", 
+        "agg1",
+        {"s1", "s2"}, 
+        {Scale(0.6), Scale(0.4)}, 
+        {500, 500}, 
+        int(BALSplitterType::Tranche), 
+        1000
+    );
+
+    bos.make_aggregator("agg2", 235000, 10000, {"s2", "home2"}, 500);
+
+    LOG() << "initital status of agg2: \n" << bos.get_status("agg2");
+
+    CSVOutput csv(
+        std::string("experiment5_")+std::to_string(watt1)+"W_"+std::to_string(watt2)+std::string("W.csv"), 
+        {
+            "slac_date & time", "slac_unix_date", "slac_power", 
+            "home1_date & time", "home1_unix_date", "home1_power", 
+            "agg1_date & time", "agg1_unix_date", "agg1_power",
+            "s1_date & time", "s1_unix_date", "s1_power", 
+            "s2_date & time", "s2_unix_date", "s2_power",
+            "home2_date & time", "home2_unix_date", "home2_power", 
+            "agg2_date & time", "agg2_unix_date", "agg2_power",
+        }
+    );
+
+    
+    timepoint_t now = get_system_time();
+    time_t now_ts = std::chrono::system_clock::to_time_t(now);
+    time_t now_ts1up = std::chrono::system_clock::to_time_t(now+35s);
+    time_t now_ts1down = std::chrono::system_clock::to_time_t(now+5min+35s);
+    time_t now_ts2up = std::chrono::system_clock::to_time_t(now+2min+35s);
+    time_t now_ts2down = std::chrono::system_clock::to_time_t(now+5min+35s);
+    
+    LOG() << "now is: (unix timestamp): " << now_ts << "\n"
+        << "s1 should ramp up at: (unix timestamp): " << now_ts1up << "\n"
+        << "s1 should ramp down at: (unix timestamp): " << now_ts1down << "\n"
+        << "agg2 should ramp up at: (unix timestamp): " << now_ts2up << "\n"
+        << "agg2 should ramp down at: (unix timestamp): " << now_ts2down; 
+
+    bos.schedule_set_current("s1", watt1/volt*1000, now+35s, now+5min+35s);
+    bos.schedule_set_current("agg2", watt2/volt*1000, now+2min+35s, now+5min+35s);
+
+    for (int i = 0; i < 335; ++i) {
+        std::this_thread::sleep_for(1s);
+        BatteryStatus slac_status = bos.get_status("slac");
+        BatteryStatus home1_status = bos.get_status("home1");
+        BatteryStatus agg1_status = bos.get_status("agg1");
+        BatteryStatus s1_status = bos.get_status("s1");
+        BatteryStatus s2_status = bos.get_status("s2");
+        BatteryStatus home2_status = bos.get_status("home2");
+        BatteryStatus agg2_status = bos.get_status("agg2");
+        output_status_to_csv(csv, {slac_status, home1_status, agg1_status, s1_status, s2_status, home2_status, agg2_status});
+        LOG() << "slac:\n" << slac_status 
+            << "home1:\n" << home1_status 
+            << "agg1:\n" << agg1_status 
+            << "s1:\n" << s1_status 
+            << "s2:\n" << s2_status
+            << "home2:\n" << home2_status
+            << "agg2:\n" << agg2_status;
+    }
+}
+/////////////////////////////////////////////////////////// EXPERIMENTS //////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////// DRYRUNS //////////////////////////////////////////////////////////////
+
+void experiment1_dryrun(double watts = 3500.0) {
+    using namespace std::chrono_literals;
+    BOS bos; 
+    Battery *slac = bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "slac", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, 1000ms)
+        )
+    ); 
+
+    BatteryStatus status = slac->get_status();
+    LOG() << "initial slac status:\n" << status << std::endl;
+
+    timepoint_t now = get_system_time();
+    time_t now_ts = std::chrono::system_clock::to_time_t(now);
+    time_t now_ts1 = std::chrono::system_clock::to_time_t(now+35s);
+    time_t now_ts2 = std::chrono::system_clock::to_time_t(now+5min+35s);
+    LOG() << "now is: (unix timestamp): " << now_ts << "\n"
+        << "scheduled rampup time: (unix timestamp): " << now_ts1 << "\n"
+        << "and scheduled rampdown time: (unix timestamp): " << now_ts2; 
+
+    // slac->schedule_set_current(round(watts / (status.voltage_mV/1000) * 1000), true, now+35s, now+5min+35s);
+    CSVOutput csv(
+        std::string("experiment1_")+std::to_string(watts)+std::string("W.csv"), 
+        {"slac_date & time", "slac_unix_date", "slac_power"}
+    );
+    for (int i = 0; i < 5; ++i) {
+        std::this_thread::sleep_for(1s);
+        BatteryStatus status = slac->get_status();
+        output_status_to_csv(csv, {status});
+        std::cout << status;
+    }
+}
+
+void experiment2_dryrun(double watts = 4000.0) {
+    using namespace std::chrono_literals;
+    BOS bos; 
+    bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "slac", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(1000))
+        )
+    );
+    bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "home1", std::stoi(std::getenv("SONNEN_SERIAL3")), 10000, 30000, 30000, std::chrono::milliseconds(1000))
+        )
+    ); 
+    // if it says voltage out of range, change 235000 to something else, 
+    // or change 10000 to something else 
+    // current voltage is 235,000 +- 10,000 mV which is 235+-10 V
+    bos.make_aggregator("agg1", 235000, 10000, {"slac", "home1"}, 1000);  // 235 +- 10
+    double volt = 235.0;
+
+    LOG() << "initital status of agg1: \n" << bos.get_status("agg1");
+
+    timepoint_t now = get_system_time();
+    time_t now_ts = std::chrono::system_clock::to_time_t(now);
+    time_t now_ts1 = std::chrono::system_clock::to_time_t(now+35s);
+    time_t now_ts2 = std::chrono::system_clock::to_time_t(now+5min+35s);
+
+    LOG() << "now is: (unix timestamp): " << now_ts << "\n"
+        << "scheduled rampup time: (unix timestamp): " << now_ts1 << "\n"
+        << "and scheduled rampdown time: (unix timestamp): " << now_ts2; 
+    
+    // bos.schedule_set_current("agg1", round(watts/volt*1000), now+35s, now+5min+35s);
+    CSVOutput csv(
+        std::string("experiment2_")+std::to_string(watts)+std::string("W.csv"), 
+        {
+            "slac_date & time", "slac_unix_date", "slac_power", 
+            "home1_date & time", "home1_unix_date", "home1_power", 
+            "agg1_date & time", "agg1_unix_date", "agg1_power",
+        }
+    );
+    for (int i = 0; i < 5; ++i) {
+        std::this_thread::sleep_for(1s);
+        BatteryStatus slac_status = bos.get_status("slac");
+        BatteryStatus home1_status = bos.get_status("home1");
+        BatteryStatus agg1_status = bos.get_status("agg1");
+        output_status_to_csv(csv, {slac_status, home1_status, agg1_status});
+        LOG() << "slac:\n" << slac_status << "home1:\n" << home1_status << "agg1:\n" << agg1_status;
+    }
+}
+
+void experiment3_dryrun(double watt1 = 2000.0, double watt2 = 2500.0) {
+    using namespace std::chrono_literals;
+    BOS bos;
+    bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "slac", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(500))
+        )
+    );
+    BatteryStatus slac_status = bos.get_status("slac");
+    LOG() << "initial status for slac:" << slac_status;
+    bos.make_policy(
+        "split_proportional", 
+        "slac",
+        {"s1", "s2"}, 
+        {Scale(0.6), Scale(0.4)}, 
+        {500, 500}, 
+        int(BALSplitterType::Tranche), 
+        1000
+    );
+    double volt = slac_status.voltage_mV / 1000;
+
+    timepoint_t now = get_system_time();
+    time_t now_ts = std::chrono::system_clock::to_time_t(now);
+    time_t now_ts1up = std::chrono::system_clock::to_time_t(now+35s);
+    time_t now_ts1down = std::chrono::system_clock::to_time_t(now+5min+35s);
+    time_t now_ts2up = std::chrono::system_clock::to_time_t(now+2min+35s);
+    time_t now_ts2down = std::chrono::system_clock::to_time_t(now+4min+35s);
+    
+    LOG() << "now is: (unix timestamp): " << now_ts << "\n"
+        << "s1 should ramp up at: (unix timestamp): " << now_ts1up << "\n"
+        << "s1 should ramp down at: (unix timestamp): " << now_ts1down << "\n"
+        << "s2 should ramp up at: (unix timestamp): " << now_ts2up << "\n"
+        << "s2 should ramp down at: (unix timestamp): " << now_ts2down; 
+
+    CSVOutput csv(
+        std::string("experiment3_")+std::to_string(watt1)+"W_"+std::to_string(watt2)+std::string("W.csv"), 
+        {
+            "slac_date & time", "slac_unix_date", "slac_power", 
+            "s1_date & time", "s1_unix_date", "s1_power", 
+            "s2_date & time", "s2_unix_date", "s2_power",
+        }
+    );
+
+    // bos.schedule_set_current("s1", watt1/volt*1000, now+35s, now+5min+35s);
+    // bos.schedule_set_current("s2", watt2/volt*1000, now+2min+35s, now+4min+35s);
+    
+    for (int i = 0; i < 5; ++i) {
+        std::this_thread::sleep_for(1s);
+        BatteryStatus slac_status = bos.get_status("slac");
+        BatteryStatus s1_status = bos.get_status("s1");
+        BatteryStatus s2_status = bos.get_status("s2");
+        output_status_to_csv(csv, {slac_status, s1_status, s2_status});
+        LOG() << "slac:\n" << slac_status << "s1:\n" << s1_status << "s2:\n" << s2_status;
+    }
+}
+/////////////////////////////////////////////////////////// DRYRUNS //////////////////////////////////////////////////////////////
+
+
+
 int run() {
     // LOG();
     // test_battery_status();
-    test_python_binding();
+    // test_python_binding();
     // test_uart();
     // test_JBDBMS(); 
-
     // test_events();
-
     // test_agg_management();  // seems ok! 
     // test_split_management(int(BALSplitterType::Reservation));
     // std::cout << std::chrono::duration_cast<std::chrono::seconds>(get_system_time().time_since_epoch()).count() << std::endl;
     // test_sonnen();
     // test_sonnen_split();
     // test_sonnen_getstatus(std::stoi(std::getenv("SONNEN_SERIAL1")), 10);
-
     // test_sonnen_aggregate();
-
     // test_sonnen_aggregate_split(int(BALSplitterType::Proportional));
+
+/////////////////////////////////////////////////////////// LOOK AT THIS //////////////////////////////////////////////////////////////
+    {
+        ////// the experiments: 
+        // experiment1(3500);
+        // experiment2(4000);
+        // experiment3(2000, 2500);
+        // experiment4(2000, -1500);
+        // experiment5(-2000, 2500);
+        ////// the dryruns
+        // experiment1_dryrun();
+        // experiment2_dryrun();
+        // experiment3_dryrun();
+    }
+/////////////////////////////////////////////////////////// HERE //////////////////////////////////////////////////////////////
 
     return 0;
 }

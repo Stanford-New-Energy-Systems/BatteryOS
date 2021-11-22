@@ -160,7 +160,7 @@ public:
             SplittedBattery *cp = dynamic_cast<SplittedBattery*>(this->directory.get_battery(cn));
             cp->attach_to_policy(policy_name);
         }
-        // pptr->start_background_refresh();
+        pptr->start_background_refresh();
         return (Battery*)pptr;
     }
 

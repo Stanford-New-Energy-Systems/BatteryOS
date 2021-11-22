@@ -72,9 +72,11 @@ bool Battery::check_staleness_and_refresh() {
     }
     auto now = get_system_time();
     if ((now - c_time_to_timepoint(this->status.timestamp)) >= this->max_staleness) {
+        // std::cout << "refresh!!!!!!" << std::endl;
         this->refresh();
         return true;
     }
+    // std::cout << "NOT refresh......" << std::endl;
     return false;
 }
 
