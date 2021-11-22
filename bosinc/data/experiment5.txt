@@ -1,0 +1,4779 @@
+DN0a226131:bosinc ouyancheng% ./a.out
+------------------------------ LOG ------------------------------
+In file main.cpp, line 650, function void experiment5(double, double): 
+initital status of agg1: 
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61709mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39471mA, 
+    .max_discharging_current_mA = 50430mA, 
+    .timestamp =                  2021-11-21 17:58:36
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 664, function void experiment5(double, double): 
+initital status of agg2: 
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66246mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47696mA, 
+    .timestamp =                  2021-11-21 17:58:43
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 687, function void experiment5(double, double): 
+now is: (unix timestamp): 1637546323
+s1 should ramp up at: (unix timestamp): 1637546358
+s1 should ramp down at: (unix timestamp): 1637546658
+agg2 should ramp up at: (unix timestamp): 1637546478
+agg2 should ramp down at: (unix timestamp): 1637546658
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:58:56
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:58:57
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61709mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39471mA, 
+    .max_discharging_current_mA = 50430mA, 
+    .timestamp =                  2021-11-21 17:58:57
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               37026mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23683mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 17:58:57
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 17:58:57
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:58:59
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 17:59:02
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:03
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:04
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61709mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39471mA, 
+    .max_discharging_current_mA = 50430mA, 
+    .timestamp =                  2021-11-21 17:59:04
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               37026mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23683mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 17:59:04
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 17:59:04
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:05
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 17:59:05
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:06
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:08
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61709mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39471mA, 
+    .max_discharging_current_mA = 50430mA, 
+    .timestamp =                  2021-11-21 17:59:08
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               37026mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23683mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 17:59:08
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 17:59:08
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:09
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 17:59:12
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:13
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:14
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61864mAh, 
+    .max_capacity_mAh =           84746mAh, 
+    .max_charging_current_mA =    39513mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 17:59:14
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               37181mAh, 
+    .max_capacity_mAh =           50920mAh, 
+    .max_charging_current_mA =    23725mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 17:59:14
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 17:59:14
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:15
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 17:59:18
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:19
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:20
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 17:59:20
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               37076mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 17:59:20
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 17:59:20
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:21
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 17:59:25
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:26
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:27
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61709mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39471mA, 
+    .max_discharging_current_mA = 50430mA, 
+    .timestamp =                  2021-11-21 17:59:27
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               37026mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23683mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 17:59:27
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 17:59:27
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:28
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66269mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47713mA, 
+    .timestamp =                  2021-11-21 17:59:31
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:32
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 844mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:33
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 844mA, 
+    .capacity_mAh =               61815mAh, 
+    .max_capacity_mAh =           84747mAh, 
+    .max_charging_current_mA =    39431mA, 
+    .max_discharging_current_mA = 50517mA, 
+    .timestamp =                  2021-11-21 17:59:33
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 844mA, 
+    .capacity_mAh =               37132mAh, 
+    .max_capacity_mAh =           50921mAh, 
+    .max_charging_current_mA =    23682mA, 
+    .max_discharging_current_mA = 30345mA, 
+    .timestamp =                  2021-11-21 17:59:33
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15749mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 17:59:33
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:34
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15749mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 17:59:34
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:35
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 844mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:36
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 844mA, 
+    .capacity_mAh =               61709mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39471mA, 
+    .max_discharging_current_mA = 50430mA, 
+    .timestamp =                  2021-11-21 17:59:36
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 844mA, 
+    .capacity_mAh =               37026mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23683mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 17:59:36
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 17:59:36
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:37
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66292mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47729mA, 
+    .timestamp =                  2021-11-21 17:59:41
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:42
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2110mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:43
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 5064mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 17:59:43
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 5064mA, 
+    .capacity_mAh =               36971mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 17:59:43
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24633mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 17:59:43
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:44
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66300mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47735mA, 
+    .timestamp =                  2021-11-21 17:59:44
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:45
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4641mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:46
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7595mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 17:59:46
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7595mA, 
+    .capacity_mAh =               36964mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 17:59:46
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24640mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 17:59:46
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:47
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66314mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47745mA, 
+    .timestamp =                  2021-11-21 17:59:50
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:51
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:52
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7173mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 17:59:52
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7173mA, 
+    .capacity_mAh =               36949mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 17:59:52
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24655mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 17:59:52
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:53
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66329mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47756mA, 
+    .timestamp =                  2021-11-21 17:59:56
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:57
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 17:59:58
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7173mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 17:59:58
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7173mA, 
+    .capacity_mAh =               36934mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 17:59:58
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24670mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 17:59:58
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:00
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 18:00:02
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:03
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 4237mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:05
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 18:00:05
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               37076mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:00:05
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 18:00:05
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:06
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 18:00:09
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:10
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:11
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7173mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 18:00:11
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7173mA, 
+    .capacity_mAh =               36921mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:00:11
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 18:00:11
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:12
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 18:00:15
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:16
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 4237mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:17
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 18:00:17
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               37076mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:00:17
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 18:00:17
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:18
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 18:00:22
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:23
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 4237mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:24
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 18:00:24
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               37076mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:00:24
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 18:00:24
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:25
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 18:00:28
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:29
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 4237mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:30
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 18:00:30
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               37076mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:00:30
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 18:00:30
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:31
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 18:00:35
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:36
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 4237mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:37
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 18:00:37
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               37076mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:00:37
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 18:00:37
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:38
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 18:00:38
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:39
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 4661mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:40
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7615mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 18:00:40
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7615mA, 
+    .capacity_mAh =               37076mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:00:40
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 18:00:40
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:41
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 18:00:44
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:45
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:46
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7173mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 18:00:46
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7173mA, 
+    .capacity_mAh =               36921mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:00:46
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 18:00:46
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:47
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 18:00:50
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:51
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 4237mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:52
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 18:00:52
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               37076mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:00:52
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 18:00:52
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:53
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 18:00:57
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:58
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 4237mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:00:59
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 18:00:59
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               37076mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:00:59
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 18:00:59
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:00
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 18:01:03
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:04
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:05
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7173mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 18:01:05
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7173mA, 
+    .capacity_mAh =               36921mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:01:05
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 18:01:05
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:06
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 18:01:06
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:07
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 4237mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:08
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 18:01:08
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               37076mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:01:08
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24683mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 18:01:08
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:09
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               66350mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47771mA, 
+    .timestamp =                  2021-11-21 18:01:19
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:25
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 4237mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:26
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7191mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 18:01:26
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3234mA, 
+    .capacity_mAh =               37078mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:01:26
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24681mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 18:01:26
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:28
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 4790mA, 
+    .capacity_mAh =               66344mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47767mA, 
+    .timestamp =                  2021-11-21 18:01:32
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:32
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 5907mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:33
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 8861mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 18:01:33
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 4904mA, 
+    .capacity_mAh =               36931mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:01:33
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24673mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 18:01:33
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:35
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 5207mA, 
+    .capacity_mAh =               66337mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47762mA, 
+    .timestamp =                  2021-11-21 18:01:38
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 2954mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:39
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 5907mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:40
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 8861mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 18:01:40
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 4904mA, 
+    .capacity_mAh =               36938mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:01:40
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24666mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 18:01:40
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 3333mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:41
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               66329mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47756mA, 
+    .timestamp =                  2021-11-21 18:01:45
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 3814mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:46
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 5907mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:47
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9721mA, 
+    .capacity_mAh =               61709mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39471mA, 
+    .max_discharging_current_mA = 50430mA, 
+    .timestamp =                  2021-11-21 18:01:47
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 5764mA, 
+    .capacity_mAh =               37050mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23683mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:01:47
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24659mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:01:47
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:48
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               66322mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47751mA, 
+    .timestamp =                  2021-11-21 18:01:51
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:52
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:53
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10548mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 18:01:53
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6591mA, 
+    .capacity_mAh =               36952mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:01:53
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24652mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 18:01:53
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5417mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:54
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9374mA, 
+    .capacity_mAh =               66316mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47747mA, 
+    .timestamp =                  2021-11-21 18:01:57
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:58
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 6356mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:01:59
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10575mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 18:01:59
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6618mA, 
+    .capacity_mAh =               37114mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:01:59
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24645mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 18:01:59
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:00
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9374mA, 
+    .capacity_mAh =               66308mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47741mA, 
+    .timestamp =                  2021-11-21 18:02:04
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:05
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:06
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10548mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 18:02:06
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6591mA, 
+    .capacity_mAh =               36966mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:02:06
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24638mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 18:02:06
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:07
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               66302mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47737mA, 
+    .timestamp =                  2021-11-21 18:02:10
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:11
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:12
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10548mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 18:02:12
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6591mA, 
+    .capacity_mAh =               36973mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:02:12
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24631mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 18:02:12
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:13
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               66298mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47734mA, 
+    .timestamp =                  2021-11-21 18:02:13
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:14
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:15
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10548mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 18:02:15
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6591mA, 
+    .capacity_mAh =               36976mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:02:15
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24628mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 18:02:15
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:17
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               66291mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47729mA, 
+    .timestamp =                  2021-11-21 18:02:19
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:21
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 6356mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:22
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10575mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 18:02:22
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6618mA, 
+    .capacity_mAh =               37139mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:02:22
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24620mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 18:02:22
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:23
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               66284mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47724mA, 
+    .timestamp =                  2021-11-21 18:02:26
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4641mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:27
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 6356mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:28
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10997mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 18:02:28
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7040mA, 
+    .capacity_mAh =               37145mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:02:28
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24614mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 18:02:28
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:29
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               66277mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47719mA, 
+    .timestamp =                  2021-11-21 18:02:32
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:33
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:35
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10548mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 18:02:35
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6591mA, 
+    .capacity_mAh =               36998mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:02:35
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24606mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 18:02:35
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:36
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               66269mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47713mA, 
+    .timestamp =                  2021-11-21 18:02:39
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:40
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:42
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10548mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 18:02:42
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6591mA, 
+    .capacity_mAh =               37005mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:02:42
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24599mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 18:02:42
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:43
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9374mA, 
+    .capacity_mAh =               66262mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47708mA, 
+    .timestamp =                  2021-11-21 18:02:46
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:47
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:48
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10548mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 18:02:48
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6591mA, 
+    .capacity_mAh =               37013mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:02:48
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24591mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 18:02:48
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:49
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               66258mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47705mA, 
+    .timestamp =                  2021-11-21 18:02:49
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4641mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:51
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:53
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10970mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 18:02:53
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7013mA, 
+    .capacity_mAh =               37017mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:02:53
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24587mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 18:02:53
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5417mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:54
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9374mA, 
+    .capacity_mAh =               66254mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47702mA, 
+    .timestamp =                  2021-11-21 18:02:54
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:55
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 5932mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:56
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10151mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 18:02:56
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6194mA, 
+    .capacity_mAh =               37177mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:02:56
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24582mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 18:02:56
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:02:58
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9374mA, 
+    .capacity_mAh =               66246mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47696mA, 
+    .timestamp =                  2021-11-21 18:03:01
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:02
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 5932mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:03
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10151mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 18:03:03
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6194mA, 
+    .capacity_mAh =               37184mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:03:03
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24575mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 18:03:03
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:04
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               66242mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47693mA, 
+    .timestamp =                  2021-11-21 18:03:04
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:05
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 6356mA, 
+    .capacity_mAh =               36864mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:06
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10575mA, 
+    .capacity_mAh =               61759mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    39553mA, 
+    .max_discharging_current_mA = 50259mA, 
+    .timestamp =                  2021-11-21 18:03:06
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6618mA, 
+    .capacity_mAh =               37188mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    23765mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:03:06
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24571mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20001mA, 
+    .timestamp =                  2021-11-21 18:03:06
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:08
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               66235mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47688mA, 
+    .timestamp =                  2021-11-21 18:03:12
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 5063mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:17
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36709mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:18
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 11392mA, 
+    .capacity_mAh =               61604mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    39512mA, 
+    .max_discharging_current_mA = 50345mA, 
+    .timestamp =                  2021-11-21 18:03:18
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7435mA, 
+    .capacity_mAh =               37046mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    23724mA, 
+    .max_discharging_current_mA = 30258mA, 
+    .timestamp =                  2021-11-21 18:03:18
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24558mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20087mA, 
+    .timestamp =                  2021-11-21 18:03:18
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:20
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9374mA, 
+    .capacity_mAh =               66220mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47678mA, 
+    .timestamp =                  2021-11-21 18:03:24
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4641mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:25
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:26
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10970mA, 
+    .capacity_mAh =               61182mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    40243mA, 
+    .max_discharging_current_mA = 50581mA, 
+    .timestamp =                  2021-11-21 18:03:26
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7013mA, 
+    .capacity_mAh =               36632mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    24455mA, 
+    .max_discharging_current_mA = 30409mA, 
+    .timestamp =                  2021-11-21 18:03:26
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24550mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:03:26
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:27
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               66217mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47675mA, 
+    .timestamp =                  2021-11-21 18:03:27
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4641mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:28
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6751mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:29
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 11392mA, 
+    .capacity_mAh =               61182mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    40243mA, 
+    .max_discharging_current_mA = 50581mA, 
+    .timestamp =                  2021-11-21 18:03:29
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7435mA, 
+    .capacity_mAh =               36636mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    24455mA, 
+    .max_discharging_current_mA = 30409mA, 
+    .timestamp =                  2021-11-21 18:03:29
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24546mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:03:29
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 6250mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:30
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               66210mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47670mA, 
+    .timestamp =                  2021-11-21 18:03:33
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4641mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:35
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:36
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10970mA, 
+    .capacity_mAh =               61182mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    40243mA, 
+    .max_discharging_current_mA = 50581mA, 
+    .timestamp =                  2021-11-21 18:03:36
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7013mA, 
+    .capacity_mAh =               36643mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    24455mA, 
+    .max_discharging_current_mA = 30409mA, 
+    .timestamp =                  2021-11-21 18:03:36
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24539mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:03:36
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:37
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               66202mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47665mA, 
+    .timestamp =                  2021-11-21 18:03:40
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4641mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:41
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:42
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10970mA, 
+    .capacity_mAh =               61182mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    40243mA, 
+    .max_discharging_current_mA = 50581mA, 
+    .timestamp =                  2021-11-21 18:03:42
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7013mA, 
+    .capacity_mAh =               36650mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    24455mA, 
+    .max_discharging_current_mA = 30409mA, 
+    .timestamp =                  2021-11-21 18:03:42
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24532mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:03:42
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41667mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:44
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               66195mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 47660mA, 
+    .timestamp =                  2021-11-21 18:03:47
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4641mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:48
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:49
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10970mA, 
+    .capacity_mAh =               61182mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    40243mA, 
+    .max_discharging_current_mA = 50581mA, 
+    .timestamp =                  2021-11-21 18:03:49
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7013mA, 
+    .capacity_mAh =               36658mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    24455mA, 
+    .max_discharging_current_mA = 30409mA, 
+    .timestamp =                  2021-11-21 18:03:49
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24524mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:03:49
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 241000mV, 
+    .current_mA =                 5809mA, 
+    .capacity_mAh =               41494mAh, 
+    .max_capacity_mAh =           41494mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:51
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9766mA, 
+    .capacity_mAh =               66015mAh, 
+    .max_capacity_mAh =           75142mAh, 
+    .max_charging_current_mA =    15787mA, 
+    .max_discharging_current_mA = 47728mA, 
+    .timestamp =                  2021-11-21 18:03:53
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4641mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:54
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:55
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10970mA, 
+    .capacity_mAh =               61182mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    40243mA, 
+    .max_discharging_current_mA = 50581mA, 
+    .timestamp =                  2021-11-21 18:03:55
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 7013mA, 
+    .capacity_mAh =               36665mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    24455mA, 
+    .max_discharging_current_mA = 30409mA, 
+    .timestamp =                  2021-11-21 18:03:55
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24517mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:03:55
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 241000mV, 
+    .current_mA =                 5809mA, 
+    .capacity_mAh =               41494mAh, 
+    .max_capacity_mAh =           41494mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:03:57
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               65764mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    16508mA, 
+    .max_discharging_current_mA = 47828mA, 
+    .timestamp =                  2021-11-21 18:04:00
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:01
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:01
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10548mA, 
+    .capacity_mAh =               61182mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    40243mA, 
+    .max_discharging_current_mA = 50581mA, 
+    .timestamp =                  2021-11-21 18:04:01
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6591mA, 
+    .capacity_mAh =               36671mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    24455mA, 
+    .max_discharging_current_mA = 30409mA, 
+    .timestamp =                  2021-11-21 18:04:01
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24511mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:04:01
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41250mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:03
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               65757mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    16508mA, 
+    .max_discharging_current_mA = 47823mA, 
+    .timestamp =                  2021-11-21 18:04:06
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4219mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:07
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:08
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10548mA, 
+    .capacity_mAh =               61182mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    40243mA, 
+    .max_discharging_current_mA = 50581mA, 
+    .timestamp =                  2021-11-21 18:04:08
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6591mA, 
+    .capacity_mAh =               36679mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    24455mA, 
+    .max_discharging_current_mA = 30409mA, 
+    .timestamp =                  2021-11-21 18:04:08
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24503mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:04:08
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41250mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:09
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               65750mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    16507mA, 
+    .max_discharging_current_mA = 47818mA, 
+    .timestamp =                  2021-11-21 18:04:13
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4641mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:16
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:16
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 10951mA, 
+    .capacity_mAh =               61077mAh, 
+    .max_capacity_mAh =           84211mAh, 
+    .max_charging_current_mA =    40286mA, 
+    .max_discharging_current_mA = 50494mA, 
+    .timestamp =                  2021-11-21 18:04:16
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6994mA, 
+    .capacity_mAh =               36582mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    24498mA, 
+    .max_discharging_current_mA = 30322mA, 
+    .timestamp =                  2021-11-21 18:04:16
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 3957mA, 
+    .capacity_mAh =               24495mAh, 
+    .max_capacity_mAh =           33471mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:04:16
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 5833mA, 
+    .capacity_mAh =               41250mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:17
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 9790mA, 
+    .capacity_mAh =               65741mAh, 
+    .max_capacity_mAh =           75315mAh, 
+    .max_charging_current_mA =    16506mA, 
+    .max_discharging_current_mA = 47811mA, 
+    .timestamp =                  2021-11-21 18:04:20
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 4641mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:21
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 1688mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:22
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               61182mAh, 
+    .max_capacity_mAh =           84388mAh, 
+    .max_charging_current_mA =    40243mA, 
+    .max_discharging_current_mA = 50581mA, 
+    .timestamp =                  2021-11-21 18:04:22
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36691mAh, 
+    .max_capacity_mAh =           50740mAh, 
+    .max_charging_current_mA =    24455mA, 
+    .max_discharging_current_mA = 30409mA, 
+    .timestamp =                  2021-11-21 18:04:22
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 6329mA, 
+    .capacity_mAh =               24491mAh, 
+    .max_capacity_mAh =           33648mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:04:22
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 3333mA, 
+    .capacity_mAh =               41250mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:23
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               65741mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    16493mA, 
+    .max_discharging_current_mA = 47811mA, 
+    .timestamp =                  2021-11-21 18:04:27
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:28
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:29
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61393mAh, 
+    .max_capacity_mAh =           84747mAh, 
+    .max_charging_current_mA =    40157mA, 
+    .max_discharging_current_mA = 50756mA, 
+    .timestamp =                  2021-11-21 18:04:29
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36902mAh, 
+    .max_capacity_mAh =           50921mAh, 
+    .max_charging_current_mA =    24369mA, 
+    .max_discharging_current_mA = 30584mA, 
+    .timestamp =                  2021-11-21 18:04:29
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24491mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:04:29
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41250mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:30
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               65741mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    16493mA, 
+    .max_discharging_current_mA = 47811mA, 
+    .timestamp =                  2021-11-21 18:04:33
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:34
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36441mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:35
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61547mAh, 
+    .max_capacity_mAh =           84926mAh, 
+    .max_charging_current_mA =    40200mA, 
+    .max_discharging_current_mA = 50668mA, 
+    .timestamp =                  2021-11-21 18:04:35
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               37056mAh, 
+    .max_capacity_mAh =           51100mAh, 
+    .max_charging_current_mA =    24412mA, 
+    .max_discharging_current_mA = 30496mA, 
+    .timestamp =                  2021-11-21 18:04:35
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24491mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:04:35
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41250mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:36
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               65741mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    16493mA, 
+    .max_discharging_current_mA = 47811mA, 
+    .timestamp =                  2021-11-21 18:04:40
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:41
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36596mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:42
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61702mAh, 
+    .max_capacity_mAh =           85106mAh, 
+    .max_charging_current_mA =    40243mA, 
+    .max_discharging_current_mA = 50580mA, 
+    .timestamp =                  2021-11-21 18:04:42
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               37211mAh, 
+    .max_capacity_mAh =           51280mAh, 
+    .max_charging_current_mA =    24455mA, 
+    .max_discharging_current_mA = 30408mA, 
+    .timestamp =                  2021-11-21 18:04:42
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24491mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:04:42
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41250mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:43
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               65741mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    16493mA, 
+    .max_discharging_current_mA = 47811mA, 
+    .timestamp =                  2021-11-21 18:04:46
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:48
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36596mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:49
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61702mAh, 
+    .max_capacity_mAh =           85106mAh, 
+    .max_charging_current_mA =    40243mA, 
+    .max_discharging_current_mA = 50580mA, 
+    .timestamp =                  2021-11-21 18:04:49
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               37211mAh, 
+    .max_capacity_mAh =           51280mAh, 
+    .max_charging_current_mA =    24455mA, 
+    .max_discharging_current_mA = 30408mA, 
+    .timestamp =                  2021-11-21 18:04:49
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24491mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:04:49
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41250mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:50
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               65741mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    16493mA, 
+    .max_discharging_current_mA = 47811mA, 
+    .timestamp =                  2021-11-21 18:04:53
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:54
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:55
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61393mAh, 
+    .max_capacity_mAh =           84747mAh, 
+    .max_charging_current_mA =    40157mA, 
+    .max_discharging_current_mA = 50756mA, 
+    .timestamp =                  2021-11-21 18:04:55
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36902mAh, 
+    .max_capacity_mAh =           50921mAh, 
+    .max_charging_current_mA =    24369mA, 
+    .max_discharging_current_mA = 30584mA, 
+    .timestamp =                  2021-11-21 18:04:55
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24491mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:04:55
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41250mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:04:56
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               65741mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    16493mA, 
+    .max_discharging_current_mA = 47811mA, 
+    .timestamp =                  2021-11-21 18:04:59
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:00
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:01
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61393mAh, 
+    .max_capacity_mAh =           84747mAh, 
+    .max_charging_current_mA =    40157mA, 
+    .max_discharging_current_mA = 50756mA, 
+    .timestamp =                  2021-11-21 18:05:01
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36902mAh, 
+    .max_capacity_mAh =           50921mAh, 
+    .max_charging_current_mA =    24369mA, 
+    .max_discharging_current_mA = 30584mA, 
+    .timestamp =                  2021-11-21 18:05:01
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24491mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:05:01
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41250mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:02
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               65741mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    16493mA, 
+    .max_discharging_current_mA = 47811mA, 
+    .timestamp =                  2021-11-21 18:05:06
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:06
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:07
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61393mAh, 
+    .max_capacity_mAh =           84747mAh, 
+    .max_charging_current_mA =    40157mA, 
+    .max_discharging_current_mA = 50756mA, 
+    .timestamp =                  2021-11-21 18:05:07
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36902mAh, 
+    .max_capacity_mAh =           50921mAh, 
+    .max_charging_current_mA =    24369mA, 
+    .max_discharging_current_mA = 30584mA, 
+    .timestamp =                  2021-11-21 18:05:07
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24491mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:05:07
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41250mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:09
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               65741mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    16493mA, 
+    .max_discharging_current_mA = 47811mA, 
+    .timestamp =                  2021-11-21 18:05:12
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:12
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:14
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61393mAh, 
+    .max_capacity_mAh =           84747mAh, 
+    .max_charging_current_mA =    40157mA, 
+    .max_discharging_current_mA = 50756mA, 
+    .timestamp =                  2021-11-21 18:05:14
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36902mAh, 
+    .max_capacity_mAh =           50921mAh, 
+    .max_charging_current_mA =    24369mA, 
+    .max_discharging_current_mA = 30584mA, 
+    .timestamp =                  2021-11-21 18:05:14
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24491mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:05:14
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41250mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:15
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               65741mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    16493mA, 
+    .max_discharging_current_mA = 47811mA, 
+    .timestamp =                  2021-11-21 18:05:15
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:16
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:17
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61393mAh, 
+    .max_capacity_mAh =           84747mAh, 
+    .max_charging_current_mA =    40157mA, 
+    .max_discharging_current_mA = 50756mA, 
+    .timestamp =                  2021-11-21 18:05:17
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36902mAh, 
+    .max_capacity_mAh =           50921mAh, 
+    .max_charging_current_mA =    24369mA, 
+    .max_discharging_current_mA = 30584mA, 
+    .timestamp =                  2021-11-21 18:05:17
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24491mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:05:17
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41250mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:18
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               65741mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    16493mA, 
+    .max_discharging_current_mA = 47811mA, 
+    .timestamp =                  2021-11-21 18:05:21
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:22
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:23
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61393mAh, 
+    .max_capacity_mAh =           84747mAh, 
+    .max_charging_current_mA =    40157mA, 
+    .max_discharging_current_mA = 50756mA, 
+    .timestamp =                  2021-11-21 18:05:23
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36902mAh, 
+    .max_capacity_mAh =           50921mAh, 
+    .max_charging_current_mA =    24369mA, 
+    .max_discharging_current_mA = 30584mA, 
+    .timestamp =                  2021-11-21 18:05:23
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24491mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:05:23
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41250mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:24
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               65741mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    16493mA, 
+    .max_discharging_current_mA = 47811mA, 
+    .timestamp =                  2021-11-21 18:05:24
+};
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 706, function void experiment5(double, double): 
+slac:
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:25
+};
+home1:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36287mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:26
+};
+agg1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               61287mAh, 
+    .max_capacity_mAh =           84567mAh, 
+    .max_charging_current_mA =    40200mA, 
+    .max_discharging_current_mA = 50668mA, 
+    .timestamp =                  2021-11-21 18:05:26
+};
+s1:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               36796mAh, 
+    .max_capacity_mAh =           50741mAh, 
+    .max_charging_current_mA =    24412mA, 
+    .max_discharging_current_mA = 30496mA, 
+    .timestamp =                  2021-11-21 18:05:26
+};
+s2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24491mAh, 
+    .max_capacity_mAh =           33826mAh, 
+    .max_charging_current_mA =    15788mA, 
+    .max_discharging_current_mA = 20172mA, 
+    .timestamp =                  2021-11-21 18:05:26
+};
+home2:
+BatteryStatus status = {
+    .voltage_mV =                 240000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               41250mAh, 
+    .max_capacity_mAh =           41667mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:05:27
+};
+agg2:
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               65741mAh, 
+    .max_capacity_mAh =           75493mAh, 
+    .max_charging_current_mA =    16493mA, 
+    .max_discharging_current_mA = 47811mA, 
+    .timestamp =                  2021-11-21 18:05:30
+};
+
+------------------------------ END ------------------------------
+^Z
+zsh: suspended  ./a.out
+DN0a226131:bosinc ouyancheng% kill %1
+DN0a226131:bosinc ouyancheng% 
+[1]  + terminated  ./a.out
+DN0a226131:bosinc ouyancheng% 

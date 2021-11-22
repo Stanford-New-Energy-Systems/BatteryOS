@@ -81,8 +81,15 @@ void output_status_to_csv(CSVOutput &csv, const std::vector<BatteryStatus> &stat
             << ((double)status.voltage_mV / 1000 * (double)status.current_mA / 1000)
             << ( (i < int(statuses.size() - 1)) ? ',' : '\n' );
     }
-    
+    csv.stream().flush();
 }
+
+
+
+
+
+
+
 
 
 

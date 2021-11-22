@@ -21,17 +21,17 @@ AggregatorBattery::AggregatorBattery(
     for (const std::string &src : src_names) {
         bat = directory.get_battery(src);
         if (!bat) {
-            ERROR() << "Battery " << name << "not found!";
+            ERROR() << "Battery " << src << "not found!";
             continue;
         }
         pstatus = bat->get_status();
         v = pstatus.voltage_mV;
         if (!(voltage_mV - voltage_tolerance_mV <= v && v <= voltage_mV + voltage_tolerance_mV)) {
-            ERROR() << "Battery " << name << " is out of voltage tolerance!";
+            ERROR() << "Battery " << src << " is out of voltage tolerance!";
             continue;
         }
         if (pstatus.current_mA != 0) {
-            ERROR() << "Battery in use!";
+            ERROR() << "Battery " << src << " in use!";
             continue;
         }
         // please add the topology outside of this! 

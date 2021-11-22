@@ -233,18 +233,18 @@ void test_sonnen_getstatus(int serial = std::stoi(std::getenv("SONNEN_SERIAL1"))
     Sonnen sonnen("s1", serial, 10000, 30000, 30000, std::chrono::milliseconds(1000));
     Sonnen sonnen2("s2", std::stoi(std::getenv("SONNEN_SERIAL2")), 10000, 30000, 30000, std::chrono::milliseconds(1000));
     Sonnen sonnen3("s3", std::stoi(std::getenv("SONNEN_SERIAL3")), 10000, 30000, 30000, std::chrono::milliseconds(1000));
-    CSVOutput csv(
-        "test_sonnen_get_status.csv", 
-        {"Date & Time", "Unix_date1", "Power1",
-         "Date & Time", "Unix_date2", "Power2",
-         "Date & Time", "Unix_date3", "Power3"}
-    );
+    // CSVOutput csv(
+    //     "test_sonnen_get_status.csv", 
+    //     {"Date & Time", "Unix_date1", "Power1",
+    //      "Date & Time", "Unix_date2", "Power2",
+    //      "Date & Time", "Unix_date3", "Power3"}
+    // );
     for (int i = 0; i < iterations; ++i) {
         std::this_thread::sleep_for(1s);
         BatteryStatus status = sonnen.get_status();
         BatteryStatus status2 = sonnen2.get_status();
         BatteryStatus status3 = sonnen3.get_status();
-        output_status_to_csv(csv, {status, status2, status3});
+        // output_status_to_csv(csv, {status, status2, status3});
         std::cout << status << status2 << status3 << std::endl;
     }
     return;
@@ -432,7 +432,7 @@ void experiment1(double watts = 3500.0) {
         std::string("experiment1_")+std::to_string(watts)+std::string("W.csv"), 
         {"slac_date & time", "slac_unix_date", "slac_power"}
     );
-    for (int i = 0; i < 335; ++i) {
+    for (int i = 0; i < 200; ++i) {
         std::this_thread::sleep_for(1s);
         BatteryStatus status = slac->get_status();
         output_status_to_csv(csv, {status});
@@ -481,7 +481,7 @@ void experiment2(double watts = 4000.0) {
             "agg1_date & time", "agg1_unix_date", "agg1_power",
         }
     );
-    for (int i = 0; i < 335; ++i) {
+    for (int i = 0; i < 180; ++i) {
         std::this_thread::sleep_for(1s);
         BatteryStatus slac_status = bos.get_status("slac");
         BatteryStatus home1_status = bos.get_status("home1");
@@ -593,7 +593,7 @@ void experiment4(double watt1 = 2000.0, double watt2 = -1500.0) {
     timepoint_t now = get_system_time();
     time_t now_ts = std::chrono::system_clock::to_time_t(now);
     time_t now_ts1up = std::chrono::system_clock::to_time_t(now+35s);
-    time_t now_ts1down = std::chrono::system_clock::to_time_t(now+4min+35s);
+    time_t now_ts1down = std::chrono::system_clock::to_time_t(now+5min+35s);
     time_t now_ts2up = std::chrono::system_clock::to_time_t(now+2min+35s);
     time_t now_ts2down = std::chrono::system_clock::to_time_t(now+5min+35s);
     
@@ -603,11 +603,11 @@ void experiment4(double watt1 = 2000.0, double watt2 = -1500.0) {
         << "s2 should ramp up at: (unix timestamp): " << now_ts2up << "\n"
         << "s2 should ramp down at: (unix timestamp): " << now_ts2down; 
 
-    bos.schedule_set_current("s1", watt1/volt*1000, now+35s, now+4min+35s);
+    bos.schedule_set_current("s1", watt1/volt*1000, now+35s, now+5min+35s);
     bos.schedule_set_current("s2", watt2/volt*1000, now+2min+35s, now+5min+35s);
 
 
-    for (int i = 0; i < 335; ++i) {
+    for (int i = 0; i < 150; ++i) {
         std::this_thread::sleep_for(1s);
         BatteryStatus slac_status = bos.get_status("slac");
         BatteryStatus home1_status = bos.get_status("home1");
@@ -693,7 +693,7 @@ void experiment5(double watt1 = -2000.0, double watt2 = 2500.0) {
     bos.schedule_set_current("s1", watt1/volt*1000, now+35s, now+5min+35s);
     bos.schedule_set_current("agg2", watt2/volt*1000, now+2min+35s, now+5min+35s);
 
-    for (int i = 0; i < 335; ++i) {
+    for (int i = 0; i < 150; ++i) {
         std::this_thread::sleep_for(1s);
         BatteryStatus slac_status = bos.get_status("slac");
         BatteryStatus home1_status = bos.get_status("home1");
@@ -873,18 +873,18 @@ int run() {
     // std::cout << std::chrono::duration_cast<std::chrono::seconds>(get_system_time().time_since_epoch()).count() << std::endl;
     // test_sonnen();
     // test_sonnen_split();
-    // test_sonnen_getstatus(std::stoi(std::getenv("SONNEN_SERIAL1")), 10);
+    // test_sonnen_getstatus(std::stoi(std::getenv("SONNEN_SERIAL1")), 1);
     // test_sonnen_aggregate();
     // test_sonnen_aggregate_split(int(BALSplitterType::Proportional));
 
 /////////////////////////////////////////////////////////// LOOK AT THIS //////////////////////////////////////////////////////////////
     {
         ////// the experiments: 
-        // experiment1(3500);
+        // experiment1(-2000);
         // experiment2(4000);
-        // experiment3(2000, 2500);
-        // experiment4(2000, -1500);
-        // experiment5(-2000, 2500);
+        // experiment3(2000, -1000);
+        // experiment4(2000, 1500);
+        // experiment5(2000, 2500);
         ////// the dryruns
         // experiment1_dryrun();
         // experiment2_dryrun();

@@ -1,0 +1,1729 @@
+DN0a226131:bosinc ouyancheng% ./a.out
+------------------------------ LOG ------------------------------
+In file main.cpp, line 420, function void experiment1(double): 
+initial slac status:
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:19
+};
+
+
+------------------------------ END ------------------------------
+------------------------------ LOG ------------------------------
+In file main.cpp, line 426, function void experiment1(double): 
+now is: (unix timestamp): 1637546959
+scheduled rampup time: (unix timestamp): 1637546994
+and scheduled rampdown time: (unix timestamp): 1637547294
+------------------------------ END ------------------------------
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:21
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:23
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:26
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:29
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:31
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:33
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:35
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:38
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:40
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:42
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:44
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:46
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:48
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:51
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:53
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:55
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:57
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:09:59
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:01
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:03
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:06
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 422mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:08
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 3797mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:10
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 3797mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:12
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 3797mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:14
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 3797mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:16
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 7595mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:19
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 7595mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:20
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 9705mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:22
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:24
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:26
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:28
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:30
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:32
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:34
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:37
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 9705mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:40
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:42
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:44
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:46
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:49
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:50
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:52
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:54
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:56
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:10:59
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:01
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:03
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:05
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:07
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9244mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:09
+};
+BatteryStatus status = {
+    .voltage_mV =                 239000mV, 
+    .current_mA =                 10042mA, 
+    .capacity_mAh =               24686mAh, 
+    .max_capacity_mAh =           41841mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:11
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:13
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:15
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:17
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:19
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:21
+};
+BatteryStatus status = {
+    .voltage_mV =                 239000mV, 
+    .current_mA =                 9623mA, 
+    .capacity_mAh =               24686mAh, 
+    .max_capacity_mAh =           41841mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:23
+};
+BatteryStatus status = {
+    .voltage_mV =                 239000mV, 
+    .current_mA =                 10042mA, 
+    .capacity_mAh =               24686mAh, 
+    .max_capacity_mAh =           41841mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:25
+};
+BatteryStatus status = {
+    .voltage_mV =                 239000mV, 
+    .current_mA =                 9623mA, 
+    .capacity_mAh =               24686mAh, 
+    .max_capacity_mAh =           41841mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:28
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 9705mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:30
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:44
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:46
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:49
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 9705mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:51
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:53
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:55
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:57
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:11:59
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:01
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:04
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:06
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:08
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:10
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:12
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:14
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:16
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:19
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:21
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:23
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:25
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:27
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:29
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:31
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:34
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:36
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:38
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:40
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:42
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:44
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:46
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:48
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:50
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:52
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:54
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:56
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:12:58
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:00
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:02
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:04
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:07
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:09
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:11
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:13
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:16
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:18
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:20
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:22
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:24
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:28
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:32
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:34
+};
+BatteryStatus status = {
+    .voltage_mV =                 239000mV, 
+    .current_mA =                 9623mA, 
+    .capacity_mAh =               24686mAh, 
+    .max_capacity_mAh =           41841mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:36
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:38
+};
+BatteryStatus status = {
+    .voltage_mV =                 239000mV, 
+    .current_mA =                 9623mA, 
+    .capacity_mAh =               24686mAh, 
+    .max_capacity_mAh =           41841mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:40
+};
+BatteryStatus status = {
+    .voltage_mV =                 239000mV, 
+    .current_mA =                 10042mA, 
+    .capacity_mAh =               24686mAh, 
+    .max_capacity_mAh =           41841mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:43
+};
+BatteryStatus status = {
+    .voltage_mV =                 239000mV, 
+    .current_mA =                 10042mA, 
+    .capacity_mAh =               24686mAh, 
+    .max_capacity_mAh =           41841mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:45
+};
+BatteryStatus status = {
+    .voltage_mV =                 239000mV, 
+    .current_mA =                 10042mA, 
+    .capacity_mAh =               24686mAh, 
+    .max_capacity_mAh =           41841mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:47
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:49
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:51
+};
+BatteryStatus status = {
+    .voltage_mV =                 239000mV, 
+    .current_mA =                 10042mA, 
+    .capacity_mAh =               24686mAh, 
+    .max_capacity_mAh =           41841mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:53
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:55
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 10084mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:13:58
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:00
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:02
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:05
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:07
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 9705mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:09
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 9705mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:11
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 9705mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:14
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:15
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 9705mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:18
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:20
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:22
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:24
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:26
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:28
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:31
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:33
+};
+BatteryStatus status = {
+    .voltage_mV =                 238000mV, 
+    .current_mA =                 9664mA, 
+    .capacity_mAh =               24790mAh, 
+    .max_capacity_mAh =           42017mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:35
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:38
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:40
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:42
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:44
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:46
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:48
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:51
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 10127mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:53
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 9283mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:55
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 2128mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:14:58
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:00
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:02
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:04
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:06
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:08
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:11
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:13
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:15
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:17
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:19
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:22
+};
+BatteryStatus status = {
+    .voltage_mV =                 235000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25106mAh, 
+    .max_capacity_mAh =           42553mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:24
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:26
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:29
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:31
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:33
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:35
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:37
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:39
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:42
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:44
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:46
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:48
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:50
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:52
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:54
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:57
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:15:59
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:16:01
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:16:03
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:16:05
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:16:07
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:16:10
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:16:12
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:16:14
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:16:16
+};
+BatteryStatus status = {
+    .voltage_mV =                 237000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               24895mAh, 
+    .max_capacity_mAh =           42194mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:16:18
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:16:20
+};
+BatteryStatus status = {
+    .voltage_mV =                 236000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               25000mAh, 
+    .max_capacity_mAh =           42373mAh, 
+    .max_charging_current_mA =    30000mA, 
+    .max_discharging_current_mA = 30000mA, 
+    .timestamp =                  2021-11-21 18:16:22
+};
+^Z
+zsh: suspended  ./a.out
+DN0a226131:bosinc ouyancheng% kill %1
+DN0a226131:bosinc ouyancheng% 
+[1]  + terminated  ./a.out
+DN0a226131:bosinc ouyancheng% 
