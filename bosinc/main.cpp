@@ -860,6 +860,44 @@ void experiment3_dryrun(double watt1 = 2000.0, double watt2 = 2500.0) {
 /////////////////////////////////////////////////////////// DRYRUNS //////////////////////////////////////////////////////////////
 
 
+int test_network(int port) {
+    using namespace std::chrono_literals;
+    BOS bos;
+    Battery *bat = bos.directory.add_battery(
+        std::unique_ptr<Battery>(
+            new Sonnen(
+                "slac", std::stoi(std::getenv("SONNEN_SERIAL1")), 10000, 30000, 30000, std::chrono::milliseconds(500))
+        )
+    );
+    Sonnen *sonnen = dynamic_cast<Sonnen*>(bat);
+    BatteryStatus slac_status = bos.get_status("slac");
+    LOG() << slac_status;
+    
+    bos.simple_remote_connection_server(port);
+}
+
+int test_network2(int port) {
+    using namespace std::chrono_literals;
+    NetworkBattery netbat("remote_slac", "slac", "127.0.0.1", port, 0ms);
+
+    BatteryStatus status = netbat.get_status();
+    LOG() << "netbattery status: " << status;
+
+    double watts = 2500;
+    timepoint_t now = get_system_time();
+    time_t now_ts = std::chrono::system_clock::to_time_t(now);
+    time_t now_ts1 = std::chrono::system_clock::to_time_t(now+35s);
+    time_t now_ts2 = std::chrono::system_clock::to_time_t(now+5min+35s);
+    LOG() << "now is: (unix timestamp): " << now_ts << "\n"
+        << "scheduled rampup time: (unix timestamp): " << now_ts1 << "\n"
+        << "and scheduled rampdown time: (unix timestamp): " << now_ts2; 
+    
+    netbat.schedule_set_current(round(watts / (status.voltage_mV/1000) * 1000), true, now+35s, now+5min+35s);
+
+    std::this_thread::sleep_for(5s);
+    return 0;
+}
+
 
 int run() {
     // LOG();
@@ -892,6 +930,8 @@ int run() {
     }
 /////////////////////////////////////////////////////////// HERE //////////////////////////////////////////////////////////////
 
+    test_network(1234);
+    // test_network2(1234);
     return 0;
 }
 

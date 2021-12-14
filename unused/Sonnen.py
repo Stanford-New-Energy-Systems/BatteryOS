@@ -142,6 +142,14 @@ def sonnen_set_current(sonnen: Sonnen, current_mA: int) -> int:
     return int(code == 0)
 
 
+if __name__ == "__main__": 
+    sonnen = Sonnen(os.environ.get("SONNEN_SERIAL1"))
+
+    # sonnen.enable_manual_mode()
+    # sonnen_set_current(sonnen, 0)
+
+    sonnen.enable_self_consumption()
+
 
 """
 Name Description

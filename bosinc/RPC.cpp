@@ -1,6 +1,6 @@
 #include "RPC.hpp"
 
-RPCRequestHeader new_request_header(RPCFunctionID func, const std::string &remote_name) {
+RPCRequestHeader new_RPC_header(RPCFunctionID func, const std::string &remote_name) {
     RPCRequestHeader header;
     memset(&header, 0, sizeof(header));
     header.func = int64_t(func);
