@@ -416,6 +416,11 @@ void experiment1(double watts = 3500.0) {
         )
     ); 
 
+    Sonnen *slacs = dynamic_cast<Sonnen*>(slac);
+    slacs->enter_manual_mode();
+
+    std::this_thread::sleep_for(5s);
+
     BatteryStatus status = slac->get_status();
     LOG() << "initial slac status:\n" << status << std::endl;
 
@@ -432,12 +437,14 @@ void experiment1(double watts = 3500.0) {
         std::string("experiment1_")+std::to_string(watts)+std::string("W.csv"), 
         {"slac_date & time", "slac_unix_date", "slac_power"}
     );
-    for (int i = 0; i < 200; ++i) {
+    for (int i = 0; i < 180; ++i) {
         std::this_thread::sleep_for(1s);
         BatteryStatus status = slac->get_status();
         output_status_to_csv(csv, {status});
         std::cout << status;
     }
+
+    slacs->enter_self_comsumption();
 }
 
 void experiment2(double watts = 4000.0) {
@@ -888,7 +895,7 @@ int run() {
 /////////////////////////////////////////////////////////// LOOK AT THIS //////////////////////////////////////////////////////////////
     {
         ////// the experiments: 
-        // experiment1(-2000);
+        experiment1(-2500);
         // experiment2(4000);
         // experiment3(2000, -1000);
         // experiment4(2000, 1500);
