@@ -7,12 +7,15 @@
 #include "BatteryInterface.hpp"
 
 /**
- * A graph of the battery topology
+ * A graph of the battery topology: (V, E), where |V| < \inf \and E \subseteq V x V
  */
 class BOSDirectory {
-    std::map<std::string, std::unique_ptr<Battery>> name_storage_map;
-    std::map<std::string, std::list<Battery*>> parent_map;
-    std::map<std::string, std::list<Battery*>> children_map;
+    ////// 
+    std::map<std::string, std::unique_ptr<Battery>> name_storage_map;  // Dictionary name |-> hBattery 
+    
+    /// 
+    std::map<std::string, std::list<Battery*>> parent_map;             // Dictionary name |-> list of parents 
+    std::map<std::string, std::list<Battery*>> children_map;           // Dictionary name |-> list of children  
     std::list<Battery*> temp;
 public:
     BOSDirectory() {}

@@ -5,6 +5,13 @@
 #include "BALSplitter.hpp"
 #include "SplittedBattery.hpp"
 
+
+
+/// Battery -> make it object oriented
+/// BatteryDirectory -> get batteries
+/// BatteryFactory, BatteryDirectoryManager -> create/destroy batteries in the graph
+/// BatteryOS -> operating system services and configuration
+
 #ifndef BOS_NAME_CHECK
 #define BOS_NAME_CHECK(bos, name)\
     do {\
