@@ -8,6 +8,10 @@
 #include <sys/time.h>
 #include <chrono>
 #include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <vector>
+#include <string>
 #include "BatteryStatus.h"
 using timepoint_t = std::chrono::time_point<std::chrono::system_clock>;
 
@@ -193,6 +197,29 @@ void error_r(const T &arg, Ts ...args) {
 
 #define error(...) error_r("Error: In file ", __FILE__, ", line ", __LINE__, ", function ", __PRETTY_FUNCTION__, ": ", __VA_ARGS__)
 
+class CSVOutput {
+    std::ofstream csvstream;
+public: 
+    CSVOutput(const std::string &filename, const std::vector<std::string> &colnames={"Date & Time", "Unix_date1", "Power1"}) {
+        csvstream.open(filename);
+        csvstream << std::fixed << std::setprecision(3);
+        for (int i = 0; i < int(colnames.size()); ++i) {
+            if (i < int(colnames.size() - 1)) {
+                csvstream << colnames[i] << ',';
+            } else {
+                csvstream << colnames[i] << std::endl;
+            }
+        }
+    }
+    ~CSVOutput() {
+        csvstream.close();
+    }
+    std::ostream &stream() {
+        return this->csvstream;
+    }
+};
+
+void output_status_to_csv(CSVOutput &csv, const std::vector<BatteryStatus> &statuses); 
 
 /**
  * Serialize a struct as a bunch of int numbers

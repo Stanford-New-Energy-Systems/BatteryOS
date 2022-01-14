@@ -4,6 +4,7 @@
 #include "AggregatorBattery.hpp"
 #include "BALSplitter.hpp"
 #include "SplittedBattery.hpp"
+#include "RPC.hpp"
 
 
 
@@ -251,6 +252,91 @@ public:
         return bat->stop_background_refresh();
     }
     
+
+    void simple_remote_connection_server(int port) {
+        int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+        if (sockfd < 0) {
+            ERROR() << "failed to create socket";
+        }
+        sockaddr_in sockaddr;
+        sockaddr.sin_family = AF_INET;
+        sockaddr.sin_addr.s_addr = INADDR_ANY;
+        sockaddr.sin_port = htons(port);
+        if (bind(sockfd, (struct sockaddr*)&sockaddr, sizeof(sockaddr)) < 0) {
+            ERROR() << "Failed to bind to port, errno: " << errno;
+        }
+        if (listen(sockfd, 10) < 0) {
+            ERROR() << "Failed to listen on socket. errno: " << errno;
+        }
+        
+        size_t addrlen = sizeof(sockaddr);
+        int connection = accept(sockfd, (struct sockaddr*)&sockaddr, (socklen_t*)&addrlen);
+
+        if (connection < 0) {
+            ERROR() << "Failed to grab connection. errno: " << errno;
+        }
+
+        TCPConnection conn("", 0);
+
+        conn.port = port;
+        conn.socket_fd = connection;
+
+        while (true) {
+            std::vector<uint8_t> len_buf = conn.read(4);
+            if (len_buf.size() != 4) {
+                WARNING() << "it seems like the data length is < 4! data_length = " << len_buf.size();
+            }
+            uint32_t data_len = deserialize_int<uint32_t>(len_buf.data());
+            if (data_len == 0) {
+                ::close(connection);
+                while (true);
+            }
+
+            std::vector<uint8_t> data_buf = conn.read(data_len);
+
+            RPCRequestHeader header;
+
+            size_t header_bytes = RPCRequestHeader_deserialize(&header, data_buf.data(), data_buf.size());
+            if (header_bytes != sizeof(RPCRequestHeader)) {
+                WARNING() << "header_bytes received does not equal to the size of the header!!!";
+            }
+
+            std::string name;
+
+            for (size_t i = header_bytes; i < data_buf.size()-1; ++i) {
+                name.push_back((char)data_buf[i]);
+            }
+
+            switch (header.func) {
+            case int(RPCFunctionID::REFRESH): 
+            case int(RPCFunctionID::GET_STATUS): { 
+                BatteryStatus status = this->get_status(name);
+                LOG() << "remote get_status: " << status;
+                std::vector<uint8_t> buf(sizeof(uint32_t) + sizeof(BatteryStatus));
+                serialize_int<uint32_t>(sizeof(BatteryStatus), buf.data(), buf.size());
+                BatteryStatus_serialize(&status, buf.data() + sizeof(uint32_t), buf.size());
+                conn.write(buf);
+            } break;
+            case int(RPCFunctionID::SET_CURRENT): {
+                int64_t current_mA = header.current_mA;
+                timepoint_t when_to_set = c_time_to_timepoint(header.when_to_set);
+                timepoint_t until_when = c_time_to_timepoint(header.until_when);
+                LOG() << "remote schedule_set_current: " << current_mA;
+                uint32_t r = this->schedule_set_current(name, current_mA, when_to_set, until_when);
+                std::vector<uint8_t> buf(sizeof(uint32_t) + sizeof(uint32_t));
+                serialize_int(sizeof(uint32_t), buf.data(), buf.size());
+                serialize_int(r, buf.data() + sizeof(uint32_t), buf.size());
+                conn.write(buf);
+            } break;
+            default:
+                WARNING() << "Unknown request";
+                break;
+            }
+
+        }
+
+    }
+
 };
 
 

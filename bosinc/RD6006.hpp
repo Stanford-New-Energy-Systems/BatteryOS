@@ -15,6 +15,10 @@ private:
     PyObject *pf_get_current;
 public: 
     RD6006PowerSupply(const std::string &address) {
+        // acquire GIL 
+        PyGILState_STATE gstate;
+        gstate = PyGILState_Ensure();
+        // now GIL is acquired 
         PyObject *p_name = PyUnicode_DecodeFSDefault("rd6006_c");
         if (p_name == 0) {
             fprintf(stderr, "RD6006PowerSupply: ERROR! p_name == 0\n");
@@ -40,6 +44,8 @@ public:
             fprintf(stderr, "ERROR! p_device == 0\n");
         }
         Py_DECREF(p_address);
+        // release GIL 
+        PyGILState_Release(gstate);
     }
     ~RD6006PowerSupply() {
         if (p_device) {
@@ -48,6 +54,10 @@ public:
     }
     void close() {
         disable();
+        // acquire GIL 
+        PyGILState_STATE gstate;
+        gstate = PyGILState_Ensure();
+        // now GIL is acquired 
         Py_DECREF(p_device);
         Py_DECREF(pf_create);
         Py_DECREF(pf_enable);
@@ -55,26 +65,52 @@ public:
         Py_DECREF(pf_set_current);
         Py_DECREF(pf_get_current);
         p_device = nullptr;
+        // release GIL 
+        PyGILState_Release(gstate);
     }
     void enable() {
+        // acquire GIL 
+        PyGILState_STATE gstate;
+        gstate = PyGILState_Ensure();
+        // now GIL is acquired 
         // NOTE: do not decref the True False None etc literals!
         // PyObject_CallOneArg(pf_enable, p_device);
         PyObject_CallFunctionObjArgs(pf_enable, p_device, NULL);
+        // release GIL 
+        PyGILState_Release(gstate);
     }
     void disable() {
+        // acquire GIL 
+        PyGILState_STATE gstate;
+        gstate = PyGILState_Ensure();
+        // now GIL is acquired 
         // PyObject_CallOneArg(pf_disable, p_device);
         PyObject_CallFunctionObjArgs(pf_disable, p_device, NULL);
+        // release GIL 
+        PyGILState_Release(gstate);
     }
     void set_current_Amps(double current_A) {
+        // acquire GIL 
+        PyGILState_STATE gstate;
+        gstate = PyGILState_Ensure();
+        // now GIL is acquired 
         PyObject *p_current = PyFloat_FromDouble(current_A);
         PyObject_CallFunctionObjArgs(pf_set_current, p_device, p_current, NULL);
         Py_DECREF(p_current);
+        // release GIL 
+        PyGILState_Release(gstate);
     }
     double get_current_Amps() {
+        // acquire GIL 
+        PyGILState_STATE gstate;
+        gstate = PyGILState_Ensure();
+        // now GIL is acquired 
         // PyObject *p_current = PyObject_CallOneArg(pf_get_current, p_device);
         PyObject *p_current = PyObject_CallFunctionObjArgs(pf_get_current, p_device, NULL);
         double current = PyFloat_AsDouble(p_current);
         Py_DECREF(p_current);
+        // release GIL 
+        PyGILState_Release(gstate);
         return current;
     }
 };
