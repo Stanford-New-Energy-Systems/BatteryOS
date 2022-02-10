@@ -44,12 +44,12 @@ void test_python_binding() {
     return;
 }
 
-void test_JBDBMS() {
-    JBDBMS bms("jbd", "/dev/ttyUSB1", "current_regulator");
-    JBDBMS::State basic_info = bms.get_basic_info();
-    std::cout << basic_info << std::endl;
-    std::cout << bms.get_status() << std::endl;
-}
+// void test_JBDBMS() {
+//     JBDBMS bms("jbd", "/dev/ttyUSB1", "current_regulator");
+//     JBDBMS::State basic_info = bms.get_basic_info();
+//     std::cout << basic_info << std::endl;
+//     std::cout << bms.get_status() << std::endl;
+// }
 
 void test_events() {
     using namespace std::chrono_literals;
@@ -139,7 +139,7 @@ void test_events() {
 
     std::cout << "done" << std::endl;
 }
-
+#if 0
 void test_agg_management() {
     using namespace std::chrono_literals;
     BOS bos;
@@ -874,11 +874,17 @@ int test_network(int port) {
     LOG() << slac_status;
     
     bos.simple_remote_connection_server(port);
+    return 0;
 }
 
 int test_network2(int port) {
     using namespace std::chrono_literals;
-    NetworkBattery netbat("remote_slac", "slac", "127.0.0.1", port, 0ms);
+    std::unique_ptr<Connection> pconn(new TCPConnection("127.0.0.1", port));
+    if (!pconn->connect()) {
+        WARNING() << "Connection failed!";
+        return 1;
+    }
+    NetworkBattery netbat("remote_slac", "slac", std::move(pconn), 0ms);
 
     BatteryStatus status = netbat.get_status();
     LOG() << "netbattery status: " << status;
@@ -897,7 +903,7 @@ int test_network2(int port) {
     std::this_thread::sleep_for(5s);
     return 0;
 }
-
+#endif 
 
 int run() {
     // LOG();
@@ -930,7 +936,7 @@ int run() {
     }
 /////////////////////////////////////////////////////////// HERE //////////////////////////////////////////////////////////////
 
-    test_network(1234);
+    // test_network(1234);
     // test_network2(1234);
     return 0;
 }

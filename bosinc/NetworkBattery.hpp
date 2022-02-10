@@ -20,19 +20,20 @@ public:
     NetworkBattery(
         const std::string &name, 
         const std::string &remote_name, 
-        const std::string &address, 
-        int port,
+        // const std::string &address, 
+        // int port,
+        std::unique_ptr<Connection> pconn,
         std::chrono::milliseconds max_staleness=std::chrono::milliseconds(1000)
     ) : 
         Battery(name, max_staleness),
         remote_name(remote_name), 
-        pconnection() 
+        pconnection(std::move(pconnection)) 
     {
         this->type = BatteryType::Physical;
-        this->pconnection.reset(new TCPConnection(address, port));
-        if (!this->pconnection->connect()) {
-            ERROR() << "TCP connection failed!";
-        }
+        // this->pconnection.reset(new TCPConnection(address, port));
+        // if (!this->pconnection->connect()) {
+        //     ERROR() << "TCP connection failed!";
+        // }
         this->refresh();  // also updates the timestamp
     }
 

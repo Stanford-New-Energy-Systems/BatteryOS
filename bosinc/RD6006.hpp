@@ -3,9 +3,10 @@
 #ifndef PY_SSIZE_T_CLEAN
 #define PY_SSIZE_T_CLEAN
 #endif 
+#include "CurrentRegulator.hpp"
 #include <Python.h>
 #include <string>
-class RD6006PowerSupply {
+class RD6006PowerSupply : public CurrentRegulator {
 private: 
     PyObject *p_device;
     PyObject *pf_create;
@@ -14,7 +15,7 @@ private:
     PyObject *pf_set_current;
     PyObject *pf_get_current;
 public: 
-    RD6006PowerSupply(const std::string &address) {
+    RD6006PowerSupply(const std::string &address) : CurrentRegulator() {
         // acquire GIL 
         PyGILState_STATE gstate;
         gstate = PyGILState_Ensure();
@@ -47,7 +48,7 @@ public:
         // release GIL 
         PyGILState_Release(gstate);
     }
-    ~RD6006PowerSupply() {
+    virtual ~RD6006PowerSupply() {
         if (p_device) {
             close();
         }
@@ -89,7 +90,7 @@ public:
         // release GIL 
         PyGILState_Release(gstate);
     }
-    void set_current_Amps(double current_A) {
+    void set_current_Amps(double current_A) override {
         // acquire GIL 
         PyGILState_STATE gstate;
         gstate = PyGILState_Ensure();
@@ -100,7 +101,7 @@ public:
         // release GIL 
         PyGILState_Release(gstate);
     }
-    double get_current_Amps() {
+    double get_current_Amps() override {
         // acquire GIL 
         PyGILState_STATE gstate;
         gstate = PyGILState_Ensure();

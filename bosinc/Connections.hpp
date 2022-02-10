@@ -238,6 +238,105 @@ struct TCPConnection : public Connection {
 };
 
 
+struct FIFOConnection : public Connection {
+    std::string path;
+    bool connected;
+    int fd;
+    int permission;
+    bool newfifo;
+    FIFOConnection(const std::string &path, int permission, bool newfifo=false) : 
+        path(path), 
+        connected(false), 
+        fd(0), 
+        permission(permission),
+        newfifo(newfifo) {}
+    FIFOConnection(const FIFOConnection &) = delete;
+    FIFOConnection(FIFOConnection &&other) : 
+        path(std::move(other.path)), 
+        connected(other.connected),
+        fd(other.fd),
+        permission(other.permission),
+        newfifo(other.newfifo) {
+        other.fd = 0;
+        other.connected = false;
+        other.permission = 0;
+    }
+    virtual ~FIFOConnection() {
+        if (fd) {
+            close();
+        }
+    }
+    bool is_connected() override {
+        return connected;
+    }
+    
+    bool connect() override {
+        if (newfifo) {
+            if (!mkfifo(path.c_str(), this->permission)) {
+                WARNING() << "mkfifo failed for fifo connection " << path;
+                return false;
+            }
+        }
+        // this->fd = open(path.c_str(), O_RDWR | O_NONBLOCK);
+        this->fd = open(path.c_str(), O_RDWR);
+        if (fd < 0) {
+            WARNING() << "fifo failed to open " << path;
+            return false;
+        }
+        connected = true;
+        return true;
+    }
+    
+    std::vector<uint8_t> read(int num_bytes) override {
+        std::vector<uint8_t> data;
+        if (num_bytes <= 0) {
+            return data;
+        }
+        data.resize(num_bytes, 0);
+        int num_bytes_read = 0;
+        int total_bytes_read = 0;
+        while (total_bytes_read < num_bytes) {
+            num_bytes_read = ::read(
+                this->fd, 
+                (data.data() + total_bytes_read), 
+                (num_bytes - total_bytes_read));
+            if (num_bytes_read < 0) {
+                WARNING() << "read error, num_bytes_read = " << num_bytes_read << ", total_bytes_read = " << total_bytes_read;
+                return data;
+            }
+            total_bytes_read += num_bytes_read;
+        }
+        return data;
+    }
+    
+    ssize_t write(const std::vector<uint8_t> &bytes) override {
+        ssize_t nbytes = ::write(this->fd, bytes.data(), bytes.size());
+        if (nbytes < 0) {
+            WARNING() << "write error, nbytes = " << nbytes;
+        } else if (nbytes < (ssize_t)bytes.size()) {
+            WARNING() << "not all bytes are written, written nbytes = " << nbytes;
+        }
+        return nbytes;
+    }
+    
+    void close() override {
+        ::close(fd);
+        if (newfifo) {
+            ::unlink(path.c_str());
+        }
+        connected = false;
+        fd = 0;
+    }
+    /// read until the fd is empty!
+    void flush() override {
+        uint32_t dummy_byte = 0;
+        while (::read(fd, &dummy_byte, 2) > 0) {}
+        return;
+    }
+};
+
+
+
 #endif // ! CONNECTIONS_HPP
 
 

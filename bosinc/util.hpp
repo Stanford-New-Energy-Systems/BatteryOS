@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <assert.h>
 #include <math.h>
+#include <float.h>
 #include <sys/time.h>
 #include <chrono>
 #include <iostream>
@@ -280,7 +281,17 @@ size_t deserialize_struct_as_int(T *obj, const uint8_t *buffer, size_t buffer_si
     return sizeof(T);
 }
 
+#ifndef DBL_EQUAL
+#define DBL_EQUAL(a, b) (fabs((a) - (b)) < (DBL_EPSILON))
+#endif // ! DBL_EQUAL
 
+#ifndef FLT_EQUAL
+#define FLT_EQUAL(a, b) (fabs((a) - (b)) < (FLT_EPSILON))
+#endif // ! FLT_EQUAL
+
+#ifndef UNIMPLEMENTED
+#define UNIMPLEMENTED(msg) do { ERROR() << "Function " << __func__ << " is unimplemented! msg: " << msg; } while (0)
+#endif // ! UNIMPLEMENTED 
 
 #endif // ! UTIL_HPP
 

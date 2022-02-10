@@ -27,9 +27,9 @@ public:
      * LAZY : refresh if the status is older than maximum staleness
      * ACTIVE : automatically refresh in background with a period of maximum staleness
      */
-    enum class RefreshMode {
-        LAZY, 
-        ACTIVE,
+    enum class RefreshMode : int {
+        LAZY = 0, 
+        ACTIVE = 1,
     };
     /**
      * The event IDs for BAL methods 
@@ -46,6 +46,7 @@ public:
         CANCEL_EVENT = 3,  
     };
 
+protected: 
     /**
      * A struct representing a BAL event
      * @param timepoint at what time does this event happen
@@ -82,6 +83,10 @@ public:
             other_data(other_data) {}
         event_t() {}
     };
+
+    /// comparison operator to compare the Battery::event_t 
+    friend bool operator < (const Battery::event_t &lhs, const Battery::event_t &rhs);
+    friend bool operator > (const Battery::event_t &lhs, const Battery::event_t &rhs);
 
     typedef std::set<event_t> EventQueue;
 
@@ -198,7 +203,7 @@ public:
      * @param to_current the current after the event is set 
      * @return the delay  
      */
-    virtual std::chrono::milliseconds get_delay(int64_t from_current, int64_t to_current) {
+    virtual std::chrono::milliseconds get_delay(int64_t from_current_mA, int64_t to_current_mA) {
         return std::chrono::milliseconds(0);
     }
 
@@ -236,6 +241,7 @@ public:
      */
     std::chrono::milliseconds get_max_staleness();
 
+protected: 
     ////// Staleness-based refresh related
     /**
      * In LAZY mode, check for staleness and then refresh if the status is too old, 
@@ -251,6 +257,7 @@ public:
      */
     static void background_func(Battery *bat);
 
+public:
     /**
      * Start the background refreshing mechanism
      * This spawns a refreshing thread and creates a mutex for protection
@@ -264,6 +271,7 @@ public:
      */
     bool stop_background_refresh();
 
+protected: 
     /** 
      * Just get the next sequence number for event 
      * @return the next sequence number
@@ -271,6 +279,7 @@ public:
     uint64_t next_sequence_number() {
         return (this->current_sequence_number++);
     }
+public: 
     void quit() {
         {
             lockguard_t lkd(this->lock);
@@ -286,8 +295,8 @@ public:
         lockguard_t lkg(this->lock);
         this->status = target;
     } 
-
 };
+
 /**
  * Compare two event_t lexicographically 
  */

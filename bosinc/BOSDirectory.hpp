@@ -37,6 +37,14 @@ public:
         }
     }
 
+    std::vector<std::string> get_name_list() {
+        std::vector<std::string> res;
+        for (auto it = parent_map.begin(); it != parent_map.end(); ++it) {
+            res.push_back(it->first);
+        }
+        return res;
+    }
+
     Battery *add_battery(std::unique_ptr<Battery> &&battery) {
         std::string name = battery->get_name();
         if (this->name_storage_map.count(name) > 0) {
@@ -51,6 +59,27 @@ public:
         children_map.insert(std::make_pair(name, std::list<Battery*>()));
 
         return ptr;  // be careful to avoid the copy constructor and the default constructor! 
+    }
+
+    /**
+     * Remove the battery 
+     */
+    int remove_battery(const std::string &name) {
+        UNIMPLEMENTED("not supporting remove battery right now");
+        const std::list<Battery*> &children_bat = this->get_children(name);
+        if (children_bat.size() == 0) {
+            UNIMPLEMENTED("just remove one node");
+            return 1;
+        }
+        std::string bname;
+        for (decltype(children_bat.begin()) it = children_bat.begin(); it != children_bat.end(); ++it) {
+            bname = (*it)->get_name();
+            if (!remove_battery(bname)) {
+                ERROR() << "battery " << bname << " failed to remove!";
+                return 0;
+            }
+        }
+        return 1;
     }
 
     const std::list<Battery*> &get_children(const std::string &name) {

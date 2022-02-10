@@ -51,7 +51,8 @@ public:
     
 private:
     std::unique_ptr<Connection> pconnection;
-    RD6006PowerSupply rd6006;
+    // RD6006PowerSupply rd6006;
+    std::unique_ptr<CurrentRegulator> pregulator;
     int64_t max_charging_current_mA;
     int64_t max_discharging_current_mA;
     State basic_state;
@@ -74,8 +75,10 @@ public:
 public: 
     JBDBMS(
         const std::string &name, 
-        const std::string &device_address, 
-        const std::string &current_regulator_address,
+        std::unique_ptr<Connection> pconnection,
+        std::unique_ptr<CurrentRegulator> pregulator,
+        // const std::string &device_address, 
+        // const std::string &current_regulator_address,
         const std::chrono::milliseconds &max_staleness_ms=std::chrono::milliseconds(1000)
     );
     
