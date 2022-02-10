@@ -31,6 +31,8 @@ private:
     void *init_result;
 public: 
     DynamicBattery(
+        const std::string &name,
+        const std::chrono::milliseconds &max_staleness_ms,
         const std::string &dll_path, 
         const std::string &init_func_name, 
         const std::string &destruct_func_name, 
@@ -38,6 +40,7 @@ public:
         const std::string &set_current_func_name,
         const std::string &get_delay_func_name,
         void *init_argument) : 
+        Battery(name, max_staleness_ms, 0),
         init_func(0), 
         destruct_func(0), 
         get_status_func(0), 
@@ -58,26 +61,26 @@ public:
             } 
         }
         bool failed = false;
-        this->init_func = dlsym(this->dll_handle, init_func_name.c_str());
+        this->init_func = (init_func_t)dlsym(this->dll_handle, init_func_name.c_str());
         if (!init_func) { WARNING() << "init_func not found! init_func = " << init_func_name << " Error: " << dlerror(); failed = true; }
-        this->destruct_func = dlsym(this->dll_handle, destruct_func_name.c_str());
+        this->destruct_func = (destruct_func_t)dlsym(this->dll_handle, destruct_func_name.c_str());
         if (!destruct_func) { WARNING() << "destruct_func not found! destruct_func = " << destruct_func_name << " Error: " << dlerror(); failed = true; }
-        this->get_status_func = dlsym(this->dll_handle, get_status_func_name.c_str());
+        this->get_status_func = (get_status_func_t)dlsym(this->dll_handle, get_status_func_name.c_str());
         if (!get_status_func) { WARNING() << "get_status_func not found! get_status_func = " << get_status_func_name << " Error: " << dlerror(); failed = true; }
-        this->set_current_func = dlsym(this->dll_handle, set_current_func_name.c_str());
+        this->set_current_func = (set_current_func_t)dlsym(this->dll_handle, set_current_func_name.c_str());
         if (!set_current_func) { WARNING() << "set_current_func not found! set_current_func = " << set_current_func_name << " Error: " << dlerror(); failed = true; }
-        this->get_delay_func = dlsym(this->dll_handle, get_delay_func_name.c_str());
+        this->get_delay_func = (get_delay_func_t)dlsym(this->dll_handle, get_delay_func_name.c_str());
         if (!get_delay_func) {
             this->get_delay_func = &no_delay;
         }
 
         if (failed) {
             WARNING() << "DLL failed to find required symbols!";
-            init_func = destruct_func = get_status_func = set_current_func = 0;
+            init_func = destruct_func = get_status_func = set_current_func = nullptr;
             return; 
         } 
         
-        loaded_dlls[dll_path] = this->handle;
+        loaded_dlls[dll_path] = this->dll_handle;
         this->initialized = true;
 
         init_result = this->init_func(init_argument);
