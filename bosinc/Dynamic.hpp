@@ -84,9 +84,9 @@ public:
         } 
         
         loaded_dynamic_libs[dynamic_lib_path] = this->dynamic_lib_handle;
-        this->initialized = true;
-
+        
         init_result = this->init_func(init_argument);
+        this->initialized = true;
     }
     ~DynamicBattery() {
         if (this->initialized) {
