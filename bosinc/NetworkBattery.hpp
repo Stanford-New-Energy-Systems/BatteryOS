@@ -27,13 +27,9 @@ public:
     ) : 
         Battery(name, max_staleness),
         remote_name(remote_name), 
-        pconnection(std::move(pconnection)) 
+        pconnection(std::move(pconn)) 
     {
         this->type = BatteryType::Physical;
-        // this->pconnection.reset(new TCPConnection(address, port));
-        // if (!this->pconnection->connect()) {
-        //     ERROR() << "TCP connection failed!";
-        // }
         this->refresh();  // also updates the timestamp
     }
 

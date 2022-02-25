@@ -6,7 +6,7 @@
 #include "SplittedBattery.hpp"
 #include "RPC.hpp"
 #include "Dynamic.hpp"
-
+#include <unordered_map>
 
 /// Battery -> make it object oriented
 /// BatteryDirectory -> get batteries
@@ -17,6 +17,7 @@ class BatteryOS;
 
 class BatteryDirectoryManager {
     BOSDirectory &dir;
+    static std::map<std::string, void*> loaded_dynamic_libs; 
 public:
     BatteryDirectoryManager(BOSDirectory &directory) : dir(directory) {}
 
@@ -66,15 +67,6 @@ public:
         int64_t max_staleness_ms
     );
 
-    // /**
-    //  * 
-    //  */
-    // Battery *make_dynamic(
-    //     const std::string &name, 
-    //     const std::string &dll_path, 
-    //     const std::string &
-    // )
-
     /**
      * Creates an aggregator battery 
      * @param name the name of the battery
@@ -117,6 +109,31 @@ public:
     );
 
     /**
+     * Creates a battery from dynamic library 
+     * @param name the name of the battery 
+     * @param dynamic_lib_path the path of the dynamic library 
+     * @param max_staleness_ms the maximum staleness 
+     * @param init_argument the argument passed to the init function 
+     * @param init_func_name the name of the init function in the dynamic library 
+     * @param destruct_func_name the name of the destructor in the dynamic library 
+     * @param get_status_func_name the name of the get_status function in the dynamic library 
+     * @param set_current_func_name the name of the set_current function in the dynamic library 
+     * @param get_delay_func_name the name of the get_delay function, could be empty 
+     */
+    Battery *make_dynamic(
+        const std::string &name, 
+        const std::string &dynamic_lib_path, 
+        int64_t max_staleness_ms, 
+        const char *init_argument, 
+        const std::string &init_func_name, 
+        const std::string &destruct_func_name, 
+        const std::string &get_status_func_name, 
+        const std::string &set_current_func_name, 
+        const std::string &get_delay_func_name = ""
+    ); 
+    
+
+    /**
      * Removes a battery, specified by the name 
      */
     int remove_battery(const std::string &name);
@@ -131,15 +148,33 @@ public:
 class BatteryOS {
     BOSDirectory dir;
     BatteryDirectoryManager mgr;
+    int admin_fifo_fd; 
+    std::unordered_map<std::string, int> battery_fds; 
+    std::unordered_map<int, std::string> fd_to_battery_name; 
+    std::string dirpath; 
 public: 
-    BatteryOS() : dir(), mgr(dir) {}
+    BatteryOS(const std::string &directory_path = "./bos") : dir(), mgr(dir) {
+        this->dirpath = directory_path + "/"; 
+    }
 
     BatteryDirectoryManager &get_manager() { return this->mgr; }
 
     void simple_remote_connection_server(int port);
     
     /** access the batteries via the filesystems (FIFOs) */
-    int fifo_init();
+    int battery_fifo_init(mode_t permission, mode_t dir_permission);
+
+    /** initiate the admin fifo */
+    int admin_fifo_init(mode_t permission, mode_t dir_permission); 
+
+    /** initiate fifo for single battery */
+    int single_battery_fifo_init(const std::string &battery_name, mode_t permission); 
+
+    /** the function to poll the fifos */
+    int poll_fifos(); 
+
+    /** ensure that dir_path is actually a directory, if not, create with permission */
+    int ensure_dir(const std::string &dir_path, mode_t permission); 
 
 private: 
     /** this one handles the battery connection request */

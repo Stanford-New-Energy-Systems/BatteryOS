@@ -230,6 +230,95 @@ std::vector<Battery*> BatteryDirectoryManager::make_splitter(
     return children;
 }
 
+
+Battery *BatteryDirectoryManager::make_dynamic(
+    const std::string &name, 
+    const std::string &dynamic_lib_path, 
+    int64_t max_staleness_ms, 
+    const char *init_argument, 
+    const std::string &init_func_name, 
+    const std::string &destruct_func_name, 
+    const std::string &get_status_func_name, 
+    const std::string &set_current_func_name, 
+    const std::string &get_delay_func_name
+) {
+    using init_func_t = typename DynamicBattery::init_func_t;
+    using destruct_func_t = typename DynamicBattery::destruct_func_t; 
+    using get_status_func_t = typename DynamicBattery::get_status_func_t; 
+    using set_current_func_t = typename DynamicBattery::set_current_func_t; 
+    using get_delay_func_t = typename DynamicBattery::get_delay_func_t; 
+
+    void *lib_handle = nullptr; 
+    if (loaded_dynamic_libs.find(dynamic_lib_path) != loaded_dynamic_libs.end()) {
+        lib_handle = loaded_dynamic_libs[dynamic_lib_path]; 
+    } else {
+        lib_handle = dlopen(dynamic_lib_path.c_str(), RTLD_LAZY); 
+        if (!lib_handle) {
+            WARNING() << "dynamic_lib not opened! Error: " << dlerror();
+            return nullptr;
+        } 
+    } 
+    bool failed = false;
+    init_func_t init_func = (init_func_t)dlsym(lib_handle, init_func_name.c_str());
+    if (!init_func) { 
+        WARNING() << "init_func not found! init_func = " << init_func_name << " Error: " << dlerror(); 
+        failed = true; 
+    }
+    destruct_func_t destruct_func = (destruct_func_t)dlsym(lib_handle, destruct_func_name.c_str());
+    if (!destruct_func) { 
+        WARNING() << "destruct_func not found! destruct_func = " << destruct_func_name << " Error: " << dlerror(); 
+        failed = true; 
+    }
+    get_status_func_t get_status_func = (get_status_func_t)dlsym(lib_handle, get_status_func_name.c_str());
+    if (!get_status_func) { 
+        WARNING() << "get_status_func not found! get_status_func = " << get_status_func_name << " Error: " << dlerror(); 
+        failed = true; 
+    }
+    set_current_func_t set_current_func = (set_current_func_t)dlsym(lib_handle, set_current_func_name.c_str());
+    if (!set_current_func) { 
+        WARNING() << "set_current_func not found! set_current_func = " << set_current_func_name << " Error: " << dlerror(); 
+        failed = true; 
+    }
+    get_delay_func_t get_delay_func = (get_delay_func_t)dlsym(lib_handle, get_delay_func_name.c_str());
+    if (!get_delay_func) {
+        get_delay_func = &DynamicBattery::no_delay;
+    }
+
+    if (failed) {
+        WARNING() << "dynamic_lib failed to find required symbols!";
+        init_func = nullptr;
+        destruct_func = nullptr;
+        get_status_func = nullptr;
+        set_current_func = nullptr;
+        dlclose(lib_handle); 
+        return nullptr; 
+    }
+    loaded_dynamic_libs[dynamic_lib_path] = lib_handle; 
+
+    void *init_result = init_func(init_argument); 
+    if (!init_result) {
+        WARNING() << "init_func " << init_func_name << " failed to initialize with argument " << init_argument;
+        return nullptr; 
+    }
+    
+    std::unique_ptr<DynamicBattery> dynamic_battery(
+        new DynamicBattery(
+            name, 
+            std::chrono::milliseconds(max_staleness_ms), 
+            dynamic_lib_path, 
+            init_func, 
+            destruct_func, 
+            get_status_func,  
+            set_current_func, 
+            get_delay_func, 
+            init_result, 
+            init_argument
+        )
+    );
+    return this->dir.add_battery(std::move(dynamic_battery)); 
+}
+
+
 int BatteryDirectoryManager::remove_battery(const std::string &name) {
     Battery *bat = this->dir.get_battery(name);
     if (!bat) {
@@ -404,56 +493,113 @@ int BatteryOS::connection_handler(Connection *conn) {
     return 0;
 }
 
-
-int BatteryOS::fifo_init() {
-    std::string dirpath("./bos");
-    std::vector<std::string> name_list = dir.get_name_list();
-    DIR *d = opendir(dirpath.c_str());
+int BatteryOS::ensure_dir(const std::string &dpath, mode_t permission) {
+    DIR *d = opendir(dpath.c_str()); 
     if (!d) {
-        if (!mkdir(dirpath.c_str(), 0777)) {
-            ERROR() << "failed to mkdir";
-            return 0;
-        }
-    } else {
-        closedir(d);
-    }
-    std::string temp;
-    
-    pollfd *fds = new pollfd[name_list.size()];
-    for (size_t i = 0; i < name_list.size(); ++i) {
-        temp = dirpath + name_list[i];
-        if (!mkfifo(temp.c_str(), 0777)) {
-            WARNING() << "mkfifo failed for battery " << temp;
-            delete [] fds;
-            return 0;
-        }
-        fds[i].fd = open(temp.c_str(), O_RDWR | O_NONBLOCK);
-        fds[i].events = POLLIN | POLLPRI;
-        fds[i].revents = 0;
-    }
-    int retval;
-    while (1) {
-        retval = poll(fds, name_list.size(), -1);
-        if (retval < 0) {
-            WARNING() << "Poll failed!";
-            delete [] fds;
+        if (mkdir(dpath.c_str(), permission) < 0) {
+            WARNING() << "failed to mkdir";
             return -1;
         }
-        for (size_t i = 0; i < name_list.size(); ++i) {
-            if (fds[i].revents & POLLIN == POLLIN) {
-                // handle data 
-                FIFOConnection conn("", 0777, false);
-                conn.connected = true;
-                conn.fd = fds[i].fd;
-                if (connection_handler(&conn) < 0) {
-                    WARNING() << "something wrong?";
-                }
-                conn.fd = 0;
-                conn.connected = false;
-            }
-        }
+    } else {
+        closedir(d); 
     }
-    delete [] fds;
+    return 0; 
+}
+
+int BatteryOS::admin_fifo_init(mode_t permission, mode_t dir_permission) {
+    if (ensure_dir(dirpath, dir_permission) < 0) {
+        WARNING() << "Error creating the dir"; 
+        return -3; 
+    } 
+    std::string admin_fifo_name = dirpath + "admin";
+    if (mkfifo(admin_fifo_name.c_str(), permission) < 0) {
+        WARNING() << "failed to make admin fifo"; 
+        return -1;
+    }
+    int fd = open(admin_fifo_name.c_str(), O_RDWR); 
+    if (fd < 0) {
+        WARNING() << "failed to open admin fifo!"; 
+        return -2; 
+    }
+    this->admin_fifo_fd = fd; 
+    return 0; 
+}  
+
+int BatteryOS::battery_fifo_init(mode_t permission, mode_t dir_permission) {
+    std::vector<std::string> name_list = dir.get_name_list();
+    if (ensure_dir(dirpath, dir_permission) < 0) {
+        WARNING() << "Error creating the dir"; 
+        return -3;
+    } 
+    std::string temp;
+    for (size_t i = 0; i < name_list.size(); ++i) {
+        temp = dirpath + name_list[i];
+        if (mkfifo(temp.c_str(), permission) < 0) {
+            WARNING() << "mkfifo failed for battery " << temp;
+            return -1;
+        }
+        int fd = open(temp.c_str(), O_RDWR); 
+        if (fd < 0) {
+            WARNING() << "failed to open battery fifo for battery " << name_list[i]; 
+            return -2; 
+        }
+        this->battery_fds[name_list[i]] = fd; 
+        this->fd_to_battery_name[fd] = name_list[i];  
+    }
     return 0;
 }
 
+int BatteryOS::single_battery_fifo_init(const std::string &battery_name, mode_t permission) {
+    std::vector<std::string> name_list = dir.get_name_list();
+    std::string fifo_path = this->dirpath + battery_name; 
+    if (mkfifo(fifo_path.c_str(), permission) < 0) {
+        WARNING() << "mkfifo failed for battery " << battery_name;
+        return -1;
+    }
+    int fd = open(fifo_path.c_str(), O_RDWR); 
+    if (fd < 0) {
+        WARNING() << "failed to open battery fifo for battery " << battery_name; 
+        return -2;
+    }
+    this->battery_fds[battery_name] = fd; 
+    this->fd_to_battery_name[fd] = battery_name;  
+    return 0; 
+}
+
+int BatteryOS::poll_fifos() {
+    pollfd *fds = new pollfd[this->battery_fds.size() + 1]; 
+    if (!fds) {
+        WARNING() << "failed to allocate memory?"; 
+        return -1; 
+    }
+    fds[0].fd = this->admin_fifo_fd; 
+    fds[0].events = POLLIN | POLLPRI; 
+    fds[0].revents = 0; 
+
+    // fds[i].fd = open(temp.c_str(), O_RDWR | O_NONBLOCK);
+    // fds[i].events = POLLIN | POLLPRI;
+    // fds[i].revents = 0;
+    // int retval;
+    // while (1) {
+    //     retval = poll(fds, name_list.size(), -1);
+    //     if (retval < 0) {
+    //         WARNING() << "Poll failed!";
+    //         delete [] fds;
+    //         return -1;
+    //     }
+    //     for (size_t i = 0; i < name_list.size(); ++i) {
+    //         if (fds[i].revents & POLLIN == POLLIN) {
+    //             // handle data 
+    //             FIFOConnection conn("", 0777, false);
+    //             conn.connected = true;
+    //             conn.fd = fds[i].fd;
+    //             if (connection_handler(&conn) < 0) {
+    //                 WARNING() << "something wrong?";
+    //             }
+    //             conn.fd = 0;
+    //             conn.connected = false;
+    //         }
+    //     }
+    // }
+    // delete [] fds;
+}

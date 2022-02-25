@@ -7,7 +7,7 @@
 #include "BatteryInterface.hpp"
 
 /**
- * A graph of the battery topology: (V, E), where |V| < \inf \and E \subseteq V x V
+ * A graph of the battery topology: (V, E), where |V| < inf and E subseteq V x V
  */
 class BOSDirectory {
     ////// 
@@ -63,8 +63,10 @@ public:
 
     /**
      * Remove the battery 
+     * TODO: 
      */
     int remove_battery(const std::string &name) {
+        
         UNIMPLEMENTED("not supporting remove battery right now");
         const std::list<Battery*> &children_bat = this->get_children(name);
         if (children_bat.size() == 0) {

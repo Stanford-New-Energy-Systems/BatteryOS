@@ -9,6 +9,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
+#include <sys/stat.h>
 #include <netdb.h>
 #include <stdio.h>
 #include <string.h>
@@ -272,7 +273,7 @@ struct FIFOConnection : public Connection {
     
     bool connect() override {
         if (newfifo) {
-            if (!mkfifo(path.c_str(), this->permission)) {
+            if (mkfifo(path.c_str(), this->permission) < 0) {
                 WARNING() << "mkfifo failed for fifo connection " << path;
                 return false;
             }
