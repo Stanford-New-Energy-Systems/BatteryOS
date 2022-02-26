@@ -907,6 +907,7 @@ int test_network2(int port) {
 
 int run() {
     LOG();
+    test_protobuf(); 
     // test_battery_status();
     // test_python_binding();
     // test_uart();

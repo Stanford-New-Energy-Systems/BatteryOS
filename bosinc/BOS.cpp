@@ -1,4 +1,5 @@
 #include "BOS.hpp"
+#include "ProtobufMsg.hpp"
 #include <sys/stat.h>
 #include <dirent.h>
 #include <poll.h>

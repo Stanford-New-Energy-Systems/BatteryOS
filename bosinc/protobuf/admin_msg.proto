@@ -1,0 +1,100 @@
+syntax = "proto3"; 
+
+import "battery_status.proto"; 
+
+package bos; 
+enum Function {
+    MAKE_NULL = 0; 
+    MAKE_PSEUDO = 1; 
+    MAKE_JBDBMS = 2; 
+    MAKE_NETWORKED = 3; 
+    MAKE_AGGREGATOR = 4; 
+    MAKE_SPLITTER = 5; 
+    MAKE_DYNAMIC = 6; 
+    REMOVE_BATTERY = 7; 
+    LIST_BATTERY = 8; 
+    GET_BATTERY_INFO = 9; 
+}
+message MakeNull {
+    string name = 1; 
+    int64 max_staleness_ms = 2; 
+    int64 voltage_mV = 3; 
+    
+}
+message MakePseudo {
+    string name = 1; 
+    int64 max_staleness_ms = 2; 
+    BatteryStatus status = 3; 
+}
+message MakeJBDBMS {
+    string name = 1; 
+    int64 max_staleness_ms = 2; 
+    string device_address = 3; 
+    string current_regulator_address = 4; 
+}
+message MakeNetworked {
+    string name = 1; 
+    int64 max_staleness_ms = 2; 
+    string remote_name = 3; 
+    string address = 4; 
+    int64 port = 5; 
+}
+message MakeAggregator {
+    string name = 1; 
+    int64 max_staleness_ms = 2; 
+    int64 voltage_mV = 3; 
+    int64 voltage_tolerance_mV = 4; 
+    repeated string src_names = 5; 
+}
+message MakeSplitter {
+    string name = 1; 
+    int64 max_staleness_ms = 2; 
+    string src_name = 3; 
+    repeated string child_names = 4; 
+    repeated Scale child_scales = 5; 
+    repeated int64 child_max_staleness_ms = 6; 
+    int64 policy_type = 7; 
+}
+message MakeDynamic {
+    string name = 1; 
+    int64 max_staleness_ms = 2; 
+    string dynamic_lib_path = 3; 
+    string init_argument = 4; 
+    string init_func_name = 5; 
+    string destruct_func_name = 6; 
+    string get_status_func_name = 7; 
+    string set_current_func_name = 8; 
+    optional string get_delay_func_name = 9; 
+}
+message RemoveBattery {
+    string name = 1; 
+}
+message ListBattery {
+
+}
+message GetBatteryInfo {
+    string name = 1; 
+}
+message AdminMsg {
+    
+    oneof func_call {
+        MakeNull make_null = 1; 
+        MakePseudo make_pseudo = 2; 
+        MakeJBDBMS make_JBDBMS = 3; 
+        MakeNetworked make_networked = 4; 
+        MakeAggregator make_aggregator = 5; 
+        MakeSplitter make_splitter = 6; 
+        MakeDynamic make_dynamic = 7; 
+        RemoveBattery remove_battery = 8; 
+        ListBattery list_battery = 9; 
+        GetBatteryInfo get_battery_info = 10; 
+    }
+}
+
+
+
+
+
+
+
+

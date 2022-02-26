@@ -7,7 +7,7 @@
 #include "RPC.hpp"
 #include "Dynamic.hpp"
 #include <unordered_map>
-
+#include "ProtobufMsg.hpp" 
 /// Battery -> make it object oriented
 /// BatteryDirectory -> get batteries
 /// BatteryFactory, BatteryDirectoryManager -> create/destroy batteries in the graph
