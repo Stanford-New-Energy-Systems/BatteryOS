@@ -209,6 +209,8 @@ int handle_admin_msg(BatteryOS *bos, bosproto::AdminMsg *msg, bosproto::AdminRes
         }
         case bosproto::AdminMsg::FuncCallCase::kListBattery: 
         case bosproto::AdminMsg::FuncCallCase::kGetBatteryInfo: 
+            resp->set_retcode(-2); 
+            resp->set_failreason("Function not supported!"); 
             break; 
         case bosproto::AdminMsg::FuncCallCase::FUNC_CALL_NOT_SET: 
             resp->set_retcode(-1); 

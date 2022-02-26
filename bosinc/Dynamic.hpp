@@ -20,7 +20,6 @@ public:
         return 0;
     }
 private: 
-    static std::map<std::string, void*> loaded_dynamic_libs;
     void *dynamic_lib_handle;
     init_func_t        init_func;
     destruct_func_t    destruct_func;
