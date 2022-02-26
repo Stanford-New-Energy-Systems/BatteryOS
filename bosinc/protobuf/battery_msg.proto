@@ -22,5 +22,18 @@ message BatteryMsg {
     }
 }
 
+message BatteryResp {
+    int64 retcode = 1; 
+    oneof retval {
+        BatteryStatus status = 2; 
+        int64 set_current_response = 3; 
+        string info_string = 4; 
+        string failreason = 5; 
+    }
+}
+
+
+
+
 
 

@@ -91,7 +91,15 @@ message AdminMsg {
     }
 }
 
-
+message AdminResp {
+    int64 retcode = 1; 
+    oneof retval {
+        int64 success = 2; 
+        string battery_info_string = 3; 
+        string battery_list_string = 4; 
+        string failreason = 5; 
+    }
+}
 
 
 

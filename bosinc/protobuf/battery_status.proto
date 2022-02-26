@@ -25,3 +25,16 @@ message Scale {
     double max_charge = 4; 
 }
 
+message BatteryInfo {
+    
+}
+
+message Response {
+    int64 retcode = 1; 
+    oneof retval {
+        string failreason = 2; 
+        BatteryStatus status = 3; 
+        int64 set_current_response = 4; 
+        string battery_names = 5; 
+    }
+}

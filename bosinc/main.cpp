@@ -6,6 +6,7 @@
 #include "SplittedBattery.hpp"
 #include "BOS.hpp"
 #include "sonnen.hpp"
+#include "ProtobufMsg.hpp"
 #include <iostream>
 
 void test_uart() {
@@ -907,7 +908,7 @@ int test_network2(int port) {
 
 int run() {
     LOG();
-    test_protobuf(); 
+    protobufmsg::test_protobuf(); 
     // test_battery_status();
     // test_python_binding();
     // test_uart();

@@ -1,3 +1,5 @@
+#ifndef BOS_HPP 
+#define BOS_HPP 
 #include "JBDBMS.hpp"
 #include "TestBattery.hpp"
 #include "NetworkBattery.hpp"
@@ -7,7 +9,7 @@
 #include "RPC.hpp"
 #include "Dynamic.hpp"
 #include <unordered_map>
-#include "ProtobufMsg.hpp" 
+
 /// Battery -> make it object oriented
 /// BatteryDirectory -> get batteries
 /// BatteryFactory, BatteryDirectoryManager -> create/destroy batteries in the graph
@@ -515,7 +517,7 @@ private:
 
 
 
-
+#endif // ! BOS_HPP 
 
 
 
