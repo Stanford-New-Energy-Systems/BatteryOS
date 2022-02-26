@@ -7,6 +7,14 @@ int test_protobuf() {
     bosproto::CTimeStamp *ts = battery_status_msg.mutable_timestamp(); 
     ts->set_msec(100); 
     ts->set_secs_since_epoch(2147483647); 
+    std::string sbuff = battery_status_msg.SerializeAsString();
+    BatteryStatus bts; 
+    bosproto::BatteryStatus parsed; 
+    parsed.ParseFromString(sbuff); 
+    deserialize(bts, &parsed); 
+    CTimestamp cts = bts.timestamp; 
+    // deserialize(cts, ts); 
+    LOG() << cts.secs_since_epoch << " " << cts.msec;
     LOG() << "battery_status_msg.IsInitialized() = " << battery_status_msg.IsInitialized(); 
     return 0; 
 }
