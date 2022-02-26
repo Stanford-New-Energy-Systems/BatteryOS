@@ -12,6 +12,7 @@
     } while (0)
 #endif  // ! BATTERY_FACTORY_NAME_CHECK
 
+std::map<std::string, void*> BatteryDirectoryManager::loaded_dynamic_libs; 
 
 Battery *BatteryDirectoryManager::make_null(
     const std::string &name,
@@ -576,6 +577,38 @@ int BatteryOS::poll_fifos() {
     fds[0].events = POLLIN | POLLPRI; 
     fds[0].revents = 0; 
 
+    size_t i = 1;
+    for (auto &it : this->battery_fds) {
+        fds[i].fd = it.second;
+        fds[i].events = POLLIN | POLLPRI; 
+        fds[i].revents = 0; 
+        i += 1; 
+    }
+    int retval = 0;
+    while (1) {
+        retval = poll(fds, this->battery_fds.size()+1, -1); 
+        if (retval < 0) {
+            WARNING() << "Poll failed!!!"; 
+            delete [] fds; 
+            return -1; 
+        }
+        for (size_t j = 0; j < this->battery_fds.size()+1; ++j) {
+            if ((fds[j].revents & POLLIN) == POLLIN) {
+                if (j == 0) {
+                    if (this->handle_admin(fds[j].fd) < 0) {
+                        WARNING() << "failed to handle admin message";
+                    } 
+                } else {
+                    if (this->handle_battery(fds[j].fd) < 0) {
+                        WARNING() << "failed to handle battery message";
+                    }
+                }
+                fds[j].revents = 0; 
+            }
+        }
+    }
+    delete [] fds; 
+    return 0; 
     // fds[i].fd = open(temp.c_str(), O_RDWR | O_NONBLOCK);
     // fds[i].events = POLLIN | POLLPRI;
     // fds[i].revents = 0;

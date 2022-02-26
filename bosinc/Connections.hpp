@@ -18,7 +18,7 @@
 #include <arpa/inet.h> 
 #include "BatteryInterface.hpp"
 #include "util.hpp"
-#include "include/wiringSerial.h"
+#include "wiringSerial/wiringSerial.h"
 struct Connection {
     Connection() {}
     Connection(const Connection &) = delete;

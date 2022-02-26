@@ -17,8 +17,8 @@ class BatteryOS;
 
 class BatteryDirectoryManager {
     BOSDirectory &dir;
-    static std::map<std::string, void*> loaded_dynamic_libs; 
 public:
+    static std::map<std::string, void*> loaded_dynamic_libs; 
     BatteryDirectoryManager(BOSDirectory &directory) : dir(directory) {}
 
     /** Null battery for testing purpose */
@@ -175,6 +175,9 @@ public:
 
     /** ensure that dir_path is actually a directory, if not, create with permission */
     int ensure_dir(const std::string &dir_path, mode_t permission); 
+
+    int handle_admin(int fd) {return 0;}
+    int handle_battery(int fd) {return 0;}
 
 private: 
     /** this one handles the battery connection request */

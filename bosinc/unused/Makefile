@@ -1,10 +1,10 @@
-PY_CFLAGS = $(shell python3-config --cflags)
-PY_LDFLAGS = $(shell python3-config --ldflags)
+PY_CFLAGS = $(shell pkg-config --cflags python3) # $(shell python3-config --cflags)
+PY_LDFLAGS = $(shell pkg-config --libs python3)  # $(shell python3-config --ldflags)
 
-PY_CFLAGS_EMBED = $(shell python3-config --cflags --embed)
-PY_LDFLAGS_EMBED = $(shell python3-config --ldflags --embed)
+PY_CFLAGS_EMBED  = $(shell pkg-config --cflags python3-embed) # $(shell python3-config --cflags --embed)
+PY_LDFLAGS_EMBED = $(shell pkg-config --libs python3-embed)  # $(shell python3-config --ldflags --embed)
 
-CURL_LDFLAGS = $(shell curl-config --libs)
+CURL_LDFLAGS = $(shell pkg-config --cflags --libs libcurl) # $(shell curl-config --libs)
 
 CPP_FILES = main.cpp 
 CPP_FILES += BatteryStatus.cpp 
@@ -14,6 +14,7 @@ CPP_FILES += BatteryInterface.cpp
 CPP_FILES += RPC.cpp
 CPP_FILES += AggregatorBattery.cpp
 CPP_FILES += BALSplitter.cpp
+CPP_FILES += BOS.cpp 
 
 C_FILES = include/wiringSerial.c
 

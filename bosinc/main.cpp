@@ -906,7 +906,7 @@ int test_network2(int port) {
 #endif 
 
 int run() {
-    // LOG();
+    LOG();
     // test_battery_status();
     // test_python_binding();
     // test_uart();
