@@ -32,7 +32,7 @@ add_library (protobufmsg ${PROTO_CXX_FILES})
 target_include_directories(protobufmsg PUBLIC ${Protobuf_INCLUDE_DIRS}) 
 target_include_directories(protobufmsg PUBLIC ${CMAKE_CURRENT_BINARY_DIR}) 
 target_link_libraries(protobufmsg PUBLIC ${Protobuf_LIBRARIES}) 
-
+target_precompile_headers(protobufmsg PUBLIC ${PROTO_H_FILES}) 
 set(PROTOBUF_MSG_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR})
 message(STATUS "PROTOBUF_MSG_INCLUDE_DIR : ${PROTOBUF_MSG_INCLUDE_DIR}")
 

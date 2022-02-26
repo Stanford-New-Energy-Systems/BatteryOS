@@ -7,10 +7,24 @@ int test_protobuf() {
     bosproto::CTimeStamp *ts = battery_status_msg.mutable_timestamp(); 
     ts->set_msec(100); 
     ts->set_secs_since_epoch(2147483647); 
+
+    if (mkfifo("test_fifo", 0777) < 0) {
+        WARNING() << "failed to mkfifo";
+        return -1;
+    } 
+    int fd = open("test_fifo", O_RDWR); 
+    if (fd < 0) {
+        WARNING() << "failed to open fifo"; 
+        return -2; 
+    }
+    battery_status_msg.SerializeToFileDescriptor(fd); 
+    LOG() << "serialized";
     std::string sbuff = battery_status_msg.SerializeAsString();
     BatteryStatus bts; 
     bosproto::BatteryStatus parsed; 
     parsed.ParseFromString(sbuff); 
+    // parsed.ParseFromFileDescriptor(fd); 
+    LOG() << "parsed";
     deserialize(bts, &parsed); 
     CTimestamp cts = bts.timestamp; 
     // deserialize(cts, ts); 
