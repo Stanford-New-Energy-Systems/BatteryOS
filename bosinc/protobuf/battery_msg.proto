@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "battery_status.proto"; 
 
-package bos; 
+package bosproto; 
 message GetStatus {
 
 }
