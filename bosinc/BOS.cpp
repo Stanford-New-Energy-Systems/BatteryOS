@@ -258,26 +258,31 @@ Battery *BatteryDirectoryManager::make_dynamic(
     } 
     bool failed = false;
     init_func_t init_func = (init_func_t)dlsym(lib_handle, init_func_name.c_str());
+    // LOG() << "init_func = " << init_func; 
     if (!init_func) { 
         WARNING() << "init_func not found! init_func = " << init_func_name << " Error: " << dlerror(); 
         failed = true; 
     }
     destruct_func_t destruct_func = (destruct_func_t)dlsym(lib_handle, destruct_func_name.c_str());
+    // LOG() << "destruct_func = " << destruct_func; 
     if (!destruct_func) { 
         WARNING() << "destruct_func not found! destruct_func = " << destruct_func_name << " Error: " << dlerror(); 
         failed = true; 
     }
     get_status_func_t get_status_func = (get_status_func_t)dlsym(lib_handle, get_status_func_name.c_str());
+    // LOG() << "get_status_func = " << get_status_func; 
     if (!get_status_func) { 
         WARNING() << "get_status_func not found! get_status_func = " << get_status_func_name << " Error: " << dlerror(); 
         failed = true; 
     }
     set_current_func_t set_current_func = (set_current_func_t)dlsym(lib_handle, set_current_func_name.c_str());
+    // LOG() << "set_current_func = " << set_current_func; 
     if (!set_current_func) { 
         WARNING() << "set_current_func not found! set_current_func = " << set_current_func_name << " Error: " << dlerror(); 
         failed = true; 
     }
     get_delay_func_t get_delay_func = (get_delay_func_t)dlsym(lib_handle, get_delay_func_name.c_str());
+    // LOG() << "get_delay_func = " << get_delay_func; 
     if (!get_delay_func) {
         get_delay_func = &DynamicBattery::no_delay;
     }

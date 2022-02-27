@@ -280,6 +280,9 @@ protected:
         return (this->current_sequence_number++);
     }
 public: 
+    virtual void cleanup() {
+        return; 
+    }
     void quit() {
         {
             lockguard_t lkd(this->lock);
@@ -287,6 +290,7 @@ public:
         }
         cv.notify_one();
         background_thread.join(); 
+        cleanup(); 
     }
     ////// Ends here
 

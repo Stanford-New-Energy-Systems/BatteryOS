@@ -926,10 +926,20 @@ void test_bos() {
     // bos.notify_should_quit(); 
 }
 
+void test_dynamic() {
+    BatteryOS bos; 
+    const char *a = "123"; 
+    Battery *dyn = bos.get_manager().make_dynamic(
+        "dyn", "../example/build/libdynamicnull.dylib", 1000, 
+        (void*)a, "init", "destroy", "get_status", "set_current"); 
+    LOG() << dyn->get_status(); 
+}
+
 int run() {
     LOG();
     // protobufmsg::test_protobuf(); 
     test_bos(); 
+    // test_dynamic(); 
     // test_battery_status();
     // test_python_binding();
     // test_uart();

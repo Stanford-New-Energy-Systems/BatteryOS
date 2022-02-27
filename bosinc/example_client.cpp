@@ -102,17 +102,98 @@ void make_pseudo() {
     return; 
 }
 
+void make_dynamic() {
+    // make_dynamic(
+    //     "dyn", "../example/build/libdynamicnull.dylib", 1000, 
+    //     (void*)a, "init", "destroy", "get_status", "set_current"); 
+    bosproto::AdminMsg msg; 
+    bosproto::MakeDynamic *args = msg.mutable_make_dynamic(); 
+    args->set_name("dyn"); 
+    args->set_max_staleness_ms(123); 
+    args->set_dynamic_lib_path("../example/build/libdynamicnull.dylib"); 
+    std::string *init_arg = args->mutable_init_argument(); 
+    (*init_arg) = "aaa"; 
+    args->set_init_func_name("init"); 
+    args->set_destruct_func_name("destroy"); 
+    args->set_get_status_func_name("get_status"); 
+    args->set_set_current_func_name("set_current"); 
+
+    int ifd = open("bosdir/admin_input", O_WRONLY); 
+    if (ifd < 0) {
+        std::cerr << "failed to open? errno = " << errno << std::endl; 
+        return; 
+    }
+    msg.SerializeToFileDescriptor(ifd); 
+    close(ifd); 
+    int ofd = open("bosdir/admin_output", O_RDONLY); 
+    bosproto::AdminResp aresp; 
+    std::cout << "parsing" << std::endl; 
+    aresp.ParseFromFileDescriptor(ofd); 
+    std::cout << "parsed" << std::endl; 
+    close(ofd); 
+    return; 
+}
+
 int main() {
     get_status("nullbat"); 
     std::cout << "------------------------------------" << std::endl;
     sleep(3); 
     make_pseudo(); 
     std::cout << "------------------------------------" << std::endl;
-    sleep(2); 
+    sleep(3); 
     get_status("pseudo"); 
+    std::cout << "------------------------------------" << std::endl;
+    sleep(3); 
+    make_dynamic(); 
+    std::cout << "------------------------------------" << std::endl;
+    sleep(3); 
+    get_status("dyn"); 
     std::cout << "------------------------------------" << std::endl;
     sleep(3); 
     ask_shutdown(); 
     std::cout << "------------------------------------" << std::endl;
     return 0; 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
