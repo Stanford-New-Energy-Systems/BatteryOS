@@ -8,7 +8,7 @@
 #include "sonnen.hpp"
 #include "ProtobufMsg.hpp"
 #include <iostream>
-
+#include <signal.h> 
 void test_uart() {
     printf("--------------------\n");
     UARTConnection connection("/dev/ttyUSB1");
@@ -905,10 +905,31 @@ int test_network2(int port) {
     return 0;
 }
 #endif 
+BatteryOS *bosptr = nullptr; 
+void test_bos() {
+    BatteryOS bos; 
+    bosptr = &bos; 
+    bos.get_manager().make_null("nullbat", 10000, 1000); 
+    // int retval = bos.admin_fifo_init(); 
+    // bool failed = false; 
+    // if (retval < 0) {
+    //     WARNING() << "Failed to initialize admin fifo"; 
+    //     failed = true; 
+    // }
+    // retval = bos.battery_fifo_init(); 
+    // if (retval < 0) {
+    //     WARNING() << "Failed to initialize battery fifo"; 
+    //     failed = true; 
+    // }
+    bos.bootup(); 
+    // bos will shutdown 
+    // bos.notify_should_quit(); 
+}
 
 int run() {
     LOG();
-    protobufmsg::test_protobuf(); 
+    // protobufmsg::test_protobuf(); 
+    test_bos(); 
     // test_battery_status();
     // test_python_binding();
     // test_uart();
@@ -942,7 +963,9 @@ int run() {
     // test_network2(1234);
     return 0;
 }
-
+void sigint_handler(int sig) {
+    if (bosptr) { bosptr->notify_should_quit(); }
+}
 int main() {
     Py_Initialize();
     // PyEval_InitThreads();
@@ -953,11 +976,11 @@ int main() {
     Py_DECREF(path);
     Py_DECREF(sys);
 
-    
+    signal(SIGINT, sigint_handler); 
     Py_BEGIN_ALLOW_THREADS
     run();
     Py_END_ALLOW_THREADS
-
+    google::protobuf::ShutdownProtobufLibrary(); 
     
     
     Py_FinalizeEx();

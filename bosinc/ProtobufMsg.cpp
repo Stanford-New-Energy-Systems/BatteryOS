@@ -30,6 +30,8 @@ int test_protobuf() {
     // deserialize(cts, ts); 
     LOG() << cts.secs_since_epoch << " " << cts.msec;
     LOG() << "battery_status_msg.IsInitialized() = " << battery_status_msg.IsInitialized(); 
+    close(fd); 
+    unlink("test_fifo"); 
     return 0; 
 }
 
@@ -185,7 +187,7 @@ int handle_admin_msg(BatteryOS *bos, bosproto::AdminMsg *msg, bosproto::AdminRes
                 args.name(), 
                 args.dynamic_lib_path(), 
                 args.max_staleness_ms(), 
-                args.init_argument().c_str(), 
+                (void*)args.init_argument().data(), 
                 args.init_func_name(), 
                 args.destruct_func_name(), 
                 args.get_status_func_name(), 
@@ -211,6 +213,11 @@ int handle_admin_msg(BatteryOS *bos, bosproto::AdminMsg *msg, bosproto::AdminRes
         case bosproto::AdminMsg::FuncCallCase::kGetBatteryInfo: 
             resp->set_retcode(-2); 
             resp->set_failreason("Function not supported!"); 
+            break; 
+        case bosproto::AdminMsg::FuncCallCase::kShutdown: 
+            bos->notify_should_quit(); 
+            resp->set_retcode(0); 
+            resp->set_success(1); 
             break; 
         case bosproto::AdminMsg::FuncCallCase::FUNC_CALL_NOT_SET: 
             resp->set_retcode(-1); 

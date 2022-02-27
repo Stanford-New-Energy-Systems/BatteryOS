@@ -59,7 +59,7 @@ message MakeDynamic {
     string name = 1; 
     int64 max_staleness_ms = 2; 
     string dynamic_lib_path = 3; 
-    string init_argument = 4; 
+    bytes init_argument = 4; 
     string init_func_name = 5; 
     string destruct_func_name = 6; 
     string get_status_func_name = 7; 
@@ -75,6 +75,9 @@ message ListBattery {
 message GetBatteryInfo {
     string name = 1; 
 }
+message Shutdown {
+
+}
 message AdminMsg {
     
     oneof func_call {
@@ -88,6 +91,7 @@ message AdminMsg {
         RemoveBattery remove_battery = 8; 
         ListBattery list_battery = 9; 
         GetBatteryInfo get_battery_info = 10; 
+        Shutdown shutdown = 11; 
     }
 }
 

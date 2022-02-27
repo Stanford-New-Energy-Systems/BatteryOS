@@ -17,23 +17,32 @@ class BOSDirectory {
     std::map<std::string, std::list<Battery*>> parent_map;             // Dictionary name |-> list of parents 
     std::map<std::string, std::list<Battery*>> children_map;           // Dictionary name |-> list of children  
     std::list<Battery*> temp;
+    bool quitted;
 public:
-    BOSDirectory() {}
+    BOSDirectory() : quitted(false) {}
     BOSDirectory(BOSDirectory &) = delete;
     BOSDirectory &operator=(BOSDirectory &) = delete;
     BOSDirectory(BOSDirectory &&other) : 
         name_storage_map(std::move(other.name_storage_map)),
         parent_map(std::move(other.parent_map)),
-        children_map(std::move(other.children_map)) {}
+        children_map(std::move(other.children_map)),
+        quitted(other.quitted) {}
     BOSDirectory &operator=(BOSDirectory &&other) {
         name_storage_map.swap(other.name_storage_map);
         parent_map.swap(other.parent_map);
         children_map.swap(other.children_map);
+        std::swap(this->quitted, other.quitted); 
         return (*this);
     } 
     ~BOSDirectory() {
-        for (auto &p : name_storage_map) {
-            p.second->quit();
+        quit(); 
+    }
+    void quit() {
+        if (!quitted) {
+            for (auto &p : name_storage_map) {
+                p.second->quit();
+            }
+            quitted = true; 
         }
     }
 

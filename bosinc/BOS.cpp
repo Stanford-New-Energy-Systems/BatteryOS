@@ -6,14 +6,12 @@
 #ifndef BATTERY_FACTORY_NAME_CHECK
 #define BATTERY_FACTORY_NAME_CHECK(factory, name)\
     do {\
-        if ((factory)->dir.name_exists(name)) {\
+        if ((factory)->dir->name_exists(name)) {\
             WARNING() << "Battery name " << (name) << " already exists!";\
             return NULL;\
         }\
     } while (0)
 #endif  // ! BATTERY_FACTORY_NAME_CHECK
-
-std::map<std::string, void*> BatteryDirectoryManager::loaded_dynamic_libs; 
 
 Battery *BatteryDirectoryManager::make_null(
     const std::string &name,
@@ -28,7 +26,7 @@ Battery *BatteryDirectoryManager::make_null(
             std::chrono::milliseconds(max_staleness_ms)
         )
     );
-    return this->dir.add_battery(std::move(null_battery));
+    return this->dir->add_battery(std::move(null_battery));
 }
 
 Battery *BatteryDirectoryManager::make_pseudo(
@@ -44,7 +42,7 @@ Battery *BatteryDirectoryManager::make_pseudo(
             std::chrono::milliseconds(max_staleness_ms)
         )
     );
-    return this->dir.add_battery(std::move(pseudo_battery));
+    return this->dir->add_battery(std::move(pseudo_battery));
 }
 
 Battery *BatteryDirectoryManager::make_JBDBMS(
@@ -68,7 +66,7 @@ Battery *BatteryDirectoryManager::make_JBDBMS(
             std::chrono::milliseconds(max_staleness_ms)
         )
     );
-    return this->dir.add_battery(std::move(jbd));
+    return this->dir->add_battery(std::move(jbd));
 }
 
 Battery *BatteryDirectoryManager::make_networked_battery(
@@ -99,7 +97,7 @@ Battery *BatteryDirectoryManager::make_networked_battery(
             std::chrono::milliseconds(max_staleness_ms)
         )
     );
-    return this->dir.add_battery(std::move(network));
+    return this->dir->add_battery(std::move(network));
 }
 
 Battery *BatteryDirectoryManager::make_aggregator(
@@ -115,7 +113,7 @@ Battery *BatteryDirectoryManager::make_aggregator(
     int64_t v;
     bool failed = false;
     for (const std::string &src : src_names) {
-        bat = this->dir.get_battery(src);
+        bat = this->dir->get_battery(src);
         if (!bat) {
             WARNING() << "Battery " << name << "not found!";
             failed = true;
@@ -141,11 +139,11 @@ Battery *BatteryDirectoryManager::make_aggregator(
             voltage_mV, 
             voltage_tolerance_mV, 
             src_names, 
-            this->dir, 
+            *(this->dir), 
             std::chrono::milliseconds(max_staleness_ms)));
-    Battery *agg = this->dir.add_battery(std::move(aggregator));
+    Battery *agg = this->dir->add_battery(std::move(aggregator));
     for (const std::string &src : src_names) {
-        this->dir.add_edge(src, name);
+        this->dir->add_edge(src, name);
     }
     return agg;
 }
@@ -159,11 +157,11 @@ std::vector<Battery*> BatteryDirectoryManager::make_splitter(
     int policy_type,
     int64_t max_staleness_ms
 ) {
-    if (this->dir.name_exists(name)) {
+    if (this->dir->name_exists(name)) {
         WARNING() << "Battery name " << (name) << " already exists!";
         return {};
     }
-    if (!this->dir.name_exists(src_name)) {
+    if (!this->dir->name_exists(src_name)) {
         WARNING() << "source battery " << src_name << " does not exist";
         return {};
     }
@@ -174,7 +172,7 @@ std::vector<Battery*> BatteryDirectoryManager::make_splitter(
     }
     bool failed = false;
     for (const std::string &cn : child_names) {
-        if (this->dir.name_exists(cn)) {
+        if (this->dir->name_exists(cn)) {
             WARNING() << "child name " << cn << " already exists!";
             failed = true;
         }
@@ -202,17 +200,17 @@ std::vector<Battery*> BatteryDirectoryManager::make_splitter(
         std::unique_ptr<Battery> child(
             new SplittedBattery(
                 child_names[i], 
-                this->dir, 
+                *(this->dir), 
                 std::chrono::milliseconds(child_max_stalenesses_ms[i])
             )
         );
-        children.push_back(this->dir.add_battery(std::move(child)));
+        children.push_back(this->dir->add_battery(std::move(child)));
     }
     std::unique_ptr<Battery> policy(
         new BALSplitter(
             name, 
             src_name, 
-            this->dir, 
+            *(this->dir), 
             child_names, 
             child_scales, 
             BALSplitterType(policy_type), 
@@ -220,11 +218,11 @@ std::vector<Battery*> BatteryDirectoryManager::make_splitter(
         )
     );
     BALSplitter *pptr = dynamic_cast<BALSplitter*>(policy.get());
-    this->dir.add_battery(std::move(policy));
-    this->dir.add_edge(src_name, name);
+    this->dir->add_battery(std::move(policy));
+    this->dir->add_edge(src_name, name);
     for (const std::string &cn : child_names) {
-        this->dir.add_edge(name, cn);
-        SplittedBattery *cp = dynamic_cast<SplittedBattery*>(this->dir.get_battery(cn));
+        this->dir->add_edge(name, cn);
+        SplittedBattery *cp = dynamic_cast<SplittedBattery*>(this->dir->get_battery(cn));
         cp->attach_to_policy(name);
     }
     pptr->start_background_refresh();
@@ -237,7 +235,7 @@ Battery *BatteryDirectoryManager::make_dynamic(
     const std::string &name, 
     const std::string &dynamic_lib_path, 
     int64_t max_staleness_ms, 
-    const char *init_argument, 
+    void *init_argument, 
     const std::string &init_func_name, 
     const std::string &destruct_func_name, 
     const std::string &get_status_func_name, 
@@ -250,10 +248,8 @@ Battery *BatteryDirectoryManager::make_dynamic(
     using set_current_func_t = typename DynamicBattery::set_current_func_t; 
     using get_delay_func_t = typename DynamicBattery::get_delay_func_t; 
 
-    void *lib_handle = nullptr; 
-    if (loaded_dynamic_libs.find(dynamic_lib_path) != loaded_dynamic_libs.end()) {
-        lib_handle = loaded_dynamic_libs[dynamic_lib_path]; 
-    } else {
+    void *lib_handle = bos->find_lib(dynamic_lib_path); 
+    if (!lib_handle) {
         lib_handle = dlopen(dynamic_lib_path.c_str(), RTLD_LAZY); 
         if (!lib_handle) {
             WARNING() << "dynamic_lib not opened! Error: " << dlerror();
@@ -295,7 +291,7 @@ Battery *BatteryDirectoryManager::make_dynamic(
         dlclose(lib_handle); 
         return nullptr; 
     }
-    loaded_dynamic_libs[dynamic_lib_path] = lib_handle; 
+    bos->add_lib(dynamic_lib_path, lib_handle); 
 
     void *init_result = init_func(init_argument); 
     if (!init_result) {
@@ -317,12 +313,12 @@ Battery *BatteryDirectoryManager::make_dynamic(
             init_argument
         )
     );
-    return this->dir.add_battery(std::move(dynamic_battery)); 
+    return this->dir->add_battery(std::move(dynamic_battery)); 
 }
 
 
 int BatteryDirectoryManager::remove_battery(const std::string &name) {
-    Battery *bat = this->dir.get_battery(name);
+    Battery *bat = this->dir->get_battery(name);
     if (!bat) {
         WARNING() << "no battery named " << name << " is found";
         return 0;
@@ -331,7 +327,7 @@ int BatteryDirectoryManager::remove_battery(const std::string &name) {
         WARNING() << "battery " << name << " is a partitioned battery, please remove the partitioner";
         return 0;
     }
-    return this->dir.remove_battery(name);
+    return this->dir->remove_battery(name);
 }
 
 void BatteryOS::simple_remote_connection_server(int port) {
@@ -390,7 +386,7 @@ void BatteryOS::simple_remote_connection_server(int port) {
                 name.push_back((char)data_buf[i]);
             }
 
-            Battery *bat = dir.get_battery(name);
+            Battery *bat = this->dir.get_battery(name);
             if (!bat) {
                 WARNING() << "battery " << name << " not found!";
             }
@@ -496,10 +492,11 @@ int BatteryOS::connection_handler(Connection *conn) {
 }
 
 int BatteryOS::ensure_dir(const std::string &dpath, mode_t permission) {
+    // LOG() << "ensure dir, dpath = " << dpath; 
     DIR *d = opendir(dpath.c_str()); 
     if (!d) {
         if (mkdir(dpath.c_str(), permission) < 0) {
-            WARNING() << "failed to mkdir";
+            WARNING() << "failed to mkdir, errno = " << errno; 
             return -1;
         }
     } else {
@@ -508,13 +505,13 @@ int BatteryOS::ensure_dir(const std::string &dpath, mode_t permission) {
     return 0; 
 }
 
-int BatteryOS::admin_fifo_init(mode_t permission, mode_t dir_permission) {
-    if (ensure_dir(dirpath, dir_permission) < 0) {
+int BatteryOS::admin_fifo_init() {
+    if (ensure_dir(dirpath, this->dir_permission) < 0) {
         WARNING() << "Error creating the dir"; 
         return -3; 
     } 
     std::string admin_fifo_name = dirpath + "admin";
-    if (mkfifo(admin_fifo_name.c_str(), permission) < 0) {
+    if (mkfifo(admin_fifo_name.c_str(), this->admin_fifo_permission) < 0) {
         WARNING() << "failed to make admin fifo"; 
         return -1;
     }
@@ -527,16 +524,16 @@ int BatteryOS::admin_fifo_init(mode_t permission, mode_t dir_permission) {
     return 0; 
 }  
 
-int BatteryOS::battery_fifo_init(mode_t permission, mode_t dir_permission) {
+int BatteryOS::battery_fifo_init() {
     std::vector<std::string> name_list = dir.get_name_list();
-    if (ensure_dir(dirpath, dir_permission) < 0) {
+    if (ensure_dir(dirpath, this->dir_permission) < 0) {
         WARNING() << "Error creating the dir"; 
         return -3;
     } 
     std::string temp;
     for (size_t i = 0; i < name_list.size(); ++i) {
         temp = dirpath + name_list[i];
-        if (mkfifo(temp.c_str(), permission) < 0) {
+        if (mkfifo(temp.c_str(), this->battery_fifo_permission) < 0) {
             WARNING() << "mkfifo failed for battery " << temp;
             return -1;
         }
@@ -551,10 +548,10 @@ int BatteryOS::battery_fifo_init(mode_t permission, mode_t dir_permission) {
     return 0;
 }
 
-int BatteryOS::single_battery_fifo_init(const std::string &battery_name, mode_t permission) {
+int BatteryOS::single_battery_fifo_init(const std::string &battery_name) {
     std::vector<std::string> name_list = dir.get_name_list();
     std::string fifo_path = this->dirpath + battery_name; 
-    if (mkfifo(fifo_path.c_str(), permission) < 0) {
+    if (mkfifo(fifo_path.c_str(), this->battery_fifo_permission) < 0) {
         WARNING() << "mkfifo failed for battery " << battery_name;
         return -1;
     }
@@ -587,20 +584,24 @@ int BatteryOS::poll_fifos() {
     }
     int retval = 0;
     while (1) {
+        if (this->should_quit) {
+            // notified to quit! 
+            break; 
+        }
         retval = poll(fds, this->battery_fds.size()+1, -1); 
         if (retval < 0) {
             WARNING() << "Poll failed!!!"; 
-            delete [] fds; 
-            return -1; 
+            break; 
         }
+        LOG() << "poll success, retval = " << retval; 
         for (size_t j = 0; j < this->battery_fds.size()+1; ++j) {
             if ((fds[j].revents & POLLIN) == POLLIN) {
                 if (j == 0) {
-                    if (this->handle_admin(fds[j].fd) < 0) {
+                    if (this->handle_admin(fds[j].fd, this) < 0) {
                         WARNING() << "failed to handle admin message";
                     } 
                 } else {
-                    if (this->handle_battery(fds[j].fd) < 0) {
+                    if (this->handle_battery(fds[j].fd, dir.get_battery(fd_to_battery_name[fds[j].fd])) < 0) {
                         WARNING() << "failed to handle battery message";
                     }
                 }
@@ -610,30 +611,103 @@ int BatteryOS::poll_fifos() {
     }
     delete [] fds; 
     return 0; 
-    // fds[i].fd = open(temp.c_str(), O_RDWR | O_NONBLOCK);
-    // fds[i].events = POLLIN | POLLPRI;
-    // fds[i].revents = 0;
-    // int retval;
-    // while (1) {
-    //     retval = poll(fds, name_list.size(), -1);
-    //     if (retval < 0) {
-    //         WARNING() << "Poll failed!";
-    //         delete [] fds;
-    //         return -1;
-    //     }
-    //     for (size_t i = 0; i < name_list.size(); ++i) {
-    //         if (fds[i].revents & POLLIN == POLLIN) {
-    //             // handle data 
-    //             FIFOConnection conn("", 0777, false);
-    //             conn.connected = true;
-    //             conn.fd = fds[i].fd;
-    //             if (connection_handler(&conn) < 0) {
-    //                 WARNING() << "something wrong?";
-    //             }
-    //             conn.fd = 0;
-    //             conn.connected = false;
-    //         }
-    //     }
-    // }
-    // delete [] fds;
 }
+
+static constexpr size_t read_buffer_size = 4096; 
+static uint8_t read_buffer[read_buffer_size]; 
+int BatteryOS::handle_admin(int fd, BatteryOS *bos) {
+    bosproto::AdminMsg msg; 
+    bosproto::AdminResp resp; 
+    // LOG() << "parsing from fd"; 
+    ssize_t nbytes = read(fd, read_buffer, read_buffer_size); 
+    bool parse_success = msg.ParseFromArray(read_buffer, nbytes); 
+    // msg.ParseFromFileDescriptor(fd); 
+    // LOG() << "parsed"; 
+    if (!parse_success) {
+        WARNING() << "message parse failed"; 
+        return -1; 
+    }
+    // LOG() << "parse success"; 
+
+    bool handle_success = protobufmsg::handle_admin_msg(bos, &msg, &resp); 
+    if (!handle_success) {
+        WARNING() << "failed to handle message"; 
+        return -2; 
+    }
+
+    bool serialize_success = resp.SerializeToFileDescriptor(fd); 
+    if (!serialize_success) {
+        WARNING() << "failed to serialize response"; 
+        return -3; 
+    }
+    fsync(fd); 
+    return 0; 
+}
+
+int BatteryOS::handle_battery(int fd, Battery *bat) {
+    bosproto::BatteryMsg msg; 
+    bosproto::BatteryResp resp; 
+    ssize_t nbytes = read(fd, read_buffer, read_buffer_size); 
+    bool parse_success = msg.ParseFromArray(read_buffer, nbytes); 
+    // msg.ParseFromFileDescriptor(fd); 
+    // bool parse_success = msg.ParseFromFileDescriptor(fd); 
+    if (!parse_success) {
+        WARNING() << "message parse failed"; 
+        return -1; 
+    }
+    bool handle_success = protobufmsg::handle_battery_msg(bat, &msg, &resp); 
+    if (!handle_success) {
+        WARNING() << "failed to handle message"; 
+        return -2; 
+    }
+    bool serialize_success = resp.SerializeToFileDescriptor(fd); 
+    if (!serialize_success) {
+        WARNING() << "failed to serialize response"; 
+        return -3; 
+    }
+    fsync(fd); 
+    return 0; 
+}
+
+/** call when a battery is created */
+int BatteryOS::battery_post_creation(const std::string &battery_name) {
+    this->single_battery_fifo_init(battery_name); 
+    return 0; 
+}
+
+/** bootup the battery os */
+int BatteryOS::bootup() {
+    int retval = this->admin_fifo_init(); 
+    bool failed = false; 
+    if (retval < 0) {
+        WARNING() << "Failed to initialize admin fifo"; 
+        failed = true; 
+    }
+    retval = this->battery_fifo_init(); 
+    if (retval < 0) {
+        WARNING() << "Failed to initialize battery fifo"; 
+        failed = true; 
+    }
+    if (!failed) {
+        poll_fifos(); 
+    }
+    shutdown(); 
+    return 0; 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

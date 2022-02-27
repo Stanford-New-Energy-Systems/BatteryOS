@@ -7,7 +7,7 @@
 class DynamicBattery : public Battery {
 public: 
     /// init_func: init_argument -> init_result
-    typedef void*(*init_func_t)(const char*);
+    typedef void*(*init_func_t)(void*);
     /// destruct_func: init_result -> void
     typedef void(*destruct_func_t)(void*);
     /// get_status: init_result -> BatteryStatus
@@ -28,7 +28,7 @@ private:
     get_delay_func_t   get_delay_func;
     bool initialized;
     void *init_result;
-    const char *init_argument; 
+    void *init_argument; 
 public: 
     DynamicBattery(
         const std::string &name,
@@ -40,7 +40,8 @@ public:
         set_current_func_t set_current_func, 
         get_delay_func_t get_delay_func, 
         void *init_result, 
-        const char *init_argument) : 
+        void *init_argument
+    ) : 
         Battery(name, max_staleness_ms, 0),
         init_func(init_func), 
         destruct_func(destruct_func), 

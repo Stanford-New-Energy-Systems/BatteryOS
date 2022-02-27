@@ -99,7 +99,7 @@ class LogStream {
 public: 
     LogStream(const char *func, const char *file, int line) {
         this->stream() << "------------------------------ LOG ------------------------------\n";
-        this->stream() << "In file " <<  file << ", line " << line << ", function " << func << ": \n";
+        this->stream() << "In file " <<  file << ":" << line << ", function " << func << ": \n";
     }
     ~LogStream() {
         this->stream() << "\n------------------------------ END ------------------------------" << std::endl;
@@ -118,7 +118,7 @@ class WarningStream {
 public: 
     WarningStream(const char *func, const char *file, int line) {
         this->stream() << "------------------------------ WARNING ------------------------------\n";
-        this->stream() << "In file " <<  file << ", line " << line << ", function " << func << ": \n";
+        this->stream() << "In file " <<  file << ":" << line << ", function " << func << ": \n";
     }
     ~WarningStream() {
         this->stream() << "\n-------------------------------- END --------------------------------" << std::endl;
@@ -140,7 +140,7 @@ class ErrorStream {
 public: 
     ErrorStream(const char *func, const char *file, int line) {
         this->stream() << "------------------------------ ERROR ------------------------------\n";
-        this->stream() << "In file " <<  file << ", line " << line << ", function " << func << ": \n";
+        this->stream() << "In file " <<  file << ":" << line << ", function " << func << ": \n";
     }
     ~ErrorStream() {
         this->stream() << "\n------------------------------- END -------------------------------" << std::endl;

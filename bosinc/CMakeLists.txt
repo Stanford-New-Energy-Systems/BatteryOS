@@ -58,9 +58,10 @@ target_link_libraries(bos PUBLIC ${Python3_LIBRARIES})
 target_link_libraries(bos PUBLIC protobufmsg)
 # target_link_libraries(bos PUBLIC ${Protobuf_LIBRARIES}) 
 target_precompile_headers(bos PUBLIC ${CXX_HEADERS})
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
-endif()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+# if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+#     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+# endif()
 
 
 
