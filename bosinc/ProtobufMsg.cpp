@@ -78,6 +78,7 @@ int handle_admin_msg(BatteryOS *bos, bosproto::AdminMsg *msg, bosproto::AdminRes
                 resp->set_retcode(-1); 
                 resp->set_failreason("failed to create battery");
             } else {
+                bos->battery_post_creation(args.name()); 
                 resp->set_retcode(0); 
                 resp->set_success(1); 
             }
@@ -92,6 +93,7 @@ int handle_admin_msg(BatteryOS *bos, bosproto::AdminMsg *msg, bosproto::AdminRes
                 resp->set_retcode(-1); 
                 resp->set_failreason("failed to create battery");
             } else {
+                bos->battery_post_creation(args.name()); 
                 resp->set_retcode(0); 
                 resp->set_success(1); 
             }
@@ -104,6 +106,7 @@ int handle_admin_msg(BatteryOS *bos, bosproto::AdminMsg *msg, bosproto::AdminRes
                 resp->set_retcode(-1); 
                 resp->set_failreason("failed to create battery");
             } else {
+                bos->battery_post_creation(args.name()); 
                 resp->set_retcode(0); 
                 resp->set_success(1); 
             }
@@ -116,6 +119,7 @@ int handle_admin_msg(BatteryOS *bos, bosproto::AdminMsg *msg, bosproto::AdminRes
                 resp->set_retcode(-1); 
                 resp->set_failreason("failed to create battery");
             } else {
+                bos->battery_post_creation(args.name()); 
                 resp->set_retcode(0); 
                 resp->set_success(1); 
             }
@@ -133,6 +137,7 @@ int handle_admin_msg(BatteryOS *bos, bosproto::AdminMsg *msg, bosproto::AdminRes
                 resp->set_retcode(-1); 
                 resp->set_failreason("failed to create battery");
             } else {
+                bos->battery_post_creation(args.name()); 
                 resp->set_retcode(0); 
                 resp->set_success(1); 
             }
@@ -170,6 +175,9 @@ int handle_admin_msg(BatteryOS *bos, bosproto::AdminMsg *msg, bosproto::AdminRes
                     resp->set_retcode(-1); 
                     resp->set_failreason("failed to create partitioner"); 
                 } else {
+                    for (std::string &cn : child_names) {
+                        bos->battery_post_creation(cn); 
+                    }
                     resp->set_retcode(0); 
                     resp->set_success(1); 
                 }
@@ -198,6 +206,7 @@ int handle_admin_msg(BatteryOS *bos, bosproto::AdminMsg *msg, bosproto::AdminRes
                 resp->set_retcode(-1); 
                 resp->set_failreason("failed to create battery");
             } else {
+                bos->battery_post_creation(args.name()); 
                 resp->set_retcode(0); 
                 resp->set_success(1); 
             }
@@ -214,15 +223,22 @@ int handle_admin_msg(BatteryOS *bos, bosproto::AdminMsg *msg, bosproto::AdminRes
             resp->set_retcode(-2); 
             resp->set_failreason("Function not supported!"); 
             break; 
-        case bosproto::AdminMsg::FuncCallCase::kShutdown: 
+        case bosproto::AdminMsg::FuncCallCase::kShutdown: {
             bos->notify_should_quit(); 
             resp->set_retcode(0); 
             resp->set_success(1); 
             break; 
-        case bosproto::AdminMsg::FuncCallCase::FUNC_CALL_NOT_SET: 
+        }
+        case bosproto::AdminMsg::FuncCallCase::FUNC_CALL_NOT_SET: {
+            WARNING() << "function type not set!"; 
             resp->set_retcode(-1); 
             resp->set_failreason("Function type not set!"); 
             break; 
+        }
+        default: {
+            WARNING() << "unknown admin msg"; 
+            break; 
+        }
     }
     return 0; 
 }

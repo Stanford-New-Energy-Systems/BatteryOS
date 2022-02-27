@@ -63,7 +63,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 #     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 # endif()
 
-
-
+add_executable(client client.cpp)
+target_link_libraries(client PUBLIC protobufmsg)
 
 

@@ -157,10 +157,12 @@ class BatteryOS {
     BOSDirectory dir;
     BatteryDirectoryManager mgr;
     std::string dirpath; 
-    std::unordered_map<std::string, int> battery_fds; 
-    std::unordered_map<int, std::string> fd_to_battery_name; 
+    std::unordered_map<std::string, int> battery_ifds; 
+    // std::unordered_map<std::string, int> battery_ofds; 
+    std::unordered_map<int, std::string> ifd_to_battery_name; 
     std::map<std::string, void*> loaded_dynamic_libs; 
-    int admin_fifo_fd; 
+    int admin_fifo_ifd; 
+    int admin_fifo_ofd; 
     mode_t dir_permission; 
     mode_t admin_fifo_permission; 
     mode_t battery_fifo_permission; 
@@ -194,6 +196,28 @@ public:
     BatteryDirectoryManager &get_manager() { 
         return this->mgr; 
     }
+
+    const std::string &get_dirpath() {
+        return this->dirpath; 
+    }
+
+    // int get_ofd(int ifd) {
+    //     if (ifd == this->admin_fifo_ifd) {
+    //         return this->admin_fifo_ofd; 
+    //     }
+    //     auto iter = ifd_to_battery_name.find(ifd); 
+    //     if (iter == ifd_to_battery_name.end()) {
+    //         WARNING() << "Failed to find ifd " << ifd; 
+    //         return -1; 
+    //     }
+    //     auto iter2 = battery_ofds.find(iter->second); 
+    //     if (iter2 == battery_ofds.end()) {
+    //         WARNING() << "Failed to find ofd for battery " << iter->first; 
+    //         return -2; 
+    //     }
+    //     return iter2->second; 
+    // }
+
     void *find_lib(const std::string &path) {
         auto iter = this->loaded_dynamic_libs.find(path);
         if (iter != this->loaded_dynamic_libs.end()) {
@@ -229,41 +253,50 @@ public:
 private: 
     /** this one handles the battery connection request */
     int connection_handler(Connection *conn);
-
+ 
     /** initiate fifo for single battery */
     int single_battery_fifo_init(const std::string &battery_name); 
-public:
+
     /** initiate the admin fifo */
     int admin_fifo_init(); 
 
     /** access the batteries via the filesystems (FIFOs) */
     int battery_fifo_init();
-private: 
+    
     /** ensure that dir_path is actually a directory, if not, create with permission */
     int ensure_dir(const std::string &dir_path, mode_t permission); 
 
     /** handle admin message from file descriptor fd */
-    static int handle_admin(int fd, BatteryOS *bos); 
+    static int handle_admin(int fd, BatteryOS *bos, const std::string &ofdpath); 
 
     /** handle battery message from file descriptor fd */
-    static int handle_battery(int fd, Battery *bat); 
+    static int handle_battery(int fd, Battery *bat, const std::string &ofdpath); 
 
     void shutdown() {
         LOG() << "shutting down"; 
         this->dir.quit(); 
-        for (auto &it : this->battery_fds) {
+        for (auto &it : this->battery_ifds) {
             ::close(it.second); 
         }
-        ::close(this->admin_fifo_fd); 
+        // for (auto &it : this->battery_ofds) {
+        //     ::close(it.second); 
+        // }
+        ::close(this->admin_fifo_ifd); 
+        // ::close(this->admin_fifo_ofd); 
+        // close dynamic libraries 
         for (auto &it : this->loaded_dynamic_libs) {
             dlclose(it.second); 
         }
         // unlink the fds 
-        std::string admin_fifo_path = this->dirpath + "admin"; 
+        std::string admin_fifo_path = this->dirpath + "admin" + "_input"; 
         unlink(admin_fifo_path.c_str()); 
-        for (auto &it : this->battery_fds) {
-            std::string fifo_path = this->dirpath + it.first; 
+        std::string admin_fifo_path2 = this->dirpath + "admin" + "_output"; 
+        unlink(admin_fifo_path2.c_str()); 
+        for (auto &it : this->battery_ifds) {
+            std::string fifo_path = this->dirpath + it.first + "_input"; 
             unlink(fifo_path.c_str()); 
+            std::string fifo_path2 = this->dirpath + it.first + "_output"; 
+            unlink(fifo_path2.c_str()); 
         }
         // unlink the dir 
         rmdir(this->dirpath.c_str()); 
