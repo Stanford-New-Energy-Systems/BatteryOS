@@ -624,12 +624,6 @@ int BatteryOS::poll_fifos() {
             }
             ++iter; 
         }
-        if (handle_admin_fd > 0) {
-            LOG() << "handling admin msg"; 
-            if (this->handle_admin(this) < 0) {
-                WARNING() << "failed to handle admin message";
-            } 
-        }
         for (const std::string *bn : batteries_to_handle) {
             LOG() << "handling battery msg"; 
             if (this->handle_battery(this, (*bn)) < 0) {
@@ -637,6 +631,12 @@ int BatteryOS::poll_fifos() {
             }
         }
         batteries_to_handle.clear(); 
+        if (handle_admin_fd > 0) {
+            LOG() << "handling admin msg"; 
+            if (this->handle_admin(this) < 0) {
+                WARNING() << "failed to handle admin message";
+            } 
+        }
     }
     delete [] fds; 
     return 0; 
