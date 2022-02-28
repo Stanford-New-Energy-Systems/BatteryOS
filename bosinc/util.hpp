@@ -99,7 +99,7 @@ class LogStream {
 public: 
     LogStream(const char *func, const char *file, int line) {
         this->stream() << "------------------------------ LOG ------------------------------\n";
-        this->stream() << "In file " <<  file << ":" << line << ", function " << func << ": \n";
+        this->stream() << file << ":" << line << ", " << func << ": \n";
     }
     ~LogStream() {
         this->stream() << "\n------------------------------ END ------------------------------" << std::endl;
@@ -156,7 +156,7 @@ public:
     }
 };
 #define LOG() \
-    LogStream(__PRETTY_FUNCTION__, __FILE__, __LINE__).stream()
+    LogStream(__func__, __FILE__, __LINE__).stream()
 #define WARNING() \
     WarningStream(__PRETTY_FUNCTION__, __FILE__, __LINE__).stream()
 #define ERROR() \
