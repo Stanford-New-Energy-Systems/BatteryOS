@@ -157,12 +157,9 @@ class BatteryOS {
     BOSDirectory dir;
     BatteryDirectoryManager mgr;
     std::string dirpath; 
-    std::unordered_map<std::string, int> battery_ifds; 
-    // std::unordered_map<std::string, int> battery_ofds; 
-    std::unordered_map<int, std::string> ifd_to_battery_name; 
+    std::map<std::string, int> battery_ifds; 
     std::map<std::string, void*> loaded_dynamic_libs; 
     int admin_fifo_ifd; 
-    int admin_fifo_ofd; 
     mode_t dir_permission; 
     mode_t admin_fifo_permission; 
     mode_t battery_fifo_permission; 
@@ -200,23 +197,6 @@ public:
     const std::string &get_dirpath() {
         return this->dirpath; 
     }
-
-    // int get_ofd(int ifd) {
-    //     if (ifd == this->admin_fifo_ifd) {
-    //         return this->admin_fifo_ofd; 
-    //     }
-    //     auto iter = ifd_to_battery_name.find(ifd); 
-    //     if (iter == ifd_to_battery_name.end()) {
-    //         WARNING() << "Failed to find ifd " << ifd; 
-    //         return -1; 
-    //     }
-    //     auto iter2 = battery_ofds.find(iter->second); 
-    //     if (iter2 == battery_ofds.end()) {
-    //         WARNING() << "Failed to find ofd for battery " << iter->first; 
-    //         return -2; 
-    //     }
-    //     return iter2->second; 
-    // }
 
     void *find_lib(const std::string &path) {
         auto iter = this->loaded_dynamic_libs.find(path);
@@ -267,10 +247,10 @@ private:
     int ensure_dir(const std::string &dir_path, mode_t permission); 
 
     /** handle admin message from file descriptor fd */
-    static int handle_admin(int &fd, BatteryOS *bos, const std::string &fd_prefix); 
+    static int handle_admin(BatteryOS *bos); 
 
     /** handle battery message from file descriptor fd */
-    static int handle_battery(int &fd, Battery *bat, const std::string &fd_prefix); 
+    static int handle_battery(BatteryOS *bos, const std::string &battery_name); 
 
     void shutdown() {
         LOG() << "shutting down"; 
@@ -278,11 +258,7 @@ private:
         for (auto &it : this->battery_ifds) {
             ::close(it.second); 
         }
-        // for (auto &it : this->battery_ofds) {
-        //     ::close(it.second); 
-        // }
         ::close(this->admin_fifo_ifd); 
-        // ::close(this->admin_fifo_ofd); 
         // close dynamic libraries 
         for (auto &it : this->loaded_dynamic_libs) {
             dlclose(it.second); 
