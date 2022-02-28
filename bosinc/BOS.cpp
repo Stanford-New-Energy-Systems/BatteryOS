@@ -597,7 +597,7 @@ int BatteryOS::poll_fifos() {
         return -1; 
     }
     int retval = 0;
-    std::vector<int> fds_to_handle;
+    std::vector<int*> fds_to_handle;
     while (1) {
         if (this->should_quit) {
             // notified to quit! 
@@ -626,24 +626,24 @@ int BatteryOS::poll_fifos() {
             if ((fds[j].revents & POLLIN) == POLLIN || (fds[j].revents & POLLPRI) == POLLPRI) {
                 if (j == 0) {
                     LOG() << "admin to handle"; 
-                    handle_admin_fd = fds[j].fd;
+                    handle_admin_fd = 1;
                 } else {
-                    fds_to_handle.push_back(fds[j].fd); 
+                    fds_to_handle.push_back(&(fds[j].fd)); 
                 }
                 fds[j].revents = 0; 
             }
         }
         if (handle_admin_fd > 0) {
             LOG() << "handling admin msg"; 
-            std::string temp = this->dirpath + "admin_output"; 
+            std::string temp = this->dirpath + "admin"; 
             if (this->handle_admin(this->admin_fifo_ifd, this, temp) < 0) {
                 WARNING() << "failed to handle admin message";
             } 
         }
-        for (int hfd : fds_to_handle) {
+        for (int *hfd : fds_to_handle) {
             LOG() << "handling battery msg"; 
-            std::string temp = this->dirpath + ifd_to_battery_name[hfd] + "_output"; 
-            if (this->handle_battery(hfd, dir.get_battery(ifd_to_battery_name[hfd]), temp) < 0) {
+            std::string temp = this->dirpath + ifd_to_battery_name[*hfd]; 
+            if (this->handle_battery((*hfd), dir.get_battery(ifd_to_battery_name[*hfd]), temp) < 0) {
                 WARNING() << "failed to handle battery message";
             }
         }
@@ -655,7 +655,7 @@ int BatteryOS::poll_fifos() {
 
 static constexpr size_t read_buffer_size = 4096; 
 static uint8_t read_buffer[read_buffer_size]; 
-int BatteryOS::handle_admin(int fd, BatteryOS *bos, const std::string &ofdpath) {
+int BatteryOS::handle_admin(int &fd, BatteryOS *bos, const std::string &fd_prefix) {
     bosproto::AdminMsg msg; 
     bosproto::AdminResp resp; 
     // ssize_t nbytes = read(fd, read_buffer, read_buffer_size); 
@@ -672,6 +672,7 @@ int BatteryOS::handle_admin(int fd, BatteryOS *bos, const std::string &ofdpath) 
         WARNING() << "failed to handle message"; 
     }
     LOG() << "opening ofd"; 
+    std::string ofdpath = fd_prefix + "_output";
     int ofd = open(ofdpath.c_str(), O_WRONLY); 
     if (!ofd) {
         WARNING() << "failed to open output fifo!"; 
@@ -683,10 +684,13 @@ int BatteryOS::handle_admin(int fd, BatteryOS *bos, const std::string &ofdpath) 
     }
     fsync(ofd); 
     close(ofd);
+    close(fd); 
+    std::string ifdpath = fd_prefix + "_input";
+    fd = open(ifdpath.c_str(), O_RDONLY | O_NONBLOCK); 
     return 0; 
 }
 
-int BatteryOS::handle_battery(int fd, Battery *bat, const std::string &ofdpath) {
+int BatteryOS::handle_battery(int &fd, Battery *bat, const std::string &fd_prefix) {
     bosproto::BatteryMsg msg; 
     bosproto::BatteryResp resp; 
     // LOG() << "reading"; 
@@ -703,6 +707,7 @@ int BatteryOS::handle_battery(int fd, Battery *bat, const std::string &ofdpath) 
         WARNING() << "failed to handle message"; 
     }
     LOG() << "done handling"; 
+    std::string ofdpath = fd_prefix + "_output";
     int ofd = open(ofdpath.c_str(), O_WRONLY); 
     if (!ofd) {
         WARNING() << "failed to open output fifo!"; 
@@ -716,6 +721,9 @@ int BatteryOS::handle_battery(int fd, Battery *bat, const std::string &ofdpath) 
     LOG() << "done serialize"; 
     fsync(ofd); 
     close(ofd); 
+    close(fd); 
+    std::string ifdpath = fd_prefix + "_input";
+    fd = open(ifdpath.c_str(), O_RDONLY | O_NONBLOCK); 
     return 0; 
 }
 

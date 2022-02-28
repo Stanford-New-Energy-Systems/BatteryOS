@@ -267,10 +267,10 @@ private:
     int ensure_dir(const std::string &dir_path, mode_t permission); 
 
     /** handle admin message from file descriptor fd */
-    static int handle_admin(int fd, BatteryOS *bos, const std::string &ofdpath); 
+    static int handle_admin(int &fd, BatteryOS *bos, const std::string &fd_prefix); 
 
     /** handle battery message from file descriptor fd */
-    static int handle_battery(int fd, Battery *bat, const std::string &ofdpath); 
+    static int handle_battery(int &fd, Battery *bat, const std::string &fd_prefix); 
 
     void shutdown() {
         LOG() << "shutting down"; 
