@@ -600,7 +600,7 @@ int BatteryOS::poll_fifos() {
             fds[i].revents = 0; 
             i += 1; 
         }
-        LOG() << "polling"; 
+        // LOG() << "polling"; 
         retval = poll(fds, this->battery_ifds.size()+1, -1); 
         if (retval < 0) {
             WARNING() << "Poll failed!!!"; 
