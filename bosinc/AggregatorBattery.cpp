@@ -16,31 +16,7 @@ AggregatorBattery::AggregatorBattery(
     this->type = BatteryType::Aggregate;
     // bool add_success;
     Battery *bat;
-    int64_t v; 
     BatteryStatus pstatus;
-    for (const std::string &src : src_names) {
-        bat = directory.get_battery(src);
-        if (!bat) {
-            ERROR() << "Battery " << name << "not found!";
-            continue;
-        }
-        pstatus = bat->get_status();
-        v = pstatus.voltage_mV;
-        if (!(voltage_mV - voltage_tolerance_mV <= v && v <= voltage_mV + voltage_tolerance_mV)) {
-            ERROR() << "Battery " << name << " is out of voltage tolerance!";
-            continue;
-        }
-        if (pstatus.current_mA != 0) {
-            ERROR() << "Battery in use!";
-            continue;
-        }
-        // please add the topology outside of this! 
-        // add_success = directory.add_edge(src, name);
-        // if (!add_success) {
-        //     WARNING() << "Failed to add battery " << name << " as source!";
-        //     continue;
-        // }
-    }
     double max_discharge_time = 0;
     double max_charge_time = 0;
     this->status.voltage_mV = voltage_mV;

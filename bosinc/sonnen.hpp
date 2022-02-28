@@ -99,7 +99,7 @@ public:
         strptime(json_resp["Timestamp"].GetString(), "%Y-%m-%d %H:%M:%S", &ts);
         ts.tm_hour -= 3;  // EST --> PST (localtime)
         timepoint_t tp = std::chrono::system_clock::from_time_t(std::mktime(&ts));
-
+        (void)tp;
         this->status.voltage_mV = uac * 1000;
         this->status.current_mA = round((double)pac_total_w/(double)uac*1000);
         this->status.capacity_mAh = round((double)max_capacity_Wh * (double)usoc/100 / (double)uac * 1000); 

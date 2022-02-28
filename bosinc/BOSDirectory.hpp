@@ -7,7 +7,7 @@
 #include "BatteryInterface.hpp"
 
 /**
- * A graph of the battery topology: (V, E), where |V| < \inf \and E \subseteq V x V
+ * A graph of the battery topology: (V, E), where |V| < inf and E subseteq V x V
  */
 class BOSDirectory {
     ////// 
@@ -17,24 +17,41 @@ class BOSDirectory {
     std::map<std::string, std::list<Battery*>> parent_map;             // Dictionary name |-> list of parents 
     std::map<std::string, std::list<Battery*>> children_map;           // Dictionary name |-> list of children  
     std::list<Battery*> temp;
+    bool quitted;
 public:
-    BOSDirectory() {}
+    BOSDirectory() : quitted(false) {}
     BOSDirectory(BOSDirectory &) = delete;
     BOSDirectory &operator=(BOSDirectory &) = delete;
     BOSDirectory(BOSDirectory &&other) : 
         name_storage_map(std::move(other.name_storage_map)),
         parent_map(std::move(other.parent_map)),
-        children_map(std::move(other.children_map)) {}
+        children_map(std::move(other.children_map)),
+        quitted(other.quitted) {}
     BOSDirectory &operator=(BOSDirectory &&other) {
         name_storage_map.swap(other.name_storage_map);
         parent_map.swap(other.parent_map);
         children_map.swap(other.children_map);
+        std::swap(this->quitted, other.quitted); 
         return (*this);
     } 
     ~BOSDirectory() {
-        for (auto &p : name_storage_map) {
-            p.second->quit();
+        quit(); 
+    }
+    void quit() {
+        if (!quitted) {
+            for (auto &p : name_storage_map) {
+                p.second->quit();
+            }
+            quitted = true; 
         }
+    }
+
+    std::vector<std::string> get_name_list() {
+        std::vector<std::string> res;
+        for (auto it = parent_map.begin(); it != parent_map.end(); ++it) {
+            res.push_back(it->first);
+        }
+        return res;
     }
 
     Battery *add_battery(std::unique_ptr<Battery> &&battery) {
@@ -51,6 +68,29 @@ public:
         children_map.insert(std::make_pair(name, std::list<Battery*>()));
 
         return ptr;  // be careful to avoid the copy constructor and the default constructor! 
+    }
+
+    /**
+     * Remove the battery 
+     * TODO: 
+     */
+    int remove_battery(const std::string &name) {
+        
+        UNIMPLEMENTED("not supporting remove battery right now");
+        const std::list<Battery*> &children_bat = this->get_children(name);
+        if (children_bat.size() == 0) {
+            UNIMPLEMENTED("just remove one node");
+            return 1;
+        }
+        std::string bname;
+        for (decltype(children_bat.begin()) it = children_bat.begin(); it != children_bat.end(); ++it) {
+            bname = (*it)->get_name();
+            if (!remove_battery(bname)) {
+                ERROR() << "battery " << bname << " failed to remove!";
+                return 0;
+            }
+        }
+        return 1;
     }
 
     const std::list<Battery*> &get_children(const std::string &name) {

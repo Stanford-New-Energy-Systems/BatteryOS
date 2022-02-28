@@ -2,29 +2,32 @@
 
 JBDBMS::JBDBMS(
     const std::string &name, 
-    const std::string &device_address, 
-    const std::string &current_regulator_address,
+    std::unique_ptr<Connection> pconnection,
+    std::unique_ptr<CurrentRegulator> pregulator,
+    // const std::string &device_address, 
+    // const std::string &current_regulator_address,
     const std::chrono::milliseconds &max_staleness_ms
 ) : 
     PhysicalBattery(name, max_staleness_ms),
-    pconnection(nullptr),
-    rd6006(current_regulator_address),
+    pconnection(std::move(pconnection)),
+    pregulator(std::move(pregulator)),
+    // rd6006(current_regulator_address),
     max_charging_current_mA(10000),         // 10A is enough? 
     max_discharging_current_mA(10000),      // 10A is enough?
     basic_state()
 {
     // device_address example: /dev/ttyUSB0
-    pconnection.reset(new UARTConnection(device_address));
-    pconnection->connect();
+    // pconnection.reset(new UARTConnection(device_address));
+    // pconnection->connect();
     // send a byte to wake up the lazy BMS! 
     pconnection->write({'W', 'a', 'k', 'e'});
     pconnection->flush();  // flush
 
-    if (!pconnection->is_connected()) {
-        ERROR() << "failed to open connections!";
-        // fprintf(stderr, "JBDBMS: failed to open connection!\n");
-        // exit(1);
-    }
+    // if (!pconnection->is_connected()) {
+    //     ERROR() << "failed to open connections!";
+    //     // fprintf(stderr, "JBDBMS: failed to open connection!\n");
+    //     // exit(1);
+    // }
     this->refresh();
 }
 
@@ -292,7 +295,8 @@ uint32_t JBDBMS::set_current(int64_t target_current_mA, bool is_greater_than_tar
         return 0;
     }
 
-    rd6006.set_current_Amps(double(target_current_mA) / 1000);
+    // rd6006.set_current_Amps(double(target_current_mA) / 1000);
+    pregulator->set_current_Amps(double(target_current_mA) / 1000);
     return 1;
 }
 

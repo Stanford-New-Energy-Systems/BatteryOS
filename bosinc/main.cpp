@@ -6,8 +6,9 @@
 #include "SplittedBattery.hpp"
 #include "BOS.hpp"
 #include "sonnen.hpp"
+#include "ProtobufMsg.hpp"
 #include <iostream>
-
+#include <signal.h> 
 void test_uart() {
     printf("--------------------\n");
     UARTConnection connection("/dev/ttyUSB1");
@@ -44,12 +45,12 @@ void test_python_binding() {
     return;
 }
 
-void test_JBDBMS() {
-    JBDBMS bms("jbd", "/dev/ttyUSB1", "current_regulator");
-    JBDBMS::State basic_info = bms.get_basic_info();
-    std::cout << basic_info << std::endl;
-    std::cout << bms.get_status() << std::endl;
-}
+// void test_JBDBMS() {
+//     JBDBMS bms("jbd", "/dev/ttyUSB1", "current_regulator");
+//     JBDBMS::State basic_info = bms.get_basic_info();
+//     std::cout << basic_info << std::endl;
+//     std::cout << bms.get_status() << std::endl;
+// }
 
 void test_events() {
     using namespace std::chrono_literals;
@@ -139,7 +140,7 @@ void test_events() {
 
     std::cout << "done" << std::endl;
 }
-
+#if 0
 void test_agg_management() {
     using namespace std::chrono_literals;
     BOS bos;
@@ -874,11 +875,17 @@ int test_network(int port) {
     LOG() << slac_status;
     
     bos.simple_remote_connection_server(port);
+    return 0;
 }
 
 int test_network2(int port) {
     using namespace std::chrono_literals;
-    NetworkBattery netbat("remote_slac", "slac", "127.0.0.1", port, 0ms);
+    std::unique_ptr<Connection> pconn(new TCPConnection("127.0.0.1", port));
+    if (!pconn->connect()) {
+        WARNING() << "Connection failed!";
+        return 1;
+    }
+    NetworkBattery netbat("remote_slac", "slac", std::move(pconn), 0ms);
 
     BatteryStatus status = netbat.get_status();
     LOG() << "netbattery status: " << status;
@@ -897,10 +904,42 @@ int test_network2(int port) {
     std::this_thread::sleep_for(5s);
     return 0;
 }
+#endif 
+BatteryOS *bosptr = nullptr; 
+void test_bos() {
+    BatteryOS bos; 
+    bosptr = &bos; 
+    bos.get_manager().make_null("nullbat", 10000, 1000); 
+    // int retval = bos.admin_fifo_init(); 
+    // bool failed = false; 
+    // if (retval < 0) {
+    //     WARNING() << "Failed to initialize admin fifo"; 
+    //     failed = true; 
+    // }
+    // retval = bos.battery_fifo_init(); 
+    // if (retval < 0) {
+    //     WARNING() << "Failed to initialize battery fifo"; 
+    //     failed = true; 
+    // }
+    bos.bootup(); 
+    // bos will shutdown 
+    // bos.notify_should_quit(); 
+}
 
+void test_dynamic() {
+    BatteryOS bos; 
+    const char *a = "123"; 
+    Battery *dyn = bos.get_manager().make_dynamic(
+        "dyn", "../example/build/libdynamicnull.dylib", 1000, 
+        (void*)a, "init", "destroy", "get_status", "set_current"); 
+    LOG() << dyn->get_status(); 
+}
 
 int run() {
-    // LOG();
+    LOG();
+    // protobufmsg::test_protobuf(); 
+    test_bos(); 
+    // test_dynamic(); 
     // test_battery_status();
     // test_python_binding();
     // test_uart();
@@ -930,11 +969,13 @@ int run() {
     }
 /////////////////////////////////////////////////////////// HERE //////////////////////////////////////////////////////////////
 
-    test_network(1234);
+    // test_network(1234);
     // test_network2(1234);
     return 0;
 }
-
+void sigint_handler(int sig) {
+    if (bosptr) { bosptr->notify_should_quit(); }
+}
 int main() {
     Py_Initialize();
     // PyEval_InitThreads();
@@ -945,11 +986,11 @@ int main() {
     Py_DECREF(path);
     Py_DECREF(sys);
 
-    
+    signal(SIGINT, sigint_handler); 
     Py_BEGIN_ALLOW_THREADS
     run();
     Py_END_ALLOW_THREADS
-
+    google::protobuf::ShutdownProtobufLibrary(); 
     
     
     Py_FinalizeEx();

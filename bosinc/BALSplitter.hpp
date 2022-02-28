@@ -68,7 +68,18 @@ struct Scale {
         }
     }
     bool is_zero() {
-        return this->capacity == 0 || this->max_capacity == 0 || this->max_discharge_rate == 0 || this->max_charge_rate == 0;
+        return 
+            DBL_EQUAL(this->capacity, 0.0) || 
+            DBL_EQUAL(this->max_capacity, 0.0) || 
+            DBL_EQUAL(this->max_discharge_rate, 0.0) || 
+            DBL_EQUAL(this->max_charge_rate, 0.0);
+    }
+    bool is_one() {
+        return 
+            DBL_EQUAL(this->capacity, 1.0) && 
+            DBL_EQUAL(this->max_capacity, 1.0) && 
+            DBL_EQUAL(this->max_discharge_rate, 1.0) && 
+            DBL_EQUAL(this->max_charge_rate, 1.0);
     }
 };
 
@@ -124,24 +135,30 @@ public:
     {
         this->type = BatteryType::BALSplitter;
         source = directory.get_battery(src_name);
-        if (!source) { ERROR() << "source not found!"; }
-        if (child_names.size() != child_scales.size()) {
-            ERROR() << "number of child batteries != number of child percentages";
-        }
+
+        // these are already checked 
+        // if (!source) { 
+        //     ERROR() << "source not found!"; 
+        // }
+        // if (child_names.size() != child_scales.size()) {
+        //     ERROR() << "number of child batteries != number of child percentages";
+        // }
+        // 
+
         child_original_status.resize(child_names.size());
         children_current_now.resize(child_names.size());
         children_last_charge_estimate_timepoint.resize(child_names.size());
         children_estimated_charge_now.resize(child_names.size());
         children_status_now.resize(child_names.size());
-
+        // already checked in factory 
         // check if the scales sum up to 1
-        Scale total_sum(0.0);
+        // Scale total_sum(0.0);
         for (size_t i = 0; i < child_names.size(); ++i) {
             name_lookup[child_names[i]] = i;
-            total_sum = total_sum + child_scales[i];
-            if (total_sum.is_zero()) {
-                ERROR() << "sum of child scales is not within [0, 1]";
-            }
+            // total_sum = total_sum + child_scales[i];
+            // if (total_sum.is_zero()) {
+            //     ERROR() << "sum of child scales is not within [0, 1]";
+            // }
         }
         // 
         // now initialize the children status 

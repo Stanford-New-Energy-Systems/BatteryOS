@@ -1,0 +1,40 @@
+syntax = "proto3"; 
+
+package bosproto; 
+
+
+message CTimeStamp {
+    int64 secs_since_epoch = 1; 
+    int64 msec = 2; 
+}
+
+message BatteryStatus {
+    sint64 voltage_mV = 1; 
+    sint64 current_mA = 2; 
+    sint64 remaining_charge_mAh = 3; 
+    sint64 full_charge_capacity_mAh = 4; 
+    sint64 max_charging_current_mA = 5; 
+    sint64 max_discharging_current_mA = 6; 
+    CTimeStamp timestamp = 7; 
+}
+
+message Scale {
+    double remaining_charge = 1; 
+    double full_charge_capacity = 2; 
+    double max_discharge = 3; 
+    double max_charge = 4; 
+}
+
+message BatteryInfo {
+    
+}
+
+message Response {
+    int64 retcode = 1; 
+    oneof retval {
+        string failreason = 2; 
+        BatteryStatus status = 3; 
+        int64 set_current_response = 4; 
+        string battery_names = 5; 
+    }
+}

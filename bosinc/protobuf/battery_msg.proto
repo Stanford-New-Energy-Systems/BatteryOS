@@ -1,0 +1,39 @@
+syntax = "proto3"; 
+
+import "battery_status.proto"; 
+
+package bosproto; 
+message GetStatus {
+
+}
+message ScheduleSetCurrent {
+    sint64 target_current_mA = 1; 
+    CTimeStamp when_to_set = 2; 
+    CTimeStamp until_when = 3; 
+}
+message GetInfo {
+
+}
+message BatteryMsg {
+    oneof func_call {
+        GetStatus get_status = 1; 
+        ScheduleSetCurrent schedule_set_current = 2; 
+        GetInfo get_info = 3; 
+    }
+}
+
+message BatteryResp {
+    int64 retcode = 1; 
+    oneof retval {
+        BatteryStatus status = 2; 
+        int64 set_current_response = 3; 
+        string info_string = 4; 
+        string failreason = 5; 
+    }
+}
+
+
+
+
+
+
