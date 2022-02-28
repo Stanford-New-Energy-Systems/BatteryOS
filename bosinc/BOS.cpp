@@ -628,7 +628,12 @@ int BatteryOS::poll_fifos() {
                     LOG() << "admin to handle"; 
                     handle_admin_fd = 1;
                 } else {
-                    fds_to_handle.push_back(&(fds[j].fd)); 
+                    // fds_to_handle.push_back(&(fds[j].fd)); 
+                    fds_to_handle.push_back(
+                        &(battery_ifds[
+                            ifd_to_battery_name[fds[j].fd]
+                        ])
+                    );
                 }
                 fds[j].revents = 0; 
             }
