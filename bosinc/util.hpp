@@ -98,17 +98,20 @@ size_t serialize_int(T number, uint8_t *buffer, size_t buffer_size) {
 class LogStream {
 public: 
     LogStream(const char *func, const char *file, int line) {
-        this->stream() << "------------------------------ LOG ------------------------------\n";
-        this->stream() << file << ":" << line << ", " << func << ": \n";
+        // this->stream() << "------------------------------ LOG ------------------------------\n";
+        this->stream() << "LOG... "; 
+        // this->stream() << file << ":" << line << ", " << func << ": \n";
+        this->stream() << file << ":" << line << ", " << func << ": ";
     }
     ~LogStream() {
-        this->stream() << "\n------------------------------ END ------------------------------" << std::endl;
+        // this->stream() << "\n------------------------------ END ------------------------------" << std::endl;
+        this->stream() << " ...ENDLOG" << std::endl; 
     }
     inline std::ostream &stream() {
         return std::cout;
     }
     inline void flush() {
-        this->stream() << std::endl;
+        // this->stream() << std::endl;
         this->stream().flush();
     }
 };
