@@ -27,7 +27,7 @@ void test_uart() {
     print_buffer(buf.data(), (size_t)buf.size());
     printf("\nRx data end\n");
 }
-
+#ifndef NO_PYTHON 
 void test_python_binding() {
     std::thread test_thread([](){
         std::string addr = "/dev/ttyUSB2";
@@ -44,7 +44,7 @@ void test_python_binding() {
     test_thread.join();
     return;
 }
-
+#endif 
 // void test_JBDBMS() {
 //     JBDBMS bms("jbd", "/dev/ttyUSB1", "current_regulator");
 //     JBDBMS::State basic_info = bms.get_basic_info();
@@ -977,6 +977,7 @@ void sigint_handler(int sig) {
     if (bosptr) { bosptr->notify_should_quit(); }
 }
 int main() {
+#ifndef NO_PYTHON
     Py_Initialize();
     // PyEval_InitThreads();
     // add the current path to the module search path!
@@ -985,15 +986,15 @@ int main() {
     PyList_Append(path, PyUnicode_FromString("./python"));
     Py_DECREF(path);
     Py_DECREF(sys);
-
-    signal(SIGINT, sigint_handler); 
     Py_BEGIN_ALLOW_THREADS
+#endif 
+    signal(SIGINT, sigint_handler); 
     run();
-    Py_END_ALLOW_THREADS
     google::protobuf::ShutdownProtobufLibrary(); 
-    
-    
+#ifndef NO_PYTHON
+    Py_END_ALLOW_THREADS
     Py_FinalizeEx();
+#endif 
     // ERROR() << "Just to test abnormal return" << ", sys=" << sys << ", path=" << path;
     // std::cout << std::endl;
     return 0;

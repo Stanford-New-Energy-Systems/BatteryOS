@@ -1,11 +1,12 @@
 #ifndef RD6006_HPP
 #define RD6006_HPP
-#ifndef PY_SSIZE_T_CLEAN
-#define PY_SSIZE_T_CLEAN
-#endif 
 #include "CurrentRegulator.hpp"
-#include <Python.h>
 #include <string>
+#ifndef NO_PYTHON
+#ifndef PY_SSIZE_T_CLEAN
+    #define PY_SSIZE_T_CLEAN
+#endif 
+#include <Python.h>
 class RD6006PowerSupply : public CurrentRegulator {
 private: 
     PyObject *p_device;
@@ -115,6 +116,23 @@ public:
         return current;
     }
 };
+#else 
+
+class RD6006PowerSupply : public CurrentRegulator {
+public: 
+    RD6006PowerSupply(const std::string &address) : CurrentRegulator() {
+        ERROR() << "RD6006 not implemented!"; 
+    }
+    virtual ~RD6006PowerSupply() {} 
+    void close() {}
+    void enable() {}
+    void disable() {}
+    void set_current_Amps(double current_A) override {}
+    double get_current_Amps() override { return 0.0; }
+};
+
+#endif 
+
 
 #endif // ! RD6006_HPP
 
