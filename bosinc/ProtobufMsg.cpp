@@ -187,10 +187,10 @@ int handle_admin_msg(BatteryOS *bos, bosproto::AdminMsg *msg, bosproto::AdminRes
         }
         case bosproto::AdminMsg::FuncCallCase::kMakeDynamic: {
             const bosproto::MakeDynamic &args = msg->make_dynamic(); 
-            std::string delay_func_name = ""; 
-            if (args.has_get_delay_func_name()) {
-                delay_func_name = args.get_delay_func_name(); 
-            }
+            std::string delay_func_name = args.get_delay_func_name(); // ""; 
+            // if (args.has_get_delay_func_name()) {
+            //     delay_func_name = args.get_delay_func_name(); 
+            // }
             Battery *bat = bos->get_manager().make_dynamic(
                 args.name(), 
                 args.dynamic_lib_path(), 
