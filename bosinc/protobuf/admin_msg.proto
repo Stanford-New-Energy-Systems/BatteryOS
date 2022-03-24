@@ -64,7 +64,7 @@ message MakeDynamic {
     string destruct_func_name = 6; 
     string get_status_func_name = 7; 
     string set_current_func_name = 8; 
-    optional string get_delay_func_name = 9; 
+    string get_delay_func_name = 9; 
 }
 message RemoveBattery {
     string name = 1; 
