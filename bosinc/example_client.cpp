@@ -3,6 +3,8 @@
 #include "battery_status.pb.h"
 #include <unistd.h> 
 #include <fcntl.h>
+#include <iostream>
+#include <string> 
 uint8_t read_buffer[4096]; 
 
 void ask_shutdown() {
