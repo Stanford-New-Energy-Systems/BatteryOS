@@ -907,7 +907,11 @@ int test_network2(int port) {
 #endif 
 BatteryOS *bosptr = nullptr; 
 void test_bos() {
+#ifdef __linux__
+    BatteryOS bos("/tmp/bosdir"); 
+#else 
     BatteryOS bos; 
+#endif 
     bosptr = &bos; 
     bos.get_manager().make_null("nullbat", 10000, 1000); 
     // int retval = bos.admin_fifo_init(); 

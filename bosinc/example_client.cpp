@@ -6,11 +6,15 @@
 #include <iostream>
 #include <string> 
 uint8_t read_buffer[4096]; 
-
+#ifdef __linux__
+#define BOSDIR "/tmp/bosdir"
+#else 
+#define BOSDIR "bosdir"
+#endif 
 void ask_shutdown() {
     bosproto::AdminMsg amsg; 
     amsg.mutable_shutdown(); 
-    int ifd = open("bosdir/admin_input", O_WRONLY | O_NONBLOCK); 
+    int ifd = open(BOSDIR "/admin_input", O_WRONLY | O_NONBLOCK); 
     if (ifd < 0) {
         std::cerr << "failed to open? errno = " << errno << std::endl; 
         return; 
@@ -22,7 +26,7 @@ void ask_shutdown() {
     // must close, otherwise EOF not sent! 
     close(ifd); 
 
-    int ofd = open("bosdir/admin_output", O_RDONLY); 
+    int ofd = open(BOSDIR "/admin_output", O_RDONLY); 
     bosproto::BatteryResp resp; 
     bosproto::AdminResp aresp; 
     std::cout << "parsing" << std::endl; 
@@ -35,9 +39,9 @@ void ask_shutdown() {
 void get_status(const std::string &name) {
     bosproto::BatteryMsg msg; 
     msg.mutable_get_status(); 
-    std::string input_name = "bosdir/";
+    std::string input_name = BOSDIR "/";
     input_name = input_name + name + "_input"; 
-    std::string output_name = "bosdir/"; 
+    std::string output_name = BOSDIR "/"; 
     output_name = output_name + name + "_output"; 
     int ifd = open(input_name.c_str(), O_WRONLY); 
     if (ifd < 0) {
@@ -87,14 +91,14 @@ void make_pseudo() {
     bosproto::CTimeStamp *ts = status->mutable_timestamp(); 
     ts->set_secs_since_epoch(123456); 
     ts->set_msec(998); 
-    int ifd = open("bosdir/admin_input", O_WRONLY); 
+    int ifd = open(BOSDIR "/admin_input", O_WRONLY); 
     if (ifd < 0) {
         std::cerr << "failed to open? errno = " << errno << std::endl; 
         return; 
     }
     msg.SerializeToFileDescriptor(ifd); 
     close(ifd); 
-    int ofd = open("bosdir/admin_output", O_RDONLY); 
+    int ofd = open(BOSDIR "/admin_output", O_RDONLY); 
     bosproto::BatteryResp resp; 
     bosproto::AdminResp aresp; 
     std::cout << "parsing" << std::endl; 
@@ -103,6 +107,12 @@ void make_pseudo() {
     close(ofd); 
     return; 
 }
+ 
+#ifdef __APPLE__
+#define DLL_SUFFIX ".dylib"
+#else 
+#define DLL_SUFFIX ".so"
+#endif 
 
 void make_dynamic() {
     // make_dynamic(
@@ -112,7 +122,7 @@ void make_dynamic() {
     bosproto::MakeDynamic *args = msg.mutable_make_dynamic(); 
     args->set_name("dyn"); 
     args->set_max_staleness_ms(123); 
-    args->set_dynamic_lib_path("../example/build/libdynamicnull.dylib"); 
+    args->set_dynamic_lib_path("../example/build/libdynamicnull" DLL_SUFFIX); 
     std::string *init_arg = args->mutable_init_argument(); 
     (*init_arg) = "aaa"; 
     args->set_init_func_name("init"); 
@@ -120,14 +130,14 @@ void make_dynamic() {
     args->set_get_status_func_name("get_status"); 
     args->set_set_current_func_name("set_current"); 
 
-    int ifd = open("bosdir/admin_input", O_WRONLY); 
+    int ifd = open(BOSDIR "/admin_input", O_WRONLY); 
     if (ifd < 0) {
         std::cerr << "failed to open? errno = " << errno << std::endl; 
         return; 
     }
     msg.SerializeToFileDescriptor(ifd); 
     close(ifd); 
-    int ofd = open("bosdir/admin_output", O_RDONLY); 
+    int ofd = open(BOSDIR "/admin_output", O_RDONLY); 
     bosproto::AdminResp aresp; 
     std::cout << "parsing" << std::endl; 
     aresp.ParseFromFileDescriptor(ofd); 
