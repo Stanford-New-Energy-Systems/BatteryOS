@@ -22,13 +22,13 @@ void *init(void *arg) {
 
 
 void *destroy(void *init_result) {
-    printf("destroy, init_result=%llx\n", (uint64_t)init_result); 
+    printf("destroy, init_result=%lx\n", (long)init_result); 
     return (void*)0xdeadbeef; 
 }
 
 
 BatteryStatus get_status(void *init_result) {
-    printf("get_status, init_result=%llx\n", (uint64_t)init_result); 
+    printf("get_status, init_result=%lx\n", (long)init_result); 
     BatteryStatus stat = {
         .voltage_mV = 123, 
         .current_mA = 456, 
@@ -43,7 +43,7 @@ BatteryStatus get_status(void *init_result) {
 }
 
 uint32_t set_current(void *init_result, int64_t current) {
-    printf("set_current, init_result=%llx, current=%lld\n", (uint64_t)init_result, current); 
+    printf("set_current, init_result=%lx, current=%ld\n", (long)init_result, (long)current); 
     return 1; 
 }
 
