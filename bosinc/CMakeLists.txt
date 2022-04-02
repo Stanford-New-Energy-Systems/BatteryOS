@@ -41,27 +41,26 @@ set(CXX_HEADERS
 )
 
 
-find_package(CURL REQUIRED)
+# find_package(CURL REQUIRED)
+# find_package(RapidJSON REQUIRED)
 find_package(Python3 COMPONENTS Development)  # not required 
-find_package(RapidJSON REQUIRED)
+
 
 add_executable(bos ${CXX_SRCS}) 
 
-target_include_directories(bos PUBLIC ${CURL_INCLUDE_DIRS})
+# target_include_directories(bos PRIVATE ${CURL_INCLUDE_DIRS})
+# target_include_directories(bos PRIVATE ${RapidJSON_INCLUDE_DIRS})
+# target_link_libraries(bos PRIVATE ${CURL_LIBRARIES})
 if (Python3_FOUND)
-    target_include_directories(bos PUBLIC ${Python3_INCLUDE_DIRS})
+    target_include_directories(bos PRIVATE ${Python3_INCLUDE_DIRS})
+    target_link_libraries(bos PRIVATE ${Python3_LIBRARIES})
 endif()
-target_include_directories(bos PUBLIC ${RapidJSON_INCLUDE_DIRS})
-# target_include_directories(bos PUBLIC ${Protobuf_INCLUDE_DIRS}) 
-# target_include_directories(bos PUBLIC ${PROTOBUF_MSG_INCLUDE_DIR})
-target_link_libraries(bos PUBLIC wiringSerial)
-target_link_libraries(bos PUBLIC ${CURL_LIBRARIES})
-if (Python3_FOUND)
-    target_link_libraries(bos PUBLIC ${Python3_LIBRARIES})
-endif()
-target_link_libraries(bos PUBLIC protobufmsg)
-# target_link_libraries(bos PUBLIC ${Protobuf_LIBRARIES}) 
-target_link_libraries(bos PUBLIC ${CMAKE_DL_LIBS})
+# target_include_directories(bos PRIVATE ${Protobuf_INCLUDE_DIRS}) 
+# target_include_directories(bos PRIVATE ${PROTOBUF_MSG_INCLUDE_DIR})
+# target_link_libraries(bos PRIVATE ${Protobuf_LIBRARIES}) 
+target_link_libraries(bos PRIVATE wiringSerial)
+target_link_libraries(bos PRIVATE protobufmsg)
+target_link_libraries(bos PRIVATE ${CMAKE_DL_LIBS})
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.16) 
     target_precompile_headers(bos PUBLIC ${CXX_HEADERS})
 endif()
@@ -75,6 +74,6 @@ endif()
 # endif()
 
 add_executable(example_client example_client.cpp)
-target_link_libraries(example_client PUBLIC protobufmsg)
+target_link_libraries(example_client PRIVATE protobufmsg)
 
 
