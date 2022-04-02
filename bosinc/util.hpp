@@ -166,40 +166,61 @@ public:
     ErrorStream(__PRETTY_FUNCTION__, __FILE__, __LINE__).stream()
 
 template <typename T>
+void log_r(const T &arg) {
+    std::cout << arg << " ...endlog" << std::endl; 
+}
+template <typename T, typename ...Ts>
+void log_r(const T &arg, Ts ...args) {
+    std::cout << arg; 
+    log_r(args...); 
+}
+// template <typename T, typename ...Ts>
+// void emit_log(const T &arg, Ts ...args) {
+//     std::cout << "log: " << arg; 
+//     log_r(args...); 
+// }
+#define emitlog(...) log_r("log: ", __FILE__, ":", __LINE__, ", function ", __func__, ": ", __VA_ARGS__)
+template <typename T>
 void warning_r(const T &arg) {
-    std::cerr << arg << std::endl;
+    std::cerr << arg << " ...ENDWARNING" << std::endl;
     #if PROMOTE_WARNINGS_TO_ERRORS
     std::cerr << "Since PROMOTE_WARNINGS_TO_ERRORS is 1...\n" << "Now exitting with code 2..." << std::endl;
     exit(2);
     #endif
 }
-
 template <typename T, typename ...Ts>
 void warning_r(const T &arg, Ts ...args) {
     std::cerr << arg;
     warning_r(args...);
 }
-
+// template <typename T, typename ...Ts>
+// void emit_warning(const T &arg, Ts ...args) {
+//     std::cerr << "WARNING: " << arg; 
+//     warning_r(args...); 
+// }
 template <typename T>
 void error_r(const T &arg) {
-    std::cerr << arg << std::endl;
+    std::cerr << arg << " ...ENDERROR" << std::endl;
     std::cerr << "Exitting with code 1..." << std::endl;
     exit(1);
 }
-
 template <typename T, typename ...Ts>
 void error_r(const T &arg, Ts ...args) {
     std::cerr << arg;
     error_r(args...);
 }
-
+// template <typename T, typename ...Ts>
+// void emit_error(const T &arg, Ts ...args) {
+//     std::cerr << "ERROR: " << arg; 
+//     error_r(args...); 
+// }
 /* Print a warning, arguments should have overloaded << operators */
 
-#define warning(...) warning_r("Warning: In file ", __FILE__, ", line ", __LINE__, ", function ", __PRETTY_FUNCTION__, ": ", __VA_ARGS__)
+#define warning(...) warning_r("WARNING: ", __FILE__, ":", __LINE__, ", function ", __PRETTY_FUNCTION__, ": ", __VA_ARGS__)
 
 /* Print an error and quit, arguments should have overloaded << operators */
 
-#define error(...) error_r("Error: In file ", __FILE__, ", line ", __LINE__, ", function ", __PRETTY_FUNCTION__, ": ", __VA_ARGS__)
+#define error(...) error_r("ERROR: ", __FILE__, ":", __LINE__, ", function ", __PRETTY_FUNCTION__, ": ", __VA_ARGS__)
 
 class CSVOutput {
     std::ofstream csvstream;
