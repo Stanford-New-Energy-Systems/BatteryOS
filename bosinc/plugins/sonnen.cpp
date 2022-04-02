@@ -1,29 +1,28 @@
-#ifndef SONNEN_HPP
-#define SONNEN_HPP
-#if BUILDIN_SONNEN
-#include "BatteryInterface.hpp"
+#include "BatteryStatus.h"
+#include <chrono>
+#include <string>
+#include <ctgmath>
+#include <iostream>
 #include <curl/curl.h>
 #include <rapidjson/document.h>
 
-class Sonnen : public PhysicalBattery {
+struct Sonnen {
+    using timepoint_t = std::chrono::time_point<std::chrono::system_clock>;
     int64_t max_capacity_Wh;
     int64_t max_discharging_current_mA; 
     int64_t max_charging_current_mA; 
+    BatteryStatus status; 
     int serial;
-public: 
     static size_t curl_write_function(void *ptr, size_t size, size_t nmemb, std::string* data) {
         data->append((char*) ptr, size * nmemb);
         return size * nmemb;
     }
-public: 
     Sonnen(
-        const std::string &name, 
         int serial, 
         int64_t max_capacity_Wh, 
         int64_t max_discharging_current_mA, 
-        int64_t max_charging_current_mA, 
-        std::chrono::milliseconds max_staleness
-    ) : PhysicalBattery(name, max_staleness),
+        int64_t max_charging_current_mA
+    ) : 
         max_capacity_Wh(max_capacity_Wh), 
         max_discharging_current_mA(max_discharging_current_mA), 
         max_charging_current_mA(max_charging_current_mA), 
@@ -32,11 +31,7 @@ public:
         this->refresh();
     }
 
-    std::string get_type_string() override {
-        return "SonnenBattery";
-    }
-
-    std::chrono::milliseconds get_delay(int64_t from_current, int64_t to_current) override {
+    std::chrono::milliseconds get_delay(int64_t from_current, int64_t to_current) {
         if (from_current == to_current) { return std::chrono::milliseconds(0); }
         else if (from_current == 0 && to_current != 0) { return std::chrono::milliseconds(30000); }
         else { return std::chrono::milliseconds(5000); }
@@ -45,7 +40,7 @@ public:
     std::string send_request(const std::string &endpoint) {
         CURL* curl = curl_easy_init();
         if (!curl) {
-            WARNING() << "curl initialization failure" << std::endl;
+            std::cerr << "curl initialization failure" << std::endl;
             return "";
         }
         CURLcode res;
@@ -78,17 +73,14 @@ public:
 
         res = curl_easy_perform(curl);
         if (res != CURLE_OK) {
-            WARNING() << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
+            std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
         }
         curl_easy_cleanup(curl);
         return response_string;
     }
 
-    BatteryStatus refresh() override {
+    BatteryStatus refresh() {
         std::string response_string = this->send_request("/api/v1/status");
-
-        // LOG() << response_string;
-
         rapidjson::Document json_resp; 
         json_resp.Parse(response_string.c_str());
         int64_t uac = json_resp["Uac"].GetInt64();
@@ -110,13 +102,7 @@ public:
         
         return this->status;
     }
-
-    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, void *other_data) override {
-        // LOG() << "set_current: " << target_current_mA << std::endl;
-
-        // LOG() << "now is (secs since epoch)" << 
-        //     std::chrono::duration_cast<std::chrono::seconds>(get_system_time().time_since_epoch()).count() << std::endl;
-
+    uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, void *other_data) {
         std::string response_string = this->send_request(
             "/api/v1/setpoint/"+
             ((target_current_mA > 0) ? std::string("discharge/") : std::string("charge/"))+
@@ -130,6 +116,43 @@ public:
         return (uint32_t)retcode;
     }
 };
-#endif 
-#endif // ! SONNEN_HPP 
+extern "C" {
+struct init_args {
+    int64_t serial; 
+    int64_t max_capacity_Wh; 
+    int64_t max_discharging_current_mA; 
+    int64_t max_charging_current_mA; 
+};
+}
+Sonnen *mksonnen(struct init_args *args) {
+    return new Sonnen(args->serial, args->max_capacity_Wh, args->max_discharging_current_mA, args->max_charging_current_mA); 
+}
+void dssonnen(Sonnen *ptr) {
+    delete ptr; 
+}
 
+extern "C" {
+
+void *init(void *arg) {
+    return (void*)mksonnen((struct init_args*)arg);
+}
+void *destroy(void *arg) {
+    dssonnen((Sonnen*)arg);
+    std::cout << "sonnen destructed" << std::endl; 
+    return NULL;
+}
+BatteryStatus get_status(void *init_result) {
+    Sonnen *s = (Sonnen*)init_result;
+    return s->refresh(); 
+}
+uint32_t set_current(void *init_result, int64_t current) {
+    Sonnen *s = (Sonnen*)init_result; 
+    return s->set_current(current, 0, NULL); 
+}
+int64_t get_delay(void *init_result, int64_t from_mA, int64_t to_mA) {
+    Sonnen *s = (Sonnen*)init_result; 
+    std::chrono::milliseconds msd = s->get_delay(from_mA, to_mA);
+    return msd.count(); 
+}
+
+}

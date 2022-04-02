@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <tgmath.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -42,7 +43,21 @@ typedef struct BatteryStatus {
     struct CTimestamp timestamp;
 } BatteryStatus;
 
-
+static inline CTimestamp get_system_time_c() {
+    struct timespec tp;
+    CTimestamp timestamp = {.secs_since_epoch = 0, .msec = 0};
+    if (clock_gettime(CLOCK_REALTIME, &tp) != 0) {
+        fprintf(stderr, "clock_gettime fails!!!");
+        return timestamp;
+    }
+    timestamp.secs_since_epoch = tp.tv_sec;
+    timestamp.msec = round(tp.tv_nsec / 1.0e6);
+    if (timestamp.msec > 999) {
+        timestamp.secs_since_epoch += 1;
+        timestamp.msec = 0;
+    }
+    return timestamp;
+}
 /**
  * Serialize an int64_t value into buffer
  * If buffer_size < 8 then serialization fails and no serialization will be performed!
