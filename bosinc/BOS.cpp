@@ -787,7 +787,12 @@ int BatteryOS::bootup_tcp_socket(int port) {
         // now the connection is the file descriptor 
 
         bosproto::MsgTag tag; 
-        tag.ParseFromFileDescriptor(connection); 
+        if (!tag.ParseFromFileDescriptor(connection)) {
+            WARNING() << "not a valid tag!"; 
+            ::shutdown(connection, SHUT_RDWR); 
+            close(connection);
+            continue; 
+        } 
 
         if (tag.tag() == 0) {
             // admin
