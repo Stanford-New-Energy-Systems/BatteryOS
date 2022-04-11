@@ -166,19 +166,7 @@ class BatteryOS {
     int should_quit; 
     int quitted; 
 public: 
-    BatteryOS(
-        const std::string &directory_path = "bosdir", 
-        mode_t dir_permission = 0777, 
-        mode_t admin_fifo_permission = 0777,
-        mode_t battery_fifo_permission = 0777
-    ) : 
-        dir_permission(dir_permission), 
-        admin_fifo_permission(admin_fifo_permission), 
-        battery_fifo_permission(battery_fifo_permission), 
-        should_quit(0), 
-        quitted(0) 
-    {
-        this->dirpath = directory_path + "/"; 
+    BatteryOS() : should_quit(0), quitted(0) {
         this->mgr.init(&(this->dir), this);
     }
     ~BatteryOS() {
@@ -186,6 +174,7 @@ public:
             this->shutdown(); 
         }
     }
+    
     void notify_should_quit() {
         this->should_quit = 1; 
     }
@@ -197,6 +186,19 @@ public:
     const std::string &get_dirpath() {
         return this->dirpath; 
     }
+    /** bootup the battery os */
+    int bootup_fifo(
+        const std::string &directory_path = "bosdir", 
+        mode_t dir_permission = 0777, 
+        mode_t admin_fifo_permission = 0777,
+        mode_t battery_fifo_permission = 0777
+    ); 
+    /** the function to poll the fifos */
+    int poll_fifos(); 
+
+    int bootup_tcp_socket(
+        int port
+    );
 
     void *find_lib(const std::string &path) {
         auto iter = this->loaded_dynamic_libs.find(path);
@@ -224,11 +226,7 @@ public:
     /** call right after a battery is created */
     int battery_post_creation(const std::string &battery_name); 
 
-    /** bootup the battery os */
-    int bootup(); 
-
-    /** the function to poll the fifos */
-    int poll_fifos(); 
+    
 
 private: 
     /** this one handles the battery connection request */

@@ -925,7 +925,7 @@ void test_bos() {
     //     WARNING() << "Failed to initialize battery fifo"; 
     //     failed = true; 
     // }
-    bos.bootup(); 
+    bos.bootup_fifo(); 
     // bos will shutdown 
     // bos.notify_should_quit(); 
 }

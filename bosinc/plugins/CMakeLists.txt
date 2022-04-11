@@ -11,3 +11,5 @@ add_library(sonnen SHARED sonnen.cpp)
 target_include_directories(sonnen PRIVATE ${RapidJSON_INCLUDE_DIRS})
 target_link_libraries(sonnen PRIVATE ${CURL_LIBRARIES})
 
+add_library(fakedelay SHARED fakedelay.cpp)
+

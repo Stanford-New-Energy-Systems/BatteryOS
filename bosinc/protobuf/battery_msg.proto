@@ -15,6 +15,7 @@ message GetInfo {
 
 }
 message BatteryMsg {
+    string name = 4;
     oneof func_call {
         GetStatus get_status = 1; 
         ScheduleSetCurrent schedule_set_current = 2; 

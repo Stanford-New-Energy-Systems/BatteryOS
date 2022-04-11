@@ -728,7 +728,16 @@ int BatteryOS::battery_post_creation(const std::string &battery_name) {
 }
 
 /** bootup the battery os */
-int BatteryOS::bootup() {
+int BatteryOS::bootup_fifo(
+    const std::string &directory_path, 
+    mode_t dir_permission, 
+    mode_t admin_fifo_permission,
+    mode_t battery_fifo_permission
+) {
+    this->dir_permission = (dir_permission), 
+    this->admin_fifo_permission = (admin_fifo_permission), 
+    this->battery_fifo_permission = (battery_fifo_permission), 
+    this->dirpath = directory_path + "/"; 
     int retval = this->admin_fifo_init(); 
     bool failed = false; 
     if (retval < 0) {
@@ -747,7 +756,87 @@ int BatteryOS::bootup() {
     return 0; 
 }
 
+int BatteryOS::bootup_tcp_socket(int port) {
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0) { ERROR() << "failed to create socket"; }
+    sockaddr_in sockaddr;
+    sockaddr.sin_family = AF_INET;
+    sockaddr.sin_addr.s_addr = INADDR_ANY;
+    sockaddr.sin_port = htons(port);
+    if (bind(sockfd, (struct sockaddr*)&sockaddr, sizeof(sockaddr)) < 0) {
+        ERROR() << "Failed to bind to port, errno: " << errno;
+    }
+    if (listen(sockfd, 10) < 0) {
+        ERROR() << "Failed to listen on socket. errno: " << errno;
+    }
+    size_t addrlen = sizeof(sockaddr);
+    while (1) {
+        sockaddr_in connection_addr;
+        sockaddr.sin_family = AF_INET;
+        sockaddr.sin_addr.s_addr = INADDR_ANY;
+        sockaddr.sin_port = htons(port);
+        addrlen = sizeof(connection_addr); 
+        int connection = accept(sockfd, (struct sockaddr*)&connection_addr, (socklen_t*)&addrlen);
+        if (this->should_quit) {
+            break; 
+        }
+        // blocking 
+        if (connection < 0) {
+            ERROR() << "Failed to grab connection. errno: " << errno;
+        }
+        // now the connection is the file descriptor 
 
+        bosproto::MsgTag tag; 
+        tag.ParseFromFileDescriptor(connection); 
+
+        if (tag.tag() == 0) {
+            // admin
+            bosproto::AdminMsg msg; 
+            bosproto::AdminResp resp; 
+            bool parse_success = msg.ParseFromFileDescriptor(connection); 
+            if (!parse_success) {
+                WARNING() << "message parse failed"; 
+            }
+            int handle_success = protobufmsg::handle_admin_msg(this, &msg, &resp); 
+            if (handle_success < 0) {
+                WARNING() << "failed to handle message"; 
+            }
+            bool serialize_success = resp.SerializeToFileDescriptor(connection); 
+            if (!serialize_success) {
+                WARNING() << "failed to serialize response"; 
+            }
+            ::shutdown(connection, SHUT_RDWR); 
+            close(connection); 
+        } else {
+            // battery 
+            bosproto::BatteryMsg msg; 
+            bosproto::BatteryResp resp; 
+            bool parse_success = msg.ParseFromFileDescriptor(connection); 
+            if (!parse_success) {
+                WARNING() << "battery message parse failed"; 
+            }
+            std::string battery_name = msg.name(); 
+            Battery *bat = this->dir.get_battery(battery_name); 
+            if (!bat) {
+                WARNING() << "no such battery!";
+                ::shutdown(connection, SHUT_RDWR); 
+                close(connection);
+                continue; 
+            }
+            int handle_success = protobufmsg::handle_battery_msg(bat, &msg, &resp); 
+            if (handle_success < 0) {
+                WARNING() << "failed to handle message"; 
+            }
+            bool serialize_success = resp.SerializeToFileDescriptor(connection); 
+            if (!serialize_success) {
+                WARNING() << "failed to serialize response"; 
+            }
+            ::shutdown(connection, SHUT_RDWR); 
+            close(connection); 
+        }
+    }
+    return 0; 
+}
 
 
 

@@ -38,6 +38,7 @@ void ask_shutdown() {
 
 void get_status(const std::string &name) {
     bosproto::BatteryMsg msg; 
+    msg.set_name(name); 
     msg.mutable_get_status(); 
     std::string input_name = BOSDIR "/";
     input_name = input_name + name + "_input"; 
