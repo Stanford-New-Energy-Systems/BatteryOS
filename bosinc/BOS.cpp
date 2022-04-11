@@ -835,6 +835,7 @@ int BatteryOS::bootup_tcp_socket(int port) {
             close(connection); 
         }
     }
+    close(sockfd); 
     return 0; 
 }
 
