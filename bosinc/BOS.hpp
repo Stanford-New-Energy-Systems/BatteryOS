@@ -1,15 +1,18 @@
 #ifndef BOS_HPP 
 #define BOS_HPP 
-#include "JBDBMS.hpp"
-#include "TestBattery.hpp"
-#include "NetworkBattery.hpp"
+#include "BatteryInterface.hpp"
+#include "BOSDirectory.hpp"
+#include "Connections.hpp"
 #include "AggregatorBattery.hpp"
 #include "BALSplitter.hpp"
 #include "SplittedBattery.hpp"
-#include "RPC.hpp"
-#include "Dynamic.hpp"
 #include <unordered_map>
+#include <unistd.h>
 #include <pthread.h>
+#include <dirent.h>
+#include <dlfcn.h>
+#include <sys/stat.h>
+#include <poll.h>
 /// Battery -> make it object oriented
 /// BatteryDirectory -> get batteries
 /// BatteryFactory, BatteryDirectoryManager -> create/destroy batteries in the graph

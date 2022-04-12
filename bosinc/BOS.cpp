@@ -1,8 +1,12 @@
 #include "BOS.hpp"
+#include "JBDBMS.hpp"
+#include "TestBattery.hpp"
+#include "NetworkBattery.hpp"
+#include "RPC.hpp"
+#include "Dynamic.hpp"
+#include "Remote.hpp"
 #include "ProtobufMsg.hpp"
-#include <sys/stat.h>
-#include <dirent.h>
-#include <poll.h>
+
 #ifndef BATTERY_FACTORY_NAME_CHECK
 #define BATTERY_FACTORY_NAME_CHECK(factory, name)\
     do {\
