@@ -777,10 +777,10 @@ int BatteryOS::bootup_tcp_socket(int port) {
         sockaddr.sin_port = htons(port);
         addrlen = sizeof(connection_addr); 
         int connection = accept(sockfd, (struct sockaddr*)&connection_addr, (socklen_t*)&addrlen);
+        // blocking 
         if (this->should_quit) {
             break; 
         }
-        // blocking 
         if (connection < 0) {
             ERROR() << "Failed to grab connection. errno: " << errno;
         }
@@ -801,6 +801,9 @@ int BatteryOS::bootup_tcp_socket(int port) {
             bool parse_success = msg.ParseFromFileDescriptor(connection); 
             if (!parse_success) {
                 WARNING() << "message parse failed"; 
+                ::shutdown(connection, SHUT_RDWR); 
+                close(connection);
+                continue; 
             }
             int handle_success = protobufmsg::handle_admin_msg(this, &msg, &resp); 
             if (handle_success < 0) {
@@ -819,18 +822,22 @@ int BatteryOS::bootup_tcp_socket(int port) {
             bool parse_success = msg.ParseFromFileDescriptor(connection); 
             if (!parse_success) {
                 WARNING() << "battery message parse failed"; 
+                ::shutdown(connection, SHUT_RDWR); 
+                close(connection);
+                continue; 
             }
             std::string battery_name = msg.name(); 
             Battery *bat = this->dir.get_battery(battery_name); 
             if (!bat) {
                 WARNING() << "no such battery!";
-                ::shutdown(connection, SHUT_RDWR); 
-                close(connection);
-                continue; 
-            }
-            int handle_success = protobufmsg::handle_battery_msg(bat, &msg, &resp); 
-            if (handle_success < 0) {
-                WARNING() << "failed to handle message"; 
+                resp.set_retcode(-1); 
+                std::string *pfailreason = resp.mutable_failreason(); 
+                pfailreason->assign("no such battery"); 
+            } else {
+                int handle_success = protobufmsg::handle_battery_msg(bat, &msg, &resp); 
+                if (handle_success < 0) {
+                    WARNING() << "failed to handle message"; 
+                }
             }
             bool serialize_success = resp.SerializeToFileDescriptor(connection); 
             if (!serialize_success) {
