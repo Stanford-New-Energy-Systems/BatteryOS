@@ -1,5 +1,6 @@
 #include "AggregatorBattery.hpp"
-
+#include <algorithm>
+#include <execution>
 AggregatorBattery::AggregatorBattery(
     const std::string &name, 
     int64_t voltage_mV, 
@@ -55,18 +56,41 @@ BatteryStatus AggregatorBattery::refresh() {
     double max_discharge_time = 0;
     double max_charge_time = 0;
     const std::list<Battery*> &parents = pdirectory->get_parents(this->name);
-    BatteryStatus status;
+    // parallelize? 
+    std::mutex m;
+    std::vector<std::thread> thread_pool(parents.size()); 
+    int ti = 0; 
     for (Battery *bat : parents) {
-        status = bat->get_status();
-        if (!(voltage_mV - voltage_tolerance_mV <= status.voltage_mV && status.voltage_mV <= voltage_mV + voltage_tolerance_mV)) {
-            WARNING() << "Battery " << bat->get_name() << " is out of voltage tolerance!";
-        }
-        max_cap_mAh += status.max_capacity_mAh;
-        current_cap_mAh += status.capacity_mAh;
-        current_mA += status.current_mA;
-        // this is the inv C-rate 
-        max_discharge_time = std::max(max_discharge_time, (double)status.capacity_mAh / status.max_discharging_current_mA);
-        max_charge_time = std::max(max_charge_time, (double)(status.max_capacity_mAh - status.capacity_mAh) / status.max_charging_current_mA);
+        thread_pool[ti++] = std::thread(
+            [
+                &m, 
+                &max_cap_mAh, 
+                &current_cap_mAh, 
+                &current_mA, 
+                &max_discharge_time, 
+                &max_charge_time,
+                this
+            ](Battery *bat) {
+                BatteryStatus status = bat->get_status();
+                if (!(this->voltage_mV - this->voltage_tolerance_mV <= status.voltage_mV && status.voltage_mV <= this->voltage_mV + this->voltage_tolerance_mV)) {
+                    WARNING() << "Battery " << bat->get_name() << " is out of voltage tolerance!";
+                }
+                {
+                    std::lock_guard<std::mutex> lg(m); 
+                    max_cap_mAh += status.max_capacity_mAh;
+                    current_cap_mAh += status.capacity_mAh;
+                    current_mA += status.current_mA;
+                    // this is the inv C-rate 
+                    max_discharge_time = std::max(max_discharge_time, (double)status.capacity_mAh / status.max_discharging_current_mA);
+                    max_charge_time = std::max(max_charge_time, (double)(status.max_capacity_mAh - status.capacity_mAh) / status.max_charging_current_mA);
+                }
+                return; 
+            }, 
+            bat
+        );
+    }
+    for (auto &&t : thread_pool) {
+        t.join(); 
     }
     if (fabs(max_charge_time) < 1e-6) {
         LOG() << "battery is full: max_charging_current is 0";
