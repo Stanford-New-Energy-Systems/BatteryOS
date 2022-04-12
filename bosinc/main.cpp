@@ -906,12 +906,8 @@ int test_network2(int port) {
 }
 #endif 
 BatteryOS *bosptr = nullptr; 
-void test_bos() {
-#ifdef __linux__
-    BatteryOS bos("/tmp/bosdir"); 
-#else 
+void test_bos_fifo() {
     BatteryOS bos; 
-#endif 
     bosptr = &bos; 
     bos.get_manager().make_null("nullbat", 10000, 1000); 
     // int retval = bos.admin_fifo_init(); 
@@ -925,9 +921,20 @@ void test_bos() {
     //     WARNING() << "Failed to initialize battery fifo"; 
     //     failed = true; 
     // }
+#ifdef __linux__
+    bos.bootup_fifo("/tmp/bosdir"); 
+#else 
     bos.bootup_fifo(); 
+#endif 
     // bos will shutdown 
     // bos.notify_should_quit(); 
+}
+
+void test_bos_remote() {
+    BatteryOS bos; 
+    bosptr = &bos; 
+    bos.get_manager().make_null("remote", 1000, 1000); 
+    bos.bootup_tcp_socket(1234); 
 }
 
 void test_dynamic() {
@@ -942,7 +949,8 @@ void test_dynamic() {
 int run() {
     LOG();
     // protobufmsg::test_protobuf(); 
-    test_bos(); 
+    // test_bos_fifo(); 
+    test_bos_remote(); 
     // test_dynamic(); 
     // test_battery_status();
     // test_python_binding();

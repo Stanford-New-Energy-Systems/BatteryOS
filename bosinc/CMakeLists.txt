@@ -76,4 +76,11 @@ endif()
 add_executable(example_client example_client.cpp)
 target_link_libraries(example_client PRIVATE protobufmsg)
 
+add_executable(remote_tester 
+    remote_tester.cpp 
+    BatteryInterface.cpp
+    BatteryStatus.cpp 
+    util.cpp
+) 
+target_link_libraries(remote_tester PRIVATE protobufmsg)
 

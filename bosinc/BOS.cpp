@@ -789,7 +789,7 @@ int BatteryOS::bootup_tcp_socket(int port) {
             ERROR() << "Failed to grab connection. errno: " << errno;
         }
         // now the connection is the file descriptor 
-
+        LOG() << "connection: " << connection; 
         bosproto::MsgTag tag; 
         if (!tag.ParseFromFileDescriptor(connection)) {
             WARNING() << "not a valid tag!"; 
@@ -797,6 +797,7 @@ int BatteryOS::bootup_tcp_socket(int port) {
             close(connection);
             continue; 
         }
+        LOG() << "tag parse success!"; 
         if (tag.tag() == 0) {
             // admin
             bosproto::AdminMsg msg; 
@@ -817,6 +818,7 @@ int BatteryOS::bootup_tcp_socket(int port) {
                 WARNING() << "failed to serialize response"; 
             }
         } else {
+            LOG() << "tag is battery"; 
             // battery 
             bosproto::BatteryMsg msg; 
             bosproto::BatteryResp resp; 
@@ -827,6 +829,7 @@ int BatteryOS::bootup_tcp_socket(int port) {
                 close(connection);
                 continue; 
             }
+            LOG() << "msg recv success!"; 
             std::string battery_name = msg.name(); 
             Battery *bat = this->dir.get_battery(battery_name); 
             if (!bat) {

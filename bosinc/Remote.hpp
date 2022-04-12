@@ -58,6 +58,7 @@ public:
             WARNING() << "connection failed to establish!"; 
             return {}; 
         }
+        LOG() << "connect success!"; 
         bool serialize_success = 0; 
         bosproto::MsgTag tag; 
         tag.set_tag(1);
@@ -67,6 +68,7 @@ public:
             disconnect(socket_fd); 
             return {}; 
         }
+        LOG() << "tag send success!"; 
         bosproto::BatteryMsg msg; 
         std::string *pmsgname = msg.mutable_name();
         pmsgname->assign(this->remote_name); 
@@ -77,6 +79,7 @@ public:
             disconnect(socket_fd); 
             return {}; 
         }
+        LOG() << "msg send success!"; 
         bool parse_success = 0; 
         bosproto::BatteryResp resp; 
         parse_success = resp.ParseFromFileDescriptor(socket_fd); 
@@ -85,6 +88,7 @@ public:
             disconnect(socket_fd); 
             return {}; 
         }
+        LOG() << "response recv success!"; 
         disconnect(socket_fd); 
         if (!resp.has_status()) {
             if (resp.has_failreason()) {

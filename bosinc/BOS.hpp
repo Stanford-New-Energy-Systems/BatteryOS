@@ -199,9 +199,7 @@ public:
     /** the function to poll the fifos */
     int poll_fifos(); 
 
-    int bootup_tcp_socket(
-        int port
-    );
+    int bootup_tcp_socket(int port);
 
     void *find_lib(const std::string &path) {
         auto iter = this->loaded_dynamic_libs.find(path);
