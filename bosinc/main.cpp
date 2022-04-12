@@ -933,7 +933,42 @@ void test_bos_fifo() {
 void test_bos_remote() {
     BatteryOS bos; 
     bosptr = &bos; 
-    bos.get_manager().make_null("remote", 1000, 1000); 
+    // bos.get_manager().make_null("remote", 1000, 1000); 
+    // bos.get_manager().make_null("remote2", 1000, 1000); 
+    int limit = 1000; 
+    std::vector<std::string> names; 
+    for (int i = 0; i < limit; ++i) {
+        bos.get_manager().make_pseudo("ps"+std::to_string(i), BatteryStatus {
+            .voltage_mV=3000, 
+            .current_mA=0, 
+            .capacity_mAh=20000, 
+            .max_capacity_mAh=40000, 
+            .max_charging_current_mA=60000, 
+            .max_discharging_current_mA=60000,
+            .timestamp = get_system_time_c()
+        }, 1000);
+        names.push_back("ps"+std::to_string(i)); 
+    }
+    bos.get_manager().make_aggregator("agg1", 3000, 10, names, 1000); 
+    // bos.get_manager().make_pseudo("ps1", BatteryStatus {
+    //     .voltage_mV=3000, 
+    //     .current_mA=0, 
+    //     .capacity_mAh=60000, 
+    //     .max_capacity_mAh=60000, 
+    //     .max_charging_current_mA=40000, 
+    //     .max_discharging_current_mA=40000,
+    //     .timestamp = get_system_time_c()
+    // }, 1000);
+    // bos.get_manager().make_pseudo("ps2", BatteryStatus {
+    //     .voltage_mV=3000, 
+    //     .current_mA=0, 
+    //     .capacity_mAh=20000, 
+    //     .max_capacity_mAh=40000, 
+    //     .max_charging_current_mA=60000, 
+    //     .max_discharging_current_mA=60000,
+    //     .timestamp = get_system_time_c()
+    // }, 1000);
+    // bos.get_manager().make_aggregator("agg1", 3000, 10, {"ps1", "ps2"}, 1000); 
     bos.bootup_tcp_socket(1234); 
 }
 
