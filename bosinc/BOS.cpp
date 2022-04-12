@@ -796,8 +796,7 @@ int BatteryOS::bootup_tcp_socket(int port) {
             ::shutdown(connection, SHUT_RDWR); 
             close(connection);
             continue; 
-        } 
-
+        }
         if (tag.tag() == 0) {
             // admin
             bosproto::AdminMsg msg; 
@@ -817,8 +816,6 @@ int BatteryOS::bootup_tcp_socket(int port) {
             if (!serialize_success) {
                 WARNING() << "failed to serialize response"; 
             }
-            ::shutdown(connection, SHUT_RDWR); 
-            close(connection); 
         } else {
             // battery 
             bosproto::BatteryMsg msg; 
@@ -847,9 +844,16 @@ int BatteryOS::bootup_tcp_socket(int port) {
             if (!serialize_success) {
                 WARNING() << "failed to serialize response"; 
             }
-            ::shutdown(connection, SHUT_RDWR); 
-            close(connection); 
         }
+        // ::shutdown(connection, SHUT_RDWR); 
+        // close(connection); 
+        int buf[1];
+        int rdval = read(connection, (void*)buf, sizeof(int));
+        if (rdval) {
+            WARNING() << "Unexpected message!"; 
+        }
+        ::shutdown(connection, SHUT_RDWR); 
+        close(connection); 
     }
     close(sockfd); 
     return 0; 
