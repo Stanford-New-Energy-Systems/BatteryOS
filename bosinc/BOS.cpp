@@ -82,7 +82,17 @@ Battery *BatteryDirectoryManager::make_networked_battery(
     int64_t max_staleness_ms
 ) {
     BATTERY_FACTORY_NAME_CHECK(this, name);
-
+    std::unique_ptr<Battery> network(
+        new RemoteBattery(
+            name, 
+            remote_name, 
+            address, 
+            port, 
+            std::chrono::milliseconds(max_staleness_ms)
+        )
+    ); 
+    return this->dir->add_battery(std::move(network)); 
+#if 0
     std::unique_ptr<Connection> pconn(
         new TCPConnection(
             address, 
@@ -93,7 +103,6 @@ Battery *BatteryDirectoryManager::make_networked_battery(
         WARNING() << "TCP connection failed!";
         return nullptr;
     }
-
     std::unique_ptr<Battery> network(
         new NetworkBattery(
             name, 
@@ -103,6 +112,7 @@ Battery *BatteryDirectoryManager::make_networked_battery(
         )
     );
     return this->dir->add_battery(std::move(network));
+#endif s
 }
 
 Battery *BatteryDirectoryManager::make_aggregator(
