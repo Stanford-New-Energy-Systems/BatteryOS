@@ -1,8 +1,13 @@
 #include "BOS.hpp"
+#include "JBDBMS.hpp"
+#include "TestBattery.hpp"
+#include "NetworkBattery.hpp"
+#include "RPC.hpp"
+#include "Dynamic.hpp"
+#include "Remote.hpp"
 #include "ProtobufMsg.hpp"
-#include <sys/stat.h>
-#include <dirent.h>
-#include <poll.h>
+static constexpr size_t read_buffer_size = 4096; 
+static uint8_t read_buffer[read_buffer_size];
 #ifndef BATTERY_FACTORY_NAME_CHECK
 #define BATTERY_FACTORY_NAME_CHECK(factory, name)\
     do {\
@@ -641,9 +646,8 @@ int BatteryOS::poll_fifos() {
     delete [] fds; 
     return 0; 
 }
+ 
 
-static constexpr size_t read_buffer_size = 4096; 
-static uint8_t read_buffer[read_buffer_size]; 
 int BatteryOS::handle_admin(BatteryOS *bos) {
     bosproto::AdminMsg msg; 
     bosproto::AdminResp resp; 
@@ -728,7 +732,16 @@ int BatteryOS::battery_post_creation(const std::string &battery_name) {
 }
 
 /** bootup the battery os */
-int BatteryOS::bootup() {
+int BatteryOS::bootup_fifo(
+    const std::string &directory_path, 
+    mode_t dir_permission, 
+    mode_t admin_fifo_permission,
+    mode_t battery_fifo_permission
+) {
+    this->dir_permission = (dir_permission), 
+    this->admin_fifo_permission = (admin_fifo_permission), 
+    this->battery_fifo_permission = (battery_fifo_permission), 
+    this->dirpath = directory_path + "/"; 
     int retval = this->admin_fifo_init(); 
     bool failed = false; 
     if (retval < 0) {
@@ -747,7 +760,131 @@ int BatteryOS::bootup() {
     return 0; 
 }
 
-
+int BatteryOS::bootup_tcp_socket(int port) {
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0) { ERROR() << "failed to create socket"; }
+    sockaddr_in sockaddr;
+    sockaddr.sin_family = AF_INET;
+    sockaddr.sin_addr.s_addr = INADDR_ANY;
+    sockaddr.sin_port = htons(port);
+    if (bind(sockfd, (struct sockaddr*)&sockaddr, sizeof(sockaddr)) < 0) {
+        ERROR() << "Failed to bind to port, errno: " << errno;
+    }
+    if (listen(sockfd, 10) < 0) {
+        ERROR() << "Failed to listen on socket. errno: " << errno;
+    }
+    size_t addrlen = sizeof(sockaddr);
+    while (1) {
+        sockaddr_in connection_addr;
+        sockaddr.sin_family = AF_INET;
+        sockaddr.sin_addr.s_addr = INADDR_ANY;
+        sockaddr.sin_port = htons(port);
+        addrlen = sizeof(connection_addr); 
+        int connection = accept(sockfd, (struct sockaddr*)&connection_addr, (socklen_t*)&addrlen);
+        // blocking 
+        if (this->should_quit) {
+            break; 
+        }
+        if (connection < 0) {
+            ERROR() << "Failed to grab connection. errno: " << errno;
+        }
+        // now the connection is the file descriptor 
+        LOG() << "connection: " << connection; 
+        bosproto::MsgTag tag; 
+        ssize_t bytes_read = read(connection, (void*)read_buffer, read_buffer_size); 
+        if (bytes_read <= 0) {
+            WARNING() << "Connection closed!"; 
+            ::shutdown(connection, SHUT_RDWR); 
+            close(connection);
+            continue; 
+        }
+        bool parse_success = tag.ParseFromArray(read_buffer, bytes_read); 
+        if (!parse_success) {
+            WARNING() << "not a valid tag!"; 
+            ::shutdown(connection, SHUT_RDWR); 
+            close(connection);
+            continue; 
+        }
+        LOG() << "tag parse success!"; 
+        // echo back 
+        write(connection, (void*)read_buffer, bytes_read); 
+        if (tag.tag() == 0) {
+            // admin
+            bosproto::AdminMsg msg; 
+            bosproto::AdminResp resp; 
+            bytes_read = read(connection, (void*)read_buffer, read_buffer_size); 
+            if (bytes_read <= 0) {
+                WARNING() << "Connection closed!"; 
+                ::shutdown(connection, SHUT_RDWR); 
+                close(connection);
+                continue; 
+            }
+            parse_success = msg.ParseFromArray(read_buffer, bytes_read); 
+            if (!parse_success) {
+                WARNING() << "message parse failed"; 
+                ::shutdown(connection, SHUT_RDWR); 
+                close(connection);
+                continue; 
+            }
+            int handle_success = protobufmsg::handle_admin_msg(this, &msg, &resp); 
+            if (handle_success < 0) {
+                WARNING() << "failed to handle message"; 
+            }
+            bool serialize_success = resp.SerializeToFileDescriptor(connection); 
+            if (!serialize_success) {
+                WARNING() << "failed to serialize response"; 
+            }
+        } else {
+            LOG() << "tag is battery"; 
+            // battery 
+            bosproto::BatteryMsg msg; 
+            bosproto::BatteryResp resp; 
+            bytes_read = read(connection, (void*)read_buffer, read_buffer_size); 
+            if (bytes_read <= 0) {
+                WARNING() << "Connection closed!"; 
+                ::shutdown(connection, SHUT_RDWR); 
+                close(connection);
+                continue; 
+            }
+            parse_success = msg.ParseFromArray(read_buffer, bytes_read); 
+            if (!parse_success) {
+                WARNING() << "battery message parse failed"; 
+                ::shutdown(connection, SHUT_RDWR); 
+                close(connection);
+                continue; 
+            }
+            LOG() << "msg recv success!"; 
+            std::string battery_name = msg.name(); 
+            Battery *bat = this->dir.get_battery(battery_name); 
+            if (!bat) {
+                WARNING() << "no such battery!";
+                resp.set_retcode(-1); 
+                std::string *pfailreason = resp.mutable_failreason(); 
+                pfailreason->assign("no such battery"); 
+            } else {
+                int handle_success = protobufmsg::handle_battery_msg(bat, &msg, &resp); 
+                if (handle_success < 0) {
+                    WARNING() << "failed to handle message"; 
+                }
+            }
+            bool serialize_success = resp.SerializeToFileDescriptor(connection); 
+            if (!serialize_success) {
+                WARNING() << "failed to serialize response"; 
+            }
+        }
+        // ::shutdown(connection, SHUT_RDWR); 
+        // close(connection); 
+        int buf[1];
+        int rdval = read(connection, (void*)buf, sizeof(int));
+        if (rdval) {
+            WARNING() << "Unexpected message!"; 
+        }
+        ::shutdown(connection, SHUT_RDWR); 
+        close(connection); 
+    }
+    close(sockfd); 
+    return 0; 
+}
 
 
 
