@@ -112,7 +112,7 @@ Battery *BatteryDirectoryManager::make_networked_battery(
         )
     );
     return this->dir->add_battery(std::move(network));
-#endif s
+#endif 
 }
 
 Battery *BatteryDirectoryManager::make_aggregator(
