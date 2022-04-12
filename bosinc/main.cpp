@@ -986,7 +986,8 @@ int run() {
     return 0;
 }
 void sigint_handler(int sig) {
-    if (bosptr) { bosptr->notify_should_quit(); }
+    // if (bosptr) { bosptr->notify_should_quit(); }
+    exit(0); 
 }
 int main() {
 #ifndef NO_PYTHON

@@ -69,6 +69,12 @@ public:
             return {}; 
         }
         LOG() << "tag send success!"; 
+        uint8_t read_buffer[4096]; 
+        if (read(socket_fd, read_buffer, 4096) <= 0) {
+            WARNING() << "server closed the connection already"; 
+            disconnect(socket_fd);
+            return {}; 
+        }
         bosproto::BatteryMsg msg; 
         std::string *pmsgname = msg.mutable_name();
         pmsgname->assign(this->remote_name); 
@@ -82,7 +88,13 @@ public:
         LOG() << "msg send success!"; 
         bool parse_success = 0; 
         bosproto::BatteryResp resp; 
-        parse_success = resp.ParseFromFileDescriptor(socket_fd); 
+        ssize_t bytes_read = read(socket_fd, read_buffer, 4096); 
+        if (bytes_read <= 0) {
+            WARNING() << "The server closed the connection when reading battery status response!";
+            disconnect(socket_fd); 
+            return {};
+        }
+        parse_success = resp.ParseFromArray(read_buffer, bytes_read); 
         if (!parse_success) {
             WARNING() << "No response!"; 
             disconnect(socket_fd); 
@@ -140,7 +152,12 @@ public:
             disconnect(socket_fd); 
             return {}; 
         }
-
+        uint8_t read_buffer[4096]; 
+        if (read(socket_fd, read_buffer, 4096) <= 0) {
+            WARNING() << "server closed the connection already"; 
+            disconnect(socket_fd);
+            return {}; 
+        }
         CTimestamp fcts = timepoint_to_c_time(when_to_set); 
         CTimestamp tcts = timepoint_to_c_time(until_when); 
         bosproto::BatteryMsg msg; 
@@ -169,7 +186,13 @@ public:
         }
         bool parse_success = 0; 
         bosproto::BatteryResp resp; 
-        parse_success = resp.ParseFromFileDescriptor(socket_fd); 
+        ssize_t bytes_read = read(socket_fd, read_buffer, 4096); 
+        if (bytes_read <= 0) {
+            WARNING() << "The server closed the connection when reading set_current response!";
+            disconnect(socket_fd); 
+            return {};
+        }
+        parse_success = resp.ParseFromArray(read_buffer, bytes_read); 
         if (!parse_success) {
             WARNING() << "No response!"; 
             disconnect(socket_fd); 

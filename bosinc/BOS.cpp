@@ -6,7 +6,8 @@
 #include "Dynamic.hpp"
 #include "Remote.hpp"
 #include "ProtobufMsg.hpp"
-
+static constexpr size_t read_buffer_size = 4096; 
+static uint8_t read_buffer[read_buffer_size];
 #ifndef BATTERY_FACTORY_NAME_CHECK
 #define BATTERY_FACTORY_NAME_CHECK(factory, name)\
     do {\
@@ -645,9 +646,8 @@ int BatteryOS::poll_fifos() {
     delete [] fds; 
     return 0; 
 }
+ 
 
-static constexpr size_t read_buffer_size = 4096; 
-static uint8_t read_buffer[read_buffer_size]; 
 int BatteryOS::handle_admin(BatteryOS *bos) {
     bosproto::AdminMsg msg; 
     bosproto::AdminResp resp; 
@@ -791,18 +791,35 @@ int BatteryOS::bootup_tcp_socket(int port) {
         // now the connection is the file descriptor 
         LOG() << "connection: " << connection; 
         bosproto::MsgTag tag; 
-        if (!tag.ParseFromFileDescriptor(connection)) {
+        ssize_t bytes_read = read(connection, (void*)read_buffer, read_buffer_size); 
+        if (bytes_read <= 0) {
+            WARNING() << "Connection closed!"; 
+            ::shutdown(connection, SHUT_RDWR); 
+            close(connection);
+            continue; 
+        }
+        bool parse_success = tag.ParseFromArray(read_buffer, bytes_read); 
+        if (!parse_success) {
             WARNING() << "not a valid tag!"; 
             ::shutdown(connection, SHUT_RDWR); 
             close(connection);
             continue; 
         }
         LOG() << "tag parse success!"; 
+        // echo back 
+        write(connection, (void*)read_buffer, bytes_read); 
         if (tag.tag() == 0) {
             // admin
             bosproto::AdminMsg msg; 
             bosproto::AdminResp resp; 
-            bool parse_success = msg.ParseFromFileDescriptor(connection); 
+            bytes_read = read(connection, (void*)read_buffer, read_buffer_size); 
+            if (bytes_read <= 0) {
+                WARNING() << "Connection closed!"; 
+                ::shutdown(connection, SHUT_RDWR); 
+                close(connection);
+                continue; 
+            }
+            parse_success = msg.ParseFromArray(read_buffer, bytes_read); 
             if (!parse_success) {
                 WARNING() << "message parse failed"; 
                 ::shutdown(connection, SHUT_RDWR); 
@@ -822,7 +839,14 @@ int BatteryOS::bootup_tcp_socket(int port) {
             // battery 
             bosproto::BatteryMsg msg; 
             bosproto::BatteryResp resp; 
-            bool parse_success = msg.ParseFromFileDescriptor(connection); 
+            bytes_read = read(connection, (void*)read_buffer, read_buffer_size); 
+            if (bytes_read <= 0) {
+                WARNING() << "Connection closed!"; 
+                ::shutdown(connection, SHUT_RDWR); 
+                close(connection);
+                continue; 
+            }
+            parse_success = msg.ParseFromArray(read_buffer, bytes_read); 
             if (!parse_success) {
                 WARNING() << "battery message parse failed"; 
                 ::shutdown(connection, SHUT_RDWR); 
