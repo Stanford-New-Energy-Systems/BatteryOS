@@ -125,8 +125,10 @@ Battery *BatteryDirectoryManager::make_aggregator(
     BATTERY_FACTORY_NAME_CHECK(this, name);
     Battery *bat;
     BatteryStatus pstatus;
-    int64_t v;
     bool failed = false;
+#define FAKE 1
+#if !FAKE
+    int64_t v;
     for (const std::string &src : src_names) {
         bat = this->dir->get_battery(src);
         if (!bat) {
@@ -145,6 +147,7 @@ Battery *BatteryDirectoryManager::make_aggregator(
             failed = true;
         }
     }
+#endif 
     if (failed) {
         return nullptr;
     }

@@ -22,7 +22,7 @@ AggregatorBattery::AggregatorBattery(
     this->status.max_capacity_mAh = 0;
     /// let's not do anything in the experiment 
 #define FAKE 1
-#if not FAKE
+#if !FAKE
     // bool add_success;
     Battery *bat;
     BatteryStatus pstatus;
