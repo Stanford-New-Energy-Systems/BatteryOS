@@ -1001,11 +1001,55 @@ int run() {
     // test_network2(1234);
     return 0;
 }
+
+void single_remote_pseduobat(int port) {
+    BatteryOS bos; 
+    bosptr = &bos; 
+    bos.get_manager().make_pseudo("ps"+std::to_string(port), BatteryStatus {
+        .voltage_mV=3000, 
+        .current_mA=0, 
+        .capacity_mAh=20000, 
+        .max_capacity_mAh=40000, 
+        .max_charging_current_mA=60000, 
+        .max_discharging_current_mA=60000,
+        .timestamp = get_system_time_c()
+    }, 1000);
+    bos.bootup_tcp_socket(port); 
+}
+
+void aggregate_remote_pseudobat(const char *const addr, int portmin, int portmax) {
+    BatteryOS bos; 
+    bosptr = &bos; 
+    std::vector<std::string> rbat; 
+    for (int port = portmin; port < portmax; ++port) {
+        bos.get_manager().make_networked_battery(
+            "remote"+std::to_string(port), 
+            "ps"+std::to_string(port), 
+            addr, 
+            port, 
+            1000
+        ); 
+        rbat.push_back("remote"+std::to_string(port));
+    }
+    Battery *agg = bos.get_manager().make_aggregator("agg", 3000, 1000, rbat, 1); 
+    if (!agg) {
+        WARNING() << "agg is NULL? what's wrong?";
+        return; 
+    }
+    std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now(); 
+    /// time it!!! 
+    agg->manual_refresh(); 
+    std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now(); 
+
+    LOG() << "The time difference is: " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << "us";
+    return; 
+}
+
 void sigint_handler(int sig) {
     if (bosptr) { bosptr->notify_should_quit(); }
     // exit(0); 
 }
-int main() {
+int main(int argc, const char *const argv[]) {
 #ifndef NO_PYTHON
     Py_Initialize();
     // PyEval_InitThreads();
@@ -1018,7 +1062,35 @@ int main() {
     Py_BEGIN_ALLOW_THREADS
 #endif 
     signal(SIGINT, sigint_handler); 
-    run();
+    // run();
+    // ./bos client port
+    // ./bos server port_min port_max
+    if (argc < 3) {
+        WARNING() << "./bos client port OR ./bos server port_min port_max"; 
+    } else {
+        if (strcmp("client", argv[1]) == 0) {
+            // client 
+            int port = atoi(argv[2]); 
+            if (port <= 0) {
+                WARNING() << "port conversion failed!"; 
+            } else {
+                single_remote_pseduobat(port);
+            }
+        } 
+        else if (strcmp("server", argv[1]) == 0) {
+            // server 
+            int portmin = atoi(argv[2]);
+            int portmax = atoi(argv[3]); 
+            if (portmin <= 0 || portmax <= 0) {
+                WARNING() << "port conversion failed!"; 
+            } else if (portmin > portmax) {
+                WARNING() << "portmin > portmax"; 
+            } else {
+                /// 
+                aggregate_remote_pseudobat("127.0.0.1", portmin, portmax); 
+            }
+        }
+    }
     google::protobuf::ShutdownProtobufLibrary(); 
 #ifndef NO_PYTHON
     Py_END_ALLOW_THREADS
