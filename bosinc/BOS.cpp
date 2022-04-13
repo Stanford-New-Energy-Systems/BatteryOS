@@ -766,12 +766,12 @@ int BatteryOS::bootup_fifo(
     if (!failed) {
         poll_fifos(); 
     }
-    shutdown(); 
+    shutdown_fifo(); 
     return 0; 
 }
 
 int BatteryOS::bootup_tcp_socket(int port) {
-    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) { ERROR() << "failed to create socket"; }
     sockaddr_in sockaddr;
     sockaddr.sin_family = AF_INET;
@@ -893,6 +893,13 @@ int BatteryOS::bootup_tcp_socket(int port) {
         close(connection); 
     }
     close(sockfd); 
+    this->dir.quit(); 
+    // close dynamic libraries 
+    for (auto &&it : this->loaded_dynamic_libs) {
+        dlclose(it.second); 
+    }
+    this->should_quit = false; 
+    this->quitted = true; 
     return 0; 
 }
 

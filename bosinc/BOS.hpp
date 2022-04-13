@@ -159,27 +159,40 @@ public:
 class BatteryOS {
     BOSDirectory dir;
     BatteryDirectoryManager mgr;
-    std::string dirpath; 
-    std::map<std::string, int> battery_ifds; 
     std::map<std::string, void*> loaded_dynamic_libs; 
+    /// if in fifo mode, this is the directory path for the fifos 
+    std::string dirpath; 
+    /// if in fifo mode, this is admin input fifo 
     int admin_fifo_ifd; 
+    /// if in fifo mode, this is the battery input fifos 
+    std::map<std::string, int> battery_ifds; 
     mode_t dir_permission; 
     mode_t admin_fifo_permission; 
     mode_t battery_fifo_permission; 
+
+    /// if in socket mode, this is the listening socket 
+    int sockfd; 
+    /// should you quit? 
     int should_quit; 
     int quitted; 
+
+
 public: 
-    BatteryOS() : should_quit(0), quitted(0) {
+    BatteryOS() : admin_fifo_ifd(-1), sockfd(-1), should_quit(0), quitted(0) {
         this->mgr.init(&(this->dir), this);
     }
     ~BatteryOS() {
-        if (!(this->quitted)) {
-            this->shutdown(); 
+        if (admin_fifo_ifd > 0 && !(this->quitted)) {
+            this->shutdown_fifo(); 
         }
     }
     
     void notify_should_quit() {
         this->should_quit = 1; 
+        if (this->sockfd > 0) {
+            ::shutdown(this->sockfd, SHUT_RDWR); 
+            close(this->sockfd);
+        }
     }
 
     BatteryDirectoryManager &get_manager() { 
@@ -251,7 +264,10 @@ private:
     /** handle battery message from file descriptor fd */
     static int handle_battery(BatteryOS *bos, const std::string &battery_name); 
 
-    void shutdown() {
+    /** 
+     * unload the batteries, close the dynamic libraries, and delete the fifos and directory 
+     */
+    void shutdown_fifo() {
         LOG() << "shutting down"; 
         this->dir.quit(); 
         for (auto &it : this->battery_ifds) {
