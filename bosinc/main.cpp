@@ -1021,7 +1021,7 @@ void aggregate_remote_pseudobat(const char *const addr, int portmin, int portmax
     BatteryOS bos; 
     bosptr = &bos; 
     std::vector<std::string> rbat; 
-    for (int port = portmin; port < portmax; ++port) {
+    for (int port = portmin; port <= portmax; ++port) {
         bos.get_manager().make_networked_battery(
             "remote"+std::to_string(port), 
             "ps"+std::to_string(port), 
