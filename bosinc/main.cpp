@@ -1013,7 +1013,7 @@ void single_remote_pseduobat(int port) {
         .max_charging_current_mA=60000, 
         .max_discharging_current_mA=60000,
         .timestamp = get_system_time_c()
-    }, 1000);
+    }, 0);
     bos.bootup_tcp_socket(port); 
 }
 
@@ -1027,11 +1027,11 @@ void aggregate_remote_pseudobat(const char *const addr, int portmin, int portmax
             "ps"+std::to_string(port), 
             addr, 
             port, 
-            1000
+            0
         ); 
         rbat.push_back("remote"+std::to_string(port));
     }
-    Battery *agg = bos.get_manager().make_aggregator("agg", 3000, 1000, rbat, 1); 
+    Battery *agg = bos.get_manager().make_aggregator("agg", 3000, 1000, rbat, 0); 
     if (!agg) {
         WARNING() << "agg is NULL? what's wrong?";
         return; 
@@ -1044,6 +1044,36 @@ void aggregate_remote_pseudobat(const char *const addr, int portmin, int portmax
     std::cout << status << std::endl;
     LOG() << "The time difference is: " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << "us";
     return; 
+}
+void chain_remote(const char *const addr, int remoteport, int myport) {
+    BatteryOS bos; 
+    bosptr = &bos; 
+    bos.get_manager().make_networked_battery(
+        "remote"+std::to_string(myport), 
+        "remote"+std::to_string(remoteport),
+        addr, 
+        remoteport,
+        0
+    );
+    bos.bootup_tcp_socket(myport); 
+}
+void chain_remote_end(const char *const addr, int remoteport) {
+    BatteryOS bos; 
+    bosptr = &bos; 
+    Battery *bat = bos.get_manager().make_networked_battery(
+        "endpoint",
+        "remote"+std::to_string(remoteport),
+        addr, 
+        remoteport,
+        0
+    );
+    BatteryStatus status;
+    std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now(); 
+    /// time it!!! 
+    status = bat->manual_refresh(); 
+    std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now(); 
+    std::cout << status << std::endl;
+    LOG() << "The time difference is: " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << "us";
 }
 
 void sigint_handler(int sig) {
@@ -1066,6 +1096,7 @@ int main(int argc, const char *const argv[]) {
     // run();
     // ./bos client port
     // ./bos server port_min port_max
+    // ./bos chain myport remoteport
     if (argc < 3) {
         WARNING() << "./bos client port OR ./bos server port_min port_max"; 
     } else {
@@ -1089,6 +1120,23 @@ int main(int argc, const char *const argv[]) {
             } else {
                 /// 
                 aggregate_remote_pseudobat("127.0.0.1", portmin, portmax); 
+            }
+        }
+        else if (strcmp("chain", argv[1]) == 0) {
+            int myport = atoi(argv[2]);
+            int remoteport = atoi(argv[3]); 
+            if (myport <= 0 || remoteport <= 0) {
+                WARNING() << "port conversion failed!";
+            } else {
+                chain_remote("127.0.0.1", remoteport, myport); 
+            }
+        }
+        else if (strcmp("chainend", argv[1]) == 0) {
+            int port = atoi(argv[2]);
+            if (port <= 0) {
+                WARNING() << "port conversion failed!";
+            } else {
+                chain_remote_end("127.0.0.1", port); 
             }
         }
     }
