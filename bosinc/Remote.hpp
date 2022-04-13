@@ -58,7 +58,7 @@ public:
             WARNING() << "connection failed to establish!"; 
             return {}; 
         }
-        LOG() << "connect success!"; 
+        // LOG() << "connect success!"; 
         bool serialize_success = 0; 
         bosproto::MsgTag tag; 
         tag.set_tag(1);
@@ -68,7 +68,7 @@ public:
             disconnect(socket_fd); 
             return {}; 
         }
-        LOG() << "tag send success!"; 
+        // LOG() << "tag send success!"; 
         uint8_t read_buffer[4096]; 
         if (read(socket_fd, read_buffer, 4096) <= 0) {
             WARNING() << "server closed the connection already"; 
@@ -85,7 +85,7 @@ public:
             disconnect(socket_fd); 
             return {}; 
         }
-        LOG() << "msg send success!"; 
+        // LOG() << "msg send success!"; 
         bool parse_success = 0; 
         bosproto::BatteryResp resp; 
         ssize_t bytes_read = read(socket_fd, read_buffer, 4096); 
@@ -100,7 +100,7 @@ public:
             disconnect(socket_fd); 
             return {}; 
         }
-        LOG() << "response recv success!"; 
+        // LOG() << "response recv success!"; 
         disconnect(socket_fd); 
         if (!resp.has_status()) {
             if (resp.has_failreason()) {

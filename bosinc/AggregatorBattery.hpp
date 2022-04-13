@@ -17,6 +17,7 @@ public:
         int64_t voltage_mV, 
         int64_t voltage_tolerance_mV, 
         const std::vector<std::string> &src_names, 
+        const std::vector<BatteryStatus> &initial_status,
         BOSDirectory &directory, 
         const std::chrono::milliseconds &max_staleness=std::chrono::milliseconds(0)
     );

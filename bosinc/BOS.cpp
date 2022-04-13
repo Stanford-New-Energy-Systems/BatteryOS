@@ -125,8 +125,11 @@ Battery *BatteryDirectoryManager::make_aggregator(
     BATTERY_FACTORY_NAME_CHECK(this, name);
     Battery *bat;
     BatteryStatus pstatus;
-    int64_t v;
     bool failed = false;
+    std::vector<BatteryStatus> initial_status(src_names.size()); 
+#define FAKE 1
+#if !FAKE
+    int64_t v;
     for (const std::string &src : src_names) {
         bat = this->dir->get_battery(src);
         if (!bat) {
@@ -144,7 +147,21 @@ Battery *BatteryDirectoryManager::make_aggregator(
             WARNING() << "Battery in use!";
             failed = true;
         }
+        initial_status[i] = pstatus; 
     }
+#else 
+    for (BatteryStatus &s : initial_status) {
+        s = BatteryStatus {
+            .voltage_mV=3000, 
+            .current_mA=0, 
+            .capacity_mAh=20000, 
+            .max_capacity_mAh=40000, 
+            .max_charging_current_mA=60000, 
+            .max_discharging_current_mA=60000,
+            .timestamp = get_system_time_c()
+        };
+    }
+#endif 
     if (failed) {
         return nullptr;
     }
@@ -154,6 +171,7 @@ Battery *BatteryDirectoryManager::make_aggregator(
             voltage_mV, 
             voltage_tolerance_mV, 
             src_names, 
+            initial_status, 
             *(this->dir), 
             std::chrono::milliseconds(max_staleness_ms)));
     Battery *agg = this->dir->add_battery(std::move(aggregator));
