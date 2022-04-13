@@ -6,6 +6,7 @@ AggregatorBattery::AggregatorBattery(
     int64_t voltage_mV, 
     int64_t voltage_tolerance_mV, 
     const std::vector<std::string> &src_names, 
+    const std::vector<BatteryStatus> &initial_status,
     BOSDirectory &directory, 
     const std::chrono::milliseconds &max_staleness
 ) : 
@@ -20,17 +21,9 @@ AggregatorBattery::AggregatorBattery(
     this->status.current_mA = 0;
     this->status.capacity_mAh = 0;
     this->status.max_capacity_mAh = 0;
-    /// let's not do anything in the experiment 
-#define FAKE 1
-#if !FAKE
-    // bool add_success;
-    Battery *bat;
-    BatteryStatus pstatus;
     double max_discharge_time = 0;
     double max_charge_time = 0;
-    for (const std::string &src : src_names) {
-        bat = directory.get_battery(src);
-        pstatus = bat->get_status();
+    for (const BatteryStatus &pstatus : initial_status) {
         this->status.capacity_mAh += pstatus.capacity_mAh;
         this->status.max_capacity_mAh += pstatus.max_capacity_mAh;
         // this is the inv C-rate 
@@ -49,10 +42,6 @@ AggregatorBattery::AggregatorBattery(
     } else {
         this->status.max_charging_current_mA = (int64_t)((this->status.max_capacity_mAh - this->status.capacity_mAh) / max_charge_time);
     }
-#else 
-    this->status.max_discharging_current_mA = this->status.max_charging_current_mA = 1000;  // fake 
-#endif 
-    
 }
 
 BatteryStatus AggregatorBattery::refresh() {
