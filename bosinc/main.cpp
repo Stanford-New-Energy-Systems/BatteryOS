@@ -1093,12 +1093,12 @@ int main(int argc, const char *const argv[]) {
     Py_BEGIN_ALLOW_THREADS
 #endif 
     signal(SIGINT, sigint_handler); 
-    // run();
     // ./bos client port
     // ./bos server port_min port_max
     // ./bos chain myport remoteport
+    // ./bos chainend remoteport
     if (argc < 3) {
-        WARNING() << "./bos client port OR ./bos server port_min port_max"; 
+        run();
     } else {
         if (strcmp("client", argv[1]) == 0) {
             // client 
