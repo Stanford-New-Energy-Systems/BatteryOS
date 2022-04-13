@@ -1036,11 +1036,12 @@ void aggregate_remote_pseudobat(const char *const addr, int portmin, int portmax
         WARNING() << "agg is NULL? what's wrong?";
         return; 
     }
+    BatteryStatus status;
     std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now(); 
     /// time it!!! 
-    agg->manual_refresh(); 
+    status = agg->manual_refresh(); 
     std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now(); 
-
+    std::cout << status << std::endl;
     LOG() << "The time difference is: " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << "us";
     return; 
 }
