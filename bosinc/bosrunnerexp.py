@@ -15,7 +15,7 @@ def run_agg(portmin: int, portmax: int):
         for i in range(5):
             mp = subprocess.Popen([exec_name, "server", str(portmin), str(port)])
             mp.wait()
-            time.sleep(1)
+            time.sleep(1.5)
 
     for p in child_bos_list:
         p.send_signal(signal.SIGINT)
@@ -31,7 +31,7 @@ def run_chain(portmin:int, portmax: int):
         for i in range(5):
             chainend = subprocess.Popen([exec_name, "chainend", str(port)])
             chainend.wait()
-            time.sleep(1)
+            time.sleep(1.5)
 
     for c in bos_chain:
         c.send_signal(signal.SIGINT)
@@ -42,9 +42,10 @@ def run_chain(portmin:int, portmax: int):
 def main(args: T.List[str]): 
     if args[1] == "agg": 
         # 1000 batteries 
-        run_agg(1200, 2200-1)
+        run_agg(1200, 2199)
     elif args[1] == "chain":
-        run_chain(1200, 1202-1)
+        # chain length 1000 
+        run_chain(1200, 2199)
     pass
 
 if __name__ == "__main__": 
