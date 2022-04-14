@@ -1,0 +1,979 @@
+, function : 
+ is out of voltage tolerance!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const
+-------------------------------- END --------------------------------
+: 
+connection failed to establish!In file ------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:, function ------------------------------ WARNING ------------------------------
+
+:In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function ------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:: 
+connection failed to establish!
+-------------------------------- END --------------------------------, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const, function virtual BatteryStatus RemoteBattery::refresh(): 
+Battery /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cppremote1936/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp is out of voltage tolerance!:
+-------------------------------- END --------------------------------71
+: 
+71Battery , function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery  is out of voltage tolerance!remote1916
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:58virtual BatteryStatus RemoteBattery::refresh(): 
+remote1242 is out of voltage tolerance!------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cppIn file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp: 
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hppconnection failed to establish!
+-------------------------------- END --------------------------------
+Battery remote1831 is out of voltage tolerance!: 
+------------------------------ WARNING ------------------------------
+71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1970:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery 
+
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+: 
+In file , function /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file ------------------------------ WARNING ------------------------------
+
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+------------------------------ WARNING ------------------------------
+remote1675In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:58, function virtual BatteryStatus RemoteBattery::refresh()
+-------------------------------- END --------------------------------
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+ is out of voltage tolerance!Battery remote1208 is out of voltage tolerance!------------------------------ WARNING ------------------------------
+In file :58, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+virtual BatteryStatus RemoteBattery::refresh()connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const
+: 
+Battery remote2011
+------------------------------ WARNING ------------------------------
+In file , function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+
+------------------------------ WARNING ------------------------------
+:In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71
+
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71------------------------------ WARNING ------------------------------
+In file ------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hppconnection failed to establish!In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1382 is out of voltage tolerance!
+-------------------------------- END --------------------------------connection failed to establish!
+-------------------------------- END --------------------------------
+::71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+------------------------------ WARNING ------------------------------
+In file , function int RemoteBattery::connect(struct sockaddr_in &):71: 
+connect error
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp58, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!virtual BatteryStatus RemoteBattery::refresh()In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function 58, function virtual BatteryStatus RemoteBattery::refresh()
+-------------------------------- END --------------------------------
+71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery  is out of voltage tolerance!
+------------------------------ WARNING ------------------------------
+
+-------------------------------- END --------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp71, function 
+-------------------------------- END --------------------------------
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:58, function : 
+Battery remote2149 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+Battery 58, function virtual BatteryStatus RemoteBattery::refresh()auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const, function int RemoteBattery::connect(struct sockaddr_in &): 
+connect error
+-------------------------------- END --------------------------------
+, function  is out of voltage tolerance!
+-------------------------------- END --------------------------------, function virtual BatteryStatus RemoteBattery::refresh(): 
+:71, function 
+:58, function /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) constconnection failed to establish!
+-------------------------------- END --------------------------------:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1452 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+
+-------------------------------- END --------------------------------
+connection failed to establish!/Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp
+-------------------------------- END --------------------------------
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery Battery remote1801 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hppIn file virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------: 
+remote1327------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp is out of voltage tolerance!
+-------------------------------- END --------------------------------
+71, function : 
+Battery remote1812 is out of voltage tolerance!: 
+:71, function ------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!In file , function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery ------------------------------ WARNING ------------------------------
+In file auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const------------------------------ WARNING ------------------------------
+In file remote1684: 
+ is out of voltage tolerance!
+-------------------------------- END --------------------------------
+:
+------------------------------ WARNING ------------------------------
+connection failed to establish!
+connection failed to establish!
+-------------------------------- END --------------------------------
+
+------------------------------ WARNING ------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cppint RemoteBattery::connect(struct sockaddr_in &):: 
+: 
+connect errorBattery 71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1379In file ------------------------------ WARNING ------------------------------
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:------------------------------ WARNING ------------------------------
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1772 is out of voltage tolerance!: 
+Battery remote2068
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp
+-------------------------------- END --------------------------------
+In file 58auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const, function : 
+virtual BatteryStatus RemoteBattery::refresh(): 
+, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+remote1702: 
+Battery remote1551------------------------------ WARNING ------------------------------
+In file : 
+connection failed to establish!
+-------------------------------- END --------------------------------
+connection failed to establish!
+-------------------------------- END --------------------------------In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const
+-------------------------------- END --------------------------------
+: 
+Battery remote1584 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const:remote168658, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:58, function virtual BatteryStatus RemoteBattery::refresh(), function 71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1537 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+-------------------------------- END --------------------------------
+-------------------------------- END --------------------------------
+Battery remote174158, function virtual BatteryStatus RemoteBattery::refresh()auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote2012 is out of voltage tolerance!------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:58, function virtual BatteryStatus RemoteBattery::refresh(): 
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) constauto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery : 
+remote1678 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+remote1205 is out of voltage tolerance!
+-------------------------------- END --------------------------------int RemoteBattery::connect(struct sockaddr_in &)In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp: 
+: 
+connection failed to establish!remote1333 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+:/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+:58, function , function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery : 
+connection failed to establish!
+-------------------------------- END --------------------------------, function 
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote2082In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1752------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp::remote1922 is out of voltage tolerance!/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp
+-------------------------------- END --------------------------------71
+58Battery remote2180: is out of voltage tolerance!------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1381
+-------------------------------- END --------------------------------
+
+------------------------------ WARNING ------------------------------
+connection failed to establish!
+-------------------------------- END --------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+, function 7171, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1911 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+------------------------------ WARNING ------------------------------
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery : 
+Battery remote1918
+-------------------------------- END --------------------------------
+ is out of voltage tolerance!
+-------------------------------- END --------------------------------
+connect error
+-------------------------------- END --------------------------------
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:: 
+58connection failed to establish!
+-------------------------------- END --------------------------------
+
+------------------------------ WARNING ------------------------------
+connection failed to establish!In file : 
+Battery remote1464 is out of voltage tolerance!
+-------------------------------- END --------------------------------:------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery In file remote2069: 
+connection failed to establish!
+-------------------------------- END --------------------------------
+In file ------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function  is out of voltage tolerance!
+-------------------------------- END --------------------------------
+:58, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END -------------------------------------------------------------- WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+58, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END -------------------------------------------------------------- WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:connection failed to establish!71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1760 is out of voltage tolerance!
+-------------------------------- END --------------------------------:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1974 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+:auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote123071, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery 71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1731In file  is out of voltage tolerance!
+-------------------------------- END --------------------------------
+:virtual BatteryStatus RemoteBattery::refresh()58: 
+
+-------------------------------- END --------------------------------, function 
+virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cppremote2077auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const
+-------------------------------- END --------------------------------
+, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+
+
+-------------------------------- END --------------------------------auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const
+-------------------------------- END --------------------------------: 
+
+ is out of voltage tolerance!
+-------------------------------- END --------------------------------In file 
+------------------------------ WARNING ------------------------------
+remote1829 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+In file :71, function /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp: is out of voltage tolerance!
+-------------------------------- END --------------------------------
+: 
+: 
+Battery /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp is out of voltage tolerance!
+-------------------------------- END --------------------------------
+71remote1738 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+: 
+, function connection failed to establish!auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const
+-------------------------------- END --------------------------------
+-------------------------------- END --------------------------------
+
+In file ------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:
+71------------------------------ WARNING ------------------------------
+In file ------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp is out of voltage tolerance!71, function remote1749 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+: 
+
+-------------------------------- END --------------------------------
+
+-------------------------------- END -------------------------------------------------------------- WARNING ------------------------------
+
+::
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:7171, function , function , function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery 58remote2026, function  is out of voltage tolerance!virtual BatteryStatus RemoteBattery::refresh()
+-------------------------------- END -------------------------------- is out of voltage tolerance!: 
+connection failed to establish!
+-------------------------------- END --------------------------------
+: 
+Battery 71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1374 is out of voltage tolerance!Battery remote1517 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+:58Battery remote2073 is out of voltage tolerance!
+-------------------------------- END --------------------------------connection failed to establish!
+
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file , function /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cppvirtual BatteryStatus RemoteBattery::refresh(), function :: 
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) constauto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const71connection failed to establish!: 
+: 
+
+-------------------------------- END --------------------------------
+remote2004 is out of voltage tolerance!
+-------------------------------- END --------------------------------auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const
+-------------------------------- END --------------------------------
+In file ------------------------------ WARNING ------------------------------
+
+, function virtual BatteryStatus RemoteBattery::refresh()------------------------------ WARNING ------------------------------
+: 
+In file connection failed to establish!/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp
+-------------------------------- END --------------------------------:
+71------------------------------ WARNING ------------------------------
+, function In file auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery 
+remote1435In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp
+-------------------------------- END --------------------------------
+
+-------------------------------- END --------------------------------
+ is out of voltage tolerance!
+-------------------------------- END --------------------------------
+Battery remote2195 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) constBattery : 
+remote2199Battery  is out of voltage tolerance!remote2187
+-------------------------------- END -------------------------------- is out of voltage tolerance!
+
+-------------------------------- END --------------------------------
+-------------------------------- END --------------------------------
+
+Battery remote1214 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1317 is out of voltage tolerance!/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp
+-------------------------------- END --------------------------------
+: is out of voltage tolerance!71, function 
+-------------------------------- END --------------------------------auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const
+: 
+Battery remote1690 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1370 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery Battery remote1277remote1703 is out of voltage tolerance! is out of voltage tolerance!
+-------------------------------- END --------------------------------
+-------------------------------- END --------------------------------
+
+71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1565 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1472 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1968 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1883 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+: 
+Battery remote1278 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1634 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote2142 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:58, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote2165 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1502 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+remote1483 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1322 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+
+
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:58, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1229/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp is out of voltage tolerance!
+-------------------------------- END --------------------------------:
+71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1643 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1842 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:58, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const, function : 
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) constBattery : 
+remote2044Battery  is out of voltage tolerance!remote1849
+-------------------------------- END -------------------------------- is out of voltage tolerance!------------------------------ WARNING ------------------------------
+
+In file 
+-------------------------------- END --------------------------------/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp
+:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1560 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) constauto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+: 
+Battery Battery remote2009remote1773 is out of voltage tolerance! is out of voltage tolerance!
+-------------------------------- END -------------------------------- is out of voltage tolerance!
+-------------------------------- END --------------------------------
+-------------------------------- END --------------------------------
+
+
+ is out of voltage tolerance!
+-------------------------------- END --------------------------------
+:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1462 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1887 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1708 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1254 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1949 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1269 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+
+Battery remote1397 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1467 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1827 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+Battery remote2105 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1578 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote2174 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1891 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+Battery remote1482 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1265 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+remote1575 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+: 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+connection failed to establish!In file 
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cppIn file :/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp71:, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const71, function : 
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) constBattery /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp: 
+Battery remote1386 is out of voltage tolerance!: 
+Battery remote1425 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+: 
+remote1557Battery  is out of voltage tolerance!remote1627------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp: 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+------------------------------ WARNING ------------------------------
+In file In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp/Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hppvirtual BatteryStatus RemoteBattery::refresh():connect error
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:: 
+58connection failed to establish!, function 
+-------------------------------- END --------------------------------virtual BatteryStatus RemoteBattery::refresh()
+------------------------------ WARNING ------------------------------
+71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const------------------------------ WARNING ------------------------------
+: 
+In file Battery /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cppremote1342: is out of voltage tolerance!
+-------------------------------- END --------------------------------71
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1912 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+58, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) constIn file : 
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cppBattery :remote160571 is out of voltage tolerance!
+-------------------------------- END --------------------------------:71, function In file auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cppBattery :remote168171 is out of voltage tolerance!, function 
+remote1798 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote2172 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+-------------------------------- END --------------------------------
+
+
+-------------------------------- END --------------------------------
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote2042 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote2113 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+ is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+-------------------------------- END --------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1318 is out of voltage tolerance!:
+-------------------------------- END --------------------------------
+71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1628 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:58, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71------------------------------ WARNING ------------------------------
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) constIn file : 
+Battery /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:remote2025 is out of voltage tolerance!71
+-------------------------------- END --------------------------------, function 
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const58: 
+, function Battery virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!, function 
+-------------------------------- END --------------------------------auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const
+: 
+Battery ------------------------------ WARNING ------------------------------
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hppIn file remote2097:/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp58:, function 71, function virtual BatteryStatus RemoteBattery::refresh() is out of voltage tolerance!
+-------------------------------- END --------------------------------
+ is out of voltage tolerance!
+-------------------------------- END --------------------------------
+connect error
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:58, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+-------------------------------- END --------------------------------
+
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1811remote1534 is out of voltage tolerance! is out of voltage tolerance!
+-------------------------------- END --------------------------------
+-------------------------------- END --------------------------------
+
+:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1666 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+-------------------------------- END --------------------------------
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const is out of voltage tolerance!: 
+
+-------------------------------- END --------------------------------Battery 
+remote1469 is out of voltage tolerance!
+-------------------------------- END --------------------------------/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp
+:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1644 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+: 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1295 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const
+: 
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cppBattery :remote177071 is out of voltage tolerance!, function 
+-------------------------------- END --------------------------------auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1383 is out of voltage tolerance!------------------------------ WARNING ------------------------------
+, function In file 
+-------------------------------- END --------------------------------virtual BatteryStatus RemoteBattery::refresh()/Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:58, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:------------------------------ WARNING ------------------------------
+71, function In file auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp: 
+: 
+: is out of voltage tolerance!
+-------------------------------- END --------------------------------
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:------------------------------ WARNING ------------------------------
+5871In file In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function , function virtual BatteryStatus RemoteBattery::refresh()auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+: 
+connection failed to establish!Battery 
+-------------------------------- END --------------------------------/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp::Battery 71, function remote1602auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const is out of voltage tolerance!: 
+
+-------------------------------- END --------------------------------
+Battery remote1680 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1992 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+:58, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+remote1846------------------------------ WARNING ------------------------------
+In file  is out of voltage tolerance!/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp
+-------------------------------- END --------------------------------
+connection failed to establish!
+-------------------------------- END --------------------------------
+In file ------------------------------ WARNING ------------------------------
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cppIn file :/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:7171, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const, function : 
+: 
+connection failed to establish!Battery 
+-------------------------------- END --------------------------------remote1817
+ is out of voltage tolerance!
+-------------------------------- END -------------------------------------------------------------- WARNING ------------------------------
+
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) constIn file : 
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cppBattery :remote213271 is out of voltage tolerance!, function 
+-------------------------------- END --------------------------------
+
+:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1371 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1617 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1648 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+: 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote2157 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+: 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1930 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+ is out of voltage tolerance!
+-------------------------------- END --------------------------------
+Battery remote1253 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:58, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1394 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote2109 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1789 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1837 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1558 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote2147 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote2108 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1436 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+remote1561 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1965 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1571 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1824 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+: 
+Battery remote2019 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote2146 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1522 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1388 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1693 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:58, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function 71auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+, function Battery auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1604 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const------------------------------ WARNING ------------------------------
+: 
+In file Battery /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cppremote1783: is out of voltage tolerance!
+-------------------------------- END --------------------------------71
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+------------------------------ WARNING ------------------------------
+Battery In file remote1765/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp is out of voltage tolerance!:
+-------------------------------- END --------------------------------71
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery Battery remote1711remote1973 is out of voltage tolerance! is out of voltage tolerance!
+-------------------------------- END --------------------------------
+-------------------------------- END --------------------------------
+
+71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1368 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+Battery remote1890 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+remote1840
+ is out of voltage tolerance!------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery 71
+-------------------------------- END --------------------------------
+remote1663 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+-------------------------------- END --------------------------------
+ is out of voltage tolerance!
+-------------------------------- END --------------------------------
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp: 
+:Battery 
+-------------------------------- END --------------------------------71remote1928
+ is out of voltage tolerance!
+-------------------------------- END --------------------------------
+virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+:Battery /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hpp:: 
+58, function Battery In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function 71auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) constIn file ------------------------------ WARNING ------------------------------
+: 
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1836, function ------------------------------ WARNING ------------------------------
+ is out of voltage tolerance!auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) constIn file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+------------------------------ WARNING ------------------------------
+remote1380In file  is out of voltage tolerance!: 
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:------------------------------ WARNING ------------------------------
+ is out of voltage tolerance!
+-------------------------------- END --------------------------------
+/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+71: 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file :/Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp71, function remote1459Battery auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const is out of voltage tolerance!remote1952: 
+
+-------------------------------- END --------------------------------:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1516remote2101 is out of voltage tolerance! is out of voltage tolerance!
+
+-------------------------------- END --------------------------------
+-------------------------------- END --------------------------------
+71
+
+71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1223 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1695 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:remote1454remote1689 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1592 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+Battery remote1718 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1776 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+Battery remote1999 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+ is out of voltage tolerance!
+-------------------------------- END --------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp: is out of voltage tolerance!71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote2063 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+Battery remote2086 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1668 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+: 
+Battery remote2041 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1519 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1415 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+Battery remote1902 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1232 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+-------------------------------- END --------------------------------
+58, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hppremote1997: is out of voltage tolerance!58, function 
+-------------------------------- END --------------------------------
+-------------------------------- END --------------------------------
+virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function 71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1745auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+ is out of voltage tolerance!Battery 
+-------------------------------- END --------------------------------remote1531
+ is out of voltage tolerance!
+-------------------------------- END --------------------------------
+:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote2159 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+
+: 
+Battery remote1375 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+connect error
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/Remote.hppIn file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1249 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+:58, function virtual BatteryStatus RemoteBattery::refresh(): 
+connection failed to establish!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote1751 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+------------------------------ WARNING ------------------------------
+In file /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:71, function auto AggregatorBattery::refresh()::(anonymous class)::operator()(Battery *) const: 
+Battery remote2051 is out of voltage tolerance!
+-------------------------------- END --------------------------------
+ is out of voltage tolerance!
+-------------------------------- END --------------------------------
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:91, refresh: battery is full: max_charging_current is 0 ...ENDLOG
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/AggregatorBattery.cpp:97, refresh: battery is empty: max_discharging_current is 0 ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               0mAh, 
+    .max_capacity_mAh =           0mAh, 
+    .max_charging_current_mA =    1mA, 
+    .max_discharging_current_mA = 1mA, 
+    .timestamp =                  2022-04-13 16:52:36
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1045, aggregate_remote_pseudobat: The time difference is: 1564726us ...ENDLOG
+DN51slvp:bosinc ouyancheng% 
