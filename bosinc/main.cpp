@@ -1043,6 +1043,10 @@ void aggregate_remote_pseudobat(const char *const addr, int portmin, int portmax
     std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now(); 
     std::cout << status << std::endl;
     LOG() << "The time difference is: " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << "us";
+    std::ofstream logger;
+    logger.open("./aggdelay.csv", std::ios::app); 
+    logger << (portmax-portmin+1) << ", " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << std::endl;
+    logger.close(); 
     return; 
 }
 void chain_remote(const char *const addr, int remoteport, int myport) {
@@ -1074,6 +1078,10 @@ void chain_remote_end(const char *const addr, int remoteport) {
     std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now(); 
     std::cout << status << std::endl;
     LOG() << "The time difference is: " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << "us";
+    std::ofstream logger;
+    logger.open("./chaindelay.csv", std::ios::app); 
+    logger << (remoteport-1200+1) << ", " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << std::endl;
+    logger.close(); 
 }
 
 void sigint_handler(int sig) {
