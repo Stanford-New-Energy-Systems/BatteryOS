@@ -1005,7 +1005,7 @@ int run() {
 void single_remote_pseduobat(int port) {
     BatteryOS bos; 
     bosptr = &bos; 
-    bos.get_manager().make_pseudo("ps"+std::to_string(port), BatteryStatus {
+    bos.get_manager().make_pseudo("remote"+std::to_string(port), BatteryStatus {
         .voltage_mV=3000, 
         .current_mA=0, 
         .capacity_mAh=20000, 
@@ -1024,7 +1024,7 @@ void aggregate_remote_pseudobat(const char *const addr, int portmin, int portmax
     for (int port = portmin; port <= portmax; ++port) {
         bos.get_manager().make_networked_battery(
             "remote"+std::to_string(port), 
-            "ps"+std::to_string(port), 
+            "remote"+std::to_string(port), 
             addr, 
             port, 
             0
