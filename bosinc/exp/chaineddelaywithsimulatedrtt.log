@@ -1,0 +1,3247 @@
+DN0a22c4f8:bosinc ouyancheng% python3 bosrunnerexp.py chain 
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:11
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 36708us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:13
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 37430us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:14
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 40138us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:16
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 39494us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:18
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 37603us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:19
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 59821us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:21
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 58660us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:22
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 61306us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:24
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 60107us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:26
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 59943us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:27
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 81413us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:29
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 81452us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:30
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 74135us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:32
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 77442us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:34
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 80408us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:35
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 102126us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:37
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 98448us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:39
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 98244us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:40
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 100924us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:42
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 98199us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:44
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 121099us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:45
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 119434us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:47
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 121288us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:49
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 121466us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:50
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 117641us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:52
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 141679us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:54
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 140787us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:55
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 140977us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:57
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 141571us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:15:59
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 138579us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:00
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 161774us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:02
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 157470us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:04
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 159320us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:06
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 154251us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:07
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 161645us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:09
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 179354us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:11
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 176758us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:12
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 180793us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:14
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 177236us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:16
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 191035us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:18
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 200845us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:19
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 199621us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:21
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 199290us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:23
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 200910us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:25
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 203596us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:26
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 220492us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:28
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 219326us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:30
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 218423us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:32
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 217558us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:34
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 219419us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:35
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 237224us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:37
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 240951us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:39
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 242697us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:41
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 240470us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:42
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 241876us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:44
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 261043us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:46
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 252046us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:48
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 258961us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:50
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 260462us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:51
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 234462us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:53
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 254274us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:55
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 257979us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:57
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 276563us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:16:59
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 278215us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:01
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 273992us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:02
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 289534us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:04
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 294290us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:06
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 297580us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:08
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 286814us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:10
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 299005us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:12
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 311463us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:13
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 318520us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:15
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 318910us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:17
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 319306us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:19
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 317671us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:21
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 335905us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:23
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 328945us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:25
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 339503us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:27
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 337639us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:28
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 309788us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:30
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 355270us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:32
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 348882us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:34
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 361388us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:36
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 352868us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:38
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 341638us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:40
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 376175us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:42
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 377118us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:44
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 369336us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:46
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 373553us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:48
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 372304us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:49
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 395663us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:51
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 396580us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:53
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 387072us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:55
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 395182us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:57
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 398656us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:17:59
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 416907us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:01
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 416131us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:03
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 411102us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:05
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 417755us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:07
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 390954us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:09
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 435662us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:11
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 436419us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:13
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 437824us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:15
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 436570us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:17
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 441309us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:19
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 453198us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:21
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 464240us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:23
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 445256us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:25
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 461076us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:27
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 453457us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:29
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 467321us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:31
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 484807us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:33
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 476396us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:35
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 480940us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:37
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 469547us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:39
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 483692us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:41
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 491131us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:43
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 500290us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:45
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 498181us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:47
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 499934us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:49
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 510282us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:51
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 519606us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:53
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 485250us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:55
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 485069us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:18:58
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 514452us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:00
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 512159us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:02
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 538495us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:04
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 534896us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:06
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 536159us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:08
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 533340us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:10
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 543564us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:12
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 550504us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:14
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 553658us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:16
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 560019us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:18
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 562631us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:21
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 573005us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:23
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 566188us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:25
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 557788us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:27
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 580515us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:29
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 575632us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:31
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 606215us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:33
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 603279us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:35
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 591060us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:38
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 583459us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:40
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 583126us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:42
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 623154us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:44
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 616085us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:46
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 613542us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:48
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 613434us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:51
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 605280us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:53
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 626367us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:55
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 626752us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:57
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 635282us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:19:59
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 635339us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:01
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 636896us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:04
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 675333us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:06
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 649502us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:08
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 658411us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:10
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 642498us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:12
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 656324us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:15
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 673774us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:17
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 679022us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:19
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 673764us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:21
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 671855us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:24
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 662883us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:26
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 672611us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:28
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 694374us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:30
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 700825us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:33
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 640306us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:35
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 640637us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:37
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 678200us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:39
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 696402us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:41
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 709390us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:44
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 722223us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:46
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 711678us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:48
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 737276us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:50
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 732034us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:53
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 720106us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:55
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 741931us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:20:57
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 743008us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:00
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 765239us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:02
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 757569us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:04
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 757251us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:07
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 753522us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:09
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 763356us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:11
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 782379us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:14
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 786433us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:16
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 781156us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:18
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 777337us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:20
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 772026us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:23
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 799493us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:25
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 806197us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:28
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 803544us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:30
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 805880us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:32
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 802162us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:35
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 815273us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:37
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 822516us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:39
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 813357us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:42
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 762621us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:44
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 803064us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:46
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 840568us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:49
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 832279us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:51
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 844851us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:54
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 844267us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:56
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 765561us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:21:58
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 815773us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:01
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 846654us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:03
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 855799us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:05
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 855301us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:08
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 869021us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:10
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 880547us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:13
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 883514us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:15
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 881627us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:18
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 885895us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:20
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 879535us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:22
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 895038us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:25
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 905023us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:27
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 906651us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:30
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 901633us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:32
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 900015us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:35
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 919958us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:37
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 913719us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:40
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 920669us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:42
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 909353us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:45
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 919151us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:47
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 944309us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:50
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 939261us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:52
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 945767us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:54
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 935733us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:57
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 937620us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:22:59
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 962334us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:02
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 946091us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:04
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 946549us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:07
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 877018us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:09
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 866637us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:12
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 934636us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:14
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 976015us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:17
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 963020us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:19
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 979981us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:22
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 972431us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:24
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 998859us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:27
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 984494us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:29
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 986706us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:32
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 994403us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:35
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 977409us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:37
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 968715us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:40
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 987040us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:42
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1023592us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:45
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1015984us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:47
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1020653us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:50
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1034431us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:52
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1031006us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:55
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1039808us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:23:58
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1037185us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:00
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1046227us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:03
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1055869us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:05
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1076304us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:08
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1057064us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:11
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1060515us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:13
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1056137us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:16
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1082578us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:19
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1072169us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:21
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1073068us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:24
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1081002us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:26
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1080243us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:29
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1088623us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:32
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1101707us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:34
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1092175us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:37
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1098445us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:40
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1080145us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:42
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1123754us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:45
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1124423us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:48
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1110843us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:50
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1128909us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:53
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1116211us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:56
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1135543us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:24:58
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1148768us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:01
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1129735us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:04
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1135393us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:06
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1144213us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:09
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1065095us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:12
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1165997us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:14
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1117486us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:17
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1146990us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:20
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1126084us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:22
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1170454us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:25
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1034877us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:28
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1186540us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:30
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1171983us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:33
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1172204us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:36
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1205404us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:39
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1207852us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:41
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1208534us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:44
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1191768us ...ENDLOG
+BatteryStatus status = {
+    .voltage_mV =                 3000mV, 
+    .current_mA =                 0mA, 
+    .capacity_mAh =               20000mAh, 
+    .max_capacity_mAh =           40000mAh, 
+    .max_charging_current_mA =    60000mA, 
+    .max_discharging_current_mA = 60000mA, 
+    .timestamp =                  2022-04-17 13:25:47
+};
+
+LOG... /Volumes/Data/workspaces/bos/BatteryOS/bosinc/main.cpp:1080, chain_remote_end: The time difference is: 1189191us ...ENDLOG
+DN0a22c4f8:bosinc ouyancheng% 
