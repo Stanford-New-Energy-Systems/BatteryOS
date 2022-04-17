@@ -44,8 +44,9 @@ def main(args: T.List[str]):
         # 1000 batteries 
         run_agg(1200, 2199)
     elif args[1] == "chain":
-        # chain length 1000 
-        run_chain(1200, 2199)
+        # chain length 1000 => 1200 - 2199
+        # chain length 60 => 1200 - 1259
+        run_chain(1200, 1259)
     pass
 
 if __name__ == "__main__": 

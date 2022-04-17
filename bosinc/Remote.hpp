@@ -6,6 +6,11 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <arpa/inet.h> 
+#define FAKE 1 
+#if FAKE
+#include <array>
+#include <random>
+#endif 
 class RemoteBattery : public PhysicalBattery {
     std::string remote_name; 
     std::string address; 
@@ -52,6 +57,40 @@ public:
     }
 
     BatteryStatus refresh() override {
+        #if FAKE
+        /*
+        Battery 1
+            Mean: 12.749ms
+            Std: 8.163
+        Battery 2
+            Mean: 15.077ms
+            Std: 8.037
+        Battery 3
+            Mean: 21.099ms
+            Std:7.088
+        Battery 4
+            Mean: 34.369ms
+            Std:8.219
+        Battery 5
+            Mean: 10.073ms
+            Std: 4.241
+        */
+        using std::make_pair;
+        std::array<std::pair<double, double>, 5> meanstd {
+            make_pair(12.749, 8.163), 
+            make_pair(15.077, 8.037), 
+            make_pair(21.099, 7.088), 
+            make_pair(34.369, 8.219), 
+            make_pair(10.073, 4.241)
+        };
+        std::default_random_engine generator; 
+        
+        std::uniform_int_distribution<size_t> picker(0, 4); // both side inclusive 
+        size_t batidx = picker(generator); 
+        std::normal_distribution<double> sampler(meanstd[batidx].first, meanstd[batidx].second); 
+        double fakertt = sampler(generator); 
+        std::this_thread::sleep_for(std::chrono::microseconds(static_cast<std::chrono::microseconds::rep>(fakertt/2.0 * 1000.0))); 
+        #endif 
         sockaddr_in server_address; 
         int socket_fd = connect(server_address); 
         if (socket_fd < 0) {
@@ -123,6 +162,9 @@ public:
                 .msec = stat.timestamp().msec()
             }
         };
+        #if FAKE
+        std::this_thread::sleep_for(std::chrono::microseconds(static_cast<std::chrono::microseconds::rep>(fakertt/2.0 * 1000.0))); 
+        #endif 
         return this->status; 
     }
 
