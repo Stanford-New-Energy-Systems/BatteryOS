@@ -83,7 +83,8 @@ public:
             make_pair(34.369, 8.219), 
             make_pair(10.073, 4.241)
         };
-        std::default_random_engine generator; 
+        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+        std::default_random_engine generator(seed); 
         
         std::uniform_int_distribution<size_t> picker(0, 4); // both side inclusive 
         size_t batidx = picker(generator); 
