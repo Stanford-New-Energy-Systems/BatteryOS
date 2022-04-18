@@ -86,8 +86,9 @@ public:
         unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
         std::default_random_engine generator(seed); 
         
-        std::uniform_int_distribution<size_t> picker(0, 4); // both side inclusive 
-        size_t batidx = picker(generator); 
+        // std::uniform_int_distribution<size_t> picker(0, 4); // both side inclusive 
+        // size_t batidx = picker(generator); 
+        size_t batidx = this->port % meanstd.size(); 
         std::normal_distribution<double> sampler(meanstd[batidx].first, meanstd[batidx].second); 
         double fakertt = sampler(generator); 
         std::this_thread::sleep_for(std::chrono::microseconds(static_cast<std::chrono::microseconds::rep>(fakertt/2.0 * 1000.0))); 
