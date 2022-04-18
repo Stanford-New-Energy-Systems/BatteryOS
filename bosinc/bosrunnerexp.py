@@ -28,7 +28,7 @@ def run_chain(portmin:int, portmax: int):
     for port in range(portmin+1, portmax+1):
         chainnode = subprocess.Popen([exec_name, "chain", str(port), str(port-1)])
         bos_chain.append(chainnode)
-        for i in range(5):
+        for i in range(25):
             chainend = subprocess.Popen([exec_name, "chainend", str(port)])
             chainend.wait()
             time.sleep(1.5)
