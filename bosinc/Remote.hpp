@@ -143,8 +143,9 @@ public:
         }
         // LOG() << "response recv success!"; 
         disconnect(socket_fd); 
-        if (!resp.has_status()) {
-            if (resp.has_failreason()) {
+        bosproto::BatteryResp::RetvalCase rvc = resp.retval_case(); 
+        if (rvc != bosproto::BatteryResp::RetvalCase::kStatus) {
+            if (rvc == bosproto::BatteryResp::RetvalCase::kFailreason) {
                 WARNING() << "no status is returned! fail reason: " << resp.failreason(); 
             } else {
                 WARNING() << "no status is returned! and there's no fail reason either!";
@@ -243,8 +244,9 @@ public:
             return {}; 
         }
         disconnect(socket_fd); 
-        if (!resp.has_set_current_response()) {
-            if (resp.has_failreason()) {
+        auto rvc = resp.retval_case(); 
+        if (rvc != bosproto::BatteryResp::RetvalCase::kSetCurrentResponse) {
+            if (rvc == bosproto::BatteryResp::RetvalCase::kFailreason) {
                 WARNING() << "set current does not get response! fail reason: " << resp.failreason(); 
             } else {
                 WARNING() << "set current does not get response! and there's no fail reason either!";
