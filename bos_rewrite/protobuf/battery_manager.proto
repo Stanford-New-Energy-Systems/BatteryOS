@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package bosproto;
+
+enum Refresh {
+    LAZY   = 0;
+    ACTIVE = 1;
+}
+
+message Scale {
+    double charge_proportion   = 1;
+    double capacity_proportion = 2;
+}
+
+enum Policy {
+    PROPORTIONAL = 0;
+    TRANCHED     = 1;
+    RESERVED     = 2;
+}
+
+enum Command_Options {
+    Create_Physical  = 0;
+    Create_Aggregate = 1;
+    Create_Partition = 2;
+    Shutdown         = 3;
+}
+
+message Physical_Battery {
+    string batteryName  = 1;
+    optional uint64 max_staleness = 2;
+    optional Refresh refresh_mode = 3; 
+}
+
+message Dynamic_Battery {
+    string batteryName  = 1;
+    string refresh_func = 2;
+    string destructor_func  = 3;
+    string constructor_func = 4;
+    string set_current_func = 5;
+    repeated string arguments = 6;
+    optional uint64 max_staleness = 7;
+    optional Refresh refresh_mode = 8; 
+}
+
+message Aggregate_Battery {
+    string batteryName = 1;
+    repeated string parentNames = 2;
+    optional uint64 max_staleness = 3; 
+    optional Refresh refresh_mode = 4;
+}
+
+message Partition_Battery {
+    string sourceName = 1;
+    Policy policy = 2;
+    repeated string names = 3;
+    repeated Scale scales = 4;
+    repeated uint64 max_stalenesses = 5; 
+    repeated Refresh refresh_modes = 6;
+}
+
+message Admin_Command {
+    Command_Options command_options = 1;
+    oneof command_parameters {
+        Physical_Battery  physical_battery = 2;
+        Aggregate_Battery aggregate_battery = 3;
+        Partition_Battery partition_battery = 4;
+    }
+}
+
+message AdminResponse {
+    int64 return_code = 1;
+    oneof return_value {
+        string success_message = 2;
+        string failure_message = 3;
+    }
+}

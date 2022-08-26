@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package bosproto;
+
+message BatteryStatus {
+    double voltage_mV = 1;
+    double current_mA = 2;
+    double capacity_mAh = 3;
+    double max_capacity_mAh = 4;
+    double max_charging_current_mA = 5;
+    double max_discharging_current_mA = 6;
+    uint64 timestamp = 7;
+}
+
+message ScheduleSetCurrent {
+    double current_mA = 1;
+    uint64 startTime  = 2;
+    uint64 endTime    = 3;
+}
+
+enum Command {
+    Schedule_Set_Current = 0;
+    Get_Status = 1;
+    Remove_Battery = 2;
+    Set_Status = 3;
+}
+
+message BatteryCommand {
+    Command command = 1;
+    oneof schedule_parameters {
+        BatteryStatus status = 2;
+        ScheduleSetCurrent schedule_set_current = 3;
+    }
+}
+
+message BatteryStatusResponse {
+    int64 return_code = 1;
+    oneof return_value {
+        string fail_reason = 2;
+        BatteryStatus status = 3;
+    }
+}
+
+message ScheduleSetCurrentResponse {
+    int64 return_code = 1;
+    oneof return_value {
+        string success_message = 2;
+        string failure_message = 3;
+    }
+}
+
+message RemoveBatteryResponse {
+    int64 return_code = 1;
+    oneof return_value {
+        string success_message = 2;
+        string failure_message = 3;
+    }
+}
+
+message SetStatusResponse {
+    int64 return_code = 1;
+    string reason = 2;
+}
