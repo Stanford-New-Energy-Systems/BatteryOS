@@ -18,6 +18,7 @@ Battery::Battery(const std::string &batteryName,
     this->quitThread            = false;
     this->refreshMode           = refreshMode;
     this->maxStaleness          = maxStaleness;
+//    this->status.time           = convertToMilliseconds(getTimeNow()); 
 }
 
 
@@ -35,7 +36,7 @@ BatteryStatus Battery::getStatus() {
 bool Battery::schedule_set_current(double current_mA, timepoint_t startTime, timepoint_t endTime, std::string name, uint64_t sequenceNumber) {
     timepoint_t currentTime = getTimeNow(); 
 
-    if (this->status.checkIfZero())
+    if (checkIfZero(this->status))
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
     if (name == this->batteryName) {
@@ -147,7 +148,7 @@ void Battery::runEventThread() {
 BatteryStatus Battery::checkAndRefresh() {
     if (this->refreshMode == RefreshMode::LAZY) {
         timepoint_t currentTime = getTimeNow();
-        if (currentTime - this->status.timestamp.time > this->maxStaleness)
+        if (currentTime - convertToTimestamp(this->status.time) > this->maxStaleness)
             return this->refresh();
     }
     return this->status;    
@@ -169,7 +170,7 @@ void Battery::checkMergeAndInsertEvents(std::string batteryName, double current_
             EventPair currPair = iter.second;
             event_t startEvent = currPair.first;
             event_t endEvent   = currPair.second;
-            
+
             if (batteryName != startEvent.batteryName) {
                 continue;
             } else if (startTime <= startEvent.eventTime && endTime >= endEvent.eventTime) {

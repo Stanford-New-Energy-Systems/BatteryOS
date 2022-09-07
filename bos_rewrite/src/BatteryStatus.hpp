@@ -1,5 +1,5 @@
-#ifndef BATTERY_STATUS_H
-#define BATTERY_STATUS_H
+#ifndef BATTERY_STATUS_HPP
+#define BATTERY_STATUS_HPP
 #include <ctime>
 #include <cmath>
 #include <chrono>
@@ -10,33 +10,11 @@
 
 using timestamp_t = std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds>;
 
-/**
- * Timestamp struct
- *
- * The timestamp records the time at which a Battery Status
- * has been recorded
- *
- * @param: time: time status is recorded
- * @func: getCurrentTime: gets the current system clock time
- * @func: getMilliseconds: converts time to milliseconds (from epoch) 
- * @func: convertToTimestamp: takes time in milliseconds and converts back to system time
-**/
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-struct Timestamp {
-    timestamp_t time;
-
-    public:
-        Timestamp();
-        ~Timestamp();
-        Timestamp(uint64_t milliseconds);
-    
-    public:
-        void getCurrentTime();
-        uint64_t getMilliseconds() const;
-        timestamp_t convertToTimestamp(uint64_t milliseconds);
-        
-        friend std::ostream& operator<<(std::ostream& out, const Timestamp& timestamp);
-};
+typedef struct BatteryStatus BatteryStatus;
 
 /* 
     Status of a Battery
@@ -47,28 +25,28 @@ struct Timestamp {
         max_capacity_mAh:             max capacity of the battery 
         max_charging_current_mA:      max charging current of the battery
         max_discharging_current_mA:   max discharging current of the battery
+        time:                         time the status was captured
 */
 
-typedef struct BatteryStatus {
-    double voltage_mV; 
+struct BatteryStatus {
+    double voltage_mV;
     double current_mA;
     double capacity_mAh;
     double max_capacity_mAh;
     double max_charging_current_mA;
     double max_discharging_current_mA;
-    struct Timestamp timestamp;
-    
-    public:
-        BatteryStatus();
-        ~BatteryStatus();
-        BatteryStatus(uint64_t milliseconds);
+    uint64_t time;
+}; 
 
-    public:
-        bool checkIfZero();
-        friend bool operator==(const BatteryStatus &lhs, const BatteryStatus &rhs);
-        friend std::ostream& operator<<(std::ostream& out, const BatteryStatus& status);
-} BatteryStatus;
+#ifdef __cplusplus
+}
+#endif
 
-
+char* formatTime(uint64_t time);
+bool checkIfZero(const BatteryStatus& status);
+uint64_t convertToMilliseconds(timestamp_t time);
+timestamp_t convertToTimestamp(uint64_t milliseconds); 
+bool operator==(const BatteryStatus &lhs, const BatteryStatus &rhs);
+std::ostream& operator<<(std::ostream& out, const BatteryStatus& status);
 
 #endif

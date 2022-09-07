@@ -57,7 +57,7 @@ BatteryStatus FifoBattery::getStatus() {
     status.max_capacity_mAh = s.max_capacity_mah();
     status.max_charging_current_mA = s.max_charging_current_ma();
     status.max_discharging_current_mA = s.max_discharging_current_ma();
-    status.timestamp = Timestamp(s.timestamp());
+    status.time = s.timestamp();
 
     return status;
 } 
@@ -84,7 +84,7 @@ bool FifoBattery::setBatteryStatus(const BatteryStatus& status) {
     s->set_max_capacity_mah(status.max_capacity_mAh);
     s->set_max_charging_current_ma(status.max_charging_current_mA);
     s->set_max_discharging_current_ma(status.max_discharging_current_mA);
-    s->set_timestamp(status.timestamp.getMilliseconds());
+    s->set_timestamp(status.time);
 
     command.SerializeToFileDescriptor(inputFD);
     close(inputFD);

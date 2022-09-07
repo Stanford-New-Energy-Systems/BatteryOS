@@ -70,6 +70,7 @@ Protected Functions
 ********************/
 
 BatteryStatus PartitionBattery::refresh() {
+    this->status.time = convertToMilliseconds(getTimeNow());
     return this->status;
 }
 
@@ -123,7 +124,7 @@ void PartitionBattery::setSourceBattery(std::shared_ptr<PartitionManager> source
 bool PartitionBattery::schedule_set_current(double current_mA, timepoint_t startTime, timepoint_t endTime, std::string name, uint64_t sequenceNumber) {
     timepoint_t currentTime = getTimeNow();
 
-    if (this->status.checkIfZero())
+    if (checkIfZero(this->status))
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
     if (name == this->batteryName) {

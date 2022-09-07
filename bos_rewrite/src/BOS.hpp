@@ -6,6 +6,7 @@
 #include <poll.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <dlfcn.h>
 #include <unistd.h>
 #include <dirent.h>
 #include <sys/stat.h>
@@ -43,6 +44,7 @@ class BOS {
         pollfd* fds;
         bool hasQuit;
         bool quitPoll;
+        void* library;
         int adminFifoFD;
         int adminSocketFD;
         int adminListener;
@@ -127,6 +129,7 @@ class BOS {
         void createPhysicalBattery(const bosproto::Admin_Command& command, int fd, bool FIFO);
         void createAggregateBattery(const bosproto::Admin_Command& command, int fd, bool FIFO);
         void createPartitionBattery(const bosproto::Admin_Command& command, int fd, bool FIFO);
+        void createDynamicBattery(const bosproto::Admin_Command& command, int fd, bool FIFO);
 };
 
 

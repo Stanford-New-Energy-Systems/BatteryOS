@@ -1,6 +1,7 @@
 #ifndef BATTERY_DIRECTORY_MANAGER_HPP
 #define BATTERY_DIRECTORY_MANAGER_HPP
 
+#include "DynamicBattery.hpp"
 #include "PhysicalBattery.hpp"
 #include "AggregateBattery.hpp"
 #include "PartitionBattery.hpp"
@@ -50,10 +51,14 @@ class BatteryDirectoryManager {
      * @func removeBattery:          removes a battery from the directory
      * @func createPhysicalBattery:  creates a physical battery and inserts it into the directory
      * @func createAggregateBattery: creates an aggregate battery and inserts it into the directory
-     * @func createParititonBattery: creates a parition battery and inserts it into the directory 
+     * @func createParititonBattery: creates a partition battery and inserts it into the directory
+                                     is the max stalenesses and refresh modes are not present, the 
+                                     default values are automatically assigned and a vector is created 
+     * @func createDynamicBattery:   creates a dynamic battery and insert it into the directory
      */
 
     public:
+        void destroyDirectory();
         bool removeBattery(const std::string &name);
         std::shared_ptr<Battery> getBattery(const std::string &name) const;
 
@@ -77,6 +82,15 @@ class BatteryDirectoryManager {
                                                                      const PolicyType &policyType, 
                                                                      std::vector<std::string> names, 
                                                                      std::vector<Scale> child_proportions);
+
+        std::shared_ptr<Battery> createDynamicBattery(void* initArgs,
+                                                      void* destructor,
+                                                      void* constructor,
+                                                      void* refreshFunc,
+                                                      void* setCurrentFunc, 
+                                                      const std::string& batteryName, 
+                                                      const std::chrono::milliseconds& maxStaleness = std::chrono::milliseconds(1000),
+                                                      const RefreshMode& refreshMode = RefreshMode::LAZY);
 };
 
 #endif

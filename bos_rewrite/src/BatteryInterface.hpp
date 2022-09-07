@@ -50,7 +50,7 @@ class Battery : public Node {
         double current_mA;
         EventSet eventSet;
         EventMap eventMap;
-        BatteryStatus status;
+        BatteryStatus status{};
         RefreshMode refreshMode;
         std::thread eventThread;
         const std::string batteryName;

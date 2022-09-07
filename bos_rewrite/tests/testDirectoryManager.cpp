@@ -36,6 +36,7 @@ int main() {
     status.max_capacity_mAh = 7500;
     status.max_charging_current_mA = 3600;
     status.max_discharging_current_mA = 3600;
+    status.time = convertToMilliseconds(getTimeNow());
 
     bat0->setBatteryStatus(status);
 
@@ -45,6 +46,7 @@ int main() {
     status.max_capacity_mAh = 10000;
     status.max_charging_current_mA = 7000;
     status.max_discharging_current_mA = 7000;
+    status.time = convertToMilliseconds(getTimeNow());
 
     bat1->setBatteryStatus(status);
 

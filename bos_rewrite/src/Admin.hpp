@@ -79,6 +79,16 @@ class Admin {
                                     const PolicyType &policyType, 
                                     std::vector<std::string> names, 
                                     std::vector<Scale> child_proportions);
+
+        bool createDynamicBattery(const char** initArgs,
+                                  const std::string& destructor,
+                                  const std::string& constructor,
+                                  const std::string& refreshFunc,
+                                  const std::string& setCurrentFunc,
+                                  const std::string& name,
+                                  const std::chrono::milliseconds& maxStaleness = std::chrono::milliseconds(1000),
+                                  const RefreshMode& refreshMode = RefreshMode::LAZY);
+                                    
 };
 
 #endif

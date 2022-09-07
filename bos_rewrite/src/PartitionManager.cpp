@@ -73,6 +73,8 @@ BatteryStatus PartitionManager::refresh() {
     else
         this->refreshTranched(pStatus);
 
+    this->status.time = convertToMilliseconds(getTimeNow());
+
     return this->status;
 }
 
@@ -82,6 +84,49 @@ bool PartitionManager::set_current(double current_mA) {
 }
 
 bool PartitionManager::schedule_set_current(double current_mA, timepoint_t startTime, timepoint_t endTime, std::string name, uint64_t sequenceNumber) {
+//    checkMergeAndInsertEvents(name, current_mA, startTime, endTime, sequenceNumber);
+//
+//    using TC = std::pair<std::pair<timepoint_t, timepoint_t>, double>;
+//
+//    std::set<TC> oldEvents;
+//    std::set<uint64_t> canceledEvents;
+//    std::map<timepoint_t, double> newEvents;
+//
+//    for (const auto &iter : eventSet) {
+//        if (iter.eventID == EventID::CANCEL_SET_CURRENT_EVENT)
+//            canceledEvents.insert(iter.sequenceNumber);
+//    }
+//
+//    for (const auto &iter : eventMap) {
+//        EventPair currPair = iter.second;
+//        event_t startEvent = currPair.first;
+//        event_t endEvent   = currPair.second;
+//
+//        if (canceledEvents.count(startEvent.sequenceNumber) == 1)
+//            continue;
+//        else if (startTime >= startEvent.eventTime && 
+//                 startTime < endEvent.eventTime ||
+//                 endTime > startEvent.eventTime && 
+//                 endTime < endEvent.eventTime) {
+//            newEvents.insert({startEvent.eventTime, 0});
+//            newEvents.insert({endEvent.eventTime, 0});
+//            oldEvents.insert({{startEvent.eventTime, endEvent.eventTime}, startEvent.current_mA});
+//        } 
+//    }
+//
+//    for (const auto &currEvent : oldEvents) {
+//        const auto lowerbound = newEvents.lower_bound(currEvent.first.first);
+//        const auto upperbound = newEvents.upper_bound(currEvent.first.second);
+//
+//        for (auto it = lowerbound; it != std::prev(upperbound); it++)
+//            it->second += currEvent.second;  
+//    }
+//
+//    for (const auto &it : newEvents) {
+//        std::time_t t = std::chrono::system_clock::to_time_t(it.first);
+//        std::cout << this->batteryName << ": " << std::ctime(&t) << ": " << it.second << std::endl;
+//    }
+
     if (this->source->schedule_set_current(current_mA, startTime, endTime, name, sequenceNumber)) {
         checkMergeAndInsertEvents(name, current_mA, startTime, endTime, sequenceNumber);
         this->condition_variable.notify_one(); 
@@ -118,6 +163,7 @@ BatteryStatus PartitionManager::initBatteryStatus(const std::string &childName) 
     childStatus.max_capacity_mAh           = max_capacity * capacity_proportion; 
     childStatus.max_charging_current_mA    = max_charge * charge_proportion; 
     childStatus.max_discharging_current_mA = max_discharge * charge_proportion;
+    childStatus.time = convertToMilliseconds(getTimeNow());
 
     return childStatus;
 }

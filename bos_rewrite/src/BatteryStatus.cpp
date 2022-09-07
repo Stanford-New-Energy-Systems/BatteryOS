@@ -1,72 +1,30 @@
 #include "BatteryStatus.hpp"
 
-/*******************
-Timestamp Functions
-********************/
+char* formatTime(uint64_t time) {
+    std::time_t t = std::chrono::system_clock::to_time_t(convertToTimestamp(time));
+    return std::ctime(&t);
+} 
 
-Timestamp::~Timestamp() {};
-
-Timestamp::Timestamp () {
-    getCurrentTime();
+bool checkIfZero(const BatteryStatus& status) {
+    if (status.voltage_mV == 0 &&
+        status.current_mA == 0 &&   
+        status.capacity_mAh == 0 &&   
+        status.max_capacity_mAh == 0 &&   
+        status.max_charging_current_mA == 0 &&   
+        status.max_discharging_current_mA == 0) 
+        return true;
+    return false;   
 }
 
-Timestamp::Timestamp(uint64_t milliseconds) {
-    this->time = convertToTimestamp(milliseconds);
+uint64_t convertToMilliseconds(timestamp_t time) {
+    return time.time_since_epoch().count();
 }
 
-void Timestamp::getCurrentTime() {
-    this->time = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()); 
-}
-
-uint64_t Timestamp::getMilliseconds() const {
-    return this->time.time_since_epoch().count();
-}
-
-timestamp_t Timestamp::convertToTimestamp(uint64_t milliseconds) {
+timestamp_t convertToTimestamp(uint64_t milliseconds) {
     timestamp_t ts;
     std::chrono::milliseconds t = std::chrono::milliseconds(milliseconds);
     ts += t;
     return ts;
-}
-
-std::ostream& operator<<(std::ostream& out, const Timestamp& timestamp) {
-    std::time_t t = std::chrono::system_clock::to_time_t(timestamp.time);
-    out << std::ctime(&t);
-    return out;
-} 
-
-/************************
-Battery Status Functions
-*************************/
-
-BatteryStatus::~BatteryStatus() {};
-
-BatteryStatus::BatteryStatus() {
-    this->voltage_mV = 0;
-    this->current_mA = 0;
-    this->capacity_mAh = 0;
-    this->max_capacity_mAh = 0;
-    this->max_charging_current_mA = 0;
-    this->max_discharging_current_mA = 0;
-}
-
-BatteryStatus::BatteryStatus(uint64_t milliseconds) {
-    this->voltage_mV = 0;
-    this->current_mA = 0;
-    this->capacity_mAh = 0;
-    this->max_capacity_mAh = 0;
-    this->max_charging_current_mA = 0;
-    this->max_discharging_current_mA = 0;
-    this->timestamp = Timestamp(milliseconds);
-}
-
-bool BatteryStatus::checkIfZero() {
-    return this->voltage_mV == 0 &&
-           this->current_mA == 0 &&
-           this->capacity_mAh == 0 &&
-           this->max_capacity_mAh == 0 &&
-           this->max_charging_current_mA == 0 &&
-           this->max_discharging_current_mA == 0;
 }
 
 bool operator==(const BatteryStatus &lhs, const BatteryStatus &rhs) {
@@ -86,7 +44,7 @@ std::ostream& operator<<(std::ostream &out, const BatteryStatus &status){
     out << "    .max_capacity_mAh =           " << status.max_capacity_mAh           << "mAh, \n";
     out << "    .max_charging_current_mA =    " << status.max_charging_current_mA    << "mA,  \n";
     out << "    .max_discharging_current_mA = " << status.max_discharging_current_mA << "mA,  \n";
-    out << "    .Latest Refresh =             " << status.timestamp << "\n";
+    out << "    .Latest Refresh =             " << formatTime(status.time)           << "     \n";
     out << "};\n";
     return out;
 }

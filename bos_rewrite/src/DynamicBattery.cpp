@@ -1,6 +1,7 @@
 #include "DynamicBattery.hpp"
 
 DynamicBattery::~DynamicBattery() {
+    PRINT() << "DYNAMIC DESTRUCTOR" << std::endl;
     this->destructor(this->battery);
 }
 
@@ -24,9 +25,9 @@ DynamicBattery::DynamicBattery(void* initArgs,
 }
 
 BatteryStatus DynamicBattery::refresh() {
-    return refreshFunc(this->battery);
+    return this->refreshFunc(this->battery);
 }
 
 bool DynamicBattery::set_current(double current_mA) {
-    return setCurrentFunc(this->battery, current_mA);
+    return this->setCurrentFunc(this->battery, current_mA);
 }

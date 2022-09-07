@@ -67,6 +67,7 @@ bool Admin::createPhysicalBattery(const std::string& name,
                                   const RefreshMode& refreshMode)
 {
     int inputFD;
+    int success;
     int outputFD;
     int size = 4096;
     char buffer[size];
@@ -105,16 +106,21 @@ bool Admin::createPhysicalBattery(const std::string& name,
         close(inputFD);
 
     while ((fds[0].revents & POLLIN) != POLLIN) {
-        int success = poll(fds, 1, -1);
+        success = poll(fds, 1, -1);
         if (success == -1)
             ERROR() << "poll failed!" << std::endl;
     } 
 
-    while (recv(outputFD, buffer, size, MSG_PEEK) == size)
-        size *= 2;
+    if (this->fifoMode)
+        success = response.ParseFromFileDescriptor(outputFD);
+    else {
 
-    int bytes = recv(outputFD, buffer, size, 0);
-    int success = response.ParseFromArray(buffer, bytes); 
+        while (recv(outputFD, buffer, size, MSG_PEEK) == size)
+            size *= 2;
+
+        int bytes = recv(outputFD, buffer, size, 0);
+        success = response.ParseFromArray(buffer, bytes); 
+    }
 
     delete[] fds;
 
@@ -131,11 +137,111 @@ bool Admin::createPhysicalBattery(const std::string& name,
     return true;  
 } 
 
+bool Admin::createDynamicBattery(const char** initArgs,
+                                 const std::string& destructor,
+                                 const std::string& constructor,
+                                 const std::string& refreshFunc,
+                                 const std::string& setCurrentFunc,
+                                 const std::string& name,
+                                 const std::chrono::milliseconds& maxStaleness, 
+                                 const RefreshMode& refreshMode)
+{
+    int success;
+    int inputFD;
+    int outputFD;
+    int size = 4096;
+    char buffer[size];
+    pollfd* fds = new pollfd[1];
+    bosproto::Admin_Command command;
+    bosproto::AdminResponse response;
+
+    if (this->fifoMode) {
+        inputFD  = open(this->inputFilePath.c_str(), O_WRONLY);
+        outputFD = open(this->outputFilePath.c_str(), O_RDONLY | O_NONBLOCK);
+    } else {
+        inputFD  = this->clientSocket;
+        outputFD = this->clientSocket;
+    }
+
+    if (inputFD == -1 || outputFD == -1)
+        ERROR() << "could not open input FIFO or output FIFO: check file paths" << std::endl;
+
+    fds[0].fd      = outputFD;
+    fds[0].events  = POLLIN;
+    fds[0].revents = 0;
+
+    command.set_command_options(bosproto::Command_Options::Create_Dynamic);
+    bosproto::Dynamic_Battery* d = command.mutable_dynamic_battery(); 
+    d->set_batteryname(name);
+    d->set_max_staleness(maxStaleness.count());
+    
+    if (refreshMode == RefreshMode::LAZY)
+        d->set_refresh_mode(bosproto::Refresh::LAZY);
+    else
+        d->set_refresh_mode(bosproto::Refresh::ACTIVE);
+
+    if (initArgs != nullptr) {
+        int arrayLen = sizeof(initArgs)/sizeof(initArgs[0]);
+        for (int i = 0; i < arrayLen; i++) {
+            LOG() << initArgs[i] << std::endl;
+            d->add_arguments(initArgs[i]);
+        }
+    }
+
+    d->set_refresh_func(refreshFunc);
+    d->set_destructor_func(destructor);
+    d->set_constructor_func(constructor);
+    d->set_set_current_func(setCurrentFunc); 
+    
+    LOG() << "about to serialize" << std::endl;
+
+    command.SerializeToFileDescriptor(inputFD);
+
+    LOG() << "after serialization" << std::endl;
+
+    if (this->fifoMode)
+        close(inputFD);
+
+    while ((fds[0].revents & POLLIN) != POLLIN) {
+        success = poll(fds, 1, -1);
+        if (success == -1)
+            ERROR() << "poll failed!" << std::endl;
+    } 
+
+    if (this->fifoMode)
+        success = response.ParseFromFileDescriptor(outputFD);
+    else {
+
+        while (recv(outputFD, buffer, size, MSG_PEEK) == size)
+            size *= 2;
+
+        int bytes = recv(outputFD, buffer, size, 0);
+        success = response.ParseFromArray(buffer, bytes); 
+    }
+
+    delete[] fds;
+
+    if (this->fifoMode)
+        close(outputFD);
+
+    if (!success) {
+        WARNING() << "could not parse admin response" << std::endl;
+        return false;
+    }
+
+    if (response.return_code() == -1)
+        return false;
+    return true;  
+
+} 
+                                    
+
 bool Admin::createAggregateBattery(const std::string& name,
                                    std::vector<std::string> parentNames,
                                    const std::chrono::milliseconds& maxStaleness,
                                    const RefreshMode& refreshMode)
 {
+    int success;
     int inputFD;
     int outputFD;
     int size = 4096;
@@ -179,16 +285,21 @@ bool Admin::createAggregateBattery(const std::string& name,
         close(inputFD);
 
     while ((fds[0].revents & POLLIN) != POLLIN) {
-        int success = poll(fds, 1, -1);
+        success = poll(fds, 1, -1);
         if (success == -1)
             ERROR() << "poll failed!" << std::endl;
     } 
 
-    while (recv(outputFD, buffer, size, MSG_PEEK) == size)
-        size *= 2;
+    if (this->fifoMode)
+        success = response.ParseFromFileDescriptor(outputFD);
+    else {
 
-    int bytes = recv(outputFD, buffer, size, 0);
-    int success = response.ParseFromArray(buffer, bytes); 
+        while (recv(outputFD, buffer, size, MSG_PEEK) == size)
+            size *= 2;
+
+        int bytes = recv(outputFD, buffer, size, 0);
+        success = response.ParseFromArray(buffer, bytes); 
+    }
 
     delete[] fds;
 
@@ -212,6 +323,7 @@ bool Admin::createPartitionBattery(const std::string& sourceName,
                                    std::vector<std::chrono::milliseconds> maxStalenesses,
                                    std::vector<RefreshMode> refreshModes)
 {
+    int success;
     int inputFD;
     int outputFD;
     int size = 4096;
@@ -278,16 +390,21 @@ bool Admin::createPartitionBattery(const std::string& sourceName,
         close(inputFD);
 
     while ((fds[0].revents & POLLIN) != POLLIN) {
-        int success = poll(fds, 1, -1);
+        success = poll(fds, 1, -1);
         if (success == -1)
             ERROR() << "poll failed!" << std::endl;
     } 
 
-    while (recv(outputFD, buffer, size, MSG_PEEK) == size)
-        size *= 2;
+    if (this->fifoMode)
+        success = response.ParseFromFileDescriptor(outputFD);
+    else {
 
-    int bytes = recv(outputFD, buffer, size, 0);
-    int success = response.ParseFromArray(buffer, bytes); 
+        while (recv(outputFD, buffer, size, MSG_PEEK) == size)
+            size *= 2;
+
+        int bytes = recv(outputFD, buffer, size, 0);
+        success = response.ParseFromArray(buffer, bytes); 
+    }
 
     delete[] fds;
 

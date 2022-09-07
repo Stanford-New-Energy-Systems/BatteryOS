@@ -34,6 +34,18 @@ typedef struct partitionBatteryParameters {
     std::vector<milliseconds> stalenesses;
 } paramsPartition;
 
-paramsPhysical  parsePhysicalBattery(bosproto::Physical_Battery battery);
-paramsAggregate parseAggregateBattery(bosproto::Aggregate_Battery battery);
-paramsPartition parsePartitionBattery(bosproto::Partition_Battery battery);
+typedef struct dynamicBatteryParameters {
+    std::string name;
+    RefreshMode refresh;
+    const char** initArgs;
+    std::string destructor;
+    milliseconds staleness;
+    std::string constructor;
+    std::string refreshFunc;
+    std::string setCurrentFunc;
+} paramsDynamic;
+
+paramsPhysical  parsePhysicalBattery(const bosproto::Physical_Battery& battery);
+paramsAggregate parseAggregateBattery(const bosproto::Aggregate_Battery& battery);
+paramsPartition parsePartitionBattery(const bosproto::Partition_Battery& battery);
+paramsDynamic   parseDynamicBattery(const bosproto::Dynamic_Battery& battery);

@@ -27,11 +27,13 @@ BatteryStatus VirtualBattery::refresh() {
     PRINT() << "VIRTUAL BATTERY REFRESH!!!!" << std::endl;
 
     BatteryStatus status;
-    status.voltage_mV = 5;
+    status.voltage_mV = 0;
     status.current_mA = 0;
-    status.capacity_mAh = 10;
-    status.max_charging_current_mA = 1200;
-    status.max_discharging_current_mA = 1200;
+    status.capacity_mAh = 0;
+    status.max_capacity_mAh = 0;
+    status.max_charging_current_mA = 0;
+    status.max_discharging_current_mA = 0;
+    status.time = convertToMilliseconds(getTimeNow());
     return status; 
 }
 

@@ -23,6 +23,10 @@ std::string BatteryDirectoryManager::createPartitionManagerName() {
 Public Functions 
 *****************/
 
+void BatteryDirectoryManager::destroyDirectory() {
+    return this->directory->destroyDirectory();
+}
+
 std::shared_ptr<Battery> BatteryDirectoryManager::getBattery(const std::string &name) const {
     return this->directory->getBattery(name);
 }
@@ -50,6 +54,24 @@ std::shared_ptr<Battery> BatteryDirectoryManager::createPhysicalBattery(const st
     if (!this->directory->addBattery(battery))
         return nullptr; 
     return battery;
+}
+
+std::shared_ptr<Battery> BatteryDirectoryManager::createDynamicBattery(void* initArgs,
+                                                                       void* destructor,
+                                                                       void* constructor,
+                                                                       void* refreshFunc,
+                                                                       void* setCurrentFunc, 
+                                                                       const std::string& batteryName, 
+                                                                       const std::chrono::milliseconds& maxStaleness,
+                                                                       const RefreshMode& refreshMode)
+{
+    std::shared_ptr<Battery> battery = std::make_shared<DynamicBattery>(initArgs, destructor, constructor,
+                                                                        refreshFunc, setCurrentFunc, batteryName,
+                                                                        maxStaleness, refreshMode);
+
+    if (!this->directory->addBattery(battery))
+        return nullptr;
+    return battery;  
 }
 
 std::shared_ptr<Battery> BatteryDirectoryManager::createAggregateBattery(const std::string &name,

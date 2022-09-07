@@ -1,6 +1,6 @@
 #include "ProtoParameters.hpp"
 
-paramsPhysical parsePhysicalBattery(bosproto::Physical_Battery battery) {
+paramsPhysical parsePhysicalBattery(const bosproto::Physical_Battery& battery) {
     paramsPhysical p;
 
     p.name = battery.batteryname();
@@ -21,7 +21,38 @@ paramsPhysical parsePhysicalBattery(bosproto::Physical_Battery battery) {
     return p;
 }
 
-paramsAggregate parseAggregateBattery(bosproto::Aggregate_Battery battery) {
+paramsDynamic parseDynamicBattery(const bosproto::Dynamic_Battery& battery) {
+    paramsDynamic p;
+
+    p.name = battery.batteryname();
+
+    p.refreshFunc = battery.refresh_func();
+    p.destructor  = battery.destructor_func();
+    p.constructor = battery.constructor_func();
+    p.setCurrentFunc = battery.set_current_func();
+
+    if (battery.has_max_staleness())
+        p.staleness = std::chrono::milliseconds(battery.max_staleness());
+    else
+        p.staleness = std::chrono::milliseconds(1000);
+
+    if (battery.has_refresh_mode()) {
+        if (battery.refresh_mode() == bosproto::Refresh::LAZY)
+            p.refresh = RefreshMode::LAZY;
+        else
+            p.refresh = RefreshMode::ACTIVE;
+    } else
+        p.refresh = RefreshMode::LAZY;
+
+    p.initArgs = new const char*[battery.arguments_size()];
+    
+    for (int i = 0; i < battery.arguments_size(); i++)
+        p.initArgs[i] = battery.arguments(i).c_str();
+
+    return p;
+}
+
+paramsAggregate parseAggregateBattery(const bosproto::Aggregate_Battery& battery) {
     paramsAggregate p;
 
     p.name = battery.batteryname();
@@ -45,7 +76,7 @@ paramsAggregate parseAggregateBattery(bosproto::Aggregate_Battery battery) {
     return p;
 }
 
-paramsPartition parsePartitionBattery(bosproto::Partition_Battery battery) {
+paramsPartition parsePartitionBattery(const bosproto::Partition_Battery& battery) {
     paramsPartition p;
 
     p.source = battery.sourcename();

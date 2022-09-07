@@ -56,13 +56,13 @@ void AggregateBattery::set_c_rate() {
 BatteryStatus AggregateBattery::calcStatusVals() {
     this->set_c_rate();
    
-    BatteryStatus newStatus;    
+    BatteryStatus newStatus{};    
     double max_effective_charge_power    = 0; 
     double max_effective_discharge_power = 0; 
 
     for (std::shared_ptr<Battery> battery : this->parents) {
         BatteryStatus pStatus = battery->getStatus();
-        
+
         newStatus.current_mA += pStatus.current_mA;
         newStatus.capacity_mAh += pStatus.capacity_mAh;
         newStatus.max_capacity_mAh += pStatus.max_capacity_mAh;
@@ -82,6 +82,8 @@ BatteryStatus AggregateBattery::calcStatusVals() {
     else
         newStatus.voltage_mV = (double)(max_effective_discharge_power / newStatus.max_discharging_current_mA); // report charge voltage always 
 
+    newStatus.time = convertToMilliseconds(getTimeNow());
+
     return newStatus;
 }
 
@@ -96,7 +98,7 @@ BatteryStatus AggregateBattery::refresh() {
 bool AggregateBattery::schedule_set_current(double current_mA, timepoint_t startTime, timepoint_t endTime, std::string name, uint64_t sequenceNumber) {
     timepoint_t currentTime = getTimeNow(); 
 
-    if (this->status.checkIfZero())
+    if (checkIfZero(this->status))
         std::this_thread::sleep_for(std::chrono::milliseconds(1000)); 
 
     this->lock.lock();

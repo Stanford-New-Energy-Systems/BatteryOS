@@ -8,6 +8,7 @@ BOS::~BOS() {
     delete[] this->fds;
     if (!this->hasQuit)
         this->shutdown();
+    dlclose(this->library);
 }
 
 BOS::BOS() {
@@ -19,6 +20,10 @@ BOS::BOS() {
     this->batteryListener  = -1;
     this->fds = new pollfd[1028];
     this->directoryManager = std::make_unique<BatteryDirectoryManager>();
+
+    this->library = dlopen("../tests/libbatterydrivers.dylib", RTLD_LAZY);
+    if (!this->library)
+        ERROR() << "could not open dynamic library!" << std::endl;
 } // use only for socket mode
 
 BOS::BOS(const std::string &directoryPath, mode_t permission) : BOS() {
@@ -163,7 +168,7 @@ void BOS::getStatus(int fd) {
     s->set_max_capacity_mah(status.max_capacity_mAh);
     s->set_max_charging_current_ma(status.max_charging_current_mA);
     s->set_max_discharging_current_ma(status.max_discharging_current_mA);
-    s->set_timestamp(status.timestamp.getMilliseconds());
+    s->set_timestamp(status.time);
 
     if (this->battery_names[fd].second) {
         std::string outputFile = this->fileNames[fd].second;
@@ -223,7 +228,7 @@ void BOS::setStatus(const bosproto::BatteryCommand& command, int fd) {
     status.max_capacity_mAh = s.max_capacity_mah();
     status.max_charging_current_mA = s.max_charging_current_ma();
     status.max_discharging_current_mA = s.max_discharging_current_ma();
-    status.timestamp = Timestamp(s.timestamp());
+    status.time = s.timestamp();
 
     battery = this->directoryManager->getBattery(name);
 
@@ -369,6 +374,9 @@ void BOS::handleAdminCommand(int fd, bool FIFO) {
             break;
         case bosproto::Command_Options::Create_Partition:
             this->createPartitionBattery(command, fd, FIFO);
+            break;
+        case bosproto::Command_Options::Create_Dynamic:
+            this->createDynamicBattery(command, fd, FIFO);
             break;
         case bosproto::Command_Options::Shutdown:
             this->shutdown();
@@ -552,6 +560,84 @@ void BOS::createPartitionBattery(const bosproto::Admin_Command& command, int fd,
     
 }
 
+void BOS::createDynamicBattery(const bosproto::Admin_Command& command, int fd, bool FIFO) {
+    int output_fd;
+    bosproto::AdminResponse response;
+
+    if (FIFO) {
+        std::string adminOutputFile = this->fileNames[this->adminFifoFD].second;
+        output_fd = open(adminOutputFile.c_str(), O_WRONLY);
+    } else
+        output_fd = fd;
+
+    if (!command.has_dynamic_battery()) {
+        WARNING() << "entering this branch :(" << std::endl;
+        response.set_return_code(-1);
+        response.set_failure_message("Dynamic_Battery parameters not set!");
+        
+        if (response.SerializeToFileDescriptor(output_fd))
+            WARNING() << "unable to write failure message to file descriptor" << std::endl;
+
+        if (FIFO)
+            close(output_fd);
+
+        return;
+    }
+
+    paramsDynamic b = parseDynamicBattery(command.dynamic_battery());
+    
+    void* initArgs = (void*)b.initArgs;
+    void* destructor     = dlsym(this->library, b.destructor.c_str());
+    void* constructor    = dlsym(this->library, b.constructor.c_str());
+    void* refreshFunc    = dlsym(this->library, b.refreshFunc.c_str());
+    void* setCurrentFunc = dlsym(this->library, b.setCurrentFunc.c_str());
+
+    if (constructor == NULL || destructor == NULL ||
+        refreshFunc == NULL || setCurrentFunc == NULL) {
+        response.set_return_code(-1);
+        response.set_failure_message("function names not found in dynamic library file");
+
+        if (!response.SerializeToFileDescriptor(output_fd))
+            WARNING() << "unable to write message to file descriptor" << std::endl;
+
+        if (FIFO)
+            close(output_fd);
+
+        return;
+    }
+
+    std::shared_ptr<Battery> bat = this->directoryManager->createDynamicBattery(initArgs, destructor, constructor,
+                                                                                refreshFunc, setCurrentFunc, b.name,
+                                                                                b.staleness, b.refresh);
+     
+    delete[] b.initArgs;
+
+    if (bat != nullptr) {
+        response.set_return_code(0);
+        response.set_success_message("successfully created battery: " + b.name);
+
+        if (FIFO) {
+            std::string inputFile  = this->directoryPath + b.name + "_fifo_input";
+            std::string outputFile = this->directoryPath + b.name + "_fifo_output";
+
+            int input_fd = this->createFifos(inputFile, outputFile, 0777);
+            this->battery_names[input_fd] = std::make_pair(b.name, true);
+        }
+    } else {
+        response.set_return_code(-1);
+        response.set_failure_message("battery name: " +  b.name + " already exists");
+    }
+
+    if (!response.SerializeToFileDescriptor(output_fd))
+        WARNING() << "unable to write message to file descriptor" << std::endl;
+
+    if (FIFO)
+        close(output_fd);
+
+    return;
+
+}
+
 void BOS::createDirectory(const std::string &directoryPath, mode_t permission) {
     if (mkdir(directoryPath.c_str(), permission) == -1)
         WARNING() << directoryPath << " already exists" << std::endl;
@@ -665,6 +751,8 @@ void BOS::shutdown() {
         ::shutdown(this->batteryListener, SHUT_RDWR);
         close(this->batteryListener);
     }
+
+    this->directoryManager->destroyDirectory();
 
     return;
 }

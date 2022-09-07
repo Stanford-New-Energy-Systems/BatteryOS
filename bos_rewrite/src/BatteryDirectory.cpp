@@ -113,5 +113,6 @@ void BatteryDirectory::destroyDirectory() {
             batteryIter.second -> quit();
         }
     }
+    this->batteryMap.clear();
     this->destroyed = true; 
 }

@@ -36,6 +36,8 @@ BatteryStatus PhysicalBattery::refresh() {
     status.max_capacity_mAh = 10;
     status.max_charging_current_mA = 1200;
     status.max_discharging_current_mA = 1200;
+    status.time = convertToMilliseconds(getTimeNow());
+
     return status; 
 }
 

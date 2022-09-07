@@ -48,7 +48,7 @@ class DynamicBattery: public PhysicalBattery {
         set_current_t setCurrentFunc;
 
     public:
-        ~DynamicBattery();
+        virtual ~DynamicBattery();
         DynamicBattery(void* initArgs,
                        void* destructor,
                        void* constructor,
