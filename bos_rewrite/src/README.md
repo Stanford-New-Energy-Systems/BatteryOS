@@ -71,7 +71,7 @@
 
 [ClientBattery]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/bos_rewrite/bos_rewrite/src/ClientBattery.cpp
 
-[driver]:
+[driver]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/tree/bos_rewrite/bos_rewrite/src/device_drivers
 
 ### Battery Abstraction Layer
 The Battery Abstraction Layer (BAL) is a software abstraction for battery eneergy storage. Its intended use case is battery systems being used as distributed energy resources 
