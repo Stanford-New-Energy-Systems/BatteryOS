@@ -26,19 +26,22 @@ if __name__ == "__main__":
     visited = set()
     graph   = nx.DiGraph()
 
-    if len(sys.argv) < 2:
-        sys.exit("python3 build_dependency_graph.py files")
+    if len(sys.argv) != 2:
+        sys.exit("python3 build_dependency_graph.py filename")
     
     visited.add(sys.argv[1])
     dependencies = findDependencies(sys.argv[1])
     tempList = [x for x in dependencies]
+
+    print(tempList)
    
     while True:
         currDependencies = [findDependencies(x[0]) for x in tempList if x[0] not in visited]
         currDependencies = [element for sublist in currDependencies for element in sublist]
         
         for dependency in tempList:
-            visited.add(dependency[1])
+            print("Dependency[0] = ", dependency[0])
+            visited.add(dependency[0])
 
         if not currDependencies:
             break
