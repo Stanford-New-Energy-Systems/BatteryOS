@@ -47,8 +47,17 @@ void AggregateBattery::set_c_rate() {
         eff_discharge_c_rates.push_back(discharge_c_rate);
     }
 
-    this->eff_charge_c_rate    = *std::min_element(eff_charge_c_rates.begin(), eff_charge_c_rates.end());
-    this->eff_discharge_c_rate = *std::min_element(eff_discharge_c_rates.begin(), eff_discharge_c_rates.end());
+    auto min = [] (const std::vector<double>& s) -> double {
+        double minValue = s[0];
+        for (double val : s) {
+            if (val < minValue)
+                minValue = val;
+        }
+        return minValue;
+    }; 
+
+    this->eff_charge_c_rate    = min(eff_charge_c_rates);
+    this->eff_discharge_c_rate = min(eff_discharge_c_rates);
 
     return;
 }
