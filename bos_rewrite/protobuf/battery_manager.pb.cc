@@ -223,6 +223,7 @@ const uint32_t TableStruct_battery_5fmanager_2eproto::offsets[] PROTOBUF_SECTION
   ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
+  ::_pbi::kInvalidFieldOffsetTag,
   PROTOBUF_FIELD_OFFSET(::bosproto::Admin_Command, _impl_.command_parameters_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::bosproto::AdminResponse, _internal_metadata_),
@@ -242,7 +243,7 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
   { 42, 52, -1, sizeof(::bosproto::Aggregate_Battery)},
   { 56, -1, -1, sizeof(::bosproto::Partition_Battery)},
   { 68, -1, -1, sizeof(::bosproto::Admin_Command)},
-  { 79, -1, -1, sizeof(::bosproto::AdminResponse)},
+  { 80, -1, -1, sizeof(::bosproto::AdminResponse)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -278,25 +279,27 @@ const char descriptor_table_protodef_battery_5fmanager_2eproto[] PROTOBUF_SECTIO
   "Policy\022\r\n\005names\030\003 \003(\t\022\037\n\006scales\030\004 \003(\0132\017."
   "bosproto.Scale\022\027\n\017max_stalenesses\030\005 \003(\004\022"
   "(\n\rrefresh_modes\030\006 \003(\0162\021.bosproto.Refres"
-  "h\"\205\002\n\rAdmin_Command\0222\n\017command_options\030\001"
+  "h\"\273\002\n\rAdmin_Command\0222\n\017command_options\030\001"
   " \001(\0162\031.bosproto.Command_Options\0226\n\020physi"
   "cal_battery\030\002 \001(\0132\032.bosproto.Physical_Ba"
   "tteryH\000\0228\n\021aggregate_battery\030\003 \001(\0132\033.bos"
   "proto.Aggregate_BatteryH\000\0228\n\021partition_b"
   "attery\030\004 \001(\0132\033.bosproto.Partition_Batter"
-  "yH\000B\024\n\022command_parameters\"j\n\rAdminRespon"
-  "se\022\023\n\013return_code\030\001 \001(\003\022\031\n\017success_messa"
-  "ge\030\002 \001(\tH\000\022\031\n\017failure_message\030\003 \001(\tH\000B\016\n"
-  "\014return_value*\037\n\007Refresh\022\010\n\004LAZY\020\000\022\n\n\006AC"
-  "TIVE\020\001*6\n\006Policy\022\020\n\014PROPORTIONAL\020\000\022\014\n\010TR"
-  "ANCHED\020\001\022\014\n\010RESERVED\020\002*`\n\017Command_Option"
-  "s\022\023\n\017Create_Physical\020\000\022\024\n\020Create_Aggrega"
-  "te\020\001\022\024\n\020Create_Partition\020\002\022\014\n\010Shutdown\020\003"
-  "b\006proto3"
+  "yH\000\0224\n\017dynamic_battery\030\005 \001(\0132\031.bosproto."
+  "Dynamic_BatteryH\000B\024\n\022command_parameters\""
+  "j\n\rAdminResponse\022\023\n\013return_code\030\001 \001(\003\022\031\n"
+  "\017success_message\030\002 \001(\tH\000\022\031\n\017failure_mess"
+  "age\030\003 \001(\tH\000B\016\n\014return_value*\037\n\007Refresh\022\010"
+  "\n\004LAZY\020\000\022\n\n\006ACTIVE\020\001*6\n\006Policy\022\020\n\014PROPOR"
+  "TIONAL\020\000\022\014\n\010TRANCHED\020\001\022\014\n\010RESERVED\020\002*t\n\017"
+  "Command_Options\022\023\n\017Create_Physical\020\000\022\024\n\020"
+  "Create_Aggregate\020\001\022\024\n\020Create_Partition\020\002"
+  "\022\022\n\016Create_Dynamic\020\003\022\014\n\010Shutdown\020\004b\006prot"
+  "o3"
   ;
 static ::_pbi::once_flag descriptor_table_battery_5fmanager_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_battery_5fmanager_2eproto = {
-    false, false, 1448, descriptor_table_protodef_battery_5fmanager_2eproto,
+    false, false, 1522, descriptor_table_protodef_battery_5fmanager_2eproto,
     "battery_manager.proto",
     &descriptor_table_battery_5fmanager_2eproto_once, nullptr, 0, 7,
     schemas, file_default_instances, TableStruct_battery_5fmanager_2eproto::offsets,
@@ -349,6 +352,7 @@ bool Command_Options_IsValid(int value) {
     case 1:
     case 2:
     case 3:
+    case 4:
       return true;
     default:
       return false;
@@ -2140,6 +2144,7 @@ class Admin_Command::_Internal {
   static const ::bosproto::Physical_Battery& physical_battery(const Admin_Command* msg);
   static const ::bosproto::Aggregate_Battery& aggregate_battery(const Admin_Command* msg);
   static const ::bosproto::Partition_Battery& partition_battery(const Admin_Command* msg);
+  static const ::bosproto::Dynamic_Battery& dynamic_battery(const Admin_Command* msg);
 };
 
 const ::bosproto::Physical_Battery&
@@ -2153,6 +2158,10 @@ Admin_Command::_Internal::aggregate_battery(const Admin_Command* msg) {
 const ::bosproto::Partition_Battery&
 Admin_Command::_Internal::partition_battery(const Admin_Command* msg) {
   return *msg->_impl_.command_parameters_.partition_battery_;
+}
+const ::bosproto::Dynamic_Battery&
+Admin_Command::_Internal::dynamic_battery(const Admin_Command* msg) {
+  return *msg->_impl_.command_parameters_.dynamic_battery_;
 }
 void Admin_Command::set_allocated_physical_battery(::bosproto::Physical_Battery* physical_battery) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
@@ -2199,6 +2208,21 @@ void Admin_Command::set_allocated_partition_battery(::bosproto::Partition_Batter
   }
   // @@protoc_insertion_point(field_set_allocated:bosproto.Admin_Command.partition_battery)
 }
+void Admin_Command::set_allocated_dynamic_battery(::bosproto::Dynamic_Battery* dynamic_battery) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  clear_command_parameters();
+  if (dynamic_battery) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(dynamic_battery);
+    if (message_arena != submessage_arena) {
+      dynamic_battery = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, dynamic_battery, submessage_arena);
+    }
+    set_has_dynamic_battery();
+    _impl_.command_parameters_.dynamic_battery_ = dynamic_battery;
+  }
+  // @@protoc_insertion_point(field_set_allocated:bosproto.Admin_Command.dynamic_battery)
+}
 Admin_Command::Admin_Command(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
@@ -2231,6 +2255,11 @@ Admin_Command::Admin_Command(const Admin_Command& from)
     case kPartitionBattery: {
       _this->_internal_mutable_partition_battery()->::bosproto::Partition_Battery::MergeFrom(
           from._internal_partition_battery());
+      break;
+    }
+    case kDynamicBattery: {
+      _this->_internal_mutable_dynamic_battery()->::bosproto::Dynamic_Battery::MergeFrom(
+          from._internal_dynamic_battery());
       break;
     }
     case COMMAND_PARAMETERS_NOT_SET: {
@@ -2294,6 +2323,12 @@ void Admin_Command::clear_command_parameters() {
       }
       break;
     }
+    case kDynamicBattery: {
+      if (GetArenaForAllocation() == nullptr) {
+        delete _impl_.command_parameters_.dynamic_battery_;
+      }
+      break;
+    }
     case COMMAND_PARAMETERS_NOT_SET: {
       break;
     }
@@ -2348,6 +2383,14 @@ const char* Admin_Command::_InternalParse(const char* ptr, ::_pbi::ParseContext*
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
           ptr = ctx->ParseMessage(_internal_mutable_partition_battery(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // .bosproto.Dynamic_Battery dynamic_battery = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
+          ptr = ctx->ParseMessage(_internal_mutable_dynamic_battery(), ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2409,6 +2452,13 @@ uint8_t* Admin_Command::_InternalSerialize(
         _Internal::partition_battery(this).GetCachedSize(), target, stream);
   }
 
+  // .bosproto.Dynamic_Battery dynamic_battery = 5;
+  if (_internal_has_dynamic_battery()) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(5, _Internal::dynamic_battery(this),
+        _Internal::dynamic_battery(this).GetCachedSize(), target, stream);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -2453,6 +2503,13 @@ size_t Admin_Command::ByteSizeLong() const {
           *_impl_.command_parameters_.partition_battery_);
       break;
     }
+    // .bosproto.Dynamic_Battery dynamic_battery = 5;
+    case kDynamicBattery: {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *_impl_.command_parameters_.dynamic_battery_);
+      break;
+    }
     case COMMAND_PARAMETERS_NOT_SET: {
       break;
     }
@@ -2492,6 +2549,11 @@ void Admin_Command::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::
     case kPartitionBattery: {
       _this->_internal_mutable_partition_battery()->::bosproto::Partition_Battery::MergeFrom(
           from._internal_partition_battery());
+      break;
+    }
+    case kDynamicBattery: {
+      _this->_internal_mutable_dynamic_battery()->::bosproto::Dynamic_Battery::MergeFrom(
+          from._internal_dynamic_battery());
       break;
     }
     case COMMAND_PARAMETERS_NOT_SET: {

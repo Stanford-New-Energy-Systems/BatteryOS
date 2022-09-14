@@ -22,7 +22,8 @@ enum Command_Options {
     Create_Physical  = 0;
     Create_Aggregate = 1;
     Create_Partition = 2;
-    Shutdown         = 3;
+    Create_Dynamic   = 3;
+    Shutdown         = 4;
 }
 
 message Physical_Battery {
@@ -64,6 +65,7 @@ message Admin_Command {
         Physical_Battery  physical_battery = 2;
         Aggregate_Battery aggregate_battery = 3;
         Partition_Battery partition_battery = 4;
+        Dynamic_Battery   dynamic_battery = 5;
     }
 }
 

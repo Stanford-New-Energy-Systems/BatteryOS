@@ -134,7 +134,8 @@ enum Command_Options : int {
   Create_Physical = 0,
   Create_Aggregate = 1,
   Create_Partition = 2,
-  Shutdown = 3,
+  Create_Dynamic = 3,
+  Shutdown = 4,
   Command_Options_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   Command_Options_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
@@ -1288,6 +1289,7 @@ class Admin_Command final :
     kPhysicalBattery = 2,
     kAggregateBattery = 3,
     kPartitionBattery = 4,
+    kDynamicBattery = 5,
     COMMAND_PARAMETERS_NOT_SET = 0,
   };
 
@@ -1373,6 +1375,7 @@ class Admin_Command final :
     kPhysicalBatteryFieldNumber = 2,
     kAggregateBatteryFieldNumber = 3,
     kPartitionBatteryFieldNumber = 4,
+    kDynamicBatteryFieldNumber = 5,
   };
   // .bosproto.Command_Options command_options = 1;
   void clear_command_options();
@@ -1437,6 +1440,24 @@ class Admin_Command final :
       ::bosproto::Partition_Battery* partition_battery);
   ::bosproto::Partition_Battery* unsafe_arena_release_partition_battery();
 
+  // .bosproto.Dynamic_Battery dynamic_battery = 5;
+  bool has_dynamic_battery() const;
+  private:
+  bool _internal_has_dynamic_battery() const;
+  public:
+  void clear_dynamic_battery();
+  const ::bosproto::Dynamic_Battery& dynamic_battery() const;
+  PROTOBUF_NODISCARD ::bosproto::Dynamic_Battery* release_dynamic_battery();
+  ::bosproto::Dynamic_Battery* mutable_dynamic_battery();
+  void set_allocated_dynamic_battery(::bosproto::Dynamic_Battery* dynamic_battery);
+  private:
+  const ::bosproto::Dynamic_Battery& _internal_dynamic_battery() const;
+  ::bosproto::Dynamic_Battery* _internal_mutable_dynamic_battery();
+  public:
+  void unsafe_arena_set_allocated_dynamic_battery(
+      ::bosproto::Dynamic_Battery* dynamic_battery);
+  ::bosproto::Dynamic_Battery* unsafe_arena_release_dynamic_battery();
+
   void clear_command_parameters();
   CommandParametersCase command_parameters_case() const;
   // @@protoc_insertion_point(class_scope:bosproto.Admin_Command)
@@ -1445,6 +1466,7 @@ class Admin_Command final :
   void set_has_physical_battery();
   void set_has_aggregate_battery();
   void set_has_partition_battery();
+  void set_has_dynamic_battery();
 
   inline bool has_command_parameters() const;
   inline void clear_has_command_parameters();
@@ -1460,6 +1482,7 @@ class Admin_Command final :
       ::bosproto::Physical_Battery* physical_battery_;
       ::bosproto::Aggregate_Battery* aggregate_battery_;
       ::bosproto::Partition_Battery* partition_battery_;
+      ::bosproto::Dynamic_Battery* dynamic_battery_;
     } command_parameters_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
     uint32_t _oneof_case_[1];
@@ -2928,6 +2951,80 @@ inline ::bosproto::Partition_Battery* Admin_Command::_internal_mutable_partition
 inline ::bosproto::Partition_Battery* Admin_Command::mutable_partition_battery() {
   ::bosproto::Partition_Battery* _msg = _internal_mutable_partition_battery();
   // @@protoc_insertion_point(field_mutable:bosproto.Admin_Command.partition_battery)
+  return _msg;
+}
+
+// .bosproto.Dynamic_Battery dynamic_battery = 5;
+inline bool Admin_Command::_internal_has_dynamic_battery() const {
+  return command_parameters_case() == kDynamicBattery;
+}
+inline bool Admin_Command::has_dynamic_battery() const {
+  return _internal_has_dynamic_battery();
+}
+inline void Admin_Command::set_has_dynamic_battery() {
+  _impl_._oneof_case_[0] = kDynamicBattery;
+}
+inline void Admin_Command::clear_dynamic_battery() {
+  if (_internal_has_dynamic_battery()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete _impl_.command_parameters_.dynamic_battery_;
+    }
+    clear_has_command_parameters();
+  }
+}
+inline ::bosproto::Dynamic_Battery* Admin_Command::release_dynamic_battery() {
+  // @@protoc_insertion_point(field_release:bosproto.Admin_Command.dynamic_battery)
+  if (_internal_has_dynamic_battery()) {
+    clear_has_command_parameters();
+    ::bosproto::Dynamic_Battery* temp = _impl_.command_parameters_.dynamic_battery_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.command_parameters_.dynamic_battery_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::bosproto::Dynamic_Battery& Admin_Command::_internal_dynamic_battery() const {
+  return _internal_has_dynamic_battery()
+      ? *_impl_.command_parameters_.dynamic_battery_
+      : reinterpret_cast< ::bosproto::Dynamic_Battery&>(::bosproto::_Dynamic_Battery_default_instance_);
+}
+inline const ::bosproto::Dynamic_Battery& Admin_Command::dynamic_battery() const {
+  // @@protoc_insertion_point(field_get:bosproto.Admin_Command.dynamic_battery)
+  return _internal_dynamic_battery();
+}
+inline ::bosproto::Dynamic_Battery* Admin_Command::unsafe_arena_release_dynamic_battery() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:bosproto.Admin_Command.dynamic_battery)
+  if (_internal_has_dynamic_battery()) {
+    clear_has_command_parameters();
+    ::bosproto::Dynamic_Battery* temp = _impl_.command_parameters_.dynamic_battery_;
+    _impl_.command_parameters_.dynamic_battery_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Admin_Command::unsafe_arena_set_allocated_dynamic_battery(::bosproto::Dynamic_Battery* dynamic_battery) {
+  clear_command_parameters();
+  if (dynamic_battery) {
+    set_has_dynamic_battery();
+    _impl_.command_parameters_.dynamic_battery_ = dynamic_battery;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:bosproto.Admin_Command.dynamic_battery)
+}
+inline ::bosproto::Dynamic_Battery* Admin_Command::_internal_mutable_dynamic_battery() {
+  if (!_internal_has_dynamic_battery()) {
+    clear_command_parameters();
+    set_has_dynamic_battery();
+    _impl_.command_parameters_.dynamic_battery_ = CreateMaybeMessage< ::bosproto::Dynamic_Battery >(GetArenaForAllocation());
+  }
+  return _impl_.command_parameters_.dynamic_battery_;
+}
+inline ::bosproto::Dynamic_Battery* Admin_Command::mutable_dynamic_battery() {
+  ::bosproto::Dynamic_Battery* _msg = _internal_mutable_dynamic_battery();
+  // @@protoc_insertion_point(field_mutable:bosproto.Admin_Command.dynamic_battery)
   return _msg;
 }
 
