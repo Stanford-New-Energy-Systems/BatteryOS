@@ -1,6 +1,6 @@
 GPP = g++
 
-INC_DIR = ../src/
+INC_DIR = ../include/
 CPP_FILES = $(wildcard ../src/*.cpp)
 
 BATTERY_DRIVERS = $(wildcard ../src/device_drivers/*.cpp)
@@ -41,6 +41,9 @@ socketTest: $(OBJS) testSocket.o
 manager: $(OBJS) testDirectoryManager.o
 	$(GPP) $(LFLAGS) -o $@ $^
 
+aggregate: $(OBJS) testAggregate.o
+	$(GPP) $(LFLAGS) -o $@ $^
+
 dynamic: $(OBJS) testDynamic.o
 	$(GPP) $(LFLAGS) -L ./ -lbatterydrivers -o $@ $^
 
@@ -67,6 +70,7 @@ clean:
 	$(call remove_file,manager)
 	$(call remove_file,dynamic)
 	$(call remove_file,fifoTest)
+	$(call remove_file,aggregate)
 	$(call remove_file,socketTest)
 	
 	$(call remove_file,libbatterydrivers.so)

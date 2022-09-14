@@ -19,6 +19,7 @@ int main() {
         status.max_capacity_mAh = 7500;
         status.max_charging_current_mA = 3600;
         status.max_discharging_current_mA = 3600;
+        status.time = convertToMilliseconds(getTimeNow());
         
         bat0->setBatteryStatus(status);
 
@@ -28,6 +29,7 @@ int main() {
         status.max_capacity_mAh = 10000;
         status.max_charging_current_mA = 7000;
         status.max_discharging_current_mA = 7000;
+        status.time = convertToMilliseconds(getTimeNow());
 
         bat1->setBatteryStatus(status);
 
@@ -44,6 +46,9 @@ int main() {
         
         d.addEdge("bat0", "bat2");
         d.addEdge("bat1", "bat2");
+
+        LOG() << "bat2 status";
+        PRINT() << bat2->getStatus() << std::endl;
         
         timepoint_t currentTime = getTimeNow();
 
@@ -56,9 +61,5 @@ int main() {
         d.destroyDirectory();
     }
 
-    std::cout << "USE COUNT: " << d.getBattery("bat0").use_count() << std::endl;
-
-//    d.removeBattery("bat0");
-//    d.removeBattery("bat1");
     return 0;
 }
