@@ -16,6 +16,7 @@ DynamicBattery::DynamicBattery(void* initArgs,
                                                                                  maxStaleness,
                                                                                  refreshMode)
 {
+    lockguard_t mutexLock(this->lock);
     this->refreshFunc    = (refresh_t)refreshFunc;
     this->destructor     = (destruct_t)destructor;
     this->constructor    = (construct_t)constructor; 

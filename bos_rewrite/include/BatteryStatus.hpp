@@ -10,6 +10,9 @@
 
 using timestamp_t = std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds>;
 
+/* get current system clock time */
+timestamp_t getTimeNow(void);
+
 #ifdef __cplusplus
 extern "C" {
 #endif

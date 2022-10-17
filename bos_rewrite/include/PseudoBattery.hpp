@@ -20,6 +20,10 @@ class PseudoBattery: public PhysicalBattery {
     protected:
         BatteryStatus refresh() override;
         bool set_current(double current_mA) override;
+
+    public:
+        double getCapacity() const;
+        double getMaxCapacity() const;
 };
 
 #endif

@@ -22,7 +22,6 @@ Public Functions
 
 bool Admin::shutdown() {
     int inputFD;
-    pollfd* fds = new pollfd[1];
     bosproto::Admin_Command command;
     bosproto::AdminResponse response;
     
@@ -143,6 +142,7 @@ bool Admin::createDynamicBattery(const char** initArgs,
                                  const std::string& refreshFunc,
                                  const std::string& setCurrentFunc,
                                  const std::string& name,
+                                 const unsigned int argsLen,
                                  const std::chrono::milliseconds& maxStaleness, 
                                  const RefreshMode& refreshMode)
 {
@@ -180,12 +180,9 @@ bool Admin::createDynamicBattery(const char** initArgs,
     else
         d->set_refresh_mode(bosproto::Refresh::ACTIVE);
 
-    if (initArgs != nullptr) {
-        int arrayLen = sizeof(initArgs)/sizeof(initArgs[0]);
-        for (int i = 0; i < arrayLen; i++) {
-            LOG() << initArgs[i] << std::endl;
-            d->add_arguments(initArgs[i]);
-        }
+    for (unsigned int i = 0; i < argsLen; i++) {
+        LOG() << initArgs[i] << std::endl;
+        d->add_arguments(initArgs[i]);
     }
 
     d->set_refresh_func(refreshFunc);
@@ -271,7 +268,7 @@ bool Admin::createAggregateBattery(const std::string& name,
     a->set_batteryname(name);
     a->set_max_staleness(maxStaleness.count());
 
-    for (int i = 0; i < parentNames.size(); i++)
+    for (unsigned int i = 0; i < parentNames.size(); i++)
         a->add_parentnames(parentNames[i]);
     
     if (refreshMode == RefreshMode::LAZY)
@@ -359,10 +356,10 @@ bool Admin::createPartitionBattery(const std::string& sourceName,
     else
         p->set_policy(bosproto::Policy::RESERVED);
 
-    for (int i = 0; i < names.size(); i++)
+    for (unsigned int i = 0; i < names.size(); i++)
         p->add_names(names[i]);
 
-    for (int i = 0; i < child_proportions.size(); i++) {
+    for (unsigned int i = 0; i < child_proportions.size(); i++) {
         bosproto::Scale* s = p->add_scales();
         double charge   = child_proportions[i].charge_proportion; 
         double capacity = child_proportions[i].capacity_proportion;
@@ -370,10 +367,10 @@ bool Admin::createPartitionBattery(const std::string& sourceName,
         s->set_capacity_proportion(capacity);
     }
     
-    for (int i = 0; i < maxStalenesses.size(); i++)
+    for (unsigned int i = 0; i < maxStalenesses.size(); i++)
         p->add_max_stalenesses(maxStalenesses[i].count());
 
-    for (int i = 0; i < refreshModes.size(); i++) {
+    for (unsigned int i = 0; i < refreshModes.size(); i++) {
         bosproto::Refresh r;
 
         if (refreshModes[i] == RefreshMode::LAZY)

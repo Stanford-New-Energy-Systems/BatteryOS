@@ -86,7 +86,7 @@ void BOS::pollFDs() {
 }
 
 void BOS::checkFileDescriptors() {
-    for (int i = 4; i < this->battery_names.size()+4; i++) {
+    for (unsigned int i = 4; i < this->battery_names.size()+4; i++) {
         if ((this->fds[i].revents & POLLIN) == POLLIN)
             this->handleBatteryCommand(this->fds[i].fd);
     }
@@ -537,7 +537,7 @@ void BOS::createPartitionBattery(const bosproto::Admin_Command& command, int fd,
         response.set_success_message("successfully created batteries!");
 
         if (FIFO) {
-            for (int i = 0; i < b.child_names.size(); i++) {
+            for (unsigned int i = 0; i < b.child_names.size(); i++) {
                 std::string inputFile  = this->directoryPath + b.child_names[i] + "_fifo_input";
                 std::string outputFile = this->directoryPath + b.child_names[i] + "_fifo_output";
 
@@ -585,12 +585,14 @@ void BOS::createDynamicBattery(const bosproto::Admin_Command& command, int fd, b
     }
 
     paramsDynamic b = parseDynamicBattery(command.dynamic_battery());
+
     
     void* initArgs = (void*)b.initArgs;
     void* destructor     = dlsym(this->library, b.destructor.c_str());
     void* constructor    = dlsym(this->library, b.constructor.c_str());
     void* refreshFunc    = dlsym(this->library, b.refreshFunc.c_str());
     void* setCurrentFunc = dlsym(this->library, b.setCurrentFunc.c_str());
+
 
     if (constructor == NULL || destructor == NULL ||
         refreshFunc == NULL || setCurrentFunc == NULL) {
@@ -610,6 +612,8 @@ void BOS::createDynamicBattery(const bosproto::Admin_Command& command, int fd, b
                                                                                 refreshFunc, setCurrentFunc, b.name,
                                                                                 b.staleness, b.refresh);
      
+    LOG() << "made it here!" << std::endl;
+
     delete[] b.initArgs;
 
     if (bat != nullptr) {

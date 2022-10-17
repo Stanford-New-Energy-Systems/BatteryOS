@@ -4,11 +4,14 @@ uint64_t SEQUENCE_NUMBER = 1;
 uint64_t getSequenceNumber(void) {
     return SEQUENCE_NUMBER++;
 }
-timepoint_t getTimeNow(void) {
-    return std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()); 
-}
 
-Battery::~Battery() {};
+//timepoint_t getTimeNow(void) {
+//    return std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()); 
+//}
+
+Battery::~Battery() {
+    PRINT() << "BATTERY DESTRUCTOR" << std::endl;
+};
 
 Battery::Battery(const std::string &batteryName,
                  const std::chrono::milliseconds &maxStaleness, 

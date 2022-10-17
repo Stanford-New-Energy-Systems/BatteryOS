@@ -23,7 +23,7 @@ extern uint64_t SEQUENCE_NUMBER;
 uint64_t getSequenceNumber(void);
 
 /* get current system clock time */
-timepoint_t getTimeNow(void);
+// timepoint_t getTimeNow(void);
 
 using lock_t      = std::mutex;
 using lockguard_t = std::lock_guard<lock_t>;

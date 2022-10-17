@@ -86,6 +86,7 @@ class Admin {
                                   const std::string& refreshFunc,
                                   const std::string& setCurrentFunc,
                                   const std::string& name,
+                                  const unsigned int argsLen,
                                   const std::chrono::milliseconds& maxStaleness = std::chrono::milliseconds(1000),
                                   const RefreshMode& refreshMode = RefreshMode::LAZY);
                                     

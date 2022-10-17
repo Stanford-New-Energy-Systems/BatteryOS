@@ -4,16 +4,17 @@ all: main
 
 OBJS = battery_manager.pb.o battery.pb.o main.o
 
-CFLAGS = -std=c++14
+CFLAGS = `pkg-config --cflags --libs protobuf`
+LFLAGS = `pkg-config --libs protobuf`
 
 main: $(OBJS)
-	$(GPP) -g -lprotobuf -o $@ $^
+	$(GPP) -o $@ $^ $(LFLAGS)
 
 %.o: %.cc
-	$(GPP) $(CFLAGS) -c $< -o $@
+	$(GPP) -std=c++14 -c $< -o $@ $(CFLAGS)
 
 main.o: main.cpp
-	$(GPP) $(CFLAGS) -c $< -o $@
+	$(GPP) -std=c++14 -c $< -o $@ $(CFLAGS)
 
 clean:
 	\rm *.o

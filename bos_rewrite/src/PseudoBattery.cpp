@@ -19,9 +19,11 @@ PseudoBattery::PseudoBattery(const std::string& batteryName,
 {
     this->runningThread = false;
     this->type = BatteryType::Physical;
-    this->eventThread = std::thread(&PseudoBattery::runEventThread, this);
 }
 
+/****************
+Private Functions
+*****************/
 
 void PseudoBattery::runChargingThread() {
     double capacity = this->status.capacity_mAh;
@@ -43,10 +45,15 @@ void PseudoBattery::runChargingThread() {
         
         this->status.capacity_mAh = capacity;
 //        std::this_thread::sleep_for(std::chrono::minutes(3));
-        std::this_thread::sleep_for(std::chrono::seconds(5));
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
     return;
 }
+
+/******************
+Protected Functions
+*******************/
 
 BatteryStatus PseudoBattery::refresh() {
     this->status.time = convertToMilliseconds(getTimeNow());
@@ -67,4 +74,16 @@ bool PseudoBattery::set_current(double current_mA) {
     }
     
     return true;
+}
+
+/***************
+Public Functions
+****************/
+
+double PseudoBattery::getCapacity() const {
+    return this->status.capacity_mAh;
+}
+
+double PseudoBattery::getMaxCapacity() const {
+    return this->status.max_capacity_mAh;
 }

@@ -48,7 +48,7 @@ void PartitionManager::refreshReserved(const BatteryStatus &pStatus) {
 }
 
 void PartitionManager::refreshProportional(const BatteryStatus &pStatus) {
-    for (int index = 0; index < this->children.size(); index++) {
+    for (unsigned int index = 0; index < this->children.size(); index++) {
         std::shared_ptr<VirtualBattery> bat = this->children[index].lock();  // weak_ptr to shared_ptr
 
         bat->setMaxChargingCurrent(pStatus.max_charging_current_mA * child_proportions[index].charge_proportion);
@@ -139,7 +139,7 @@ bool PartitionManager::schedule_set_current(double current_mA, timepoint_t start
 }
 
 BatteryStatus PartitionManager::initBatteryStatus(const std::string &childName) {
-    int index;
+    unsigned int index;
     BatteryStatus childStatus;
 
     for (index = 0; index < this->children.size(); index++) {

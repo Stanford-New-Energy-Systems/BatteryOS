@@ -1,5 +1,9 @@
 #include "BatteryStatus.hpp"
 
+timestamp_t getTimeNow(void) {
+    return std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()); 
+}
+
 char* formatTime(uint64_t time) {
     std::time_t t = std::chrono::system_clock::to_time_t(convertToTimestamp(time));
     return std::ctime(&t);

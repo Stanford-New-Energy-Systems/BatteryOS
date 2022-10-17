@@ -65,9 +65,11 @@ std::shared_ptr<Battery> BatteryDirectoryManager::createDynamicBattery(void* ini
                                                                        const std::chrono::milliseconds& maxStaleness,
                                                                        const RefreshMode& refreshMode)
 {
+    LOG() << "Made it here!" << std::endl;
     std::shared_ptr<Battery> battery = std::make_shared<DynamicBattery>(initArgs, destructor, constructor,
                                                                         refreshFunc, setCurrentFunc, batteryName,
                                                                         maxStaleness, refreshMode);
+    LOG() << "Made it here!" << std::endl;
 
     if (!this->directory->addBattery(battery))
         return nullptr;
@@ -81,7 +83,7 @@ std::shared_ptr<Battery> BatteryDirectoryManager::createAggregateBattery(const s
 {
     std::vector<std::shared_ptr<Battery>> parents;
 
-    for (int i = 0; i < parentNames.size(); i++) {
+    for (unsigned int i = 0; i < parentNames.size(); i++) {
         std::shared_ptr<Battery> battery = this->directory->getBattery(parentNames[i]);
 
         if (battery == nullptr)
@@ -107,7 +109,7 @@ std::shared_ptr<Battery> BatteryDirectoryManager::createAggregateBattery(const s
     if (!this->directory->addBattery(battery))
         return nullptr;
 
-    for (int i = 0; i < parentNames.size(); i++) {
+    for (unsigned int i = 0; i < parentNames.size(); i++) {
         this->directory->addEdge(parentNames[i], name);
     }    
 
@@ -122,7 +124,7 @@ std::vector<std::shared_ptr<Battery>> BatteryDirectoryManager::createPartitionBa
                                                                          std::vector<RefreshMode> refreshModes)
 {
     Scale s;
-    for (int i = 0; i < child_proportions.size(); i++) {
+    for (unsigned int i = 0; i < child_proportions.size(); i++) {
         s += child_proportions[i];
     }
 
@@ -141,7 +143,7 @@ std::vector<std::shared_ptr<Battery>> BatteryDirectoryManager::createPartitionBa
     std::vector<std::weak_ptr<VirtualBattery>> children;    
     std::vector<std::shared_ptr<PartitionBattery>> partitions;
 
-    for (int i = 0; i < names.size(); i++) {
+    for (unsigned int i = 0; i < names.size(); i++) {
         std::shared_ptr<PartitionBattery> battery = std::make_shared<PartitionBattery>(names[i], maxStalenesses[i], refreshModes[i]);    
 
         children.push_back(battery);
@@ -161,7 +163,7 @@ std::vector<std::shared_ptr<Battery>> BatteryDirectoryManager::createPartitionBa
     std::string pManager = this->createPartitionManagerName();
     std::shared_ptr<PartitionManager> manager = std::make_shared<PartitionManager>(pManager, child_proportions, policyType, source, children);
 
-    for (int i = 0; i < partitions.size(); i++) {
+    for (unsigned int i = 0; i < partitions.size(); i++) {
         partitions[i]->setSourceBattery(manager);
     }
 
@@ -172,7 +174,7 @@ std::vector<std::shared_ptr<Battery>> BatteryDirectoryManager::createPartitionBa
 
     this->directory->addEdge(sourceName, pManager);
 
-    for (int i = 0; i < names.size(); i++) {
+    for (unsigned int i = 0; i < names.size(); i++) {
         if (!this->directory->addBattery(partitions[i]))
             return std::vector<std::shared_ptr<Battery>>();
 
@@ -190,7 +192,7 @@ std::vector<std::shared_ptr<Battery>> BatteryDirectoryManager::createPartitionBa
     std::vector<RefreshMode> refreshModes;
     std::vector<std::chrono::milliseconds> maxStalenesses;
 
-    for (int i = 0; i < names.size(); i++) {
+    for (unsigned int i = 0; i < names.size(); i++) {
         refreshModes.push_back(RefreshMode::LAZY);
         maxStalenesses.push_back(std::chrono::milliseconds(1000));
     }
