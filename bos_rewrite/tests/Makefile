@@ -1,13 +1,26 @@
 GPP = g++
 GCC = gcc
 
-## check if macOS or linux, store to variable and replace at all:
-## need python3-config 
-## to install on Linux (sudo apt-get install python3-dev)
-## to install on MacOS (brew install python) ... NEED HOMEBREW
-## for python versions 3.8 and above you must use --embed flag 
-## to run python script you need to pip install minimalmodbus 
-## might need to install pkg-config as well 
+.SILENT: check_python_version
+
+OS := $(shell uname -s)
+ifeq ($(OS),Darwin)
+    target = mac
+else 
+    target = linux
+endif
+
+# check if python exists and then ensure
+# python version is at least 3.8
+
+PROTOC   := $(shell which protoc)
+PYTHON   := $(shell which python3)
+VERSION  := $(shell python3 --version)
+
+PYCONFIG  := $(shell which python3-config)
+PKGCONFIG := $(shell which pkg-config)
+
+PY3 = $(word 3, $(subst ., ,$(VERSION)))
 
 INC_DIR = ../include/
 CPP_FILES = $(wildcard ../src/*.cpp)
@@ -32,7 +45,24 @@ define remove_file
     $(if $(wildcard $(1)), \rm $(1))
 endef
 
-all: $(OBJS) mac
+all: check_python_version 
+
+run: protobuf $(OBJS) $(target)
+
+check_python_version:
+	$(if $(PYTHON), ,$(error "python3 not installed or added to path. Install python3 to continue."))
+	if [ ${PY3} -lt 8 ]; then \
+		echo "python3 version must be at least 3.8" ;\
+		echo "upgrade to python3.8 or above to continue" ;\
+	fi;
+
+install:
+	$(if $(PROTOC), ,$(shell bash install_protobuf.sh))
+	$(if $(PYCONFIG), ,$(shell bash install_python_config.sh)) 
+	$(if $(PKGCONFIG), ,$(shell bash install_pkg_config.sh))
+
+protobuf:
+	protoc -I ../protobuf --cpp_out ../protobuf ../protobuf/battery.proto ../protobuf/battery_manager.proto 
 
 mac: $(BATTERY_OBJECTS) ../src/BatteryStatus.o ../src/wiringSerial.o
 	$(GPP) -dynamiclib -o libbatterydrivers.dylib $^
@@ -86,6 +116,8 @@ clean:
 	$(call remove_file,*.o)
 	$(call remove_file,../src/*.o)
 	$(call remove_file,../protobuf/*.o)
+	$(call remove_file,../protobuf/*.h)
+	$(call remove_file,../protobuf/*.cc)
 	$(call remove_file,../src/device_drivers/*.o)
 
 	$(call remove_file,bos)

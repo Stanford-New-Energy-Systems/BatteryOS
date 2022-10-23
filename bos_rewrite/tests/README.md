@@ -77,17 +77,26 @@ are provided and the Battery Operating System is responsible for linking them. T
 - [testJBDBMS][jdb]: This file is used to test the JBD Battery Management System (BMS). The function names of the battery driver are provided and the
 Battery Operating System is responsible for linking them so that they can be used. The executable can be formed using **make bms**.
 
+To make sure that a system is set up to compile the code, a few commands in the makefile can be run. The command: **make** checks the python
+version installed on the system. **PYTHON 3.8 or ABOVE** is required to compile the software. If the system does not have python3.8, python3.8
+needs to be installed first before continuing. Secondly, the command: **make install** can be run. This command checks to see if the protoc
+compiler is installed on the system as well as pkg-config and python3-config. If these are not already on the system, three different shell scripts
+are invoked installing the commands. For pkg-config and python3-config, the commands are installed using apt-get (for linux) and brew (for mac).
+The protoc compiler source code is downloaded from GitHub and installed from source from instructions from protobuf. **The protoc version that is used 
+to compile this program is 3.21.6.** Some of these shell scripts use the sudo command and require root access, so the root password will need to be
+provided by the user. Protoc and the other packages can be installed manually as well, but the **make install** command should install the tools
+necessary to build the system. Finally, once that is complete the command: **make run** can be called to compile the software. To run any of the tests in
+this file reference the text above.   
+
 [merge]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/bos_rewrite/bos_rewrite/tests/testAggregate.cpp
 [aggregate]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/bos_rewrite/bos_rewrite/tests/testAggregate.cpp
 [design]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/bos_rewrite/bos_rewrite/doc/Task%202.2%20BAL%20Document.pdf
-[partition]:
-[directory]:
-[manager]:
+[partition]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/bos_rewrite/bos_rewrite/tests/testPartition.cpp
+[directory]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/bos_rewrite/bos_rewrite/tests/testDirectory.cpp
+[manager]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/bos_rewrite/bos_rewrite/tests/testDirectoryManager.cpp
+[jbd]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/bos_rewrite/bos_rewrite/tests/testJBDBMS.cpp
+[bos]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/bos_rewrite/bos_rewrite/tests/fifo.cpp
+[doc]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/tree/bos_rewrite/bos_rewrite/doc
+[fifo]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/bos_rewrite/bos_rewrite/tests/testFifo.cpp
+[pseudo]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/bos_rewrite/bos_rewrite/tests/testPseudo.cpp
 [topology]:
-[jbd]:
-[bos]:
-[test\_topology]:
-[doc]:
-[fifo]:
-[pseudo]:
-[jbd]:
