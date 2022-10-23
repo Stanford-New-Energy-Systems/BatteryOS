@@ -74,7 +74,7 @@ formed using **make pseudo**.
 - [testDynamic][dynamic]: This file is used to test dynamic batteries whose functions are compiled in a dynamic library. The function names of the drivers
 are provided and the Battery Operating System is responsible for linking them. The executable can be formed using **make dynamic**.
 
-- [testJBDBMS][jdb]: This file is used to test the JBD Battery Management System (BMS). The function names of the battery driver are provided and the
+- [testJBDBMS][jbd]: This file is used to test the JBD Battery Management System (BMS). The function names of the battery driver are provided and the
 Battery Operating System is responsible for linking them so that they can be used. The executable can be formed using **make bms**.
 
 To make sure that a system is set up to compile the code, a few commands in the makefile can be run. The command: **make** checks the python
@@ -99,4 +99,7 @@ this file reference the text above.
 [doc]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/tree/bos_rewrite/bos_rewrite/doc
 [fifo]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/bos_rewrite/bos_rewrite/tests/testFifo.cpp
 [pseudo]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/bos_rewrite/bos_rewrite/tests/testPseudo.cpp
-[topology]:
+[topology]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/bos_rewrite/bos_rewrite/doc/test_topology.png
+[socket]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/bos_rewrite/bos_rewrite/tests/socket.cpp
+[socketTest]: https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/bos_rewrite/bos_rewrite/tests/testSocket.cpp
+[dynamic]: https://github.com/obinnoromjr/BOS/blob/main/tests/testDynamic.cpp
