@@ -15,7 +15,7 @@ echo "cd into protobuf directory"
 cd protobuf-3.21.6/
 
 echo "Installing protoc ... sudo access necessary here"
-sleep(5)
+sleep 5
 ./configure
 make -j 8 # uses 8 cores ( can make this number higher if more cores ) 
 make check
