@@ -98,19 +98,19 @@ dynamic: $(OBJS) testDynamic.o
 	$(GPP) -o $@ $^ $(LFLAGS) -L ./ -lbatterydrivers
 
 ../src/device_drivers/%.o: ../src/device_drivers/%.cpp
-	$(GPP) -std=c++14 -fPIC -c $< -o $@	$(CFLAGS)
+	$(GPP) -std=c++17 -fPIC -c $< -o $@	$(CFLAGS)
 
 ../src/BatteryStatus.o: ../src/BatteryStatus.cpp
-	$(GPP) -std=c++14 -fPIC -c $< -o $@ $(CFLAGS)	
+	$(GPP) -std=c++17 -fPIC -c $< -o $@ $(CFLAGS)	
 
 ../src/wiringSerial.o: ../src/wiringSerial.c
 	$(GCC) -fPIC -c $< -o $@ $(CFLAGS)
 
 ../protobuf/%.o: ../protobuf/%.cc
-	$(GPP) -std=c++14 -c $< -o $@ $(CFLAGS)
+	$(GPP) -std=c++17 -c $< -o $@ $(CFLAGS)
 
 %.o: %.cpp
-	$(GPP) -std=c++14 -c $< -o $@ $(CFLAGS)
+	$(GPP) -std=c++17 -c $< -o $@ $(CFLAGS)
 
 clean:
 	$(call remove_file,*.o)
