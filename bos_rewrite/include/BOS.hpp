@@ -17,6 +17,16 @@
 #include "ProtoParameters.hpp"
 #include "BatteryDirectoryManager.hpp"
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#error "Windows not supported!"
+#elif __APPLE__
+#define DYLIB_EXT ".dylib"
+#else
+#define DYLIB_EXT ".so"
+#endif
+
+#define DYLIB_PATH(path) path DYLIB_EXT
+
 /**
  * BOS
  *

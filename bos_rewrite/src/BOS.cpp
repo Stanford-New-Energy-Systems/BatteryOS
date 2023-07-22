@@ -21,7 +21,7 @@ BOS::BOS() {
     this->fds = new pollfd[1028];
     this->directoryManager = std::make_unique<BatteryDirectoryManager>();
 
-    this->library = dlopen("../tests/libbatterydrivers.dylib", RTLD_LAZY);
+    this->library = dlopen(DYLIB_PATH("../tests/libbatterydrivers"), RTLD_LAZY);
     if (!this->library)
         ERROR() << "could not open dynamic library!" << std::endl;
 } // use only for socket mode
