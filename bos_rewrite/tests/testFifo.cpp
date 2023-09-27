@@ -1,6 +1,6 @@
 #include <thread>
 #include "Admin.hpp"
-#include "FifoBattery.hpp"
+#include "ClientBattery.hpp"
 
 std::string path   = "batteries/";
 std::string input  = "_fifo_input";
@@ -40,15 +40,18 @@ std::string makeOutputFileName(const std::string& name) {
 int main() {
     using namespace std::chrono_literals;
 
-    Admin admin(makeInputFileName("admin"), makeOutputFileName("admin"));
+    Admin admin("admin");
+    std::cout << "CREATED ADMIN" << std::endl;
 
     if (!admin.createPhysicalBattery("bat0", std::chrono::seconds(100)))
         ERROR() << "could not create bat0 battery!" << std::endl;
     if (!admin.createPhysicalBattery("bat1", std::chrono::seconds(100)))
         ERROR() << "could not create bat1 battery!" << std::endl;
+   
+    std::this_thread::sleep_for(1s);
     
-    FifoBattery bat0(makeInputFileName("bat0"), makeOutputFileName("bat0"));
-    FifoBattery bat1(makeInputFileName("bat1"), makeOutputFileName("bat1"));
+    ClientBattery bat0("batteries", "bat0");
+    ClientBattery bat1("batteries", "bat1");
     
     BatteryStatus status;
 
@@ -82,7 +85,7 @@ int main() {
     if (!admin.createAggregateBattery("bat2", createVector({"bat0", "bat1"})))
         ERROR() << "could not create aggregate battery: bat2" << std::endl;
 
-    FifoBattery bat2(makeInputFileName("bat2"), makeOutputFileName("bat2"));
+    ClientBattery bat2("batteries", "bat2");
 
     LOG() << "bat2 status" << std::endl;
     PRINT() << bat2.getStatus();
@@ -90,8 +93,8 @@ int main() {
     if (!admin.createPartitionBattery("bat2", PolicyType::PROPORTIONAL, createVector({"bat3", "bat4"}), createVector({Scale(0.5,0.5), Scale(0.5, 0.5)})))
         ERROR() << "could not create partition batteries: bat3 and bat4" << std::endl;
 
-    FifoBattery bat3(makeInputFileName("bat3"), makeOutputFileName("bat3"));
-    FifoBattery bat4(makeInputFileName("bat4"), makeOutputFileName("bat4"));
+    ClientBattery bat3("batteries", "bat3");
+    ClientBattery bat4("batteries", "bat4");
 
     LOG() << "bat3 status" << std::endl;
     PRINT() << bat3.getStatus();
@@ -101,7 +104,7 @@ int main() {
     if (!admin.createAggregateBattery("bat5", createVector({"bat3", "bat4"}), std::chrono::seconds(5), RefreshMode::ACTIVE))
         ERROR() << "could not create aggregate battery bat5" << std::endl;
 
-    FifoBattery bat5(makeInputFileName("bat5"), makeOutputFileName("bat5"));
+    ClientBattery bat5("batteries", "bat5");
 
     LOG() << "bat5 status" << std::endl;
     PRINT() << bat5.getStatus();
@@ -109,8 +112,8 @@ int main() {
     if (!admin.createPartitionBattery("bat5", PolicyType::PROPORTIONAL, createVector({"bat6", "bat7"}), createVector({Scale(0.5,0.5), Scale(0.5, 0.5)})))
         ERROR() << "could not create partition batteries: bat6 and bat7" << std::endl;
 
-    FifoBattery bat6(makeInputFileName("bat6"), makeOutputFileName("bat6"));
-    FifoBattery bat7(makeInputFileName("bat7"), makeOutputFileName("bat7"));
+    ClientBattery bat6("batteries", "bat6");
+    ClientBattery bat7("batteries", "bat7");
 
     LOG() << "bat6 status" << std::endl;
     PRINT() << bat6.getStatus();

@@ -14,8 +14,12 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+#include "Fifo.hpp"
 #include "ProtoParameters.hpp"
 #include "BatteryDirectoryManager.hpp"
+#include "Acceptor.hpp"
+#include "BatteryConnection.hpp"
+#include "NetService.hpp"
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 #error "Windows not supported!"
@@ -26,6 +30,11 @@
 #endif
 
 #define DYLIB_PATH(path) path DYLIB_EXT
+
+enum BOSMode {
+    Network,
+    Fifo,
+};
 
 /**
  * BOS
@@ -51,17 +60,27 @@
 
 class BOS {
     private:
+        BOSMode mode;
         pollfd* fds;
         bool hasQuit;
         bool quitPoll;
         void* library;
+        NetService netServicer;
         int adminFifoFD;
-        int adminSocketFD;
-        int adminListener;
-        int batteryListener;
+        //int adminSocketFD;
+        std::shared_ptr<BatteryConnection> adminConnection;
+        //int adminListener;
+        std::shared_ptr<Pollable> adminListener;
+        std::shared_ptr<Acceptor> batteryListener;
         std::string directoryPath;
         std::unique_ptr<BatteryDirectoryManager> directoryManager;
-        std::map<int, std::pair<std::string, bool>> battery_names;
+
+        // TODO: move these somewhere sensible....
+        std::vector<std::shared_ptr<FifoAcceptor>> fifos;
+        std::vector<std::shared_ptr<BatteryConnection>> connections;
+
+        //std::map<BatteryConnection*, std::string> batteryNames;
+        //std::vector<std::pair<std::string, BatteryConnection*>> batteryConnections;
         std::map<int, std::pair<std::string, std::string>> fileNames;
 
     public:
@@ -93,11 +112,12 @@ class BOS {
     private:
         void pollFDs();
         void checkFileDescriptors();
-        void acceptBatteryConnection();
-        void handleBatteryCommand(int fd);
-        void handleAdminCommand(int fd, bool FIFO);
+        void acceptBatteryConnection(const std::string& batteryName, std::shared_ptr<BatteryConnection> connection);
+        void acceptAdminConnection(Stream* stream);
+        void handleBatteryCommand(const std::string& batteryName, BatteryConnection& connection);
+        void handleAdminCommand(BatteryConnection& connection);
         void createDirectory(const std::string &directoryPath, mode_t permission);
-        int  createFifos(const std::string& inputFile, const std::string& outputFile, mode_t permission);
+        void createBatteryFifos(const std::string& batteryName);
     
     /**
      * Public Helper Functions
@@ -122,10 +142,10 @@ class BOS {
      */
 
     private:
-        void getStatus(int fd);
+        void getStatus(const std::string& batteryName, BatteryConnection& connection);
         void removeBattery(int fd);
-        void setStatus(const bosproto::BatteryCommand& command, int fd);
-        void scheduleSetCurrent(const bosproto::BatteryCommand& command, int fd);
+        void setStatus(const bosproto::BatteryCommand& command, const std::string& batteryName, BatteryConnection& connection);
+        void scheduleSetCurrent(const bosproto::BatteryCommand& command, const std::string& batteryName, BatteryConnection& connection);
 
     /**
      * Private Helper Functions
@@ -136,10 +156,10 @@ class BOS {
      */
 
     private:
-        void createPhysicalBattery(const bosproto::Admin_Command& command, int fd, bool FIFO);
-        void createAggregateBattery(const bosproto::Admin_Command& command, int fd, bool FIFO);
-        void createPartitionBattery(const bosproto::Admin_Command& command, int fd, bool FIFO);
-        void createDynamicBattery(const bosproto::Admin_Command& command, int fd, bool FIFO);
+        void createPhysicalBattery(const bosproto::Admin_Command& command, BatteryConnection& connection);
+        void createAggregateBattery(const bosproto::Admin_Command& command, BatteryConnection& connection);
+        void createPartitionBattery(const bosproto::Admin_Command& command, BatteryConnection& connection);
+        void createDynamicBattery(const bosproto::Admin_Command& command, BatteryConnection& connection);
 };
 
 

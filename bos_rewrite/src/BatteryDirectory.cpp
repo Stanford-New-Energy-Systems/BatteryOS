@@ -62,7 +62,6 @@ bool BatteryDirectory::addEdge(const std::string &parentName, const std::string 
 
 std::shared_ptr<Battery> BatteryDirectory::getBattery(const std::string &batteryName) const {
     if (batteryMap.count(batteryName) != 1) {
-        WARNING() << batteryName << " does not exist in directory!" << std::endl;
         return nullptr;
     }
 

@@ -15,9 +15,7 @@ BOS::BOS() {
     this->hasQuit          = true;
     this->quitPoll         = false;
     this->adminFifoFD      = -1;
-    this->adminSocketFD    = -1;
-    this->adminListener    = -1;
-    this->batteryListener  = -1;
+    this->adminConnection      = nullptr;
     this->fds = new pollfd[1028];
     this->directoryManager = std::make_unique<BatteryDirectoryManager>();
 
@@ -36,115 +34,52 @@ Private Functions
 
 void BOS::pollFDs() {
     while(!this->quitPoll) { // think of best way to terminate this loop 
-        int index = 4;
-
-        this->fds[0].fd      = this->adminFifoFD;
-        this->fds[0].events  = POLLIN;
-        this->fds[0].revents = 0;
-
-        this->fds[1].fd      = this->adminSocketFD;
-        this->fds[1].events  = POLLIN;
-        this->fds[1].revents = 0;
-
-        this->fds[2].fd      = this->adminListener;
-        this->fds[2].events  = POLLIN;
-        this->fds[2].revents = 0;
-
-        this->fds[3].fd      = this->batteryListener;
-        this->fds[3].events  = POLLIN;
-        this->fds[3].revents = 0;
-        
-        for (const auto &p : this->battery_names) {
-            this->fds[index].revents = 0;
-            this->fds[index].events  = POLLIN;
-            this->fds[index++].fd    = p.first;
-
-            if (index == 1024)
-                break;
-        }
-    
-        int nelems = poll(this->fds, this->battery_names.size()+4, -1);
-
-        if (nelems == -1)
-            ERROR() << "poll failed!" << std::endl;
-        else if (nelems != 0) {
-            this->checkFileDescriptors();
-
-            if ((this->fds[0].revents & POLLIN) == POLLIN)
-                this->handleAdminCommand(this->adminFifoFD, true);
-            else if ((this->fds[1].revents & POLLIN) == POLLIN)
-                this->handleAdminCommand(this->adminSocketFD, false);
-            else if ((this->fds[2].revents & POLLIN) == POLLIN) {
-                this->adminSocketFD = accept(this->adminListener, NULL, NULL);
-                if (this->adminSocketFD == -1)
-                    ERROR() << "error creating client socket from admin socket" << std::endl;
-            } else if ((this->fds[3].revents & POLLIN) == POLLIN)
-                this->acceptBatteryConnection();
-        }
+        netServicer.poll();
     } 
     return;
 }
 
-void BOS::checkFileDescriptors() {
-    for (unsigned int i = 4; i < this->battery_names.size()+4; i++) {
-        if ((this->fds[i].revents & POLLIN) == POLLIN)
-            this->handleBatteryCommand(this->fds[i].fd);
-    }
-    return;
+void BOS::acceptAdminConnection(Stream* stream) {
+    this->adminConnection = std::make_shared<BatteryConnection>(std::unique_ptr<Stream>(stream));
+    this->adminConnection->messageReadyHandler = [this](BatteryConnection* connection) {
+        std::cout << "ADMIN COMMAND!" << std::endl;
+        this->handleAdminCommand(*connection);
+    };
+    netServicer.add(this->adminConnection);
 }
 
-void BOS::acceptBatteryConnection() {
-    char batteryName[100];
-    int clientSocket = accept(this->batteryListener, NULL, NULL); 
-    
-    int bytes = recv(clientSocket, batteryName, 100, 0);
-    batteryName[bytes] = '\0';
-
-    if (bytes == -1)
-        WARNING() << "Unable to read batteryName from clientSocket!" << std::endl;
-    else if (this->directoryManager->getBattery(batteryName) == nullptr)
-        close(clientSocket);
-    else
-        this->battery_names[clientSocket] = std::make_pair(batteryName, false);
-
-    return;
+void BOS::acceptBatteryConnection(const std::string& batteryName, std::shared_ptr<BatteryConnection> connection) {
+    connection->messageReadyHandler = [this, batteryName](BatteryConnection* connection) {
+        this->handleBatteryCommand(batteryName, *connection);
+    };
+    netServicer.add(connection);
+    this->connections.push_back(connection);
 }
 
-void BOS::handleBatteryCommand(int fd) {
-    int success;
+void BOS::handleBatteryCommand(const std::string& batteryName, BatteryConnection& connection) {
     bosproto::BatteryCommand command;
-    
-    if (this->battery_names[fd].second)
-        success = command.ParseFromFileDescriptor(fd);
-    else {
-        int size = 4096;
-        char buffer[size];
-
-        while (recv(fd, buffer, size, MSG_PEEK) == size)
-            size *= 2;
-
-        int bytesRead = recv(fd, buffer, size, 0);
-        success = command.ParseFromArray(buffer, bytesRead);
-    }
+    int success = connection.read(command);
 
     if (!success) {
         WARNING() << "could not parse BatteryCommand" << std::endl;
         return;
     } 
 
+    std::cout << "COMMAND: " << command.DebugString() << std::endl;
+
     switch(command.command()) {
         case bosproto::Command::Get_Status:
-            this->getStatus(fd);
-            break;
-        case bosproto::Command::Schedule_Set_Current:
-            this->scheduleSetCurrent(command, fd);
-            break;
-        case bosproto::Command::Remove_Battery:
-            this->removeBattery(fd);
+            this->getStatus(batteryName, connection);
             break;
         case bosproto::Command::Set_Status:
-            this->setStatus(command, fd);
+            this->setStatus(command, batteryName, connection);
             break;
+        case bosproto::Command::Schedule_Set_Current:
+            this->scheduleSetCurrent(command, batteryName, connection);
+            break;
+        //case bosproto::Command::Remove_Battery:
+        //    this->removeBattery(fd);
+        //    break;
         default:
             WARNING() << "need to select battery command option" << std::endl;
             break;
@@ -153,84 +88,34 @@ void BOS::handleBatteryCommand(int fd) {
     return;
 }
 
-void BOS::getStatus(int fd) {
-    int output_fd;
+void BOS::getStatus(const std::string& batteryName, BatteryConnection& connection) {
+    std::cout << "GET STATUS: " << batteryName << std::endl;
+
     bosproto::BatteryStatusResponse response;
     bosproto::BatteryStatus* s = response.mutable_status();
 
-    std::string name = this->battery_names[fd].first;
-    std::shared_ptr<Battery> bat = this->directoryManager->getBattery(name);
+    std::shared_ptr<Battery> bat = this->directoryManager->getBattery(batteryName);
     BatteryStatus status = bat->getStatus();
-    
-    s->set_voltage_mv(status.voltage_mV);
-    s->set_current_ma(status.current_mA);
-    s->set_capacity_mah(status.capacity_mAh);
-    s->set_max_capacity_mah(status.max_capacity_mAh);
-    s->set_max_charging_current_ma(status.max_charging_current_mA);
-    s->set_max_discharging_current_ma(status.max_discharging_current_mA);
-    s->set_timestamp(status.time);
-
-    if (this->battery_names[fd].second) {
-        std::string outputFile = this->fileNames[fd].second;
-        output_fd = open(outputFile.c_str(), O_WRONLY);
-    } else
-        output_fd = fd;
-
-    if (output_fd == -1) {
-        WARNING() << "Unable to open " << name << "'s output FIFO!" << std::endl;
-        return;
-    }
+    status.toProto(*response.mutable_status());
 
     response.set_return_code(0);    
-    response.SerializeToFileDescriptor(output_fd);
-
-    if (this->battery_names[fd].second)
-        close(output_fd); 
-
-    return;
+    std::cout << "STATUS: " << response.DebugString() << std::endl;
+    connection.write(response);
 }
 
-void BOS::setStatus(const bosproto::BatteryCommand& command, int fd) {
-    int output_fd;
-    BatteryStatus status;
-    std::shared_ptr<Battery> battery;
+void BOS::setStatus(const bosproto::BatteryCommand& command, const std::string& batteryName, BatteryConnection& connection) {
     bosproto::SetStatusResponse response;
-
-    std::string name = this->battery_names[fd].first;
-    
-    if (this->battery_names[fd].second) {
-        std::string outputFile = this->fileNames[fd].second;
-        output_fd = open(outputFile.c_str(), O_WRONLY);
-    } else
-        output_fd = fd;
-
-    if (output_fd == -1) {
-        WARNING() << "cannot open " << name << "'s output FIFO" << std::endl; 
-        return;
-    }
-    
     if (!command.has_status()) {
         response.set_return_code(-1);
         response.set_reason("status needs to be set!");
 
-        response.SerializeToFileDescriptor(output_fd);
-        
-        if (this->battery_names[fd].second)
-            close(output_fd);
+        connection.write(response);
         return;
     }
 
-    bosproto::BatteryStatus s = command.status();
+    BatteryStatus status(command.status());
 
-    status.voltage_mV = s.voltage_mv();
-    status.current_mA = s.current_ma();
-    status.capacity_mAh = s.capacity_mah();
-    status.max_capacity_mAh = s.max_capacity_mah();
-    status.max_charging_current_mA = s.max_charging_current_ma();
-    status.max_discharging_current_mA = s.max_discharging_current_ma();
-    status.time = s.timestamp();
-
-    battery = this->directoryManager->getBattery(name);
+    std::shared_ptr<Battery> battery = this->directoryManager->getBattery(batteryName);
 
     if (battery == nullptr) {
         response.set_return_code(-1);
@@ -241,39 +126,17 @@ void BOS::setStatus(const bosproto::BatteryCommand& command, int fd) {
         response.set_reason("successfully set status!");
     }
 
-    response.SerializeToFileDescriptor(output_fd);
-    
-    if (this->battery_names[fd].second)
-        close(output_fd);
-    
-    return;
+    connection.write(response);
 }
 
-void BOS::scheduleSetCurrent(const bosproto::BatteryCommand& command, int fd) {
-    int output_fd;
+void BOS::scheduleSetCurrent(const bosproto::BatteryCommand& command, const std::string& batteryName, BatteryConnection& connection) {
     bosproto::ScheduleSetCurrentResponse response;
-
-    std::string name = this->battery_names[fd].first;
-
-    if (this->battery_names[fd].second) {
-        std::string outputFile = this->fileNames[fd].second;
-        output_fd = open(outputFile.c_str(), O_WRONLY);
-    } else 
-        output_fd = fd;
-
-    if (output_fd == -1) {
-        WARNING() << "cannot open " << name << "'s output FIFO" << std::endl; 
-        return;
-    }
-
     if (!command.has_schedule_set_current()) {
         response.set_return_code(-1);
         response.set_failure_message("must set current, start time, and end time");
-        
-        response.SerializeToFileDescriptor(output_fd);
+       
+        connection.write(response);
 
-        if (this->battery_names[fd].second)
-            close(output_fd);
         return;
     } 
 
@@ -282,84 +145,66 @@ void BOS::scheduleSetCurrent(const bosproto::BatteryCommand& command, int fd) {
     uint64_t startTime = params.starttime();
     uint64_t endTime   = params.endtime(); 
 
-    std::shared_ptr<Battery> bat = this->directoryManager->getBattery(name);
+    std::shared_ptr<Battery> bat = this->directoryManager->getBattery(batteryName);
     bool success = bat->schedule_set_current(current_mA, startTime, endTime);
 
     if (!success) {
         response.set_return_code(-1);
-        response.set_failure_message("failure setting current for " + name);
+        response.set_failure_message("failure setting current for " + batteryName);
     } else {
         response.set_return_code(0);
-        response.set_success_message("successfully set current for " + name);
+        response.set_success_message("successfully set current for " + batteryName);
     }
 
-    if (!response.SerializeToFileDescriptor(output_fd))
-        WARNING() << "Unable to serialize response to " << name << std::endl;
-
-    if (this->battery_names[fd].second)
-        close(output_fd);
-
-    return;
+    if (!connection.write(response)) {
+        WARNING() << "Unable to serialize response to " << batteryName << std::endl;
+    }
 }
 
 void BOS::removeBattery(int fd) {
-    int output_fd;
-    bosproto::RemoveBatteryResponse response;
+    //int output_fd;
+    //bosproto::RemoveBatteryResponse response;
 
-    std::string name = this->battery_names[fd].first;
+    //std::string name = this->battery_names[fd].first;
 
-    if (this->battery_names[fd].second) {
-        std::string outputFile = this->fileNames[fd].second;
-        output_fd = open(outputFile.c_str(), O_WRONLY);
-    } else
-        output_fd = fd;
+    //if (this->battery_names[fd].second) {
+    //    std::string outputFile = this->fileNames[fd].second;
+    //    output_fd = open(outputFile.c_str(), O_WRONLY);
+    //} else
+    //    output_fd = fd;
 
-    if (output_fd == -1) {
-        WARNING() << "Unable to open " << name << "'s output FIFO" << std::endl;
-        return;
-    }
-    
-    bool success = this->directoryManager->removeBattery(name);
+    //if (output_fd == -1) {
+    //    WARNING() << "Unable to open " << name << "'s output FIFO" << std::endl;
+    //    return;
+    //}
+    //
+    //bool success = this->directoryManager->removeBattery(name);
 
-    if (!success) {
-        response.set_return_code(-1);
-        response.set_failure_message("Unable to remove battery");
-    } else {
-        response.set_return_code(0);
-        response.set_success_message("Successfully removed battery");
+    //if (!success) {
+    //    response.set_return_code(-1);
+    //    response.set_failure_message("Unable to remove battery");
+    //} else {
+    //    response.set_return_code(0);
+    //    response.set_success_message("Successfully removed battery");
 
-        close(fd);
-        this->battery_names.erase(fd);
-        this->fileNames.erase(fd);  
-    }
+    //    close(fd);
+    //    this->battery_names.erase(fd);
+    //    this->fileNames.erase(fd);  
+    //}
 
-    if (!response.SerializeToFileDescriptor(output_fd))
-        WARNING() << "unable to write remove battery response to output FIFO" << std::endl;
+    //if (!response.SerializeToFileDescriptor(output_fd))
+    //    WARNING() << "unable to write remove battery response to output FIFO" << std::endl;
 
-    if (this->battery_names[fd].second)
-        close(output_fd);
+    //if (this->battery_names[fd].second)
+    //    close(output_fd);
 
-    return;
+    //return;
 }
 
-void BOS::handleAdminCommand(int fd, bool FIFO) {
-    int success;
+void BOS::handleAdminCommand(BatteryConnection& connection) {
     bosproto::Admin_Command command;
-    
-    if (FIFO)
-        success = command.ParseFromFileDescriptor(fd);
-    else {
-        int size = 4096;
-        char buffer[size];
 
-        while (recv(fd, buffer, size, MSG_PEEK) == size)
-            size *= 2;
-
-        int bytesRead = recv(fd, buffer, size, 0);
-        
-        success = command.ParseFromArray(buffer, bytesRead);
-    }
-
+    int success = connection.read(command);
     if (!success) {
         WARNING() << "could not parse Admin_Command" << std::endl;
         return;
@@ -367,46 +212,54 @@ void BOS::handleAdminCommand(int fd, bool FIFO) {
 
     switch(command.command_options()) {
         case bosproto::Command_Options::Create_Physical:
-            this->createPhysicalBattery(command, fd, FIFO); 
+            this->createPhysicalBattery(command, connection); 
             break;
         case bosproto::Command_Options::Create_Aggregate:
-            this->createAggregateBattery(command, fd, FIFO);
+            this->createAggregateBattery(command, connection);
             break;
         case bosproto::Command_Options::Create_Partition:
-            this->createPartitionBattery(command, fd, FIFO);
+            this->createPartitionBattery(command, connection);
             break;
         case bosproto::Command_Options::Create_Dynamic:
-            this->createDynamicBattery(command, fd, FIFO);
+            this->createDynamicBattery(command, connection);
             break;
         case bosproto::Command_Options::Shutdown:
             this->shutdown();
             break;
         default:
             WARNING() << "invalid Command_Options" << std::endl;
+            bosproto::AdminResponse response;
+            response.set_return_code(-1);
+            response.set_failure_message("Invalid admin command!");
+            connection.write(response);
             break;
     }
     return;
 }
 
-void BOS::createPhysicalBattery(const bosproto::Admin_Command& command, int fd, bool FIFO) {
-    int output_fd;
+void BOS::createBatteryFifos(const std::string& batteryName) {
+    std::cout << "Creating battery fifos" << std::endl;
+    std::string path = this->directoryPath + batteryName;
+
+    std::shared_ptr<FifoAcceptor> acceptor = std::make_shared<FifoAcceptor>(path, batteryName, [this](FifoPipe* pipe) {
+        std::shared_ptr<BatteryConnection> connection = std::make_shared<BatteryConnection>(std::unique_ptr<Stream>(pipe));
+        this->acceptBatteryConnection(pipe->name, connection);
+    }, true);
+    this->fifos.push_back(acceptor);
+    this->netServicer.add(this->fifos[this->fifos.size() - 1]);
+}
+
+void BOS::createPhysicalBattery(const bosproto::Admin_Command& command, BatteryConnection& connection) {
     bosproto::AdminResponse response;
 
-    if (FIFO) {
-        std::string adminOutputFile = this->fileNames[this->adminFifoFD].second;
-        output_fd = open(adminOutputFile.c_str(), O_WRONLY);
-    } else
-        output_fd = fd;
-
+    std::cout << "GOT COMMAND: " << command.DebugString() << std::endl;
     if (!command.has_physical_battery()) {
         response.set_return_code(-1);
         response.set_failure_message("Physical_Battery parameters not set!");
         
-        if (response.SerializeToFileDescriptor(output_fd))
+        if (connection.write(response)) {
             WARNING() << "unable to write failure message to file descriptor" << std::endl;
-
-        if (FIFO)
-            close(output_fd);
+        }
 
         return;
     }
@@ -414,179 +267,144 @@ void BOS::createPhysicalBattery(const bosproto::Admin_Command& command, int fd, 
     paramsPhysical b = parsePhysicalBattery(command.physical_battery());
     std::shared_ptr<Battery> bat = this->directoryManager->createPhysicalBattery(b.name, b.staleness, b.refresh);
 
-    if (bat != nullptr) {
-        response.set_return_code(0);
-        response.set_success_message("successfully created battery: " + b.name);
-
-        if (FIFO) {
-            std::string inputFile  = this->directoryPath + b.name + "_fifo_input";
-            std::string outputFile = this->directoryPath + b.name + "_fifo_output";
-
-            int input_fd = this->createFifos(inputFile, outputFile, 0777);
-            this->battery_names[input_fd] = std::make_pair(b.name, true);
-        }
-    } else {
+    if (!bat) {
         response.set_return_code(-1);
         response.set_failure_message("battery name: " +  b.name + " already exists");
+        connection.write(response);
+
+        return;
     }
 
-    if (!response.SerializeToFileDescriptor(output_fd))
-        WARNING() << "unable to write message to file descriptor" << std::endl;
+    response.set_return_code(0);
+    response.set_success_message("successfully created battery: " + b.name);
 
-    if (FIFO)
-        close(output_fd);
+    if (this->mode == BOSMode::Fifo) {
+        createBatteryFifos(b.name);
+    }
+
+    if (!connection.write(response)) {
+        WARNING() << "unable to write message to file descriptor" << std::endl;
+    }
 
     return;
 }
 
-void BOS::createAggregateBattery(const bosproto::Admin_Command& command, int fd, bool FIFO) {
-    int output_fd;
+void BOS::createAggregateBattery(const bosproto::Admin_Command& command, BatteryConnection& connection) {
+    //int output_fd;
+
+    //if (FIFO) {
+    //    std::string adminOutputFile = this->fileNames[this->adminBFifoFD].second;
+    //    output_fd = open(adminOutputFile.c_str(), O_WRONLY);
+    //} else
+    //    output_fd = fd;
+
     bosproto::AdminResponse response;
-
-    if (FIFO) {
-        std::string adminOutputFile = this->fileNames[this->adminFifoFD].second;
-        output_fd = open(adminOutputFile.c_str(), O_WRONLY);
-    } else
-        output_fd = fd;
-
     if (!command.has_aggregate_battery()) {
         response.set_return_code(-1);
         response.set_failure_message("Aggregate_Battery parameters not set!");
         
-        if (response.SerializeToFileDescriptor(output_fd))
+        if (connection.write(response)) {
             WARNING() << "unable to write failure message to file descriptor" << std::endl;
+        }
 
-        if (FIFO)
-            close(output_fd);
+        //if (FIFO)
+        //    close(output_fd);
 
         return;
     }
 
     paramsAggregate b = parseAggregateBattery(command.aggregate_battery());
+    std::cout << "Creating aggregate battery " << b.name << std::endl;
     std::shared_ptr<Battery> bat = this->directoryManager->createAggregateBattery(b.name, b.parents, b.staleness, b.refresh);     
 
-    if (bat != nullptr) {
-        response.set_return_code(0);
-        response.set_success_message("successfully created battery: " + b.name);
-
-        if (FIFO) {
-            std::string inputFile  = this->directoryPath + b.name + "_fifo_input";
-            std::string outputFile = this->directoryPath + b.name + "_fifo_output";
-
-            int input_fd = this->createFifos(inputFile, outputFile, 0777);
-            this->battery_names[input_fd] = std::make_pair(b.name, true);
-        }
-    } else {
+    if (!bat) {
         response.set_return_code(-1);
         response.set_failure_message("error creating aggregate battery!");
+        connection.write(response);
+
+        return;
     }
 
-    if (!response.SerializeToFileDescriptor(output_fd))
+    if (this->mode == BOSMode::Fifo) {
+        createBatteryFifos(b.name);
+    }
+
+    response.set_return_code(0);
+    response.set_success_message("successfully created battery: " + b.name);
+
+    if (!connection.write(response)) {
         WARNING() << "unable to write message to file descriptor" << std::endl;
-
-    if (FIFO)
-        close(output_fd);
-
-    return;
+    }
 }
 
-void BOS::createPartitionBattery(const bosproto::Admin_Command& command, int fd, bool FIFO) {
-    int output_fd;
+void BOS::createPartitionBattery(const bosproto::Admin_Command& command, BatteryConnection& connection) {
     bosproto::AdminResponse response;
-    std::vector<std::shared_ptr<Battery>> batteries;
-
-    if (FIFO) {
-        std::string adminOutputFile = this->fileNames[this->adminFifoFD].second;
-        output_fd = open(adminOutputFile.c_str(), O_WRONLY);
-    } else
-        output_fd = fd;
-
     if (!command.has_partition_battery()) {
         response.set_return_code(-1);
         response.set_failure_message("Partition_Battery parameters not set!");
         
-        if (response.SerializeToFileDescriptor(output_fd))
+        if (connection.write(response)) {
             WARNING() << "unable to write failure message to file descriptor" << std::endl;
-
-        if (FIFO)
-            close(output_fd);
+        }
 
         return;
     }
 
     paramsPartition b = parsePartitionBattery(command.partition_battery());
 
-    if (b.refreshModes.size() == 0 && b.stalenesses.size() == 0)
+    std::vector<std::shared_ptr<Battery>> batteries;
+    if (b.refreshModes.size() == 0 && b.stalenesses.size() == 0) {
         batteries = this->directoryManager->createPartitionBattery(b.source, b.policy, b.child_names, b.proportions); 
-    else if (b.refreshModes.size() == 0 || b.stalenesses.size() == 0) {
+    } else if (b.refreshModes.size() == 0 || b.stalenesses.size() == 0) {
         response.set_return_code(-1);
         response.set_failure_message("refresh modes and stalenesses both need to be included or excluded: cannot choose one");
 
-        if (response.SerializeToFileDescriptor(output_fd))
+        if (!connection.write(response)) { 
             WARNING() << "unable to write failure message to file descriptor" << std::endl;
-
-        if (FIFO)
-            close(output_fd);
+        }
 
         return;
-    } else
-        batteries = this->directoryManager->createPartitionBattery(b.source, b.policy, b.child_names, b.proportions, b.stalenesses, b.refreshModes); 
-
-    if (batteries.size() != 0) {
-        response.set_return_code(0);
-        response.set_success_message("successfully created batteries!");
-
-        if (FIFO) {
-            for (unsigned int i = 0; i < b.child_names.size(); i++) {
-                std::string inputFile  = this->directoryPath + b.child_names[i] + "_fifo_input";
-                std::string outputFile = this->directoryPath + b.child_names[i] + "_fifo_output";
-
-                int input_fd = this->createFifos(inputFile, outputFile, 0777);
-                this->battery_names[input_fd] = std::make_pair(b.child_names[i], true);
-            }
-        }
     } else {
-        response.set_return_code(-1);
-        response.set_failure_message("error creating partition batteries!");
+        batteries = this->directoryManager->createPartitionBattery(b.source, b.policy, b.child_names, b.proportions, b.stalenesses, b.refreshModes); 
     }
 
-    if (!response.SerializeToFileDescriptor(output_fd))
+    if (batteries.size() == 0) {
+        response.set_return_code(-1);
+        response.set_failure_message("error creating partition batteries!");
+        connection.write(response);
+        return;
+    }
+
+    if (this->mode == BOSMode::Fifo) {
+        for (auto& name : b.child_names) {
+            createBatteryFifos(name);
+        }
+    }
+
+    response.set_return_code(0);
+    response.set_success_message("successfully created batteries!");
+
+    if (!connection.write(response)) {
         WARNING() << "unable to write message to file descriptor" << std::endl;
-
-    if (FIFO)
-        close(output_fd);
-
-    return;
-    
+    }
 }
 
-void BOS::createDynamicBattery(const bosproto::Admin_Command& command, int fd, bool FIFO) {
-    int output_fd;
+void BOS::createDynamicBattery(const bosproto::Admin_Command& command, BatteryConnection& connection) {
     bosproto::AdminResponse response;
-
-    if (FIFO) {
-        std::string adminOutputFile = this->fileNames[this->adminFifoFD].second;
-        output_fd = open(adminOutputFile.c_str(), O_WRONLY);
-    } else
-        output_fd = fd;
-
     if (!command.has_dynamic_battery()) {
         WARNING() << "entering this branch :(" << std::endl;
         response.set_return_code(-1);
         response.set_failure_message("Dynamic_Battery parameters not set!");
         
-        if (response.SerializeToFileDescriptor(output_fd))
+        if (connection.write(response)) {
             WARNING() << "unable to write failure message to file descriptor" << std::endl;
-
-        if (FIFO)
-            close(output_fd);
+        }
 
         return;
     }
 
     paramsDynamic b = parseDynamicBattery(command.dynamic_battery());
 
-    
     void* initArgs = (void*)b.initArgs;
     void* destructor     = dlsym(this->library, b.destructor.c_str());
     void* constructor    = dlsym(this->library, b.constructor.c_str());
@@ -599,11 +417,9 @@ void BOS::createDynamicBattery(const bosproto::Admin_Command& command, int fd, b
         response.set_return_code(-1);
         response.set_failure_message("function names not found in dynamic library file");
 
-        if (!response.SerializeToFileDescriptor(output_fd))
+        if (!connection.write(response)) {
             WARNING() << "unable to write message to file descriptor" << std::endl;
-
-        if (FIFO)
-            close(output_fd);
+        }
 
         return;
     }
@@ -616,30 +432,23 @@ void BOS::createDynamicBattery(const bosproto::Admin_Command& command, int fd, b
 
     delete[] b.initArgs;
 
-    if (bat != nullptr) {
-        response.set_return_code(0);
-        response.set_success_message("successfully created battery: " + b.name);
-
-        if (FIFO) {
-            std::string inputFile  = this->directoryPath + b.name + "_fifo_input";
-            std::string outputFile = this->directoryPath + b.name + "_fifo_output";
-
-            int input_fd = this->createFifos(inputFile, outputFile, 0777);
-            this->battery_names[input_fd] = std::make_pair(b.name, true);
-        }
-    } else {
+    if (!bat) {
         response.set_return_code(-1);
         response.set_failure_message("battery name: " +  b.name + " already exists");
+        connection.write(response);
+        return;
     }
 
-    if (!response.SerializeToFileDescriptor(output_fd))
+    if (this->mode == BOSMode::Fifo) {
+        createBatteryFifos(b.name);
+    }
+
+    response.set_return_code(0);
+    response.set_success_message("successfully created battery: " + b.name);
+
+    if (!connection.write(response)) {
         WARNING() << "unable to write message to file descriptor" << std::endl;
-
-    if (FIFO)
-        close(output_fd);
-
-    return;
-
+    }
 }
 
 void BOS::createDirectory(const std::string &directoryPath, mode_t permission) {
@@ -649,71 +458,58 @@ void BOS::createDirectory(const std::string &directoryPath, mode_t permission) {
     return;
 }
 
-int BOS::createFifos(const std::string& inputFile, const std::string& outputFile, mode_t permission) {
-    if (mkfifo(inputFile.c_str(), permission) == -1)
-        ERROR() << "Unable to create " << inputFile << std::endl;
-    else if (mkfifo(outputFile.c_str(), permission) == -1)
-        ERROR() << "Unable to create " << outputFile << std::endl;
-
-    int fd = open(inputFile.c_str(), O_RDONLY | O_NONBLOCK);
-
-    if (fd == -1)
-        ERROR() << "Unable to open " << inputFile << std::endl;
-    this->fileNames[fd] = std::make_pair(inputFile, outputFile);
-
-    return fd;
-}
-
 /****************
 Public Functions
 *****************/
 
 void BOS::startFifos(mode_t adminPermission) {
     this->hasQuit = false;
+    this->mode = BOSMode::Fifo;
 
-    std::string inputFile  = this->directoryPath + "admin_fifo_input";
-    std::string outputFile = this->directoryPath + "admin_fifo_output";
+    std::string path  = this->directoryPath + "admin";
     
-    this->adminFifoFD = this->createFifos(inputFile, outputFile, adminPermission);
+    this->adminListener = std::make_shared<FifoAcceptor>(path, "admin", [this](FifoPipe* pipe) {
+        this->acceptAdminConnection(pipe);  
+    }, true);
+    std::cout << "CREATED!" << std::endl;
+    netServicer.add(this->adminListener);
 
     this->pollFDs();
-
-    return;
 }
 
 void BOS::startSockets(int adminPort, int batteryPort) {
-    this->adminListener   = socket(AF_INET, SOCK_STREAM, 0);
-    this->batteryListener = socket(AF_INET, SOCK_STREAM, 0);
+    this->hasQuit = false;
+    this->mode = BOSMode::Network;
 
-    if (this->adminListener < 0 || this->batteryListener < 0)
-        ERROR() << "failed to create admin/battery socket" << std::endl;   
+    this->adminListener = std::make_shared<Acceptor>(INADDR_ANY, adminPort, 1, [this](Socket* socket) {
+        this->acceptAdminConnection(socket);
+    });
+    netServicer.add(this->adminListener);
 
-    struct sockaddr_in adminAddr;
-    struct sockaddr_in batteryAddr;
+    this->batteryListener = std::make_shared<Acceptor>(INADDR_ANY, batteryPort, 1024, [this](Socket* socket) {
+        bosproto::BatteryConnect command;
+        std::shared_ptr<BatteryConnection> connection = std::make_shared<BatteryConnection>(std::unique_ptr<Stream>(socket));
+ 
+        int bytes_read = connection->read(command);
+        std::cout << "Battery connect: " << command.batteryname() << std::endl;
 
-    adminAddr.sin_port          = htons(adminPort);
-    adminAddr.sin_family        = AF_INET;
-    adminAddr.sin_addr.s_addr   = INADDR_ANY;
+        bosproto::ConnectResponse response;
+        if (bytes_read == -1) {
+            WARNING() << "Unable to read batteryName from clientSocket!" << std::endl;
+            response.set_status_code(bosproto::ConnectStatusCode::GenericError);
+        } else if (this->directoryManager->getBattery(command.batteryname()) == nullptr) {
+            WARNING() << "Get battery nullptr: " << command.batteryname() << std::endl;
+            response.set_status_code(bosproto::ConnectStatusCode::DoesNotExist);
+        } else {
+            this->acceptBatteryConnection(command.batteryname(), connection);
+            response.set_status_code(bosproto::ConnectStatusCode::Success);
+        }
 
-    batteryAddr.sin_port        = htons(batteryPort);
-    batteryAddr.sin_family      = AF_INET;
-    batteryAddr.sin_addr.s_addr = INADDR_ANY;    
+        connection->write(response);
+    });
+    netServicer.add(this->batteryListener);
 
-    if (bind(this->adminListener, (struct sockaddr*)&adminAddr, sizeof(adminAddr)) < 0)
-        ERROR() << "failed to bind to adminListener" << std::endl;
-    else if (bind(this->batteryListener, (struct sockaddr*)&batteryAddr, sizeof(batteryAddr)) < 0)
-        ERROR() << "failed to bind on batteryListener" << std::endl;
-    else if (listen(this->adminListener, 1) < 0)
-        ERROR() << "failed to listen on adminSocket: " << this->adminListener << std::endl;
-    else if (listen(this->batteryListener, 1024) < 0)
-        ERROR() << "failed to listen on batterySocket: " << this->batteryListener << std::endl;
-
-    if (this->hasQuit) {
-        this->hasQuit = false;
-        this->pollFDs();
-    }
-
-    return;
+    this->pollFDs();
 }
 
 void BOS::shutdown() {
@@ -738,23 +534,24 @@ void BOS::shutdown() {
         rmdir(this->directoryPath.c_str());
     }
 
-    for (const auto &f: battery_names) {
-        if (f.second.second)
-            close(f.first);
-    }
+    //for (const auto &f: battery_names) {
+    //    if (f.second.second)
+    //        close(f.first);
+    //}
 
-    if (this->adminSocketFD != -1)
-        close(this->adminSocketFD);
+    //if (this->adminSocketFD != -1)
+    //    close(this->adminSocketFD);
 
-    if (this->adminListener != -1) {
-        ::shutdown(this->adminListener, SHUT_RDWR);
-        close(this->adminListener);
-    }
+    //delete this->batteryListener;
+    //if (this->adminListener != -1) {
+    //    ::shutdown(this->adminListener, SHUT_RDWR);
+    //    close(this->adminListener);
+    //}
 
-    if (this->batteryListener != -1) {
-        ::shutdown(this->batteryListener, SHUT_RDWR);
-        close(this->batteryListener);
-    }
+    //if (this->batteryListener != -1) {
+    //    ::shutdown(this->batteryListener, SHUT_RDWR);
+    //    close(this->batteryListener);
+    //}
 
     this->directoryManager->destroyDirectory();
 

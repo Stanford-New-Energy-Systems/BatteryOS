@@ -12,6 +12,8 @@
 #include "refresh.hpp"
 #include "protobuf/battery.pb.h"
 #include "protobuf/battery_manager.pb.h"
+#include "Socket.hpp"
+#include "BatteryConnection.hpp"
 
 /**
  * Admin Class
@@ -29,9 +31,8 @@
 class Admin {
     private:
         bool fifoMode;
-        int clientSocket;
-        std::string inputFilePath;
-        std::string outputFilePath;
+        BatteryConnection* clientSocket;
+        std::string path;
 
     /**
      * Constructors
@@ -43,7 +44,7 @@ class Admin {
     public:
         ~Admin();
         Admin(int port);
-        Admin(const std::string& inputFilePath, const std::string& outputFilePath);
+        Admin(const std::string& path);
 
     /**
      * Public Helper Functions
@@ -57,7 +58,7 @@ class Admin {
 
     public:
         bool shutdown();
-        int setupClient(int port);
+        BatteryConnection* setupClient(int port);
 
         bool createPhysicalBattery(const std::string &name,
                                    const std::chrono::milliseconds &maxStaleness = std::chrono::milliseconds(1000), 

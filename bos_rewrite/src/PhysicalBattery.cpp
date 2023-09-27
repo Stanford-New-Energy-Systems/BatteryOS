@@ -29,16 +29,7 @@ std::string PhysicalBattery::getBatteryString() const {
 BatteryStatus PhysicalBattery::refresh() {
     PRINT() << "REFRESH!!!!" << std::endl;
 
-    BatteryStatus status;
-    status.voltage_mV = 5;
-    status.current_mA = 0;
-    status.capacity_mAh = 10;
-    status.max_capacity_mAh = 10;
-    status.max_charging_current_mA = 1200;
-    status.max_discharging_current_mA = 1200;
-    status.time = convertToMilliseconds(getTimeNow());
-
-    return status; 
+    return this->status; 
 }
 
 bool PhysicalBattery::set_current(double current_mA) {

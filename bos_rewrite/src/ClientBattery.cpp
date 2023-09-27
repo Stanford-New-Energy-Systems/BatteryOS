@@ -1,45 +1,52 @@
 #include "ClientBattery.hpp"
 
+#include <thread>
+#include "Socket.hpp"
+#include "Fifo.hpp"
+#include "BatteryConnection.hpp"
+
 /***********************
 Constructpor/Destructor 
 ************************/
 
 ClientBattery::~ClientBattery() {
-    close(this->clientSocket);
+    //close(this->clientSocket);
 };
 
-ClientBattery::ClientBattery(int port, const std::string& batteryName) {
-    this->clientSocket = this->setupClient(port, batteryName);
+ClientBattery::ClientBattery(const std::string& directory, const std::string& batteryName) {
+    std::unique_ptr<FifoPipe> pipe = std::make_unique<FifoPipe>(std::move(FifoPipe::connect(directory, batteryName)));
+    this->connection = std::make_unique<BatteryConnection>(std::move(pipe));
 }
 
-/*****************
-Private Functions
-******************/
-
-int ClientBattery::setupClient(int port, const std::string& batteryName) {
+ClientBattery::ClientBattery(int port, const std::string& batteryName) {
     char buffer[64];
     struct sockaddr_in servAddr;
     int s = socket(AF_INET, SOCK_STREAM, 0);
 
-    servAddr.sin_family = AF_INET;
-    servAddr.sin_port = htons(port);
-    servAddr.sin_addr.s_addr = INADDR_ANY; 
+    std::unique_ptr<Socket> socket = Socket::connect(s, INADDR_ANY, port);
+    this->connection = std::make_unique<BatteryConnection>(std::move(socket));
 
-    int status = connect(s, (struct sockaddr*)&servAddr, sizeof(servAddr));
+    bosproto::BatteryConnect command;
+    command.set_batteryname(batteryName);
 
-    if (status == -1)
-        ERROR() << "could not connect to server!" << std::endl;
+    int success = connection->write(command);
+    if (!success) {
+        ERROR() << "Failed to send connection request: " << command.DebugString() << std::endl;
+        exit(1);
+    }
 
-    LOG() << batteryName.c_str() << std::endl;
+    // TODO: we should really write a nice wrapper around the message passing...
+    //       TCP streams are not it...
+    bosproto::ConnectResponse response;
+    connection->read(response);
 
-    int bytesWritten = write(s, batteryName.c_str(), batteryName.length());
-    if (bytesWritten == -1)
-        ERROR() << "could not write batteryName to socket!" << std::endl;
-
-    if (recv(s, buffer, sizeof(buffer), MSG_PEEK | MSG_DONTWAIT) == 0)
+    if (response.status_code() == bosproto::ConnectStatusCode::DoesNotExist) {
         ERROR() << "server does not have battery in directory!" << std::endl;
-
-    return s;
+        exit(1);
+    } else if (response.status_code() == bosproto::ConnectStatusCode::DoesNotExist) {
+        ERROR() << "generic battery connection error!" << std::endl;
+        exit(1);
+    }
 }
 
 /****************
@@ -47,92 +54,42 @@ Public Functions
 *****************/
 
 BatteryStatus ClientBattery::getStatus() {
-    int size = 4096;
-    char buffer[size];
-    BatteryStatus status;
-    pollfd* fds = new pollfd[1];
     bosproto::BatteryCommand command;
-    bosproto::BatteryStatusResponse response; 
-
-    fds[0].fd      = this->clientSocket;
-    fds[0].events  = POLLIN;
-    fds[0].revents = 0;
-    
     command.set_command(bosproto::Command::Get_Status);
-    command.SerializeToFileDescriptor(this->clientSocket);
-    
-    while ((fds[0].revents & POLLIN) != POLLIN) {
-        int success = poll(fds, 1, -1);
-        if (success == -1)
-            ERROR() << "poll failed!" << std::endl;
-    } 
 
-    while (recv(this->clientSocket, buffer, size, MSG_PEEK) == size)
-        size *= 2;
+    this->connection->write(command);
 
-    int bytes = recv(this->clientSocket, buffer, size, 0);
-    int success = response.ParseFromArray(buffer, bytes); 
-
-    delete[] fds;
+    bosproto::BatteryStatusResponse response;
+    int success = this->connection->read(response);
+    std::cout << response.DebugString() << std::endl;
 
     if (!success) {
         WARNING() << "could not parse response" << std::endl;
-        return status;
+        throw std::runtime_error("could not parse response");
     } else if (!response.has_status()) {
         WARNING() << "response did not include BatteryStatus" << std::endl;
-        return status;
+        throw std::runtime_error("could not parse response");
     }
 
-    bosproto::BatteryStatus s = response.status();
-
-    status.voltage_mV = s.voltage_mv();
-    status.current_mA = s.current_ma();
-    status.capacity_mAh = s.capacity_mah();
-    status.max_capacity_mAh = s.max_capacity_mah();
-    status.max_charging_current_mA = s.max_charging_current_ma();
-    status.max_discharging_current_mA = s.max_discharging_current_ma();
-    status.time = s.timestamp();
-
-    return status;
+    return BatteryStatus(response.status());
 } 
 
 bool ClientBattery::setBatteryStatus(const BatteryStatus& status) {
-    int size = 4096;
-    char buffer[size];
-    pollfd* fds = new pollfd[1];
+    std::cout << "set battery status" << std::endl;
     bosproto::BatteryCommand command;
     bosproto::SetStatusResponse response; 
 
-    fds[0].fd      = this->clientSocket;
-    fds[0].events  = POLLIN;
-    fds[0].revents = 0;
-
     command.set_command(bosproto::Command::Set_Status);
     bosproto::BatteryStatus* s = command.mutable_status();
-    s->set_voltage_mv(status.voltage_mV);
-    s->set_current_ma(status.current_mA);
-    s->set_capacity_mah(status.capacity_mAh);
-    s->set_max_capacity_mah(status.max_capacity_mAh);
-    s->set_max_charging_current_ma(status.max_charging_current_mA);
-    s->set_max_discharging_current_ma(status.max_discharging_current_mA);
-    s->set_timestamp(status.time);
+    status.toProto(*s);
 
-    command.SerializeToFileDescriptor(this->clientSocket);
+    // TODO: error
+    this->connection->write(command);
 
-    while ((fds[0].revents & POLLIN) != POLLIN) {
-        int success = poll(fds, 1, -1);
-        if (success == -1)
-            ERROR() << "poll failed!" << std::endl;
-    } 
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(1s);
 
-    while (recv(this->clientSocket, buffer, size, MSG_PEEK) == size)
-        size *= 2;
-
-    int bytes = recv(this->clientSocket, buffer, size, 0);
-    int success = response.ParseFromArray(buffer, bytes); 
-
-    delete[] fds;
-
+    int success = this->connection->read(response);
     if (!success) {
         WARNING() << "could not parse response" << std::endl;
         return false;
@@ -140,19 +97,12 @@ bool ClientBattery::setBatteryStatus(const BatteryStatus& status) {
 
     if (response.return_code() == -1)
         return false;
+
     return true;
 }
 
 bool ClientBattery::schedule_set_current(double current_mA, uint64_t startTime, uint64_t endTime) {
-    int size = 4096;
-    char buffer[size];
-    pollfd* fds = new pollfd[1];
     bosproto::BatteryCommand command;
-    bosproto::ScheduleSetCurrentResponse response; 
-    
-    fds[0].fd      = this->clientSocket;
-    fds[0].events  = POLLIN;
-    fds[0].revents = 0;
 
     command.set_command(bosproto::Command::Schedule_Set_Current);
     bosproto::ScheduleSetCurrent* s = command.mutable_schedule_set_current();
@@ -160,30 +110,46 @@ bool ClientBattery::schedule_set_current(double current_mA, uint64_t startTime, 
     s->set_starttime(startTime);
     s->set_endtime(endTime);
 
-    command.SerializeToFileDescriptor(this->clientSocket);
+    this->connection->write(command);
 
-    while ((fds[0].revents & POLLIN) != POLLIN) {
-        int success = poll(fds, 1, -1);
-        if (success == -1)
-            ERROR() << "poll failed!" << std::endl;
-    } 
-
-    while (recv(this->clientSocket, buffer, size, MSG_PEEK) == size)
-        size *= 2;
-
-    int bytes = recv(this->clientSocket, buffer, size, 0);
-    int success = response.ParseFromArray(buffer, bytes); 
-
-    delete[] fds;
-
+    bosproto::ScheduleSetCurrentResponse response; 
+    int success =this->connection->read(response);
     if (!success) {
         WARNING() << "could not parse response" << std::endl;
         return false;
     }
 
-    if (response.return_code() == -1)
-        return false;
     return true;
+
+    //if (response.return_code() == -1)
+    //    return false;
+
+    //int size = 4096;
+    //char buffer[size];
+    //pollfd* fds = new pollfd[1];
+    //bosproto::ScheduleSetCurrentResponse response; 
+    //
+    //fds[0].fd      = this->clientSocket;
+    //fds[0].events  = POLLIN;
+    //fds[0].revents = 0;
+
+    //command.SerializeToFileDescriptor(this->clientSocket);
+
+    //while ((fds[0].revents & POLLIN) != POLLIN) {
+    //    int success = poll(fds, 1, -1);
+    //    if (success == -1)
+    //        ERROR() << "poll failed!" << std::endl;
+    //} 
+
+    //while (recv(this->clientSocket, buffer, size, MSG_PEEK) == size)
+    //    size *= 2;
+
+    //int bytes = recv(this->clientSocket, buffer, size, 0);
+    //int success = response.ParseFromArray(buffer, bytes); 
+
+    //delete[] fds;
+
+    //return true;
 }
 
 bool ClientBattery::schedule_set_current(double current_mA, timestamp_t startTime, timestamp_t endTime) {

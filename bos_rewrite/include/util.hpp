@@ -2,6 +2,7 @@
 #define UTIL_HPP
 #include <sstream>
 #include <iostream>
+#include <unistd.h>
 
 #define LOG() \
     LogStream(__func__, __FILE__, __LINE__).writeToLog()
@@ -90,5 +91,12 @@ class PrintStream {
             return this->msg;
         }
 };
+
+
+// file helpers
+namespace util {
+    size_t read_exact(int fd, char* buffer, size_t num_bytes);
+    size_t write_exact(int fd, char* buffer, size_t num_bytes);
+}
 
 #endif

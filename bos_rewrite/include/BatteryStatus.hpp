@@ -8,6 +8,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "protobuf/battery.pb.h"
+
 using timestamp_t = std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds>;
 
 /* get current system clock time */
@@ -39,6 +41,24 @@ struct BatteryStatus {
     double max_charging_current_mA;
     double max_discharging_current_mA;
     uint64_t time;
+
+    BatteryStatus()
+        : voltage_mV(0),
+          current_mA(0),
+          capacity_mAh(0),
+          max_capacity_mAh(0),
+          max_charging_current_mA(0),
+          max_discharging_current_mA(0),
+          time(0) {}
+    BatteryStatus(const bosproto::BatteryStatus &proto_status)
+        : voltage_mV(proto_status.voltage_mv()),
+          current_mA(proto_status.current_ma()),
+          capacity_mAh(proto_status.capacity_mah()),
+          max_capacity_mAh(proto_status.max_capacity_mah()),
+          max_charging_current_mA(proto_status.max_charging_current_ma()),
+          max_discharging_current_mA(proto_status.max_discharging_current_ma()),
+          time(proto_status.timestamp()) {}
+    void toProto(bosproto::BatteryStatus &proto_status) const;
 }; 
 
 #ifdef __cplusplus

@@ -2,6 +2,21 @@ syntax = "proto3";
 
 package bosproto;
 
+message BatteryConnect {
+    string batteryName  = 1;
+}
+
+enum ConnectStatusCode {
+    Success = 0;
+    // TODO: should add more error conditions...
+    GenericError = 1;
+    DoesNotExist = 2;
+}
+
+message ConnectResponse {
+    ConnectStatusCode status_code = 1; 
+}
+
 message BatteryStatus {
     double voltage_mV = 1;
     double current_mA = 2;

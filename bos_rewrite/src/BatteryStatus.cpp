@@ -31,6 +31,16 @@ timestamp_t convertToTimestamp(uint64_t milliseconds) {
     return ts;
 }
 
+void BatteryStatus::toProto(bosproto::BatteryStatus& proto_status) const {
+    proto_status.set_voltage_mv(this->voltage_mV);
+    proto_status.set_current_ma(this->current_mA);
+    proto_status.set_capacity_mah(this->capacity_mAh);
+    proto_status.set_max_capacity_mah(this->max_capacity_mAh);
+    proto_status.set_max_charging_current_ma(this->max_charging_current_mA);
+    proto_status.set_max_discharging_current_ma(this->max_discharging_current_mA);
+    proto_status.set_timestamp(this->time);
+}
+
 bool operator==(const BatteryStatus &lhs, const BatteryStatus &rhs) {
     return (lhs.voltage_mV == rhs.voltage_mV) &&
            (lhs.current_mA == rhs.current_mA) &&

@@ -35,11 +35,13 @@ OBJS += ../src/wiringSerial.o
 OBJS += $(BATTERY_OBJECTS)
 
 LFLAGS = -pthread 
-CFLAGS = -I$(INC_DIR) -I../
+CXXFLAGS = -MMD -MD -I$(INC_DIR) -I../
 LFLAGS += `pkg-config --libs protobuf`
-CFLAGS += `pkg-config --cflags protobuf`
-CFLAGS += `python3-config --cflags --embed`
+CXXFLAGS += `pkg-config --cflags protobuf`
+CXXFLAGS += `python3-config --cflags --embed`
 LFLAGS += `python3-config --ldflags --embed`
+
+CFLAGS = $(CXXFLAGS)
 
 define remove_file
     $(if $(wildcard $(1)), \rm $(1))
@@ -109,9 +111,6 @@ dynamic: $(OBJS) testDynamic.o
 ../protobuf/%.o: ../protobuf/%.cc
 	$(GPP) -std=c++17 -c $< -o $@ $(CFLAGS)
 
-%.o: %.cpp
-	$(GPP) -std=c++17 -c $< -o $@ $(CFLAGS)
-
 clean:
 	$(call remove_file,*.o)
 	$(call remove_file,../src/*.o)
@@ -132,3 +131,5 @@ clean:
 	
 	$(call remove_file,libbatterydrivers.so)
 	$(call remove_file,libbatterydrivers.dylib)
+
+-include *.d

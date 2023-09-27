@@ -34,9 +34,14 @@ int main() {
         ERROR() << "could not create bat0 battery!" << std::endl;
     if (!admin.createPhysicalBattery("bat1", std::chrono::seconds(100)))
         ERROR() << "could not create bat1 battery!" << std::endl;
+    if (!admin.createPhysicalBattery("batFoo", std::chrono::seconds(100)))
+        ERROR() << "could not create bat1 battery!" << std::endl;
 
+    // TODO: server receives some junk data when sleep is removed... debug this...
+    //sleep(2);
     ClientBattery bat0(65431, "bat0");
     ClientBattery bat1(65431, "bat1");
+    ClientBattery batFoo(65431, "batFoo");
 
     BatteryStatus status;
 
@@ -47,8 +52,11 @@ int main() {
     status.max_charging_current_mA = 3600;
     status.max_discharging_current_mA = 3600;
 
-    if (!bat0.setBatteryStatus(status))
+    std::cout << "SET BAT0 STATUS" << std::endl;
+    if (!bat0.setBatteryStatus(status)) {
         ERROR() << "could not set bat0 battery status" << std::endl;
+        exit(1);
+    }
 
     status.voltage_mV = 5;
     status.current_mA = 0;
@@ -57,8 +65,11 @@ int main() {
     status.max_charging_current_mA = 7000;
     status.max_discharging_current_mA = 7000;
 
-    if (!bat1.setBatteryStatus(status))
+    std::cout << "SET BAT1 STATUS" << std::endl;
+    if (!bat1.setBatteryStatus(status)) {
         ERROR() << "could not set bat1 battery status" << std::endl;
+        exit(1);
+    }
 
     std::this_thread::sleep_for(1s);
     
@@ -111,7 +122,12 @@ int main() {
     bat7.schedule_set_current(1750, currentTime+10s, currentTime+18s);
     bat6.schedule_set_current(1500, currentTime+5s, currentTime+15s);
 
-    std::this_thread::sleep_for(20s);
+    LOG() << "bat6 status" << std::endl;
+    PRINT() << bat6.getStatus();
+    LOG() << "bat7 status" << std::endl;
+    PRINT() << bat7.getStatus();
+
+    ////std::this_thread::sleep_for(20s);
 
     admin.shutdown();
     return 0;

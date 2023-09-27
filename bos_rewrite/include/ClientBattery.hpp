@@ -10,6 +10,7 @@
 #include "BatteryStatus.hpp"
 #include "protobuf/battery.pb.h"
 #include "protobuf/battery_manager.pb.h"
+#include "BatteryConnection.hpp"
 
 /**
  * Client Battery Class
@@ -23,7 +24,7 @@
 
 class ClientBattery {
     private:
-        int clientSocket;
+        std::unique_ptr<BatteryConnection> connection;
 
     /**
      * Constructor
@@ -34,6 +35,7 @@ class ClientBattery {
 
     public:
         ~ClientBattery();
+        ClientBattery(const std::string& directory, const std::string& batteryName);
         ClientBattery(int port, const std::string& batteryName);
 
     /**
