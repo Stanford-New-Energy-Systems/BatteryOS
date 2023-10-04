@@ -91,6 +91,7 @@ class Admin {
                                   const std::chrono::milliseconds& maxStaleness = std::chrono::milliseconds(1000),
                                   const RefreshMode& refreshMode = RefreshMode::LAZY);
                                     
+        bool createSecureBattery(const std::string &sourceName, uint64_t num_clients);
 };
 
 #endif

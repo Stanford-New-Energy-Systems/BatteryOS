@@ -20,6 +20,7 @@
 #include "Acceptor.hpp"
 #include "BatteryConnection.hpp"
 #include "NetService.hpp"
+#include "Aggregator.hpp"
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 #error "Windows not supported!"
@@ -83,6 +84,8 @@ class BOS {
         //std::vector<std::pair<std::string, BatteryConnection*>> batteryConnections;
         std::map<int, std::pair<std::string, std::string>> fileNames;
 
+        std::unique_ptr<Aggregator> agg;
+
     public:
 
         /**
@@ -118,6 +121,7 @@ class BOS {
         void handleAdminCommand(BatteryConnection& connection);
         void createDirectory(const std::string &directoryPath, mode_t permission);
         void createBatteryFifos(const std::string& batteryName);
+
     
     /**
      * Public Helper Functions
@@ -131,6 +135,7 @@ class BOS {
         void shutdown();
         void startFifos(mode_t adminPermission);
         void startSockets(int adminPort, int batteryPort);
+        void startAggregator(int client_port, int agg_port); 
 
     /**
      * Private Helper Functions
@@ -160,6 +165,7 @@ class BOS {
         void createAggregateBattery(const bosproto::Admin_Command& command, BatteryConnection& connection);
         void createPartitionBattery(const bosproto::Admin_Command& command, BatteryConnection& connection);
         void createDynamicBattery(const bosproto::Admin_Command& command, BatteryConnection& connection);
+        void createSecureBattery(const bosproto::Admin_Command& command, BatteryConnection& connection);
 };
 
 

@@ -33,11 +33,16 @@ message ScheduleSetCurrent {
     uint64 endTime    = 3;
 }
 
+message SetSchedule {
+    bytes my_schedule = 1;
+}
+
 enum Command {
     Schedule_Set_Current = 0;
     Get_Status = 1;
     Remove_Battery = 2;
     Set_Status = 3;
+    Set_Schedule = 4;
 }
 
 message BatteryCommand {
@@ -45,6 +50,7 @@ message BatteryCommand {
     oneof schedule_parameters {
         BatteryStatus status = 2;
         ScheduleSetCurrent schedule_set_current = 3;
+        SetSchedule set_schedule = 4;
     }
 }
 

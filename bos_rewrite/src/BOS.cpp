@@ -65,8 +65,6 @@ void BOS::handleBatteryCommand(const std::string& batteryName, BatteryConnection
         return;
     } 
 
-    std::cout << "COMMAND: " << command.DebugString() << std::endl;
-
     switch(command.command()) {
         case bosproto::Command::Get_Status:
             this->getStatus(batteryName, connection);
@@ -77,6 +75,13 @@ void BOS::handleBatteryCommand(const std::string& batteryName, BatteryConnection
         case bosproto::Command::Schedule_Set_Current:
             this->scheduleSetCurrent(command, batteryName, connection);
             break;
+        case bosproto::Command::Set_Schedule: {
+            std::shared_ptr<Battery> bat = this->directoryManager->getBattery(batteryName);
+            SecureBattery* secBat = (SecureBattery*) bat.get();
+            bosproto::SetSchedule params = command.set_schedule();
+            secBat->set_schedule(params.my_schedule().c_str(), params.my_schedule().size());
+            break;
+                                              }
         //case bosproto::Command::Remove_Battery:
         //    this->removeBattery(fd);
         //    break;
@@ -222,6 +227,9 @@ void BOS::handleAdminCommand(BatteryConnection& connection) {
             break;
         case bosproto::Command_Options::Create_Dynamic:
             this->createDynamicBattery(command, connection);
+            break;
+        case bosproto::Command_Options::Create_Secure:
+            this->createSecureBattery(command, connection);
             break;
         case bosproto::Command_Options::Shutdown:
             this->shutdown();
@@ -451,6 +459,46 @@ void BOS::createDynamicBattery(const bosproto::Admin_Command& command, BatteryCo
     }
 }
 
+void BOS::createSecureBattery(const bosproto::Admin_Command& command, BatteryConnection& connection) {
+    bosproto::AdminResponse response;
+
+    std::cout << "GOT COMMAND: " << command.DebugString() << std::endl;
+    if (!command.has_secure_battery()) {
+        response.set_return_code(-1);
+        response.set_failure_message("Secure_Battery parameters not set!");
+        
+        if (connection.write(response)) {
+            WARNING() << "unable to write failure message to file descriptor" << std::endl;
+        }
+
+        return;
+    }
+
+    paramsSecure b = parseSecureBattery(command.secure_battery());
+    std::shared_ptr<Battery> bat = this->directoryManager->createSecureBattery(b.name, b.num_clients, 65430);
+
+    if (!bat) {
+        response.set_return_code(-1);
+        response.set_failure_message("battery name: " +  b.name + " already exists");
+        connection.write(response);
+
+        return;
+    }
+
+    response.set_return_code(0);
+    response.set_success_message("successfully created battery: " + b.name);
+
+    if (this->mode == BOSMode::Fifo) {
+        createBatteryFifos(b.name);
+    }
+
+    if (!connection.write(response)) {
+        WARNING() << "unable to write message to file descriptor" << std::endl;
+    }
+
+    return;
+}
+
 void BOS::createDirectory(const std::string &directoryPath, mode_t permission) {
     if (mkdir(directoryPath.c_str(), permission) == -1)
         WARNING() << directoryPath << " already exists" << std::endl;
@@ -509,6 +557,13 @@ void BOS::startSockets(int adminPort, int batteryPort) {
     });
     netServicer.add(this->batteryListener);
 
+    this->pollFDs();
+}
+
+void BOS::startAggregator(int client_port, int agg_port) {
+
+    char* verify_key = "abcdefghijklmnop";
+    this->agg = std::make_unique<Aggregator>(INADDR_ANY, client_port, agg_port, verify_key, &this->netServicer);
     this->pollFDs();
 }
 

@@ -111,3 +111,12 @@ paramsPartition parsePartitionBattery(const bosproto::Partition_Battery& battery
 
     return p;
 }
+
+paramsSecure parseSecureBattery(const bosproto::Secure_Battery& battery) {
+    paramsSecure p;
+
+    p.name = battery.batteryname();
+    p.num_clients = battery.numclients(); 
+
+    return p;
+}

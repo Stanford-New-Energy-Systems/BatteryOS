@@ -12,13 +12,7 @@ PhysicalBattery::PhysicalBattery(const std::string &batteryName,
                                                                            maxStaleness,
                                                                            refreshMode) 
 {
-    this->type = BatteryType::Physical;
-    this->eventSet.insert(event_t(this->batteryName,
-                          EventID::REFRESH,
-                          0,
-                          getTimeNow(),
-                          getSequenceNumber()));
-    this->eventThread = std::thread(&PhysicalBattery::runEventThread, this);
+    // TODO
 }
     
 std::string PhysicalBattery::getBatteryString() const {

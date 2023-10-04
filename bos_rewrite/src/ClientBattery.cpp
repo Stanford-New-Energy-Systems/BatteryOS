@@ -86,9 +86,6 @@ bool ClientBattery::setBatteryStatus(const BatteryStatus& status) {
     // TODO: error
     this->connection->write(command);
 
-    using namespace std::chrono_literals;
-    std::this_thread::sleep_for(1s);
-
     int success = this->connection->read(response);
     if (!success) {
         WARNING() << "could not parse response" << std::endl;

@@ -199,3 +199,14 @@ std::vector<std::shared_ptr<Battery>> BatteryDirectoryManager::createPartitionBa
 
     return this->createPartitionBattery(sourceName, policyType, names, child_proportions, maxStalenesses, refreshModes);
 }
+
+std::shared_ptr<Battery> BatteryDirectoryManager::createSecureBattery(const std::string &name,
+                                                     uint32_t num_clients, int agg_port)
+{
+    char* verify_key = "abcdefghijklmnop";
+    std::shared_ptr<Battery> battery = std::make_shared<SecureBattery>(name, num_clients, verify_key, agg_port);
+
+    if (!this->directory->addBattery(battery))
+        return nullptr; 
+    return battery;
+}

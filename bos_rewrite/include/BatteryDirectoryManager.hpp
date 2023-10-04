@@ -5,6 +5,7 @@
 #include "PhysicalBattery.hpp"
 #include "AggregateBattery.hpp"
 #include "PartitionBattery.hpp"
+#include "SecureBattery.hpp"
 #include "BatteryDirectory.hpp"
 
 template <typename T, typename U>
@@ -91,6 +92,10 @@ class BatteryDirectoryManager {
                                                       const std::string& batteryName, 
                                                       const std::chrono::milliseconds& maxStaleness = std::chrono::milliseconds(1000),
                                                       const RefreshMode& refreshMode = RefreshMode::LAZY);
+
+        std::shared_ptr<Battery> createSecureBattery(const std::string &name,
+                                                     uint32_t num_clients,
+                                                     int agg_port);
 };
 
 #endif

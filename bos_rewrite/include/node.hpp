@@ -7,6 +7,7 @@ enum class BatteryType : int {
     Aggregate,
     Partition,
     PartitionManager,
+    Secure,
 };
 
 /*  General Node in BOS Graph */

@@ -34,7 +34,7 @@ OBJS += ../protobuf/battery_manager.pb.o
 OBJS += ../src/wiringSerial.o
 OBJS += $(BATTERY_OBJECTS)
 
-LFLAGS = -pthread 
+LFLAGS = -g -pthread -L. -lbprivacy
 CXXFLAGS = -MMD -MD -I$(INC_DIR) -I../
 LFLAGS += `pkg-config --libs protobuf`
 CXXFLAGS += `pkg-config --cflags protobuf`
@@ -76,6 +76,9 @@ bos: $(OBJS) fifo.o
 	$(GPP) -o $@ $^ $(LFLAGS)
 
 socket: $(OBJS) socket.o 
+	$(GPP) -o $@ $^ $(LFLAGS)
+
+aggregator: $(OBJS) aggregator.o 
 	$(GPP) -o $@ $^ $(LFLAGS)
 
 fifoTest: $(OBJS) testFifo.o

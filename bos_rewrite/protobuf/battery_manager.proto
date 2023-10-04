@@ -24,6 +24,7 @@ enum Command_Options {
     Create_Partition = 2;
     Create_Dynamic   = 3;
     Shutdown         = 4;
+    Create_Secure   = 5;
 }
 
 message Physical_Battery {
@@ -59,6 +60,11 @@ message Partition_Battery {
     repeated Refresh refresh_modes = 6;
 }
 
+message Secure_Battery {
+    string batteryName = 1;
+    uint64 numClients = 2;
+}
+
 message Admin_Command {
     Command_Options command_options = 1;
     oneof command_parameters {
@@ -66,6 +72,7 @@ message Admin_Command {
         Aggregate_Battery aggregate_battery = 3;
         Partition_Battery partition_battery = 4;
         Dynamic_Battery   dynamic_battery = 5;
+        Secure_Battery    secure_battery = 6;
     }
 }
 

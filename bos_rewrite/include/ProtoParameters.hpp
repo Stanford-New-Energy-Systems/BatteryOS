@@ -1,3 +1,6 @@
+#ifndef PROTO_PARAMS_H
+#define PROTO_PARAMS_H
+
 #include "protobuf/battery.pb.h"
 #include "protobuf/battery_manager.pb.h"
 
@@ -45,7 +48,15 @@ typedef struct dynamicBatteryParameters {
     std::string setCurrentFunc;
 } paramsDynamic;
 
+typedef struct secureParameters {
+    std::string name;
+    uint32_t num_clients;
+} paramsSecure;
+
 paramsPhysical  parsePhysicalBattery(const bosproto::Physical_Battery& battery);
 paramsAggregate parseAggregateBattery(const bosproto::Aggregate_Battery& battery);
 paramsPartition parsePartitionBattery(const bosproto::Partition_Battery& battery);
 paramsDynamic   parseDynamicBattery(const bosproto::Dynamic_Battery& battery);
+paramsSecure   parseSecureBattery(const bosproto::Secure_Battery& battery);
+
+#endif

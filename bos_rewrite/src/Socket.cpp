@@ -4,6 +4,7 @@
 #include "util.hpp"
 
 #include <unistd.h>
+#include <cstring>
 
 // TODO:
 Socket::Socket(int fd) 
@@ -72,7 +73,7 @@ std::unique_ptr<Socket> Socket::connect(int fd, in_addr_t addr, int port) {
     int status = ::connect(socket->fd, (struct sockaddr*)&saddr, sizeof(saddr));
 
     if (status == -1) {
-        ERROR() << "could not connect to server!" << std::endl;
+        ERROR() << "could not connect to server! " << std::strerror(errno) << std::endl;
         exit(1);
     }
 

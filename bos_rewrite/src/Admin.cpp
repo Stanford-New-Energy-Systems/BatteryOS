@@ -461,3 +461,27 @@ bool Admin::createPartitionBattery(const std::string& sourceName,
 
     return this->createPartitionBattery(sourceName, policyType, names, child_proportions, m, r);
 }
+
+bool Admin::createSecureBattery(const std::string& name, uint64_t num_clients)
+{
+    bosproto::Admin_Command command;
+    bosproto::AdminResponse response;
+
+    command.set_command_options(bosproto::Command_Options::Create_Secure);
+    bosproto::Secure_Battery* p = command.mutable_secure_battery(); 
+    p->set_batteryname(name);
+    p->set_numclients(num_clients);
+    
+    this->clientSocket->write(command);
+
+    int success = this->clientSocket->read(response); 
+
+    if (!success) {
+        WARNING() << "could not parse admin response" << std::endl;
+        return false;
+    }
+
+    if (response.return_code() == -1)
+        return false;
+    return true;  
+}
