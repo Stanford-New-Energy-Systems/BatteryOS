@@ -118,8 +118,8 @@ void* CreateJBDBMS(void* args) {
     const char** initArgs = (const char**)args;
     
     int baud                = atoi(initArgs[1]);
-    int max_charge          = atof(initArgs[2]);     
-    int max_discharge       = atof(initArgs[3]);
+    double max_charge       = atof(initArgs[2]);     
+    double max_discharge    = atof(initArgs[3]);
     std::string device_path = initArgs[0];
 
     return (void *) new JBDBMS(device_path, baud, max_charge, max_discharge);

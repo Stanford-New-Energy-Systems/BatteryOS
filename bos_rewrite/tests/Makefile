@@ -34,12 +34,14 @@ OBJS += ../protobuf/battery_manager.pb.o
 OBJS += ../src/wiringSerial.o
 OBJS += $(BATTERY_OBJECTS)
 
-LFLAGS = -pthread 
+LFLAGS = -pthread
 CFLAGS = -I$(INC_DIR) -I../
 LFLAGS += `pkg-config --libs protobuf`
 CFLAGS += `pkg-config --cflags protobuf`
 CFLAGS += `python3-config --cflags --embed`
 LFLAGS += `python3-config --ldflags --embed`
+CFLAGS += -I/usr/local/include
+LFLAGS += -L/usr/lib -lssl -lcrypto -lcurl
 
 define remove_file
     $(if $(wildcard $(1)), \rm $(1))
@@ -65,10 +67,10 @@ protobuf:
 	protoc -I ../protobuf --cpp_out ../protobuf ../protobuf/battery.proto ../protobuf/battery_manager.proto 
 
 mac: $(BATTERY_OBJECTS) ../src/BatteryStatus.o ../src/wiringSerial.o
-	$(GPP) -dynamiclib -o libbatterydrivers.dylib $^
+	$(GPP) -dynamiclib -o libbatterydrivers.dylib $^ -lcurl
 
 linux: $(BATTERY_OBJECTS) ../src/BatteryStatus.o ../src/wiringSerial.o
-	$(GPP) -shared -o libbatterydrivers.so $^
+	$(GPP) -shared -o libbatterydrivers.so $^ -lcurl
 	
 bos: $(OBJS) fifo.o
 	$(GPP) -o $@ $^ $(LFLAGS)
@@ -76,10 +78,16 @@ bos: $(OBJS) fifo.o
 socket: $(OBJS) socket.o 
 	$(GPP) -o $@ $^ $(LFLAGS)
 
+secureSocket: $(OBJS) secureSocket.o 
+	$(GPP) -o $@ $^ $(LFLAGS)
+
 fifoTest: $(OBJS) testFifo.o
 	$(GPP) -o $@ $^ $(LFLAGS)
 
 socketTest: $(OBJS) testSocket.o 
+	$(GPP) -o $@ $^ $(LFLAGS)
+
+secureSocketTest: $(OBJS) testSecureSocket.o 
 	$(GPP) -o $@ $^ $(LFLAGS)
 
 manager: $(OBJS) testDirectoryManager.o
@@ -129,6 +137,8 @@ clean:
 	$(call remove_file,aggregate)
 	$(call remove_file,partition)
 	$(call remove_file,socketTest)
+	$(call remove_file,secureSocket)
+	$(call remove_file,secureSocketTest)
 	
 	$(call remove_file,libbatterydrivers.so)
 	$(call remove_file,libbatterydrivers.dylib)

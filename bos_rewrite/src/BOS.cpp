@@ -11,7 +11,8 @@ BOS::~BOS() {
     dlclose(this->library);
 }
 
-BOS::BOS() {
+BOS::BOS(bool TLS) {
+    this->TLS              = TLS;
     this->hasQuit          = true;
     this->quitPoll         = false;
     this->adminFifoFD      = -1;
@@ -21,9 +22,23 @@ BOS::BOS() {
     this->fds = new pollfd[1028];
     this->directoryManager = std::make_unique<BatteryDirectoryManager>();
 
+    if (this->TLS) {
+        SSL_library_init();
+        this->context = InitServerCTX(); 
+
+        if (SSL_CTX_load_verify_locations(this->context, "../certs/ca_cert.pem", NULL) != 1)
+            ERR_print_errors_fp(stderr);
+        SSL_CTX_set_verify(this->context, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, NULL);
+        LoadCertificates(this->context, (char*) "../certs/server.pem", (char*) "../certs/server.key"); /* load certs */
+    } else 
+        this->context = nullptr;
+
     this->library = dlopen("../tests/libbatterydrivers.dylib", RTLD_LAZY);
     if (!this->library)
         ERROR() << "could not open dynamic library!" << std::endl;
+    
+    if (!this->TLS)
+        LOG() << "BOS MADE IT HERE!" << std::endl;
 } // use only for socket mode
 
 BOS::BOS(const std::string &directoryPath, mode_t permission) : BOS() {
@@ -35,6 +50,7 @@ Private Functions
 ******************/
 
 void BOS::pollFDs() {
+    LOG() << "entering this function!" << std::endl;
     while(!this->quitPoll) { // think of best way to terminate this loop 
         int index = 4;
 
@@ -70,14 +86,23 @@ void BOS::pollFDs() {
         else if (nelems != 0) {
             this->checkFileDescriptors();
 
-            if ((this->fds[0].revents & POLLIN) == POLLIN)
+            if ((this->fds[0].revents & POLLIN) == POLLIN) 
                 this->handleAdminCommand(this->adminFifoFD, true);
-            else if ((this->fds[1].revents & POLLIN) == POLLIN)
+            else if ((this->fds[1].revents & POLLIN) == POLLIN) {
+                LOG() << "about to call this command!" << std::endl;
                 this->handleAdminCommand(this->adminSocketFD, false);
+            }
             else if ((this->fds[2].revents & POLLIN) == POLLIN) {
                 this->adminSocketFD = accept(this->adminListener, NULL, NULL);
                 if (this->adminSocketFD == -1)
                     ERROR() << "error creating client socket from admin socket" << std::endl;
+                
+                if (this->TLS) {
+                    this->ssl_map[adminSocketFD] = SSL_new(this->context); 
+                    SSL_set_fd(this->ssl_map[adminSocketFD], adminSocketFD);
+                    if ( SSL_accept(this->ssl_map[adminSocketFD]) == -1 ) // SSL-protocol accept
+                        ERR_print_errors_fp(stderr);
+                }
             } else if ((this->fds[3].revents & POLLIN) == POLLIN)
                 this->acceptBatteryConnection();
         }
@@ -93,25 +118,68 @@ void BOS::checkFileDescriptors() {
     return;
 }
 
+SSL_CTX* BOS::InitServerCTX() {
+    OpenSSL_add_all_algorithms();                       // load and register crypto
+    SSL_load_error_strings();                           // load all error messages
+    const SSL_METHOD* method = TLS_server_method(); // create new server-method instance
+    SSL_CTX* ctx = SSL_CTX_new(method);                 // create new context from server-method
+
+    if (ctx == NULL) {
+        ERR_print_errors_fp(stderr);
+        abort();
+    }
+    return ctx;
+}
+
+void BOS::LoadCertificates(SSL_CTX* ctx, char* certFile, char* keyFile) {
+    if (SSL_CTX_use_certificate_file(ctx, certFile, SSL_FILETYPE_PEM) <= 0)
+        ERR_print_errors_fp(stderr);
+    else if (SSL_CTX_use_PrivateKey_file(ctx, keyFile, SSL_FILETYPE_PEM) <= 0)
+        ERR_print_errors_fp(stderr);
+    else if (!SSL_CTX_check_private_key(ctx))
+        ERR_print_errors_fp(stderr);
+    else
+        return;
+    abort();
+}
+
 void BOS::acceptBatteryConnection() {
+    SSL* ssl;
+    int bytes;
     char batteryName[100];
     int clientSocket = accept(this->batteryListener, NULL, NULL); 
-    
-    int bytes = recv(clientSocket, batteryName, 100, 0);
+
+    if (this->TLS) {
+        ssl = SSL_new(this->context);
+        SSL_set_fd(ssl, clientSocket);
+        if ( SSL_accept(ssl) == -1 ) // SSL-protocol accept
+            ERR_print_errors_fp(stderr);
+        bytes = SSL_read(ssl, batteryName, 100);
+    } else  
+        bytes = recv(clientSocket, batteryName, 100, 0);
     batteryName[bytes] = '\0';
 
     if (bytes == -1)
         WARNING() << "Unable to read batteryName from clientSocket!" << std::endl;
-    else if (this->directoryManager->getBattery(batteryName) == nullptr)
+    else if (this->directoryManager->getBattery(batteryName) == nullptr) {
+        ERROR() << "battery not found in directory" << std::endl;
+        if (this->TLS)
+            SSL_free(ssl);
         close(clientSocket);
-    else
+    }
+    else {
+        if (this->TLS)
+            this->ssl_map[clientSocket]   = ssl;
         this->battery_names[clientSocket] = std::make_pair(batteryName, false);
+    }
 
     return;
 }
 
 void BOS::handleBatteryCommand(int fd) {
+    LOG() << "handling battery command" << std::endl;
     int success;
+    int bytesRead;
     bosproto::BatteryCommand command;
     
     if (this->battery_names[fd].second)
@@ -120,10 +188,19 @@ void BOS::handleBatteryCommand(int fd) {
         int size = 4096;
         char buffer[size];
 
-        while (recv(fd, buffer, size, MSG_PEEK) == size)
-            size *= 2;
+        if (this->TLS) {
+            SSL* ssl = this->ssl_map[fd];
+            //while (SSL_peek(ssl, buffer, size) == size)
+            //    size *= 2;
 
-        int bytesRead = recv(fd, buffer, size, 0);
+            bytesRead = SSL_read(ssl, buffer, size);
+        } else {
+            while (recv(fd, buffer, size, MSG_PEEK) == size)
+                size *= 2;
+
+            bytesRead = recv(fd, buffer, size, 0);
+        }
+
         success = command.ParseFromArray(buffer, bytesRead);
     }
 
@@ -182,7 +259,16 @@ void BOS::getStatus(int fd) {
     }
 
     response.set_return_code(0);    
-    response.SerializeToFileDescriptor(output_fd);
+    if (this->TLS) {
+        SSL* ssl = this->ssl_map[output_fd];
+        int size = response.ByteSizeLong();
+
+        char buffer[size];
+        response.SerializeToArray(buffer, size);
+        SSL_write(ssl, buffer, size); 
+    }
+    else
+        response.SerializeToFileDescriptor(output_fd);
 
     if (this->battery_names[fd].second)
         close(output_fd); 
@@ -191,6 +277,7 @@ void BOS::getStatus(int fd) {
 }
 
 void BOS::setStatus(const bosproto::BatteryCommand& command, int fd) {
+    LOG() << "entering set status function!" << std::endl;
     int output_fd;
     BatteryStatus status;
     std::shared_ptr<Battery> battery;
@@ -212,7 +299,8 @@ void BOS::setStatus(const bosproto::BatteryCommand& command, int fd) {
     if (!command.has_status()) {
         response.set_return_code(-1);
         response.set_reason("status needs to be set!");
-
+        
+        LOG() << "this part is not set up for TLS!" <<std::endl;
         response.SerializeToFileDescriptor(output_fd);
         
         if (this->battery_names[fd].second)
@@ -241,7 +329,16 @@ void BOS::setStatus(const bosproto::BatteryCommand& command, int fd) {
         response.set_reason("successfully set status!");
     }
 
-    response.SerializeToFileDescriptor(output_fd);
+    if (this->TLS) {
+        LOG() << "in this TLS function for setStatus" << std::endl;
+        SSL* ssl = this->ssl_map[output_fd];
+        int size = response.ByteSizeLong();
+
+        char buffer[size];
+        response.SerializeToArray(buffer, size);
+        SSL_write(ssl, buffer, size); 
+    } else
+        response.SerializeToFileDescriptor(output_fd);
     
     if (this->battery_names[fd].second)
         close(output_fd);
@@ -293,7 +390,14 @@ void BOS::scheduleSetCurrent(const bosproto::BatteryCommand& command, int fd) {
         response.set_success_message("successfully set current for " + name);
     }
 
-    if (!response.SerializeToFileDescriptor(output_fd))
+    if (this->TLS) {
+        SSL* ssl = this->ssl_map[output_fd];
+        int size = response.ByteSizeLong();
+
+        char buffer[size];
+        response.SerializeToArray(buffer, size);
+        SSL_write(ssl, buffer, size); 
+    } else if (!response.SerializeToFileDescriptor(output_fd))
         WARNING() << "Unable to serialize response to " << name << std::endl;
 
     if (this->battery_names[fd].second)
@@ -333,6 +437,17 @@ void BOS::removeBattery(int fd) {
         this->fileNames.erase(fd);  
     }
 
+    if (this->TLS) {
+        SSL* ssl = this->ssl_map[output_fd];
+        int size = response.ByteSizeLong();
+
+        char buffer[size];
+        response.SerializeToArray(buffer, size);
+        SSL_write(ssl, buffer, size); 
+
+        SSL_free(ssl);
+        this->ssl_map[output_fd]; 
+    }
     if (!response.SerializeToFileDescriptor(output_fd))
         WARNING() << "unable to write remove battery response to output FIFO" << std::endl;
 
@@ -343,7 +458,10 @@ void BOS::removeBattery(int fd) {
 }
 
 void BOS::handleAdminCommand(int fd, bool FIFO) {
+    LOG() << "entered admin command!" << std::endl;
+
     int success;
+    int bytesRead;
     bosproto::Admin_Command command;
     
     if (FIFO)
@@ -352,10 +470,28 @@ void BOS::handleAdminCommand(int fd, bool FIFO) {
         int size = 4096;
         char buffer[size];
 
-        while (recv(fd, buffer, size, MSG_PEEK) == size)
-            size *= 2;
+        if (this->TLS) {
+            LOG() << "made it here!" << std::endl;
 
-        int bytesRead = recv(fd, buffer, size, 0);
+            SSL* ssl = this->ssl_map[fd];
+            //while (SSL_peek(ssl, buffer, size) == size)
+            //    size *= 2;
+            
+            if (ssl == NULL)
+                ERROR() << "pointer is NULL" << std::endl;           
+ 
+            bytesRead = SSL_read(ssl, buffer, size);
+            LOG() << "bytesRead = " << bytesRead << std::endl;
+            if (bytesRead < 0) {
+                SSL_get_error(ssl, bytesRead);
+            }
+        } else {
+            while (recv(fd, buffer, size, MSG_PEEK) == size)
+                size *= 2;
+
+            bytesRead = recv(fd, buffer, size, 0);
+        }
+
         
         success = command.ParseFromArray(buffer, bytesRead);
     }
@@ -389,6 +525,7 @@ void BOS::handleAdminCommand(int fd, bool FIFO) {
 }
 
 void BOS::createPhysicalBattery(const bosproto::Admin_Command& command, int fd, bool FIFO) {
+    LOG() << "entering this function!" << std::endl;
     int output_fd;
     bosproto::AdminResponse response;
 
@@ -402,8 +539,17 @@ void BOS::createPhysicalBattery(const bosproto::Admin_Command& command, int fd, 
         response.set_return_code(-1);
         response.set_failure_message("Physical_Battery parameters not set!");
         
-        if (response.SerializeToFileDescriptor(output_fd))
-            WARNING() << "unable to write failure message to file descriptor" << std::endl;
+        if (this->TLS) {
+            SSL* ssl = this->ssl_map[output_fd];
+            int size = response.ByteSizeLong();
+
+            char buffer[size];
+            response.SerializeToArray(buffer, size);
+            SSL_write(ssl, buffer, size); 
+        } else {
+            if (response.SerializeToFileDescriptor(output_fd))
+                WARNING() << "unable to write failure message to file descriptor" << std::endl;
+        }
 
         if (FIFO)
             close(output_fd);
@@ -413,6 +559,8 @@ void BOS::createPhysicalBattery(const bosproto::Admin_Command& command, int fd, 
 
     paramsPhysical b = parsePhysicalBattery(command.physical_battery());
     std::shared_ptr<Battery> bat = this->directoryManager->createPhysicalBattery(b.name, b.staleness, b.refresh);
+
+    LOG() << "name of physical battery is: " << b.name << std::endl;
 
     if (bat != nullptr) {
         response.set_return_code(0);
@@ -430,7 +578,14 @@ void BOS::createPhysicalBattery(const bosproto::Admin_Command& command, int fd, 
         response.set_failure_message("battery name: " +  b.name + " already exists");
     }
 
-    if (!response.SerializeToFileDescriptor(output_fd))
+    if (this->TLS) {
+        SSL* ssl = this->ssl_map[output_fd];
+        int size = response.ByteSizeLong();
+
+        char buffer[size];
+        response.SerializeToArray(buffer, size);
+        SSL_write(ssl, buffer, size); 
+    } else if (!response.SerializeToFileDescriptor(output_fd))
         WARNING() << "unable to write message to file descriptor" << std::endl;
 
     if (FIFO)
@@ -481,7 +636,14 @@ void BOS::createAggregateBattery(const bosproto::Admin_Command& command, int fd,
         response.set_failure_message("error creating aggregate battery!");
     }
 
-    if (!response.SerializeToFileDescriptor(output_fd))
+    if (this->TLS) {
+        SSL* ssl = this->ssl_map[output_fd];
+        int size = response.ByteSizeLong();
+
+        char buffer[size];
+        response.SerializeToArray(buffer, size);
+        SSL_write(ssl, buffer, size); 
+    } else if (!response.SerializeToFileDescriptor(output_fd))
         WARNING() << "unable to write message to file descriptor" << std::endl;
 
     if (FIFO)
@@ -550,7 +712,14 @@ void BOS::createPartitionBattery(const bosproto::Admin_Command& command, int fd,
         response.set_failure_message("error creating partition batteries!");
     }
 
-    if (!response.SerializeToFileDescriptor(output_fd))
+    if (this->TLS) {
+        SSL* ssl = this->ssl_map[output_fd];
+        int size = response.ByteSizeLong();
+
+        char buffer[size];
+        response.SerializeToArray(buffer, size);
+        SSL_write(ssl, buffer, size); 
+    } else if (!response.SerializeToFileDescriptor(output_fd))
         WARNING() << "unable to write message to file descriptor" << std::endl;
 
     if (FIFO)
@@ -632,7 +801,14 @@ void BOS::createDynamicBattery(const bosproto::Admin_Command& command, int fd, b
         response.set_failure_message("battery name: " +  b.name + " already exists");
     }
 
-    if (!response.SerializeToFileDescriptor(output_fd))
+    if (this->TLS) {
+        SSL* ssl = this->ssl_map[output_fd];
+        int size = response.ByteSizeLong();
+
+        char buffer[size];
+        response.SerializeToArray(buffer, size);
+        SSL_write(ssl, buffer, size); 
+    } else if (!response.SerializeToFileDescriptor(output_fd))
         WARNING() << "unable to write message to file descriptor" << std::endl;
 
     if (FIFO)
@@ -682,6 +858,7 @@ void BOS::startFifos(mode_t adminPermission) {
 }
 
 void BOS::startSockets(int adminPort, int batteryPort) {
+    LOG() << "entered this command to start the sockets!" << std::endl;
     this->adminListener   = socket(AF_INET, SOCK_STREAM, 0);
     this->batteryListener = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -707,6 +884,19 @@ void BOS::startSockets(int adminPort, int batteryPort) {
         ERROR() << "failed to listen on adminSocket: " << this->adminListener << std::endl;
     else if (listen(this->batteryListener, 1024) < 0)
         ERROR() << "failed to listen on batterySocket: " << this->batteryListener << std::endl;
+
+    if (this->TLS) {
+        this->ssl_map[adminListener]   = SSL_new(this->context); 
+        this->ssl_map[batteryListener] = SSL_new(this->context); 
+
+        SSL_set_fd(this->ssl_map[adminListener], adminListener);
+        SSL_set_fd(this->ssl_map[batteryListener], batteryListener);
+
+        if ( SSL_accept(this->ssl_map[adminListener]) == -1 ) // SSL-protocol accept
+            ERR_print_errors_fp(stderr);
+        else if ( SSL_accept(this->ssl_map[batteryListener]) == -1 ) // SSL-protocol accept
+            ERR_print_errors_fp(stderr);
+    }
 
     if (this->hasQuit) {
         this->hasQuit = false;
@@ -741,6 +931,12 @@ void BOS::shutdown() {
     for (const auto &f: battery_names) {
         if (f.second.second)
             close(f.first);
+    }
+
+    if (this->TLS) {
+        for (const auto &ssl: this->ssl_map)
+            SSL_free(ssl.second);
+        SSL_CTX_free(this->context);
     }
 
     if (this->adminSocketFD != -1)

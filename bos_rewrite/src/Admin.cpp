@@ -5,9 +5,32 @@ Admin::~Admin() {
         close(this->clientSocket);
 };
 
-Admin::Admin(int port) {
+Admin::Admin(int port, bool TLS) {
     this->fifoMode = false;
+    this->TLS      = TLS;
+
+    if (TLS) {
+        SSL_library_init();
+        this->context = InitCTX();
+        if (SSL_CTX_load_verify_locations(this->context, "../certs/ca_cert.pem", NULL) != 1)
+            ERR_print_errors_fp(stderr);
+        LoadCertificates(this->context, (char*) "../certs/client.pem", (char*) "../certs/client.key");
+        SSL_CTX_set_verify(this->context, SSL_VERIFY_PEER, NULL);
+    } else {
+        this->ssl = nullptr;
+        this->context = nullptr;
+    }
+
     this->clientSocket = this->setupClient(port);
+    if (!TLS)
+        LOG() << "clientSocket = " << this->clientSocket << std::endl;
+
+    if (TLS) {
+        this->ssl = SSL_new(this->context);
+        SSL_set_fd(this->ssl, this->clientSocket);
+        if (SSL_connect(this->ssl) == -1)
+            ERR_print_errors_fp(stderr);
+    }
 }
 
 Admin::Admin(const std::string& inputFilePath, const std::string& outputFilePath) {
@@ -16,17 +39,47 @@ Admin::Admin(const std::string& inputFilePath, const std::string& outputFilePath
     this->outputFilePath = outputFilePath;
 }
 
+/*****************
+Private Functions
+******************/
+
+SSL_CTX* Admin::InitCTX() {
+    OpenSSL_add_all_algorithms();                   // Load crypto
+    SSL_load_error_strings();                       // bring in and register error messages
+    const SSL_METHOD* method = TLS_client_method(); // create new client-method instance
+    SSL_CTX* ctx = SSL_CTX_new(method);             // create new context
+
+    if (ctx == NULL) {
+        ERR_print_errors_fp(stderr);
+        abort();
+    }
+    return ctx;
+}
+
+void Admin::LoadCertificates(SSL_CTX* ctx, char* certFile, char* keyFile) {
+    if (SSL_CTX_use_certificate_file(ctx, certFile, SSL_FILETYPE_PEM) <= 0)
+        ERR_print_errors_fp(stderr);
+    else if (SSL_CTX_use_PrivateKey_file(ctx, keyFile, SSL_FILETYPE_PEM) <= 0)
+        ERR_print_errors_fp(stderr);
+    else if (!SSL_CTX_check_private_key(ctx))
+        ERR_print_errors_fp(stderr);
+    else
+        return;
+    abort();
+}
+
 /****************
 Public Functions
 *****************/
 
 bool Admin::shutdown() {
     int inputFD;
+    int success;
     bosproto::Admin_Command command;
     bosproto::AdminResponse response;
     
     if (this->fifoMode)
-        inputFD  = open(this->inputFilePath.c_str(), O_WRONLY);
+        inputFD = open(this->inputFilePath.c_str(), O_WRONLY);
     else
         inputFD = this->clientSocket;
 
@@ -34,7 +87,15 @@ bool Admin::shutdown() {
         ERROR() << "could not open input FIFO or output FIFO: check file paths" << std::endl;
 
     command.set_command_options(bosproto::Command_Options::Shutdown);
-    int success = command.SerializeToFileDescriptor(inputFD);
+
+    if (this->TLS) {
+        int commandSize = command.ByteSizeLong();
+        char buffer[commandSize];
+        command.SerializeToArray(buffer, commandSize);
+        success = SSL_write(this->ssl, buffer, commandSize);
+    } else    
+        success = command.SerializeToFileDescriptor(inputFD);
+
     if (!success)
         ERROR() << "error writing message to file descriptor" << std::endl;
     std::cout << " sending shutdown request " << std::endl;
@@ -65,6 +126,8 @@ bool Admin::createPhysicalBattery(const std::string& name,
                                   const std::chrono::milliseconds& maxStaleness,
                                   const RefreshMode& refreshMode)
 {
+    LOG() << "entering this function!" << std::endl;
+    int bytes;
     int inputFD;
     int success;
     int outputFD;
@@ -98,8 +161,17 @@ bool Admin::createPhysicalBattery(const std::string& name,
         p->set_refresh_mode(bosproto::Refresh::LAZY);
     else
         p->set_refresh_mode(bosproto::Refresh::ACTIVE);
-    
-    command.SerializeToFileDescriptor(inputFD);
+
+    if (this->TLS) {
+        LOG() << "about to write command to create physical battery" << std::endl;
+        int commandSize = command.ByteSizeLong();
+        command.SerializeToArray(buffer, commandSize);
+        SSL_write(this->ssl, buffer, commandSize);
+    } else {    
+        LOG() << "regular socket command begin!" << std::endl; 
+        command.SerializeToFileDescriptor(inputFD);
+        LOG() << "regular socket command end!" << std::endl; 
+    }
 
     if (this->fifoMode)
         close(inputFD);
@@ -114,11 +186,20 @@ bool Admin::createPhysicalBattery(const std::string& name,
         success = response.ParseFromFileDescriptor(outputFD);
     else {
 
-        while (recv(outputFD, buffer, size, MSG_PEEK) == size)
-            size *= 2;
-
-        int bytes = recv(outputFD, buffer, size, 0);
+        if (this->TLS) {
+            //while (SSL_peek(this->ssl, buffer, size) == size)
+            //    size *= 2;
+            bytes = SSL_read(this->ssl, buffer, size);
+        } else {
+            while (recv(outputFD, buffer, size, MSG_PEEK) == size)
+                size *= 2;
+            bytes = recv(outputFD, buffer, size, 0);
+            LOG() << "in here with the number of bytes = " << bytes << std::endl;
+        }
+        
+        LOG() << "regular response command begin! bytes = " << bytes <<  std::endl;
         success = response.ParseFromArray(buffer, bytes); 
+        LOG() << "regular response command end!" << std::endl;
     }
 
     delete[] fds;
@@ -130,6 +211,8 @@ bool Admin::createPhysicalBattery(const std::string& name,
         WARNING() << "could not parse admin response" << std::endl;
         return false;
     }
+
+    LOG() << "exiting this function" << std::endl;
 
     if (response.return_code() == -1)
         return false;
@@ -146,6 +229,7 @@ bool Admin::createDynamicBattery(const char** initArgs,
                                  const std::chrono::milliseconds& maxStaleness, 
                                  const RefreshMode& refreshMode)
 {
+    int bytes;
     int success;
     int inputFD;
     int outputFD;
@@ -192,7 +276,12 @@ bool Admin::createDynamicBattery(const char** initArgs,
     
     LOG() << "about to serialize" << std::endl;
 
-    command.SerializeToFileDescriptor(inputFD);
+    if (this->TLS) {
+        int commandSize = command.ByteSizeLong();
+        command.SerializeToArray(buffer, commandSize);
+        SSL_write(this->ssl, buffer, commandSize);
+    } else
+        command.SerializeToFileDescriptor(inputFD);
 
     LOG() << "after serialization" << std::endl;
 
@@ -208,11 +297,16 @@ bool Admin::createDynamicBattery(const char** initArgs,
     if (this->fifoMode)
         success = response.ParseFromFileDescriptor(outputFD);
     else {
+        if (this->TLS) {
+            //while (SSL_peek(this->ssl, buffer, size) == size)
+            //    size *= 2;
+            bytes = SSL_read(this->ssl, buffer, size);
+        } else {
+            while (recv(outputFD, buffer, size, MSG_PEEK) == size)
+                size *= 2;
+            bytes = recv(outputFD, buffer, size, 0);
+        }
 
-        while (recv(outputFD, buffer, size, MSG_PEEK) == size)
-            size *= 2;
-
-        int bytes = recv(outputFD, buffer, size, 0);
         success = response.ParseFromArray(buffer, bytes); 
     }
 
@@ -238,6 +332,7 @@ bool Admin::createAggregateBattery(const std::string& name,
                                    const std::chrono::milliseconds& maxStaleness,
                                    const RefreshMode& refreshMode)
 {
+    int bytes;
     int success;
     int inputFD;
     int outputFD;
@@ -276,7 +371,12 @@ bool Admin::createAggregateBattery(const std::string& name,
     else
         a->set_refresh_mode(bosproto::Refresh::ACTIVE);
 
-    command.SerializeToFileDescriptor(inputFD);
+    if (this->TLS) {
+        int commandSize = command.ByteSizeLong();
+        command.SerializeToArray(buffer, commandSize);
+        SSL_write(this->ssl, buffer, commandSize);
+    } else
+        command.SerializeToFileDescriptor(inputFD);
 
     if (this->fifoMode)
         close(inputFD);
@@ -290,11 +390,16 @@ bool Admin::createAggregateBattery(const std::string& name,
     if (this->fifoMode)
         success = response.ParseFromFileDescriptor(outputFD);
     else {
+        if (this->TLS) {
+            //while (SSL_peek(this->ssl, buffer, size) == size)
+            //    size *= 2;
+            bytes = SSL_read(this->ssl, buffer, size);
+        } else {
+            while (recv(outputFD, buffer, size, MSG_PEEK) == size)
+                size *= 2;
+            bytes = recv(outputFD, buffer, size, 0);
+        }
 
-        while (recv(outputFD, buffer, size, MSG_PEEK) == size)
-            size *= 2;
-
-        int bytes = recv(outputFD, buffer, size, 0);
         success = response.ParseFromArray(buffer, bytes); 
     }
 
@@ -320,6 +425,7 @@ bool Admin::createPartitionBattery(const std::string& sourceName,
                                    std::vector<std::chrono::milliseconds> maxStalenesses,
                                    std::vector<RefreshMode> refreshModes)
 {
+    int bytes;
     int success;
     int inputFD;
     int outputFD;
@@ -381,7 +487,12 @@ bool Admin::createPartitionBattery(const std::string& sourceName,
         p->add_refresh_modes(r); 
     }
 
-    command.SerializeToFileDescriptor(inputFD);
+    if (this->TLS) {
+        int commandSize = command.ByteSizeLong();
+        command.SerializeToArray(buffer, commandSize);
+        SSL_write(this->ssl, buffer, commandSize);
+    } else
+        command.SerializeToFileDescriptor(inputFD);
 
     if (this->fifoMode)
         close(inputFD);
@@ -395,11 +506,16 @@ bool Admin::createPartitionBattery(const std::string& sourceName,
     if (this->fifoMode)
         success = response.ParseFromFileDescriptor(outputFD);
     else {
+        if (this->TLS) {
+            //while (SSL_peek(this->ssl, buffer, size) == size)
+            //    size *= 2;
+            bytes = SSL_read(this->ssl, buffer, size);
+        } else {
+            while (recv(outputFD, buffer, size, MSG_PEEK) == size)
+                size *= 2;
+            bytes = recv(outputFD, buffer, size, 0);
+        }
 
-        while (recv(outputFD, buffer, size, MSG_PEEK) == size)
-            size *= 2;
-
-        int bytes = recv(outputFD, buffer, size, 0);
         success = response.ParseFromArray(buffer, bytes); 
     }
 

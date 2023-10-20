@@ -17,6 +17,7 @@ PseudoBattery::PseudoBattery(const std::string& batteryName,
                                                                                maxStaleness,
                                                                                refreshMode)
 {
+    this->signal = false;
     this->runningThread = false;
     this->type = BatteryType::Physical;
 }
@@ -26,10 +27,16 @@ Private Functions
 *****************/
 
 void PseudoBattery::runChargingThread() {
+    std::unique_lock<lock_t> uLock(this->cLock);
     double capacity = this->status.capacity_mAh;
 
     while (this->status.current_mA != 0) {
-        capacity += (-this->status.current_mA / 20); // dividing by 20 used for 3 minute intervals
+        this->signal = false;
+
+        while(!this->signal)
+            this->chargeNotifier.wait(uLock);
+
+        capacity += (-this->status.current_mA); // dividing by 20 used for 3 minute intervals
 
         if (this->status.current_mA < 0) {
             if (capacity >= this->status.max_capacity_mAh) {
@@ -44,9 +51,13 @@ void PseudoBattery::runChargingThread() {
         }
         
         this->status.capacity_mAh = capacity;
+
+//        while (!this->signal)  
+//            this->chargeNotifier.wait(uLock); // these two lines down here for capacityLock function
+
 //        std::this_thread::sleep_for(std::chrono::minutes(3));
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-//        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+//        std::this_thread::sleep_for(std::chrono::seconds(1));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(1005));
     }
     return;
 }
@@ -80,10 +91,35 @@ bool PseudoBattery::set_current(double current_mA) {
 Public Functions
 ****************/
 
-double PseudoBattery::getCapacity() const {
+double PseudoBattery::getCapacityLock() {
+    this->cLock.lock();
+    this->signal = true;
+    this->cLock.unlock();
+
+    double capacity = this->status.capacity_mAh;
+    this->chargeNotifier.notify_one();   
+    return capacity;
+}
+
+double PseudoBattery::getCapacity() {
+    lockguard_t gLock(this->cLock);
     return this->status.capacity_mAh;
 }
 
 double PseudoBattery::getMaxCapacity() const {
     return this->status.max_capacity_mAh;
+}
+
+/*******************
+PID Helper Function
+********************/
+
+void PseudoBattery::sendSignal() {
+    this->cLock.lock();
+    this->signal = true;
+    this->cLock.unlock();
+
+    this->chargeNotifier.notify_all();
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    return; 
 }

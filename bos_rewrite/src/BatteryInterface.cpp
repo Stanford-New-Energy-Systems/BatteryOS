@@ -46,6 +46,9 @@ bool Battery::schedule_set_current(double current_mA, timepoint_t startTime, tim
         if (startTime < currentTime) {
             WARNING() << "start time of event has already passed!" << std::endl;
             return false; 
+        } else if (startTime > endTime) {
+            WARNING() << "start time of event occurs after end time!" << std::endl;
+            return false;
         } else if ((current_mA * -1) > getMaxChargingCurrent()) {
             WARNING() << "requested charging current exceeds the maximum charging current!" << std::endl;
             return false;
@@ -259,6 +262,9 @@ double Battery::getMaxChargingCurrent() const {
     return this->status.max_charging_current_mA;
 }
 
+double Battery::getCapacity() const {
+    return this->status.capacity_mAh;
+}
 
 double Battery::getMaxDischargingCurrent() const {
     return this->status.max_discharging_current_mA;
