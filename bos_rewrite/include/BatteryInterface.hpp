@@ -120,6 +120,7 @@ class Battery : public Node {
     public:
         void quit();
         double getCurrent() const;
+        double getCapacity() const;
         std::string getBatteryName() const;
         double getMaxChargingCurrent() const;
         double getMaxDischargingCurrent() const;

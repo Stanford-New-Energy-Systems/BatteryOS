@@ -5,8 +5,11 @@
 
 class PseudoBattery: public PhysicalBattery {
     private:
+        bool signal;
+        lock_t cLock;
         bool runningThread;
         std::thread thread;
+        std::condition_variable chargeNotifier; 
 
     public:
         virtual ~PseudoBattery();
@@ -22,8 +25,10 @@ class PseudoBattery: public PhysicalBattery {
         bool set_current(double current_mA) override;
 
     public:
-        double getCapacity() const;
+        double getCapacity();
+        double getCapacityLock();
         double getMaxCapacity() const;
+        void sendSignal();
 };
 
 #endif
