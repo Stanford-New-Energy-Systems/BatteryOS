@@ -3,9 +3,14 @@
 
 #include <poll.h>
 #include <fcntl.h>
+#include <errno.h>
+#include <netdb.h>
+#include <resolv.h>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 
 #include "util.hpp"
 #include "scale.hpp"
@@ -20,6 +25,9 @@
  * or an admin socket over the network. A user can use this to 
  * create batteries, remove batteries, or shutdown a BOS instance.
  *
+ * @param ssl:            pointer to ssl for private communication over TLS
+ * @param TLS:            boolean indicated if communication is over TLS
+ * @param context:        pointer to context for private communication over TLS
  * @param fifoMode:       indicates whether commands are sent to fifo or over network
  * @param clientSocket:   communication socket over network mode
  * @param inputFilePath:  input admin fifo (used for writing commands)
@@ -28,7 +36,10 @@
 
 class Admin {
     private:
+        SSL* ssl;
+        bool TLS;
         bool fifoMode;
+        SSL_CTX* context;
         int clientSocket;
         std::string inputFilePath;
         std::string outputFilePath;
@@ -42,8 +53,12 @@ class Admin {
 
     public:
         ~Admin();
-        Admin(int port);
+        Admin(int port, bool TLS = false);
         Admin(const std::string& inputFilePath, const std::string& outputFilePath);
+
+    private:
+        SSL_CTX* InitCTX();
+        void LoadCertificates(SSL_CTX* ctx, char* certFile, char* keyFile);
 
     /**
      * Public Helper Functions
