@@ -10,6 +10,7 @@
 #include "BatteryStatus.hpp"
 #include "protobuf/battery.pb.h"
 #include "protobuf/battery_manager.pb.h"
+#include "BatteryInterface.hpp"
 
 /**
  * Client Battery Class
@@ -21,7 +22,7 @@
  * @param clientSocket: socket to send commands over 
  */
 
-class ClientBattery {
+class ClientBattery : public Battery {
     private:
         int clientSocket;
 

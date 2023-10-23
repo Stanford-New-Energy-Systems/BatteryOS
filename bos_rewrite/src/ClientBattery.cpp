@@ -8,7 +8,8 @@ ClientBattery::~ClientBattery() {
     close(this->clientSocket);
 };
 
-ClientBattery::ClientBattery(int port, const std::string& batteryName) {
+using namespace std::chrono_literals;
+ClientBattery::ClientBattery(int port, const std::string& batteryName) : Battery(batteryName, 1000ms, RefreshMode::LAZY) {
     this->clientSocket = this->setupClient(port, batteryName);
 }
 
