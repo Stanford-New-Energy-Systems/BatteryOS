@@ -14,6 +14,11 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+#include <resolv.h>
+#include <arpa/inet.h>
+#include "openssl/ssl.h"
+#include "openssl/err.h"
+
 #include "ProtoParameters.hpp"
 #include "BatteryDirectoryManager.hpp"
 
@@ -41,19 +46,22 @@
 
 class BOS {
     private:
+        bool TLS;
         pollfd* fds;
         bool hasQuit;
         bool quitPoll;
         void* library;
         int adminFifoFD;
+        SSL_CTX* context;
         int adminSocketFD;
         int adminListener;
         int batteryListener;
         std::string directoryPath;
+        std::map<int, SSL*> ssl_map; 
         std::unique_ptr<BatteryDirectoryManager> directoryManager;
         std::map<int, std::pair<std::string, bool>> battery_names;
         std::map<int, std::pair<std::string, std::string>> fileNames;
-
+    
     public:
 
         /**
@@ -64,8 +72,8 @@ class BOS {
          *   over the network.
          */
 
-        BOS();
         ~BOS();
+        BOS(bool TLS = false);
         BOS(const std::string &directoryPath, mode_t permission);
 
     /**
@@ -73,7 +81,9 @@ class BOS {
      *
      * @func pollFDs:                 polls the file descriptors in this->fds 
      * @func createFifos:             creates an input/output fifo for a battery
+     * @func InitServerCTX:           initializes TLS communication for server
      * @func createDirectory:         creates a directory using given file path
+     * @func LoadCertificates:        loads the certificate and keyfile and ensures they match
      * @func handleAdminCommand:      handles a command from the admin fifo or admin socket 
      * @func handleBatteryCommand:    handles a battery command from a battery fifo or battery socket
      * @func checkFileDescriptors:    check file descriptors for POLLIN
@@ -82,10 +92,12 @@ class BOS {
 
     private:
         void pollFDs();
+        SSL_CTX* InitServerCTX();
         void checkFileDescriptors();
         void acceptBatteryConnection();
         void handleBatteryCommand(int fd);
         void handleAdminCommand(int fd, bool FIFO);
+        void LoadCertificates(SSL_CTX* ctx, char* certFile, char* keyFile);
         void createDirectory(const std::string &directoryPath, mode_t permission);
         int  createFifos(const std::string& inputFile, const std::string& outputFile, mode_t permission);
     
