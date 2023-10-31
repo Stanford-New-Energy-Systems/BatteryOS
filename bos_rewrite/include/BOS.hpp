@@ -75,7 +75,7 @@ class BOS {
         std::shared_ptr<BatteryConnection> adminConnection;
         //int adminListener;
         std::shared_ptr<Pollable> adminListener;
-        std::shared_ptr<Acceptor<TLSSocket>> batteryListener;
+        std::shared_ptr<TLSAcceptor> batteryListener;
         std::string directoryPath;
         std::unique_ptr<BatteryDirectoryManager> directoryManager;
 

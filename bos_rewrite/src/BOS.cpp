@@ -531,12 +531,12 @@ void BOS::startSockets(int adminPort, int batteryPort) {
     this->hasQuit = false;
     this->mode = BOSMode::Network;
 
-    this->adminListener = std::make_shared<Acceptor<BOSSocket>>(INADDR_ANY, adminPort, 1, [this](Socket* socket) {
+    this->adminListener = std::make_shared<TLSAcceptor>(INADDR_ANY, adminPort, 1, [this](Socket* socket) {
         this->acceptAdminConnection(socket);
     });
     netServicer.add(this->adminListener);
 
-    this->batteryListener = std::make_shared<Acceptor<BOSSocket>>(INADDR_ANY, batteryPort, 1024, [this](Socket* socket) {
+    this->batteryListener = std::make_shared<TLSAcceptor>(INADDR_ANY, batteryPort, 1024, [this](Socket* socket) {
         bosproto::BatteryConnect command;
         std::shared_ptr<BatteryConnection> connection = std::make_shared<BatteryConnection>(std::unique_ptr<Stream>(socket));
  

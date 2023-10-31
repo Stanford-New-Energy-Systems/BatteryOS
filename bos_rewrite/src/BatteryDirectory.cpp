@@ -109,7 +109,7 @@ bool BatteryDirectory::removeBattery(const std::string &batteryName) {
 void BatteryDirectory::destroyDirectory() {
     if (!this->destroyed) {
         for (const auto &batteryIter : batteryMap) {
-            batteryIter.second -> quit();
+            batteryIter.second->quit();
         }
     }
     this->batteryMap.clear();

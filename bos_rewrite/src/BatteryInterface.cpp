@@ -244,7 +244,9 @@ void Battery::quit() {
     this->lock.unlock(); 
 
     this->condition_variable.notify_one();
-    eventThread.join();
+    if (eventThread.joinable()) {
+        eventThread.join();
+    }
 }
 
 double Battery::getCurrent() const {
