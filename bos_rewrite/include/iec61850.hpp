@@ -10,6 +10,7 @@
 #include "BatteryInterface.hpp"
 #include "hal_thread.h"
 #include "iec61850_client.h"
+#include "PhysicalBattery.hpp"
 
 class IEC61850 : public PhysicalBattery {
     public:
@@ -22,8 +23,8 @@ class IEC61850 : public PhysicalBattery {
          * Overridden functions from Battery Interface
          * ********************************************/
         BatteryStatus refresh() override;
-        std::string get_type_string() override;
-        uint32_t set_current(int64_t target_current_mA, bool is_greater_than_target, void* other_data) override;
+        std::string getBatteryString() const override;
+        bool set_current(double current_mA) override;
 
         /*****************
          * Constructors
@@ -40,6 +41,7 @@ class IEC61850 : public PhysicalBattery {
          * ***************************************************************/
         IedConnection con;
         IedClientError error;
+        TLSConfiguration config;
 
         /*************************************************************
          * Names of the IEC61850 Logical Device on the server as well 

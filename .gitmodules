@@ -1,3 +1,7 @@
 [submodule "bosinc/libiec61850"]
 	path = bosinc/libiec61850
 	url = https://github.com/obinnoromjr/libiec61850.git
+[submodule "libiec61850"]
+	path = libiec61850
+    url = https://github.com/mz-automation/libiec61850
+    ignore = dirty
