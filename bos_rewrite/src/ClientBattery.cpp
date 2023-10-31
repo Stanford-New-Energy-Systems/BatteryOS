@@ -2,6 +2,7 @@
 
 #include <thread>
 #include "Socket.hpp"
+#include "TLSSocket.hpp"
 #include "Fifo.hpp"
 #include "BatteryConnection.hpp"
 
@@ -19,11 +20,12 @@ ClientBattery::ClientBattery(const std::string& directory, const std::string& ba
 }
 
 ClientBattery::ClientBattery(int port, const std::string& batteryName) {
+    TLSSocket::InitializeClient("../certs/ca_cert.pem", "../certs/client.pem", "../certs/client.key");
     char buffer[64];
     struct sockaddr_in servAddr;
     int s = socket(AF_INET, SOCK_STREAM, 0);
 
-    std::unique_ptr<Socket> socket = Socket::connect(s, INADDR_ANY, port);
+    std::unique_ptr<Socket> socket = TLSSocket::connect(s, INADDR_ANY, port);
     this->connection = std::make_unique<BatteryConnection>(std::move(socket));
 
     bosproto::BatteryConnect command;

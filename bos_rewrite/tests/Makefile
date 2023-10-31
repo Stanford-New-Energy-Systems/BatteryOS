@@ -34,7 +34,7 @@ OBJS += ../protobuf/battery_manager.pb.o
 OBJS += ../src/wiringSerial.o
 OBJS += $(BATTERY_OBJECTS)
 
-LFLAGS = -g -L. -lbprivacy -L../../libiec61850/.install/lib -pthread -liec61850
+LFLAGS = -g -L. -lbprivacy -L../../libiec61850/.install/lib -pthread -liec61850 -lssl -lcrypto
 CXXFLAGS = -MMD -MD -I$(INC_DIR) -I../ -I../../libiec61850/.install/include
 LFLAGS += `pkg-config --libs protobuf`
 CXXFLAGS += `pkg-config --cflags protobuf`

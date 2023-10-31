@@ -18,7 +18,7 @@
  * a higher level abstraction like ProtobufPipe (TODO).
  */
 class Socket : public Stream {
-    private:
+    protected:
         std::function<void()> readHandler;
 
     public:

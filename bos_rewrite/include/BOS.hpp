@@ -21,6 +21,7 @@
 #include "BatteryConnection.hpp"
 #include "NetService.hpp"
 #include "Aggregator.hpp"
+#include "TLSSocket.hpp"
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 #error "Windows not supported!"
@@ -36,6 +37,8 @@ enum BOSMode {
     Network,
     Fifo,
 };
+
+typedef TLSSocket BOSSocket;
 
 /**
  * BOS
@@ -72,7 +75,7 @@ class BOS {
         std::shared_ptr<BatteryConnection> adminConnection;
         //int adminListener;
         std::shared_ptr<Pollable> adminListener;
-        std::shared_ptr<Acceptor> batteryListener;
+        std::shared_ptr<Acceptor<TLSSocket>> batteryListener;
         std::string directoryPath;
         std::unique_ptr<BatteryDirectoryManager> directoryManager;
 

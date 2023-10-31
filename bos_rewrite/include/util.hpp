@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include <unistd.h>
+#include <openssl/ssl.h>
 
 #define LOG() \
     LogStream(__func__, __FILE__, __LINE__).writeToLog()
@@ -15,7 +16,6 @@
 
 #define PRINT() \
     PrintStream().printMsg()
-
 class LogStream {
     private:
         std::stringstream msg;
@@ -97,6 +97,9 @@ class PrintStream {
 namespace util {
     size_t read_exact(int fd, char* buffer, size_t num_bytes);
     size_t write_exact(int fd, char* buffer, size_t num_bytes);
+
+    size_t SSL_read_exact(SSL* fd, char* buffer, size_t num_bytes);
+    size_t SSL_write_exact(SSL* fd, char* buffer, size_t num_bytes);
 }
 
 #endif

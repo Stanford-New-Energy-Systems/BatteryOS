@@ -1,6 +1,7 @@
 #include "Admin.hpp"
 
 #include "Fifo.hpp"
+#include "TLSSocket.hpp"
 
 Admin::~Admin() {
     //if (!this->fifoMode)
@@ -46,10 +47,11 @@ bool Admin::shutdown() {
 }
 
 BatteryConnection* Admin::setupClient(int port) {
+    TLSSocket::InitializeClient("../certs/ca_cert.pem", "../certs/client.pem", "../certs/client.key");
     struct sockaddr_in servAddr;
     int s = socket(AF_INET, SOCK_STREAM, 0);
 
-    std::unique_ptr<Socket> socket = Socket::connect(s, INADDR_ANY, port);
+    std::unique_ptr<TLSSocket> socket = TLSSocket::connect(s, INADDR_ANY, port);
     BatteryConnection* b = new BatteryConnection(std::move(socket));
 
     return b;
