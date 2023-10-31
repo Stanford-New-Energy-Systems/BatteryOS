@@ -1,0 +1,9 @@
+**/*.o
+**/*.d
+
+protobuf/*.pb.cc
+protobuf/*.pb.h
+
+# test executables
+socket
+socketTest
