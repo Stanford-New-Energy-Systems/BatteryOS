@@ -105,13 +105,22 @@ bool IEC61850::check_MmsValue(MmsValue* value) {
 }
 
 bool IEC61850::create_iec61850_client(std::string hostname, int tcpPort) {
-    con = IedConnection_create();
+
+    this->config = TLSConfiguration_create();
+    TLSConfiguration_setClientMode(config);
+    TLSConfiguration_setOwnCertificateFromFile(config, "../certs/client.pem"); 
+    TLSConfiguration_setOwnKeyFromFile(config, "../certs/client.key");
+    TLSConfiguration_addCACertificateFromFile(config, "../certs/ca_cert.pem");
+
+    this->con = IEDConnection_createEx(config, false); 
+//    con = IedConnection_create();
 
     IedConnection_connect(con, &error, hostname.c_str(), tcpPort);
 
     if (error != IED_ERROR_OK) {
         IedConnection_close(con);
         IedConnection_destroy(con);
+        TLSConfiguration_destroy(config);
         return false;
     }
     return true;

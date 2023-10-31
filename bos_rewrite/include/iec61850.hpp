@@ -40,6 +40,7 @@ class IEC61850 : public PhysicalBattery {
          * ***************************************************************/
         IedConnection con;
         IedClientError error;
+        TLSConfiguration config;
 
         /*************************************************************
          * Names of the IEC61850 Logical Device on the server as well 
