@@ -7,6 +7,8 @@ it to physical batteries. The core ideas in BatteryOS are described in
 
   [Software defined grid energy storage.](https://dl.acm.org/doi/10.1145/3563357.3564082) Sonia Martin, Nicholas Mosier, Obi Nnorom, Yancheng Ou, Liana Patel, Oskar Triebe, Gustavo Cezar, Philip Levis, Ram Rajagopal. In BuildSys '22: Proceedings of the 9th ACM International Conference on Systems for Energy-Efficient Buildings, Cities, and Transportation, 2022.
 
+This [design document report](https://github.com/Stanford-New-Energy-Systems/BatteryOS/blob/main/BatteryOS-V3/doc/Task%202.2%20BAL%20Document.pdf) contains a more complete description of the software system.
+
 BatteryOS has gone through three implementations:
   - V1: The first prototype, written in Python.
   - V2: The first full version, written in C++.
