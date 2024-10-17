@@ -1,5 +1,5 @@
 [submodule "bosinc/libiec61850"]
-	path = bosinc/libiec61850
+	path = BatteryOS-V2/libiec61850
 	url = https://github.com/obinnoromjr/libiec61850.git
 [submodule "libiec61850"]
 	path = libiec61850
