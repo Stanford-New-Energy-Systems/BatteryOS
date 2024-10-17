@@ -3,7 +3,10 @@
 BatteryOS is a software package for software virtualization of batteries, particularly 
 grid-attached batteries in homes and home battery/solar installations. BatteryOS allows
 you to aggregate and partition batteries and supports a simple driver interface for connecting
-it to physical batteries. The core ideas in BatteryOS are described in
+it to physical batteries. BatteryOS was developed as part of the *TrustDER: Trusted, Private and 
+Scalable Coordination of Distributed Energy Resources* project at Stanford University, funded 
+by the Department of Energy in Agreement DE-OE0000919. The project concluded in the summer 
+of 2024. The core ideas in BatteryOS are described in
 
   [Software defined grid energy storage.](https://dl.acm.org/doi/10.1145/3563357.3564082) Sonia Martin, Nicholas Mosier, Obi Nnorom, Yancheng Ou, Liana Patel, Oskar Triebe, Gustavo Cezar, Philip Levis, Ram Rajagopal. In BuildSys '22: Proceedings of the 9th ACM International Conference on Systems for Energy-Efficient Buildings, Cities, and Transportation, 2022.
 
